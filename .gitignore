@@ -5,7 +5,7 @@
 !Resurces/
 !src/
 
-.idea
+.idea/
 
 # Created by https://www.gitignore.io/api/java,maven,macos,linux,windows,intellij
 # Edit at https://www.gitignore.io/?templates=java,maven,macos,linux,windows,intellij
