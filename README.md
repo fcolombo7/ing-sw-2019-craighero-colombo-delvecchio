@@ -1,5 +1,8 @@
 # ing-sw-2019-craighero-colombo-delvecchio
-Progetto di ingegneria del software 2019 - AM53
+
+N.gruppo: 53
+
+Scaglione: Margara
 
 Michele Craighero - 10523037 - michele.craighero@mail.polimi.it
 
