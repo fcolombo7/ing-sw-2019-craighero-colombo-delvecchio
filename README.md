@@ -1,11 +1,25 @@
-# ing-sw-2019-craighero-colombo-delvecchio
+# Prova Finale Ingegneria del Software 2019
+## Gruppo AM53
 
-N.gruppo: 53
+- ###   10523037    Michele Craighero ([@Michelec1997](https://github.com/Michelec1997))<br>michele.craighero@mail.polimi.it
+- ###   10570682    Giovanni Del Vecchio ([@giovannidv8](https://github.com/giovannidv8))<br>giovanni.delvecchio@mail.polimi.it
+- ###   10559531    Filippo Colombo ([@fcolombo7](https://github.com/fcolombo7))<br>filippo7.colombo@mail.polimi.it
 
-Scaglione: Margara
+| Functionality | State |
+|:-----------------------|:------------------------------------:|
+| Basic rules | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Complete rules | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Socket | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| RMI | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| GUI | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| CLI | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Multiple games | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Persistence | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Domination or Towers modes | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Terminator | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
 
-Michele Craighero - 10523037 - michele.craighero@mail.polimi.it
-
-Filippo Colombo - 10559531 - filippo7.colombo@mail.polimi.it
-
-Giovanni Del Vecchio - 10570682 - giovanni.delvecchio@mail.polimi.it
+<!--
+[![RED](https://placehold.it/15/f03c15/f03c15)](#)
+[![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)
+[![GREEN](https://placehold.it/15/44bb44/44bb44)](#)
+-->
