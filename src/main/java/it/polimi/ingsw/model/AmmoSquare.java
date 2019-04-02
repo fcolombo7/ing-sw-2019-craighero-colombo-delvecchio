@@ -7,7 +7,9 @@ public class AmmoSquare extends Square{
         super(color, doors);
     }
 
-    public void setAmmoTile(AmmoTile ammoTile){}
+    public void setAmmoTile(AmmoTile ammoTile){
+        //todo
+    }
 
     public AmmoTile getAmmoTile(){
         return ammoTile;

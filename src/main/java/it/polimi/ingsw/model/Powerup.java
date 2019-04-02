@@ -24,8 +24,8 @@ public class Powerup extends Card {
         return effect;
     }
 
-    public String getColor(){
-        return color();
+    public Color getColor(){
+        return color;
     }
 
     public TurnStatus getTiming() {

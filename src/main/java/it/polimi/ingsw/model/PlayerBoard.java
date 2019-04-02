@@ -27,8 +27,6 @@ public class PlayerBoard {
     }
 
     public void addAmmos(List<Color> ammos){
-
-
-
+        //todo
     }
 }
