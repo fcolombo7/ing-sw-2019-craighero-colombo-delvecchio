@@ -24,7 +24,8 @@ public class Weapon extends Card{
     }
 
     public Effect getEffect(String name){
-        return effect;
+        //todo
+        return effects.get(0);
     }
 
     public List<Effect> getEffects(){
