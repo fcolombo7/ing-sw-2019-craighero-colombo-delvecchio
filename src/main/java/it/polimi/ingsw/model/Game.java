@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Game {
-    private HashMap<String, Requirement>;
+    /*
+    private HashMap<String, Requirement> map;
     private String weaponFilename;
     private String powerupFilename;
     private String gameSettingsFilename;
@@ -64,5 +65,5 @@ public class Game {
 
     public GameBoard getGameBoard() {
         return gameBoard;
-    }
+    }*/
 }

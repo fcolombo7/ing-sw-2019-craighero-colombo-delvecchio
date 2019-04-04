@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import org.w3c.dom.*;
 
 public class GameBoard {
+    /*
     private Square[][] map;
     private Player[] killshotTrack;
     private boolean[] overkillTrack;
@@ -23,4 +24,7 @@ public class GameBoard {
     }
 
     public void updateTrack(Player player, boolean hasOverkilled){}
+
+    */
+
 }

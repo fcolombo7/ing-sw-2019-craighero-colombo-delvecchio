@@ -5,13 +5,43 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represent a single effect of a card (powerup or weapon)
+ * */
 public class Effect {
-    String name;
-    List<Color> cost;
-    NodeList requirements;
-    List<Action> actions;
-    Target target;
+    /**
+     * This attributes contains the effect name
+     * */
+    private String name;
 
+    /**
+     * This attributes contains the cost of the effect
+     * */
+    private List<Color> cost;
+
+    /**
+     * This attributes contains all the requirements of the effect
+     * */
+    private NodeList requirements;
+
+    /**
+     * This attributes contains all the actions of the effect which can be executed only if all the requirements are satisfied
+     * */
+    private List<Action> actions;
+
+    /**
+     * This attributes contains the target of the effect
+     * */
+    private Target target;
+
+    /**
+     * This constructur instantiates an Effect
+     * @param name String representing the name of the effect to be instantiated
+     * @param cost List<Color> representing the cost of the effect to be instantiated
+     * @param requirements NodeList representing the prerequisits of the effect to be instantiated
+     * @param actions List<Action> representing all the actions of the effect to be instantiated
+     * @param target Target of the effect to be instantiated
+     */
     public Effect(String name, List<Color> cost, NodeList requirements, List<Action> actions, Target target) {
         this.name = name;
         this.cost = cost;
@@ -20,26 +50,43 @@ public class Effect {
         this.target = target;
     }
 
+    /**
+     * This method return the effect name
+     * @return String representing the name of the effect
+     * */
     public String getName() {
         return name;
     }
 
+    /**
+     * This method return the cost of the effect
+     * @return List<Color> representing the cost of the effect
+     * */
     public List<Color> getCost() {
-        List<Color> temp= new ArrayList<Color>();
-        temp.addAll(cost);
-        return temp;
+        return new ArrayList<>(cost);
     }
 
+    /**
+     * This method returns a meta-data tree node which contains all the requirements of the effect
+     * @return NodeList representing all the requirements of the effect
+     * */
     public NodeList getRequirements() {
+        //todo: ritornandolo in questo modo viene preservata la proprietà di immutabilità della classe?
         return requirements;
     }
 
+    /**
+     * This method return all the actions performed by the current effect
+     * @return List<Action> representing all the actions performed by the current effect
+     * */
     public List<Action> getActions() {
-        List<Action> temp= new ArrayList<Action>();
-        temp.addAll(actions);
-        return temp;
+        return new ArrayList<>(actions);
     }
 
+    /**
+     * This method return the target of the effect
+     * @return Target of the effect
+     * */
     public Target getTarget() {
         return target;
     }

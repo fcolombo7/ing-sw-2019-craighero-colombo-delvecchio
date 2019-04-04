@@ -8,15 +8,15 @@ public class AmmoSquare extends Square{
     }
 
     public void setAmmoTile(AmmoTile ammoTile){
-        //todo
+        this.ammoTile=ammoTile;
     }
 
-    public AmmoTile getAmmoTile(){
-        return ammoTile;
-    }
+    //SERVE IL METODO GET?
 
     public AmmoTile popAmmoTile(){
-        return ammoTile;
+        AmmoTile ret= new AmmoTile(ammoTile);
+        ammoTile=null;
+        return ret;
     }
 
 }

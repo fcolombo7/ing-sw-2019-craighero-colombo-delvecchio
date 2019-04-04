@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerBoard {
+    /*
     private Player[] damages;
     private List<Color> ammos;
     private int deathCounter;
@@ -29,4 +30,5 @@ public class PlayerBoard {
     public void addAmmos(List<Color> ammos){
         //todo
     }
+    */
 }
