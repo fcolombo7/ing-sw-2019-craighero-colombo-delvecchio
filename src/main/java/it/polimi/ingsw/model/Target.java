@@ -8,22 +8,22 @@ import java.util.List;
  */
 public class Target {
     /**
-     * This attributes contains the target type of the effect
+     * This attribute contains the target type of the effect
      */
     private TargetType type;
 
     /**
-     * This attributes contains the minimum number of the target type of the effect
+     * This attribute contains the minimum number of the target type of the effect
      */
     private int minNumber;
 
     /**
-     * This attributes contains the maximum number of the target type of the effect
+     * This attribute contains the maximum number of the target type of the effect
      */
     private int maxNumber;
 
     /**
-     * This attributes contains all the preconditions of the selected target that must be satisfied in order to perform the effect actions on the selected target
+     * This attribute contains all the preconditions of the selected target that must be satisfied in order to perform the effect actions on the selected target
      */
     private List<String> prevConstraints;
 

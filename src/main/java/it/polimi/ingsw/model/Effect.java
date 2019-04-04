@@ -10,27 +10,27 @@ import java.util.List;
  * */
 public class Effect {
     /**
-     * This attributes contains the effect name
+     * This attribute contains the effect name
      * */
     private String name;
 
     /**
-     * This attributes contains the cost of the effect
+     * This attribute contains the cost of the effect
      * */
     private List<Color> cost;
 
     /**
-     * This attributes contains all the requirements of the effect
+     * This attribute contains all the requirements of the effect
      * */
     private NodeList requirements;
 
     /**
-     * This attributes contains all the actions of the effect which can be executed only if all the requirements are satisfied
+     * This attribute contains all the actions of the effect which can be executed only if all the requirements are satisfied
      * */
     private List<Action> actions;
 
     /**
-     * This attributes contains the target of the effect
+     * This attribute contains the target of the effect
      * */
     private Target target;
 
@@ -38,7 +38,7 @@ public class Effect {
      * This constructur instantiates an Effect
      * @param name String representing the name of the effect to be instantiated
      * @param cost List<Color> representing the cost of the effect to be instantiated
-     * @param requirements NodeList representing the prerequisits of the effect to be instantiated
+     * @param requirements NodeList representing the preconditions of the effect to be instantiated
      * @param actions List<Action> representing all the actions of the effect to be instantiated
      * @param target Target of the effect to be instantiated
      */
