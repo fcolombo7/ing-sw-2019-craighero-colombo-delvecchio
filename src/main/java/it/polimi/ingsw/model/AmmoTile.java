@@ -69,6 +69,7 @@ public class AmmoTile {
 
     /**
      * This method return an ammo of the tile
+     * @param index int representing the position of the ammo in the rep
      * @return Color representing the ammo at index 'index'
      * */
     public Color getAmmo(int index) throws AmmoTileIndexErrorException {
