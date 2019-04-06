@@ -24,7 +24,7 @@ public class AmmoTile {
     private boolean powerup;
 
     /**
-     * This constructur instantiates an AmmoTile
+     * This constructor instantiates an AmmoTile
      * @param a1 representing the first ammo
      * @param a2 representing the second ammo
      * @param a3 representing the third ammo
@@ -47,7 +47,7 @@ public class AmmoTile {
     }
 
     /**
-     * This constructur creates a new file as a copy of another yet created.
+     * This constructor creates a new file as a copy of another yet created.
      * @param ammoTile representing the tile that is copied
      */
     public AmmoTile(AmmoTile ammoTile){
