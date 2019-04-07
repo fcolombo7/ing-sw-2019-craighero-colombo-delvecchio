@@ -18,7 +18,7 @@ public class AmmoTile {
     private Color[] ammo;
 
     /**
-     * This attribute specify if the tile contains a powerup
+     * This attribute specifies if the tile contains a powerup
      * */
     private boolean powerup;
 
@@ -46,7 +46,7 @@ public class AmmoTile {
     }
 
     /**
-     * This constructor creates a new file as a copy of another yet created.
+     * This constructor creates a new file as a copy of another already created.
      * @param ammoTile representing the tile that is copied
      */
     public AmmoTile(AmmoTile ammoTile){
@@ -59,7 +59,7 @@ public class AmmoTile {
     }
 
     /**
-     * This method return the tile id
+     * This method returns the tile id
      * @return String representing the id of the tile
      * */
     public String getId(){
@@ -67,7 +67,7 @@ public class AmmoTile {
     }
 
     /**
-     * This method return an ammo of the tile
+     * This method returns an ammo of the tile
      * @param index int representing the position of the ammo in the rep
      * @return Color representing the ammo at index 'index'
      * */
@@ -80,7 +80,7 @@ public class AmmoTile {
     }
 
     /**
-     * This method return true if the ammo has a powerup
+     * This method returns true if the ammo has a powerup
      * @return Boolean as true if the ammo has a powerup
      * */
     public boolean hasPowerup(){
