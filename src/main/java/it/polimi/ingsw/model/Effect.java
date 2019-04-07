@@ -71,7 +71,7 @@ public class Effect {
      * @return NodeList representing all the requirements of the effect
      * */
     public NodeList getRequirements() {
-        //todo: ritornandolo in questo modo viene preservata la proprietà di immutabilità della classe?
+        //FIXME: ritornandolo in questo modo viene preservata la proprietà di immutabilità della classe?
         return requirements;
     }
 

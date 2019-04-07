@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.AmmoTileIndexErrorException;
-import it.polimi.ingsw.exceptions.AmmoTileNotValidExceptoin;
+import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
 
 /**
- * This class represent an ammo tile
+ * This class represents an ammo tile
  * */
 public class AmmoTile {
 
@@ -14,9 +13,9 @@ public class AmmoTile {
     private String id;
 
     /**
-     * This attribute contains the ammos
+     * This attribute contains the ammo
      * */
-    private Color[] ammos;
+    private Color[] ammo;
 
     /**
      * This attribute specify if the tile contains a powerup
@@ -29,20 +28,20 @@ public class AmmoTile {
      * @param a2 representing the second ammo
      * @param a3 representing the third ammo
      * @param powerup representing the possibility of a tile of having a powerup
-     * @throws AmmoTileNotValidExceptoin when parameters does not respect Adrenalina's rules
+     * @throws AmmoTileNotValidException when parameters does not respect Adrenalina's rules
      */
-    public AmmoTile(Color a1, Color a2, Color a3, boolean powerup) throws AmmoTileNotValidExceptoin {
+    public AmmoTile(Color a1, Color a2, Color a3, boolean powerup) throws AmmoTileNotValidException {
         if(a1==null||a2==null)
-            throw  new AmmoTileNotValidExceptoin("AmmoTile can't have a1 or a2 as null.");
+            throw  new AmmoTileNotValidException("AmmoTile can't have a1 or a2 as null.");
         if(a3!=null&&powerup)
-            throw  new AmmoTileNotValidExceptoin("AmmoTile can't have three ammos and powerup.");
+            throw  new AmmoTileNotValidException("AmmoTile can't have three ammo and powerup.");
         if(a3==null&&!powerup)
-            throw  new AmmoTileNotValidExceptoin("AmmoTile can't have two ammos and no powerup.");
+            throw  new AmmoTileNotValidException("AmmoTile can't have two ammo and no powerup.");
 
-        this.ammos=new Color[3];
-        this.ammos[0]=a1;
-        this.ammos[1]=a2;
-        this.ammos[2]=a3;
+        this.ammo=new Color[3];
+        this.ammo[0]=a1;
+        this.ammo[1]=a2;
+        this.ammo[2]=a3;
         this.powerup=powerup;
     }
 
@@ -53,10 +52,10 @@ public class AmmoTile {
     public AmmoTile(AmmoTile ammoTile){
         this.id=ammoTile.id;
         this.powerup=ammoTile.powerup;
-        this.ammos=new Color[3];
-        this.ammos[0]=ammoTile.ammos[0];
-        this.ammos[1]=ammoTile.ammos[1];
-        this.ammos[2]=ammoTile.ammos[2];
+        this.ammo=new Color[3];
+        this.ammo[0]=ammoTile.ammo[0];
+        this.ammo[1]=ammoTile.ammo[1];
+        this.ammo[2]=ammoTile.ammo[2];
     }
 
     /**
@@ -72,12 +71,12 @@ public class AmmoTile {
      * @param index int representing the position of the ammo in the rep
      * @return Color representing the ammo at index 'index'
      * */
-    public Color getAmmo(int index) throws AmmoTileIndexErrorException {
+    public Color getAmmo(int index) {
         if(index>=3)
-            throw new AmmoTileIndexErrorException("Index out of bound.");
+            throw new IndexOutOfBoundsException("Index out of bound.");
         if(index==2&&powerup)
-            throw  new AmmoTileIndexErrorException("Index out of bound (this tile has a powerup).");
-        return ammos[index];
+            throw  new IndexOutOfBoundsException("Index out of bound (this tile has a powerup).");
+        return ammo[index];
     }
 
     /**
@@ -86,5 +85,14 @@ public class AmmoTile {
      * */
     public boolean hasPowerup(){
         return powerup;
+    }
+
+    /**
+     * This method return a String representation of the instantiated ammo
+     * @return String representing the instantiated ammo
+     * */
+    @Override
+    public String toString(){
+        return "AmmoTile{a1:"+ ammo[0].name()+", a2:"+ ammo[1].name()+", a3:"+ (ammo[2]!=null?ammo[2].name():"null")+", powerup:"+powerup+"}";
     }
 }

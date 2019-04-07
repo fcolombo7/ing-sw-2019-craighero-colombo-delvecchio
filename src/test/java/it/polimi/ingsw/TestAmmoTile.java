@@ -1,14 +1,13 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.exceptions.AmmoTileIndexErrorException;
-import it.polimi.ingsw.exceptions.AmmoTileNotValidExceptoin;
+import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Color;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for the class AmmoTile
@@ -16,58 +15,86 @@ import static org.junit.Assert.fail;
 public class TestAmmoTile {
 
     /**
-     * Test if AmmoTile constructor throws AmmoTileNotValidExceptoin when the first parameter (a1) is nulll
+     * Test if AmmoTile constructor throws AmmoTileNotValidException when the first parameter (a1) is null
      */
     @Test
     public void AmmoTileWithFirstAmmoNull()
     {
         try {
             new AmmoTile(null, Color.RED,Color.BLUE,false);
-            fail("Expected an AmmoTileNotValidExceptoin to be thrown");
-        } catch (AmmoTileNotValidExceptoin anAmmoTileNotValidExceptoin) {
-            assertThat(anAmmoTileNotValidExceptoin.getMessage(), is("AmmoTile is not valid: AmmoTile can't have a1 or a2 as null."));
+            fail("Expected an AmmoTileNotValidException to be thrown");
+        } catch (AmmoTileNotValidException anAmmoTileNotValidException) {
+            assertThat(anAmmoTileNotValidException.getMessage(), is("AmmoTile is not valid: AmmoTile can't have a1 or a2 as null."));
         }
     }
 
     /**
-     * Test if AmmoTile constructor throws AmmoTileNotValidExceptoin when the second parameter (a2) is nulll
+     * Test if AmmoTile constructor throws AmmoTileNotValidException when the second parameter (a2) is nulll
      */
     @Test
     public void AmmoTileWithSecondAmmoNull()
     {
         try {
             new AmmoTile(Color.YELLOW, null,Color.BLUE,false);
-            fail("Expected an AmmoTileNotValidExceptoin to be thrown");
-        } catch (AmmoTileNotValidExceptoin anAmmoTileNotValidExceptoin) {
-            assertThat(anAmmoTileNotValidExceptoin.getMessage(), is("AmmoTile is not valid: AmmoTile can't have a1 or a2 as null."));
+            fail("Expected an AmmoTileNotValidException to be thrown");
+        } catch (AmmoTileNotValidException anAmmoTileNotValidException) {
+            assertThat(anAmmoTileNotValidException.getMessage(), is("AmmoTile is not valid: AmmoTile can't have a1 or a2 as null."));
         }
     }
 
     /**
-     * Test if AmmoTile constructor throws AmmoTileNotValidExceptoin when there are three valid ammos and powerup
+     * Test if AmmoTile constructor throws AmmoTileNotValidException when there are three valid ammos and powerup
      */
     @Test
     public void AmmoTileWithThreeAmmosAndPowerup()
     {
         try {
             new AmmoTile(Color.YELLOW, Color.YELLOW, Color.BLUE,true);
-            fail("Expected an AmmoTileNotValidExceptoin to be thrown");
-        } catch (AmmoTileNotValidExceptoin anAmmoTileNotValidExceptoin) {
-            assertThat(anAmmoTileNotValidExceptoin.getMessage(), is("AmmoTile is not valid: AmmoTile can't have three ammos and powerup."));
+            fail("Expected an AmmoTileNotValidException to be thrown");
+        } catch (AmmoTileNotValidException anAmmoTileNotValidException) {
+            assertThat(anAmmoTileNotValidException.getMessage(), is("AmmoTile is not valid: AmmoTile can't have three ammo and powerup."));
         }
     }
 
     /**
-     * Test if AmmoTile constructor throws AmmoTileNotValidExceptoin when there are two valid ammos and no powerup
+     * Test if AmmoTile constructor throws AmmoTileNotValidException when there are two valid ammos and no powerup
      */
     @Test
     public void AmmoTileWithTwoAmmosAndNoPowerup()
     {
         try {
             new AmmoTile(Color.YELLOW, Color.YELLOW, null,false);
-            fail("Expected an AmmoTileNotValidExceptoin to be thrown");
-        } catch (AmmoTileNotValidExceptoin anAmmoTileNotValidExceptoin) {
-            assertThat(anAmmoTileNotValidExceptoin.getMessage(), is("AmmoTile is not valid: AmmoTile can't have two ammos and no powerup."));
+            fail("Expected an AmmoTileNotValidException to be thrown");
+        } catch (AmmoTileNotValidException anAmmoTileNotValidException) {
+            assertThat(anAmmoTileNotValidException.getMessage(), is("AmmoTile is not valid: AmmoTile can't have two ammo and no powerup."));
+        }
+    }
+
+    /**
+     * Test if AmmoTile constructor doesn't throw exceptions when all the parameters are valid
+     */
+    @Test
+    public void AmmoTileWithTwoAmmoAndPowerup()
+    {
+        try {
+            AmmoTile ammo=new AmmoTile(Color.YELLOW, Color.RED, null,true);
+            assertEquals("AmmoTile{a1:YELLOW, a2:RED, a3:null, powerup:true}", ammo.toString());
+        } catch (AmmoTileNotValidException anAmmoTileNotValidException) {
+            fail("An unexpected AmmoTileNotValidException has been thrown");
+        }
+    }
+
+    /**
+     * Test if AmmoTile constructor doesn't throw exceptions when all the parameters are valid
+     */
+    @Test
+    public void AmmoTileWithThreeAmmoAndNoPowerup()
+    {
+        try {
+            AmmoTile ammo=new AmmoTile(Color.YELLOW, Color.RED, Color.RED,false);
+            assertEquals("AmmoTile{a1:YELLOW, a2:RED, a3:RED, powerup:false}", ammo.toString());
+        } catch (AmmoTileNotValidException anAmmoTileNotValidException) {
+            fail("An unexpected AmmoTileNotValidException has been thrown");
         }
     }
 
@@ -80,11 +107,11 @@ public class TestAmmoTile {
         try {
             new AmmoTile(Color.YELLOW, Color.YELLOW, Color.BLUE,false).getAmmo(3);
 
-            fail("Expected an AmmoTileIndexErrorException to be thrown");
-        } catch (AmmoTileIndexErrorException anAmmoTileIndexErrorException) {
-            assertThat(anAmmoTileIndexErrorException.getMessage(), is("Index is not valid: Index out of bound."));
-        }catch (AmmoTileNotValidExceptoin anAmmoTileNotValidExceptoin){
-            fail("Expected an AmmoTileIndexErrorException to be thrown.\n"+anAmmoTileNotValidExceptoin.getMessage());
+            fail("Expected an IndexOutOfBoundsException to be thrown");
+        } catch (IndexOutOfBoundsException e) {
+            assertThat(e.getMessage(), is("Index out of bound."));
+        }catch (AmmoTileNotValidException anAmmoTileNotValidException){
+            fail("Expected an IndexOutOfBoundsException to be thrown.\n"+anAmmoTileNotValidException.getMessage());
         }
     }
 
@@ -97,11 +124,41 @@ public class TestAmmoTile {
         try {
             new AmmoTile(Color.YELLOW, Color.RED, null,true).getAmmo(2);
 
-            fail("Expected an AmmoTileIndexErrorException to be thrown");
-        } catch (AmmoTileIndexErrorException anAmmoTileIndexErrorException) {
-            assertThat(anAmmoTileIndexErrorException.getMessage(), is("Index is not valid: Index out of bound (this tile has a powerup)."));
-        }catch (AmmoTileNotValidExceptoin anAmmoTileNotValidExceptoin){
-            fail("Expected an AmmoTileIndexErrorException to be thrown.\n"+anAmmoTileNotValidExceptoin.getMessage());
+            fail("Expected an IndexOutOfBoundsException to be thrown");
+        } catch (IndexOutOfBoundsException e) {
+            assertThat(e.getMessage(), is("Index out of bound (this tile has a powerup)."));
+        }catch (AmmoTileNotValidException anAmmoTileNotValidException){
+            fail("Expected an IndexOutOfBoundsException to be thrown.\n"+anAmmoTileNotValidException.getMessage());
+        }
+    }
+
+    /**
+     * Test if AmmoTile get method doesn't throw AmmoTileIndexErrorExceptoin when the index is correct
+     */
+    @Test
+    public void AmmoTileIndexCorrectWithPowerup()
+    {
+        try {
+            assertEquals(Color.RED,new AmmoTile(Color.YELLOW, Color.RED, null,true).getAmmo(1));
+        } catch (IndexOutOfBoundsException e) {
+            fail("An unexpected a IndexOutOfBoundsException has been thrown");
+        }catch (AmmoTileNotValidException anAmmoTileNotValidException){
+            fail("An unexpected a AmmoTileNotValidException has been thrown");
+        }
+    }
+
+    /**
+     * Test if AmmoTile get method doesn't throw AmmoTileIndexErrorExceptoin when the index is correct
+     */
+    @Test
+    public void AmmoTileIndexCorrectNoPowerup()
+    {
+        try {
+            assertEquals(Color.RED,new AmmoTile(Color.YELLOW, Color.RED, Color.RED,false).getAmmo(2));
+        } catch (IndexOutOfBoundsException anAmmoTileIndexErrorException) {
+            fail("An unexpected a IndexOutOfBoundsException has been thrown");
+        }catch (AmmoTileNotValidException anAmmoTileNotValidException){
+            fail("An unexpected a AmmoTileNotValidException has been thrown");
         }
     }
 }
