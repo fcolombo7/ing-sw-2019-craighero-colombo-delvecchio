@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* This class represent a single action of an effect of a generic card (powerup or weapon)
+* This class represents a single action of an effect of a generic card (powerup or weapon)
 * */
 public class Action {
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represent a single effect of a card (powerup or weapon)
+ * This class represents a single effect of a card (powerup or weapon)
  * */
 public class Effect {
     /**
@@ -51,7 +51,7 @@ public class Effect {
     }
 
     /**
-     * This method return the effect name
+     * This method returns the effect name
      * @return String representing the name of the effect
      * */
     public String getName() {
@@ -59,7 +59,7 @@ public class Effect {
     }
 
     /**
-     * This method return the cost of the effect
+     * This method returns the cost of the effect
      * @return List<Color> representing the cost of the effect
      * */
     public List<Color> getCost() {
@@ -76,7 +76,7 @@ public class Effect {
     }
 
     /**
-     * This method return all the actions performed by the current effect
+     * This method returns all the actions performed by the current effect
      * @return List<Action> representing all the actions performed by the current effect
      * */
     public List<Action> getActions() {
@@ -84,7 +84,7 @@ public class Effect {
     }
 
     /**
-     * This method return the target of the effect
+     * This method returns the target of the effect
      * @return Target of the effect
      * */
     public Target getTarget() {

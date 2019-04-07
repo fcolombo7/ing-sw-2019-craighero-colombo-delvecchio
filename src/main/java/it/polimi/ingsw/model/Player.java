@@ -9,7 +9,7 @@ import java.util.List;
 import static it.polimi.ingsw.model.PlayerStatus.*;
 
 /**
- * This class represent a player
+ * This class represents a player
  * */
 public class Player {
 
@@ -77,7 +77,7 @@ public class Player {
     }
 
     /**
-     * This method return the player nickname
+     * This method returns the player nickname
      * @return String representing the player nickname
      * */
     public String getNickname() {
@@ -85,7 +85,7 @@ public class Player {
     }
 
     /**
-     * This method return the player motto
+     * This method returns the player motto
      * @return String representing the player motto
      * */
     public String getMotto() {
@@ -93,7 +93,7 @@ public class Player {
     }
 
     /**
-     * This method return the player score
+     * This method returns the player score
      * @return int representing the player score
      * */
     public int getScore() {
@@ -101,7 +101,7 @@ public class Player {
     }
 
     /**
-     * This method return the player status
+     * This method returns the player status
      * @return PlayerStatus representing the player status
      * */
     public PlayerStatus getStatus() {
@@ -109,7 +109,7 @@ public class Player {
     }
 
     /**
-     * This method return the player weapons
+     * This method returns the player weapons
      * @return List containing Weapon representing the player weapons
      * */
     public List<Weapon> getWeapons() {
@@ -117,7 +117,7 @@ public class Player {
     }
 
     /**
-     * This method return the player powerups
+     * This method returns the player powerups
      * @return List containing Poweruo representing the player powerups
      * */
     public List<Powerup> getPowerups() {
@@ -125,7 +125,7 @@ public class Player {
     }
 
     /**
-     * This method return the player position
+     * This method returns the player position
      * @return Square representing the player position
      * */
     public Square getPosition() {
@@ -133,7 +133,7 @@ public class Player {
     }
 
     /**
-     * This method return the player board
+     * This method returns the player board
      * @return PlayerBoard representing the player board
      * */
     public PlayerBoard getBoard() {
@@ -141,7 +141,7 @@ public class Player {
     }
 
     /**
-     * This method return true if the player is the very first playing a turn
+     * This method returns true if the player is the very first playing a turn
      * @return boolean representing if the player is the very first playing a turn
      * */
     public boolean isFirst() {
@@ -149,7 +149,7 @@ public class Player {
     }
 
     /**
-     * This method set the player status
+     * This method sets the player status
      * @param status representing the player status
      * */
     public void setStatus(PlayerStatus status) {
@@ -157,7 +157,7 @@ public class Player {
     }
 
     /**
-     * This method set the player position
+     * This method sets the player position
      * @param position representing the player position
      * */
     public void setPosition(Square position) {
@@ -165,7 +165,7 @@ public class Player {
     }
 
     /**
-     * This method add a weapon to the player
+     * This method adds a weapon to the player
      * @param weapon representing the weapon to add
      * @throws PlayerWeaponsException when player already has 3 weapons
      * */
@@ -176,7 +176,7 @@ public class Player {
     }
 
     /**
-     * This method pop a weapon from the player weapons
+     * This method pops a weapon from the player weapons
      * @param card representing the card that need to be popped
      * @return Weapon representing the weapon just popped
      * @throws PlayerWeaponsException when player does not have any weapons to pop
@@ -197,7 +197,7 @@ public class Player {
     }
 
     /**
-     * This method add a powerup to the player
+     * This method adds a powerup to the player
      * @param powerup representing the powerup to add
      * @throws PlayerPowerupsException when player already has 3 powerups
      */
@@ -208,7 +208,7 @@ public class Player {
     }
 
     /**
-     * This method pop a powerup from the player powerups
+     * This method pops a powerup from the player powerups
      * @param card representing the card that need to be popped
      * @return Powerup representing the powerup just popped
      * @throws PlayerPowerupsException when player does not have any powerup to pop
@@ -229,7 +229,7 @@ public class Player {
     }
 
     /**
-     * This method update the player score
+     * This method updates the player score
      * @param points representing the points to be added to player score
      */
     public void updateScore(int points){
