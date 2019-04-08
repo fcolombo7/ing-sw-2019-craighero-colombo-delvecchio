@@ -52,7 +52,7 @@ public class TestWeaponSquare {
     }
 
     /**
-     * Test if popWeapon() throws SquareContentException when there aren no set weapon.
+     * Test if popWeapon() throws SquareContentException when there are not set weapon.
      */
     @Test
     public void PopWithNoAmmo()
