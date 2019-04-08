@@ -36,7 +36,7 @@ public class MatrixHelper {
     }
 
     /**
-     * This metod convert the MatrixHelper object into a matrix of boolean value
+     * This method convert the MatrixHelper object into a matrix of boolean value
      * @return boolean[][] representing the MatrixHelper object
      */
     public boolean[][] toBooleanMatrix(){
@@ -47,18 +47,18 @@ public class MatrixHelper {
     }
 
     /**
-     * this methot return the matrix row length
+     * this method return the matrix row length
      * @return int representing the matrix row length
      */
-    public int getrowLength() {
+    public int getRowLength() {
         return rowLength;
     }
 
     /**
-     * this methot return the matrix column length
+     * this method return the matrix column length
      * @return int representing the matrix column length
      */
-    public int getcolLength() {
+    public int getColLength() {
         return colLength;
     }
 
@@ -83,7 +83,7 @@ public class MatrixHelper {
     /**
      * This method return a String representation of the instantiated MatrixHelper
      * @return String representing the instantiated MatrixHelper
-     * */
+     */
     @Override
     public String toString(){
         StringBuilder msg=new StringBuilder();

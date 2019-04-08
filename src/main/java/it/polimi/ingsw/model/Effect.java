@@ -44,9 +44,9 @@ public class Effect {
      */
     public Effect(String name, List<Color> cost, NodeList requirements, List<Action> actions, Target target) {
         this.name = name;
-        this.cost = cost;
+        this.cost = new ArrayList<>(cost);
         this.requirements = requirements;
-        this.actions = actions;
+        this.actions = new ArrayList<>(actions);
         this.target = target;
     }
 
@@ -70,8 +70,9 @@ public class Effect {
      * This method returns a meta-data tree node which contains all the requirements of the effect
      * @return NodeList representing all the requirements of the effect
      * */
+
     public NodeList getRequirements() {
-        //FIXME: ritornandolo in questo modo viene preservata la proprietà di immutabilità della classe?
+        //FIXME: is this the right way of return the attributes? Does it preserve the immutability property?
         return requirements;
     }
 

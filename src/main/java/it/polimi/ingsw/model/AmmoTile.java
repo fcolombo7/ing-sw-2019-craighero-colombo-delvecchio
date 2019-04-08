@@ -4,22 +4,22 @@ import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
 
 /**
  * This class represents an ammo tile
- * */
+ */
 public class AmmoTile {
 
     /**
      * This attribute contains the tile id (in order to identify the associated resources)
-     * */
+     */
     private String id;
 
     /**
      * This attribute contains the ammo
-     * */
+     */
     private Color[] ammo;
 
     /**
      * This attribute specifies if the tile contains a powerup
-     * */
+     */
     private boolean powerup;
 
     /**

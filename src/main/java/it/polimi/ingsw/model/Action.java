@@ -9,7 +9,7 @@ import java.util.List;
 public class Action {
 
     /**
-     * this attribute contains the Action Type
+     * this attribute contains the ActionType
      * */
     private ActionType type;
 
@@ -24,12 +24,13 @@ public class Action {
     private List<String[]> extra;
 
     /**
-     * This constructur instantiates an Action
+     * This constructor instantiates an Action
      * @param type ActionType of the Action to be instantiated
      * @param value int value of Action to be instantiated
      * @param extra List<String[]> of action representing all the additional conditions that must be evaluated after the execution of the main action
      */
     public Action(ActionType type, int value, List<String[]> extra){
+        if(type==null)throw new IllegalArgumentException("Type value can't be null.");
         this.type=type;
         this.value=value;
         if(extra!=null)
