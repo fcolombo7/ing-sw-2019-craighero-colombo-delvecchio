@@ -118,7 +118,7 @@ public class Player {
 
     /**
      * This method returns the player powerups
-     * @return List containing Poweruo representing the player powerups
+     * @return List containing Powerup representing the player powerups
      * */
     public List<Powerup> getPowerups() {
         return new ArrayList<>(powerups);
