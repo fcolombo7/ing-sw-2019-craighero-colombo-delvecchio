@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.PlayerException.PlayerPowerupsException;
-import it.polimi.ingsw.exceptions.PlayerException.PlayerWeaponsException;
+import it.polimi.ingsw.exceptions.playerException.PlayerPowerupsException;
+import it.polimi.ingsw.exceptions.playerException.PlayerWeaponsException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +113,7 @@ public class Player {
      * @return List containing Weapon representing the player weapons
      * */
     public List<Weapon> getWeapons() {
-        return weapons;
+        return new ArrayList<>(weapons);
     }
 
     /**
@@ -121,7 +121,7 @@ public class Player {
      * @return List containing Poweruo representing the player powerups
      * */
     public List<Powerup> getPowerups() {
-        return powerups;
+        return new ArrayList<>(powerups);
     }
 
     /**
@@ -240,4 +240,25 @@ public class Player {
         }
     }
 
+    @Override
+    public String toString(){
+        StringBuilder msg = new StringBuilder();
+        msg.append("Player\n" + "Nickname: " + this.nickname + "\nMotto: " + this.motto + "\n");
+        msg.append("Score: " + score + "\n");
+        msg.append("Room: ");
+        if(this.position==null)
+            msg.append("Nowhere\n");
+        else msg.append(position.getRoomColor() + "\n");
+        if(!this.weapons.isEmpty()) {
+            msg.append("Weapons:\n");
+            for (Weapon weapon : this.weapons)
+                msg.append(((Card)weapon).toString() + "\n");
+        }
+        if(!this.powerups.isEmpty()) {
+            msg.append("Powerups:\n");
+            for (Powerup powerup : this.powerups)
+                msg.append(((Card)powerup).toString() + /*" " + powerup.getColor() + */"\n");
+        }
+        return msg.toString();
+    }
 }

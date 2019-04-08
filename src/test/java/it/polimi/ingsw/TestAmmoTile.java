@@ -98,7 +98,7 @@ public class TestAmmoTile {
     }
 
     /**
-     * Test if AmmoTile get method throws AmmoTileIndexErrorExceptoin when the index is >=3
+     * Test if AmmoTile get method throws AmmoTileIndexErrorException when the index is >=3
      */
     @Test
     public void AmmoTileIndexOutOfBound()
@@ -115,7 +115,7 @@ public class TestAmmoTile {
     }
 
     /**
-     * Test if AmmoTile get method throws AmmoTileIndexErrorExceptoin when the index is 2 and powerup is true
+     * Test if AmmoTile get method throws AmmoTileIndexErrorException when the index is 2 and powerup is true
      */
     @Test
     public void AmmoTileIndexPowerupError()
@@ -132,7 +132,7 @@ public class TestAmmoTile {
     }
 
     /**
-     * Test if AmmoTile get method doesn't throw AmmoTileIndexErrorExceptoin when the index is correct
+     * Test if AmmoTile get method doesn't throw AmmoTileIndexErrorException when the index is correct
      */
     @Test
     public void AmmoTileIndexCorrectWithPowerup()
@@ -147,7 +147,7 @@ public class TestAmmoTile {
     }
 
     /**
-     * Test if AmmoTile get method doesn't throw AmmoTileIndexErrorExceptoin when the index is correct
+     * Test if AmmoTile get method doesn't throw AmmoTileIndexErrorException when the index is correct
      */
     @Test
     public void AmmoTileIndexCorrectNoPowerup()
