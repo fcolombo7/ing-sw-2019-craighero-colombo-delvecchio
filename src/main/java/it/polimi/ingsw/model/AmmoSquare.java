@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.FullSquareException;
+import it.polimi.ingsw.exceptions.SquareContentException;
 
 /**
  * This class represents a Square that contains an AmmoTile
@@ -43,17 +43,33 @@ public class AmmoSquare extends Square{
      * @param ammoTile AmmoTile representing the ammo tile
      */
     public void setAmmoTile(AmmoTile ammoTile) {
-        if(this.ammoTile!=null) throw new FullSquareException("The AmmoSquare already contains an AmmoTile.");
+        if(this.ammoTile!=null) throw new SquareContentException("The AmmoSquare already contains an AmmoTile.");
         this.ammoTile=ammoTile;
     }
 
     /**
      * This method remove the AmmoTile from the square
-     * @return ammoTile AmmoTile representing the ammo tile in the square
+     * @return AmmoTile representing the ammo tile removed from the square
      */
     public AmmoTile popAmmoTile(){
+        if(this.ammoTile==null) throw new SquareContentException("The AmmoSquare doesn't contain an AmmoTile.");
         AmmoTile ret= new AmmoTile(ammoTile);
         ammoTile=null;
         return ret;
+    }
+
+    /**
+     * This method return a String representation of the instantiated AmmoSquare
+     * @return String representing the instantiated AmmoSquare
+     * */
+    @Override
+    public String toString(){
+        StringBuilder msg=new StringBuilder();
+        msg.append("AmmoSquare ").append(super.toString());
+        msg.append("Ammo: ");
+        if(ammoTile==null) msg.append("null\n");
+        else msg.append(ammoTile.toString()).append("\n");
+        msg.append("}");
+        return msg.toString();
     }
 }

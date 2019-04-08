@@ -25,11 +25,11 @@ public abstract class Square {
      */
     public Square(RoomColor roomColor, boolean[] doors) {
         if(roomColor==null)
-            throw  new NullPointerException("roomColor can't have null value.");
+            throw  new NullPointerException("The roomColor param can't have null value.");
         if(doors==null)
-            throw  new NullPointerException("doors can't have null value.");
-        if(doors.length>4)
-            throw new IllegalArgumentException("doors length must be 4.");
+            throw  new NullPointerException("The doors param can't have null value.");
+        if(doors.length!=4)
+            throw new IllegalArgumentException("The doors param length must be 4.");
         this.roomColor=roomColor;
         this.doors=new boolean[4];
         System.arraycopy(doors,0,this.doors,0,4);
@@ -48,7 +48,7 @@ public abstract class Square {
      * @param visibilityMatrix MatrixHelper representing which squares are visible from the current position (square).
      */
     public void setVisibilityMatrix(MatrixHelper visibilityMatrix){
-        if(visibilityMatrix==null) throw new NullPointerException("Param 'visibilityMatrix' is null");
+        if(visibilityMatrix==null) throw new NullPointerException("Param 'visibilityMatrix' is null.");
         this.visibilityMatrix=visibilityMatrix;
     }
 
@@ -66,8 +66,27 @@ public abstract class Square {
      * @return Boolean representing the presence of the door in the given direction.
      */
     public boolean hasDoor(Direction direction) {
-        if(direction==null) throw new NullPointerException();
+        if(direction==null) throw new NullPointerException("Param 'direction' is null.");
         return doors[direction.ordinal()];
+    }
+
+    /**
+     * This method return a String representation of the instantiated Square
+     * @return String representing the instantiated Square
+     * */
+    @Override
+    public String toString(){
+        StringBuilder msg=new StringBuilder();
+        msg.append("{\n");
+        msg.append("Room color: ").append(roomColor.name()).append(",\n");
+        msg.append("Doors: ").append("{NORTH: ").append(doors[Direction.NORTH.ordinal()]).append(",")
+        .append(" EAST: ").append(doors[Direction.EAST.ordinal()]).append(",")
+        .append(" SOUTH: ").append(doors[Direction.SOUTH.ordinal()]).append(",")
+        .append(" WEST: ").append(doors[Direction.WEST.ordinal()]).append("},\n");
+        msg.append("Visibility Matrix: ");
+        if(visibilityMatrix==null) msg.append("null\n");
+        else msg.append(visibilityMatrix.toString()).append("\n");
+        return msg.toString();
     }
 
     /**

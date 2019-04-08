@@ -3,7 +3,6 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Color;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

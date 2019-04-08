@@ -79,6 +79,11 @@ public class MatrixHelper {
         }
         return new MatrixHelper(ret);
     }
+
+    /**
+     * This method return a String representation of the instantiated MatrixHelper
+     * @return String representing the instantiated MatrixHelper
+     * */
     @Override
     public String toString(){
         StringBuilder msg=new StringBuilder();

@@ -4,6 +4,7 @@ import org.w3c.dom.*;
 
 public class GameBoard {
     /*
+    TODO
     private Square[][] map;
     private Player[] killshotTrack;
     private boolean[] overkillTrack;
