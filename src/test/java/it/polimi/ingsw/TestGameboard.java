@@ -23,7 +23,7 @@ public class TestGameboard {
 
     @Test
     public void testParsing() {
-        try{
+        try {
 
             //Get Document Builder
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -57,15 +57,17 @@ public class TestGameboard {
             root.normalize();
             System.out.println(root.getNodeName());
 
-            GameBoard gameBoard=new GameBoard(root,5);
+            GameBoard gameBoard = new GameBoard(root, 5);
             System.out.println(root.getNodeName());
 
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            fail("Unexpected ParserConfigurationException has been thrown");
         } catch (SAXException e) {
             e.printStackTrace();
+            fail("Unexpected SAXException has been thrown");
+        } catch (IOException e) {
+            fail("Unexpected IOException has been thrown");
         }
     }
 }

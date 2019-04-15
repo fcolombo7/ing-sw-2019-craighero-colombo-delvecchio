@@ -27,47 +27,52 @@ public class GameBoard {
         for(int i=0; i<nodeList.getLength();i++){
             Node rowNode=nodeList.item(i);
             if(rowNode.getNodeType()!=Node.TEXT_NODE)
-            {
-                if(rowCount>=rowLength) throw new IllegalArgumentException("RowLength does not correspond to rows number.");
-                int colCount=0;
-                NodeList squares=rowNode.getChildNodes();
-                for(int j=0;j<colLength;j++){
-                    Node square=squares.item(j);
-                    if(square.getNodeType()!=Node.TEXT_NODE){
-
-                        if(colCount>=colLength) throw new IllegalArgumentException("ColLength does not correspond to columns number.");
-                        boolean []doors=null;
-                        RoomColor roomColor=null;
-                        String type="";
-                        int count=0;
-                        NodeList elements=square.getChildNodes();
-                        while (count<elements.getLength()){
-                            Node node=elements.item(count);
-                            if(node.getNodeType()!=Node.TEXT_NODE){
-                                if(node.getNodeName().equalsIgnoreCase("type"))
-                                    type=node.getFirstChild().getNodeValue();
-                                else if(node.getNodeName().equalsIgnoreCase("color"))
-                                    roomColor=getRoomColor(node.getFirstChild().getNodeValue());
-                                else if(node.getNodeName().equalsIgnoreCase("doors"))
-                                    doors=getDoors(node.getChildNodes());
-                            }
-                            count++;
-                        }
-                        if(type.equalsIgnoreCase("Weaopn"))
-                            this.map[rowCount][colCount]=new WeaponSquare(roomColor,doors);
-                        else if(type.equalsIgnoreCase("Ammo"))
-                            this.map[rowCount][colCount]=new AmmoSquare(roomColor,doors);
-                        else
-                            this.map[rowCount][colCount]=null;
-                        colCount++;
-                    }
-                }
-                rowCount++;
-            }
+                rowCount=composeRow(rowNode,rowCount);
         }
         this.skullNumber=skullNumber;
         this.killshotTrack=new ArrayList<>(skullNumber);
         this.overkillTrack=new ArrayList<>(skullNumber);
+    }
+
+    private int composeRow(Node rowNode, int rowCount) {
+        if(rowCount>=rowLength) throw new IllegalArgumentException("RowLength does not correspond to rows number.");
+        int colCount=0;
+        NodeList squares=rowNode.getChildNodes();
+        for(int j=0;j<colLength;j++){
+            Node square=squares.item(j);
+            if(square.getNodeType()!=Node.TEXT_NODE){
+                colCount=composeColumn(square,colCount,rowCount);
+            }
+        }
+        return rowCount+1;
+    }
+
+    private int composeColumn(Node square, int colCount, int rowCount) {
+        if(colCount>=colLength) throw new IllegalArgumentException("ColLength does not correspond to columns number.");
+        boolean []doors=null;
+        RoomColor roomColor=null;
+        String type="";
+        int count=0;
+        NodeList elements=square.getChildNodes();
+        while (count<elements.getLength()){
+            Node node=elements.item(count);
+            if(node.getNodeType()!=Node.TEXT_NODE){
+                if(node.getNodeName().equalsIgnoreCase("type"))
+                    type=node.getFirstChild().getNodeValue();
+                else if(node.getNodeName().equalsIgnoreCase("color"))
+                    roomColor=getRoomColor(node.getFirstChild().getNodeValue());
+                else if(node.getNodeName().equalsIgnoreCase("doors"))
+                    doors=getDoors(node.getChildNodes());
+            }
+            count++;
+        }
+        if(type.equalsIgnoreCase("Weaopn"))
+            this.map[rowCount][colCount]=new WeaponSquare(roomColor,doors);
+        else if(type.equalsIgnoreCase("Ammo"))
+            this.map[rowCount][colCount]=new AmmoSquare(roomColor,doors);
+        else
+            this.map[rowCount][colCount]=null;
+        return colCount+1;
     }
 
     private boolean[] getDoors(NodeList nodeList) {
