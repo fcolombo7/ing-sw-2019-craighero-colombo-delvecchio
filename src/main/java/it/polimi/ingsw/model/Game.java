@@ -6,7 +6,7 @@ import java.util.List;
 public class Game {
     /*
     TODO
-    private HashMap<String, Requirement> map;
+
     private String weaponFilename;
     private String powerupFilename;
     private String gameSettingsFilename;

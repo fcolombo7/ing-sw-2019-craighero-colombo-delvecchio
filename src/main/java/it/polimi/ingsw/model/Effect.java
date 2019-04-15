@@ -3,12 +3,18 @@ package it.polimi.ingsw.model;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * This class represents a single effect of a card (powerup or weapon)
  * */
 public class Effect {
+    /**
+     * TODO
+     */
+    private static HashMap<String,Requirement> requirementsMap;
+
     /**
      * This attribute contains the effect name
      * */
@@ -35,7 +41,7 @@ public class Effect {
     private Target target;
 
     /**
-     * This constructur instantiates an Effect
+     * This constructor instantiates an Effect
      * @param name String representing the name of the effect to be instantiated
      * @param cost List<Color> representing the cost of the effect to be instantiated
      * @param requirements NodeList representing the preconditions of the effect to be instantiated
@@ -90,5 +96,12 @@ public class Effect {
      * */
     public Target getTarget() {
         return target;
+    }
+
+    /**
+     * TODO
+     */
+    public static void initRequirements(){
+        //TODO
     }
 }
