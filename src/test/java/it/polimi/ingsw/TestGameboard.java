@@ -55,10 +55,8 @@ public class TestGameboard {
             //Here comes the root node
             Element root = document.getDocumentElement();
             root.normalize();
-            System.out.println(root.getNodeName());
 
             GameBoard gameBoard = new GameBoard(root, 5);
-            System.out.println(root.getNodeName());
 
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

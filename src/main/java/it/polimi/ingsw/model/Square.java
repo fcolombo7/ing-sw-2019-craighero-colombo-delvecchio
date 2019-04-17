@@ -19,19 +19,33 @@ public abstract class Square {
     private boolean[] doors;
 
     /**
+     * This attribute represents the x index of this in the GameBoard map
+     */
+    int xIndex;
+
+    /**
+     * This attribute represents the x index of this in the GameBoard map
+     */
+    int yIndex;
+
+    /**
      * This constructor instantiates a Square
      * @param roomColor RoomColor representing the color of the room
      * @param doors  boolean[] representing the doors connected to the Square
      */
-    public Square(RoomColor roomColor, boolean[] doors) {
+    public Square(RoomColor roomColor, boolean[] doors, int[] indexes) {
         if(roomColor==null)
             throw  new NullPointerException("The roomColor param can't have null value.");
         if(doors==null)
             throw  new NullPointerException("The doors param can't have null value.");
         if(doors.length!=4)
             throw new IllegalArgumentException("The doors param length must be 4.");
+        if(indexes.length!=2||indexes[0]<0||indexes[1]<0)
+            throw new IllegalArgumentException("The indexes param is invalid.");
         this.roomColor=roomColor;
         this.doors=new boolean[4];
+        this.xIndex=indexes[0];
+        this.yIndex=indexes[1];
         System.arraycopy(doors,0,this.doors,0,4);
     }
 
@@ -41,6 +55,14 @@ public abstract class Square {
      */
     public RoomColor getRoomColor(){
         return roomColor;
+    }
+
+    /**
+     * This method return the x-index and y-index of this in the GameBoard map
+     * @return RoomColor representing the color of the room
+     */
+    public int[] getBoardIndexes(){
+        return new int[]{xIndex,yIndex};
     }
 
     /**

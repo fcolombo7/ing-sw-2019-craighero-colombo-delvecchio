@@ -18,7 +18,7 @@ public class TestWeaponSquare {
     @Test
     public void AlreadyFullOfWeapon()
     {
-        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false});
+        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
             weaponSquare.addWeapon(new Weapon("w1","weapon1"));
             weaponSquare.addWeapon(new Weapon("w2","weapon2"));
@@ -38,7 +38,7 @@ public class TestWeaponSquare {
     @Test
     public void SquareAlreadyContainsWeapon()
     {
-        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false});
+        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
             weaponSquare.addWeapon(new Weapon("w1","weapon1"));
             weaponSquare.addWeapon(new Weapon("w1","weapon2"));
@@ -57,7 +57,7 @@ public class TestWeaponSquare {
     @Test
     public void PopWithNoAmmo()
     {
-        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false});
+        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
             Weapon weapon=weaponSquare.popWeapon(0);
             fail("Expected a SquareContentException to be thrown");
@@ -72,7 +72,7 @@ public class TestWeaponSquare {
     @Test
     public void PopWithNotValidIndex()
     {
-        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false});
+        WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
             weaponSquare.addWeapon(new Weapon("w1","weapon1"));
             weaponSquare.addWeapon(new Weapon("w2","weapon2"));
@@ -102,7 +102,7 @@ public class TestWeaponSquare {
             msg.append("Visibility Matrix: ").append("null\n");
             msg.append("Weapons: \n").append(((Card)weapon).toString()).append("\n");
             msg.append("}");
-            WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,doors);
+            WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,doors,new int[]{2,3});
             weaponSquare.addWeapon(weapon);
             assertEquals(msg.toString(),weaponSquare.toString());
         }catch(Exception e){
@@ -129,7 +129,7 @@ public class TestWeaponSquare {
             msg.append("Visibility Matrix: ").append("null\n");
             msg.append("Weapons: empty\n").append("\n");
             msg.append("}");
-            WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,doors);
+            WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,doors,new int[]{2,3});
             weaponSquare.addWeapon(weapon);
             weapon=weaponSquare.popWeapon(0);
             assertEquals(msg.toString(),weaponSquare.toString());

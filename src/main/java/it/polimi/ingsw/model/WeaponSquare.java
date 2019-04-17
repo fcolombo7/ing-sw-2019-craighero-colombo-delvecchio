@@ -19,8 +19,8 @@ public class WeaponSquare extends Square {
      * @param roomColor RoomColor representing the color of the room
      * @param doors  boolean[] representing the doors connected to the WeaponSquare
      */
-    public WeaponSquare(RoomColor roomColor, boolean[] doors){
-        super(roomColor, doors);
+    public WeaponSquare(RoomColor roomColor, boolean[] doors, int[] indexes){
+        super(roomColor, doors, indexes);
         weapons=new ArrayList<>();
     }
 

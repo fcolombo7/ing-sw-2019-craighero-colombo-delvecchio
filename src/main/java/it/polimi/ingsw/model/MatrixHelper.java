@@ -68,14 +68,51 @@ public class MatrixHelper {
      * @return a MatrixHelper object representing the Bitwise-And of the current matrix and the one that is insert by the user
      */
     public MatrixHelper bitWiseAnd(MatrixHelper matrix) {
-        if(matrix==null) throw new NullPointerException("Matrix is null");
-        if(matrix.rowLength!=this.rowLength) throw new IllegalArgumentException("Rows length of the matrices are different.");
-        if(matrix.colLength!=this.colLength) throw new IllegalArgumentException("Columns length of the matrices are different.");
+        verifyMatrixParam(matrix);
         boolean[][] m2=matrix.toBooleanMatrix();
         boolean[][] ret= new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
             for(int j=0;j<colLength;j++)
                 ret[i][j]=m2[i][j]&&this.matrix[i][j];
+        }
+        return new MatrixHelper(ret);
+    }
+
+    /**
+     * This method calculate the Bitwise-Or of the current matrix and the one that is insert by the user
+     * @param matrix representing the second matrix involved in the Bitwise-Or
+     * @return a MatrixHelper object representing the Bitwise-Or of the current matrix and the one that is insert by the user
+     */
+    public MatrixHelper bitWiseOr(MatrixHelper matrix) {
+        verifyMatrixParam(matrix);
+        boolean[][] m2=matrix.toBooleanMatrix();
+        boolean[][] ret= new boolean[rowLength][colLength];
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++)
+                ret[i][j]=m2[i][j]||this.matrix[i][j];
+        }
+        return new MatrixHelper(ret);
+    }
+
+    /**
+     * This method verify if the matrix inserted as parameter of an operation is valid
+     * @param matrix representing the matrix involved in the operation
+     */
+    private void verifyMatrixParam(MatrixHelper matrix) {
+        if(matrix==null) throw new NullPointerException("Matrix is null");
+        if(matrix.rowLength!=this.rowLength) throw new IllegalArgumentException("Rows length of the matrices are different.");
+        if(matrix.colLength!=this.colLength) throw new IllegalArgumentException("Columns length of the matrices are different.");
+    }
+
+    /**
+     * This method calculate the Bitwise-Not of the current matrix
+     * @return a MatrixHelper object representing the Bitwise-Not of the current matrix
+     */
+    public MatrixHelper bitwiseNot(){
+        boolean[][] ret= new boolean[rowLength][colLength];
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++)
+                ret[i][j]=!this.matrix[i][j];
         }
         return new MatrixHelper(ret);
     }

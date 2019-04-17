@@ -19,7 +19,7 @@ public class TestAmmoSquare {
     @Test
     public void AlreadySetAmmo()
     {
-        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,new boolean[]{true,true,false,false});
+        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
             ammoSquare.setAmmoTile(new AmmoTile(Color.RED,Color.BLUE,Color.YELLOW,false));
             ammoSquare.setAmmoTile(new AmmoTile(Color.BLUE,Color.BLUE,null,true));
@@ -37,7 +37,7 @@ public class TestAmmoSquare {
     @Test
     public void PopWithNoAmmo()
     {
-        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,new boolean[]{true,true,false,false});
+        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
             AmmoTile ammoTile=ammoSquare.popAmmoTile();
             fail("Expected a SquareContentException to be thrown");
@@ -65,7 +65,7 @@ public class TestAmmoSquare {
             msg.append("Visibility Matrix: ").append("null\n");
             msg.append("Ammo: ").append(ammo.toString()).append("\n");
             msg.append("}");
-            AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,doors);
+            AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,doors, new int[]{2,3});
             ammoSquare.setAmmoTile(ammo);
             assertEquals(msg.toString(),ammoSquare.toString());
         }
@@ -93,7 +93,7 @@ public class TestAmmoSquare {
             msg.append("Visibility Matrix: ").append("null\n");
             msg.append("Ammo: ").append("null").append("\n");
             msg.append("}");
-            AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,doors);
+            AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,doors,new int[]{2,3});
             ammoSquare.setAmmoTile(ammo);
             ammo=ammoSquare.popAmmoTile();
             assertEquals(msg.toString(),ammoSquare.toString());

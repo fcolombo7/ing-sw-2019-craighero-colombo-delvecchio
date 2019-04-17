@@ -18,7 +18,7 @@ public class TestSquare {
     public void SquareColorNull()
     {
         try {
-            new AmmoSquare(null,new boolean[]{true,true,false,false});
+            new AmmoSquare(null,new boolean[]{true,true,false,false},new int[]{2,3});
             fail("Expected a NullPointerException to be thrown");
         } catch (NullPointerException e) {
             assertThat(e.getMessage(), is("The roomColor param can't have null value."));
@@ -32,7 +32,7 @@ public class TestSquare {
     public void SquareDoorsNull()
     {
         try {
-            new AmmoSquare(RoomColor.RED,null);
+            new AmmoSquare(RoomColor.RED,null,new int[]{2,3});
             fail("Expected a NullPointerException to be thrown");
         } catch (NullPointerException e) {
             assertThat(e.getMessage(), is("The doors param can't have null value."));
@@ -46,7 +46,7 @@ public class TestSquare {
     public void SquareDoorsMalformed()
     {
         try {
-            new AmmoSquare(RoomColor.RED,new boolean[]{true,false});
+            new AmmoSquare(RoomColor.RED,new boolean[]{true,false},new int[]{2,3});
             fail("Expected a IllegalArgumentException to be thrown");
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage(), is("The doors param length must be 4."));
@@ -69,7 +69,7 @@ public class TestSquare {
         msg.append("Visibility Matrix: ").append("null\n");
         msg.append("Ammo: ").append("null\n");
         msg.append("}");
-        assertEquals(msg.toString(),new AmmoSquare(RoomColor.RED,doors).toString());
+        assertEquals(msg.toString(),new AmmoSquare(RoomColor.RED,doors,new int[]{2,3}).toString());
     }
 
     /**
@@ -77,7 +77,7 @@ public class TestSquare {
      */
     @Test
     public void SquareDoorDirection(){
-        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED, new boolean[]{true,true,false,false});
+        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED, new boolean[]{true,true,false,false},new int[]{2,3});
         assertTrue(ammoSquare.hasDoor(Direction.NORTH));
     }
 
@@ -86,7 +86,7 @@ public class TestSquare {
      */
     @Test
     public void SquareDoorInvalidDirection(){
-        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED, new boolean[]{true,true,false,false});
+        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED, new boolean[]{true,true,false,false},new int[]{2,3});
         try{
             ammoSquare.hasDoor(null);
             fail("Expected a NullPointerException to be thrown");
@@ -100,7 +100,7 @@ public class TestSquare {
      */
     @Test
     public void SquareSetVisibilityMatrixInvalid(){
-        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED, new boolean[]{true,true,false,false});
+        AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED, new boolean[]{true,true,false,false},new int[]{2,3});
         try{
             ammoSquare.setVisibilityMatrix(null);
             fail("Expected a NullPointerException to be thrown");

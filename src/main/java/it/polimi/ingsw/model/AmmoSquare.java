@@ -16,8 +16,8 @@ public class AmmoSquare extends Square{
      * @param roomColor RoomColor representing the color of the room
      * @param doors  boolean[] representing the doors connected to the AmmoSquare
      */
-    public AmmoSquare(RoomColor roomColor, boolean[] doors){
-        super(roomColor, doors);
+    public AmmoSquare(RoomColor roomColor, boolean[] doors, int[] indexes){
+        super(roomColor, doors, indexes);
     }
 
     /**

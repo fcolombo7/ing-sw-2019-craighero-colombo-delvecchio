@@ -4,6 +4,7 @@ import org.w3c.dom.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class GameBoard {
 
@@ -14,6 +15,11 @@ public class GameBoard {
     private ArrayList<Boolean> overkillTrack;
     private int skullNumber;
 
+    /**
+     * This constructor instantiates a GameBoard object
+     * @param map representing the Node read from the XML file
+     * @param skullNumber representing the number of the skull placed on the Board
+     */
     public GameBoard(Node map, int skullNumber){
         NamedNodeMap attributes=map.getAttributes();
         rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
@@ -32,13 +38,20 @@ public class GameBoard {
         this.skullNumber=skullNumber;
         this.killshotTrack=new ArrayList<>(skullNumber);
         this.overkillTrack=new ArrayList<>(skullNumber);
+        initMatrixes();
     }
 
+    /**
+     * This method construct the row of the map at index rowNode.
+     * @param rowNode index of the row the method constructs
+     * @param rowCount index of the row which is constructed
+     * @return integer representing the next row of the map
+     */
     private int composeRow(Node rowNode, int rowCount) {
         if(rowCount>=rowLength) throw new IllegalArgumentException("RowLength does not correspond to rows number.");
         int colCount=0;
         NodeList squares=rowNode.getChildNodes();
-        for(int j=0;j<colLength;j++){
+        for(int j=0;j<squares.getLength();j++){
             Node square=squares.item(j);
             if(square.getNodeType()!=Node.TEXT_NODE){
                 colCount=composeColumn(square,colCount,rowCount);
@@ -66,10 +79,10 @@ public class GameBoard {
             }
             count++;
         }
-        if(type.equalsIgnoreCase("Weaopn"))
-            this.map[rowCount][colCount]=new WeaponSquare(roomColor,doors);
+        if(type.equalsIgnoreCase("Weapon"))
+            this.map[rowCount][colCount]=new WeaponSquare(roomColor,doors,new int[]{rowCount,colCount});
         else if(type.equalsIgnoreCase("Ammo"))
-            this.map[rowCount][colCount]=new AmmoSquare(roomColor,doors);
+            this.map[rowCount][colCount]=new AmmoSquare(roomColor,doors,new int[]{rowCount,colCount});
         else
             this.map[rowCount][colCount]=null;
         return colCount+1;
@@ -100,21 +113,77 @@ public class GameBoard {
         throw  new IllegalArgumentException("RoomColor error");
     }
 
-    public List<Boolean> getOverkillTrack() {
-        return overkillTrack;
+    private void initMatrixes(){
+        for(int i=0;i<rowLength;i++){
+            for (int j=0;j<colLength;j++){
+                if(map[i][j]!=null)
+                    composeMatrix(i,j);
+            }
+        }
+    }
+
+    private void composeMatrix(int x,int y){
+        boolean[][] mat=new boolean[rowLength][colLength];
+        for(int i=0;i<rowLength;i++)
+            for (int j=0;j<colLength;j++)
+                mat[i][j]=false;
+        ArrayBlockingQueue<RoomColor> queue=new ArrayBlockingQueue<>(RoomColor.values().length);
+        ArrayList<RoomColor> checked=new ArrayList<>(RoomColor.values().length);
+        queue.add(map[x][y].getRoomColor());
+        incQueue(x,y,queue,checked);
+        while(!queue.isEmpty()){
+            RoomColor curColor=queue.poll();
+            checked.add(curColor);
+            for(int r=0;r<rowLength;r++){
+                for(int c =0;c<colLength;c++){
+                    if(map[r][c]!=null&&map[r][c].getRoomColor()==curColor) mat[r][c]=true;
+                }
+            }
+        }
+        map[x][y].setVisibilityMatrix(new MatrixHelper(mat));
+    }
+
+    private void incQueue(int r, int c, ArrayBlockingQueue<RoomColor> queue, ArrayList<RoomColor> checked) {
+        for (Direction direction:Direction.values()) {
+            if(map[r][c].hasDoor(direction)){
+                int rx;
+                int cx;
+                switch(direction){
+                    case NORTH: rx=r-1;cx=c; break;
+                    case EAST: rx=r;cx=c+1; break;
+                    case SOUTH: rx=r+1;cx=c; break;
+                    case WEST: rx=r;cx=c-1; break;
+                    default: rx=r;cx=r;
+                }
+
+                if(!checked.contains(map[rx][cx].getRoomColor()))
+                    queue.add(map[rx][cx].getRoomColor());
+            }
+        }
     }
 
     public int getSkullNumber() {
         return skullNumber;
     }
 
-    public List<Player> getKillshotTrack() {
-        return killshotTrack;
+    public List<Boolean> getOverkillTrack() {
+        return new ArrayList<>(overkillTrack);
     }
 
-    public void updateTrack(Player player, boolean hasOverkilled){}
+    public List<Player> getKillshotTrack() {
+        return new ArrayList<>(killshotTrack);
+    }
 
-    //public MatrixHelper getVisibilityMatrix(int x,int y){}
+    public MatrixHelper getVisibilityMatrix(int x,int y){
+        if(map[x][y]==null) return null;
+        return map[x][y].getVisibilityMatrix();
+    }
 
-    //public MatrixHelper getVisibilityMatrix(int x,int y,int distance){}
+    //public MatrixHelper getDistanceMatrix(int x,int y,int distance){}
+
+    public void updateTrack(Player player, boolean hasOverkilled){
+        killshotTrack.add(player);
+        overkillTrack.add(hasOverkilled);
+    }
+
 }
