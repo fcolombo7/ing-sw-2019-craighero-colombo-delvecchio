@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
 * This class represents a single action of an effect of a generic card (powerup or weapon)
 * */
@@ -19,24 +16,14 @@ public class Action {
     private int value;
 
     /**
-     * this attribute contains all the additional conditions that must be evaluated after the execution of the main action
-     * */
-    private List<String[]> extra;
-
-    /**
      * This constructor instantiates an Action
      * @param type ActionType of the Action to be instantiated
      * @param value int value of Action to be instantiated
-     * @param extra List<String[]> of action representing all the additional conditions that must be evaluated after the execution of the main action
      */
-    public Action(ActionType type, int value, List<String[]> extra){
+    public Action(ActionType type, int value){
         if(type==null)throw new IllegalArgumentException("Type value can't be null.");
         this.type=type;
         this.value=value;
-        if(extra!=null)
-            this.extra=new ArrayList<>(extra);
-        else
-            this.extra=new ArrayList<>();
     }
 
     /**
@@ -54,13 +41,4 @@ public class Action {
     public int getValue(){
         return value;
     }
-
-    /**
-     * this method returns the additional conditions that must be evaluated after the execution of the main action
-     * @return List<String> representing all the additional conditions that must be evaluated after the execution of the main action
-     * */
-    public List<String[]> getExtra(){
-        return new ArrayList<>(extra);
-    }
-
 }

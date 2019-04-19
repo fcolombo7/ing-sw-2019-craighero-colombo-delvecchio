@@ -20,10 +20,10 @@ public class TestWeaponSquare {
     {
         WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
-            weaponSquare.addWeapon(new Weapon("w1","weapon1"));
-            weaponSquare.addWeapon(new Weapon("w2","weapon2"));
-            weaponSquare.addWeapon(new Weapon("w3","weapon3"));
-            weaponSquare.addWeapon(new Weapon("w4","weapon4"));
+            weaponSquare.addWeapon(new Weapon("w1","weapon1",""));
+            weaponSquare.addWeapon(new Weapon("w2","weapon2", ""));
+            weaponSquare.addWeapon(new Weapon("w3","weapon3",""));
+            weaponSquare.addWeapon(new Weapon("w4","weapon4",""));
             fail("Expected a SquareContentException to be thrown");
         } catch (SquareContentException e) {
             assertThat(e.getMessage(), is("The WeaponSquare already contains three weapons."));
@@ -40,9 +40,9 @@ public class TestWeaponSquare {
     {
         WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
-            weaponSquare.addWeapon(new Weapon("w1","weapon1"));
-            weaponSquare.addWeapon(new Weapon("w1","weapon2"));
-            weaponSquare.addWeapon(new Weapon("w3","weapon3"));
+            weaponSquare.addWeapon(new Weapon("w1","weapon1",""));
+            weaponSquare.addWeapon(new Weapon("w1","weapon2",""));
+            weaponSquare.addWeapon(new Weapon("w3","weapon3",""));
             fail("Expected a SquareContentException to be thrown");
         } catch (SquareContentException e) {
             assertThat(e.getMessage(), is("Weapon is yet contained in the WeaponSquare."));
@@ -74,8 +74,8 @@ public class TestWeaponSquare {
     {
         WeaponSquare weaponSquare=new WeaponSquare(RoomColor.RED,new boolean[]{true,true,false,false},new int[]{2,3});
         try {
-            weaponSquare.addWeapon(new Weapon("w1","weapon1"));
-            weaponSquare.addWeapon(new Weapon("w2","weapon2"));
+            weaponSquare.addWeapon(new Weapon("w1","weapon1",""));
+            weaponSquare.addWeapon(new Weapon("w2","weapon2",""));
             Weapon weapon=weaponSquare.popWeapon(2);
             fail("Expected a SquareContentException to be thrown");
         } catch (IllegalArgumentException e) {
@@ -91,7 +91,7 @@ public class TestWeaponSquare {
     {
         try{
             boolean []doors=new boolean[]{true,false,false,true};
-            Weapon weapon=new Weapon("id","name");
+            Weapon weapon=new Weapon("id","name","");
             StringBuilder msg=new StringBuilder();
             msg.append("WeaponSquare {\n");
             msg.append("Room color: ").append(RoomColor.RED.name()).append(",\n");
@@ -119,7 +119,7 @@ public class TestWeaponSquare {
         try{
             boolean []doors=new boolean[]{true,false,false,true};
             StringBuilder msg=new StringBuilder();
-            Weapon weapon=new Weapon("id","name");
+            Weapon weapon=new Weapon("id","name","");
             msg.append("WeaponSquare {\n");
             msg.append("Room color: ").append(RoomColor.RED.name()).append(",\n");
             msg.append("Doors: ").append("{NORTH: ").append(doors[Direction.NORTH.ordinal()]).append(",")

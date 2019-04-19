@@ -1,0 +1,23 @@
+<effect ref_id="1" name="nome">
+    <cost/>
+    <target>
+        <type>PLAYER</type>
+        <minNumber>1</minNumber>
+        <maxNumber>1</maxNumber>
+        <prevConstraints/>
+    </target>
+    <requirements>
+        <requirement name="VISIBLE">TRUE</requirement>
+    </requirements>
+    <actions>
+        <action type="DAMAGE">
+            <value>2</value>
+        </action>
+        <action type="MARK">
+            <value>1</value>
+        </action>
+    </actions>
+    <extras>
+        <extra name="extraName">value</extra>
+    </extras>
+</effect>

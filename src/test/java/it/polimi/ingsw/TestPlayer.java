@@ -18,7 +18,7 @@ public class TestPlayer {
      */
     @Test
     public void AddingFourthWeaponTest(){
-        Weapon weapon = new Weapon("id", "name");
+        Weapon weapon = new Weapon("id", "name","");
         Player player = new Player("","",false);
         player.addWeapon(weapon);
         player.addWeapon(weapon);
@@ -38,7 +38,7 @@ public class TestPlayer {
     public void PoppingEmptyWeaponsListTest(){
         try{
             Player player = new Player("", "", false);
-            player.popWeapon(new Card("", ""));
+            player.popWeapon(new Card("", "",""));
             fail("Expected a PlayerWeaponsException to be thrown");
         } catch(PlayerWeaponsException aPlayerWeaponException){
             assertThat(aPlayerWeaponException.getMessage(), is("Player weapons error: Player does not have any weapon"));
@@ -51,11 +51,11 @@ public class TestPlayer {
     @Test
     public void PoppingMissingWeaponTest(){
         Player player = new Player("", "", false);
-        player.addWeapon(new Weapon("1", "a"));
-        player.addWeapon(new Weapon("2", "b"));
-        player.addWeapon(new Weapon("3", "c"));
+        player.addWeapon(new Weapon("1", "a",""));
+        player.addWeapon(new Weapon("2", "b",""));
+        player.addWeapon(new Weapon("3", "c",""));
         try{
-            player.popWeapon(new Card("4", "d"));
+            player.popWeapon(new Card("4", "d",""));
             fail("Expected a PlayerWeaponsException to be thrown");
         } catch(PlayerWeaponsException aPlayerWeaponException){
             assertThat(aPlayerWeaponException.getMessage(), is("Player weapons error: Player does not own the weapon"));
@@ -67,7 +67,7 @@ public class TestPlayer {
      */
     @Test
     public void AddingFourthPowerupTest(){
-        Powerup powerup = new Powerup("id", "name");
+        Powerup powerup = new Powerup("id", "name","");
         Player player = new Player("","",false);
         player.addPowerup(powerup);
         player.addPowerup(powerup);
@@ -87,7 +87,7 @@ public class TestPlayer {
     public void PoppingEmptyPowerupsListTest(){
         try{
             Player player = new Player("", "", false);
-            player.popPowerup(new Card("", ""));
+            player.popPowerup(new Card("", "",""));
             fail("Expected a PlayerPowerupsException to be thrown");
         } catch(PlayerPowerupsException aPlayerPowerupsException){
             assertThat(aPlayerPowerupsException.getMessage(), is("Player powerups error: Player does not have any powerup"));
@@ -100,11 +100,11 @@ public class TestPlayer {
     @Test
     public void PoppingMissingPowerupTest(){
         Player player = new Player("", "", false);
-        player.addPowerup(new Powerup("1", "a"));
-        player.addPowerup(new Powerup("2", "b"));
-        player.addPowerup(new Powerup("3", "c"));
+        player.addPowerup(new Powerup("1", "a",""));
+        player.addPowerup(new Powerup("2", "b",""));
+        player.addPowerup(new Powerup("3", "c",""));
         try{
-            player.popPowerup(new Card("4", "d"));
+            player.popPowerup(new Card("4", "d",""));
             fail("Expected a PlayerPowerupsException to be thrown");
         } catch(PlayerPowerupsException aPlayerPowerupsException){
             assertThat(aPlayerPowerupsException.getMessage(), is("Player powerups error: Player does not own the powerup"));
@@ -131,7 +131,7 @@ public class TestPlayer {
     @Test
     public void CorrectAddingWeaponTest(){
         Player player = new Player("t", "ttt", false);
-        Weapon weapon = new Weapon("1", "a");
+        Weapon weapon = new Weapon("1", "a", "");
         player.addWeapon(weapon);
         assertThat(player.toString(), is("Player\nNickname: " + player.getNickname() + "\nMotto: " + player.getMotto() + "\nScore: " + player.getScore() + "\nRoom: " + "Nowhere" + "\nWeapons:\n" + ((Card)weapon).toString() + "\n"));
     }
@@ -142,7 +142,7 @@ public class TestPlayer {
     @Test
     public void CorrectAddingPowerupTest(){
         Player player = new Player("t", "ttt", false);
-        Powerup powerup = new Powerup("1", "a");
+        Powerup powerup = new Powerup("1", "a","");
         player.addPowerup(powerup);
         assertThat(player.toString(), is("Player\nNickname: " + player.getNickname() + "\nMotto: " + player.getMotto() + "\nScore: " + player.getScore() + "\nRoom: " + "Nowhere" + "\nPowerups:\n" + ((Card)powerup).toString() + "\n"));
     }
@@ -153,8 +153,8 @@ public class TestPlayer {
     @Test
     public void CorrectPoppingWeaponTest(){
         Player player = new Player("t", "ttt", false);
-        Weapon weapon1 = new Weapon("1", "a");
-        Weapon weapon2 = new Weapon("2", "b");
+        Weapon weapon1 = new Weapon("1", "a","");
+        Weapon weapon2 = new Weapon("2", "b","");
 
         player.addWeapon(weapon1);
         player.addWeapon(weapon2);
@@ -169,8 +169,8 @@ public class TestPlayer {
     @Test
     public void CorrectPoppingPowerupTest(){
         Player player = new Player("t", "ttt", false);
-        Powerup powerup1 = new Powerup("1", "a");
-        Powerup powerup2 = new Powerup("2", "b");
+        Powerup powerup1 = new Powerup("1", "a","");
+        Powerup powerup2 = new Powerup("2", "b","");
 
         player.addPowerup(powerup1);
         player.addPowerup(powerup2);

@@ -25,15 +25,14 @@ public class TestGameboard {
     public void testParsing() {
         try {
 
-            //Get Document Builder
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
-
             builder.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException e) throws SAXException {
                     System.out.println("WARNING : " + e.getMessage()); // do nothing
+                    throw e;
                 }
 
                 @Override
@@ -48,11 +47,8 @@ public class TestGameboard {
                     throw e;
                 }
             });
-            //Build Document
             Document document = builder.parse(new File("src/test/Resources/gameboard_test1.xml"));
-            //Normalize the XML Structure; It's just too important !!
             document.normalizeDocument();
-            //Here comes the root node
             Element root = document.getDocumentElement();
             root.normalize();
 

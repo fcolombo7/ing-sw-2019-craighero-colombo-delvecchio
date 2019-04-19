@@ -34,8 +34,8 @@ public class Powerup extends Card {
      * @param id representing the id of the power up card
      * @param name representing the name of the power up
      */
-    public Powerup(String id, String name){
-        super(id, name);
+    public Powerup(String id, String name, String initXML){
+        super(id, name, initXML);
         initialized=false;
     }
 
