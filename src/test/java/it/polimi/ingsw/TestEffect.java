@@ -14,8 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for the class Effect
@@ -47,7 +46,18 @@ public class TestEffect {
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
-            new Effect(root);
+
+            Effect effect=new Effect(root);
+            String msg="Effect {\n" +
+                    "ref_id: 1\n" +
+                    "name: nome\n" +
+                    "cost: none\n" +
+                    "Target: {type: PLAYER, minNumber: 1, maxNumber: 1, minPlayerIn: 0, maxPlayerIn: 0, prevConstraints: { } }\n" +
+                    "requirements: {VISIBLE: TRUE}\n" +
+                    "actions: {DAMAGE: 2, MARK: 1}\n" +
+                    "extra: {extraName: value}\n" +
+                    "}";
+            assertEquals(msg,effect.toString());
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             fail("Unexpected ParserConfigurationException has been thrown");

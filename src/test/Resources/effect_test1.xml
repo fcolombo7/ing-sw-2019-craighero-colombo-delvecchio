@@ -1,5 +1,5 @@
 <effect ref_id="1" name="nome">
-    <cost/>
+    <cost>RBY</cost>
     <target>
         <type>PLAYER</type>
         <minNumber>1</minNumber>

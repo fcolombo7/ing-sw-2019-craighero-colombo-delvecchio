@@ -18,7 +18,7 @@ public class GameBoard {
     /**
      * This constructor instantiates a GameBoard object
      * @param map representing the Node read from the XML file
-     * @param skullNumber representing the number of the skull placed on the Board
+     * @param skullNumber representing the number of the skull placed on the board
      */
     public GameBoard(Node map, int skullNumber){
         NamedNodeMap attributes=map.getAttributes();
@@ -113,15 +113,6 @@ public class GameBoard {
         throw  new IllegalArgumentException("RoomColor error");
     }
 
-    private void initMatrixes(){
-        for(int i=0;i<rowLength;i++){
-            for (int j=0;j<colLength;j++){
-                if(map[i][j]!=null)
-                    composeMatrix(i,j);
-            }
-        }
-    }
-
     private void composeMatrix(int x,int y){
         boolean[][] mat=new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++)
@@ -166,12 +157,12 @@ public class GameBoard {
         return skullNumber;
     }
 
-    public List<Boolean> getOverkillTrack() {
-        return new ArrayList<>(overkillTrack);
-    }
-
     public List<Player> getKillshotTrack() {
         return new ArrayList<>(killshotTrack);
+    }
+
+    public List<Boolean> getOverkillTrack() {
+        return new ArrayList<>(overkillTrack);
     }
 
     public MatrixHelper getVisibilityMatrix(int x,int y){
@@ -179,11 +170,20 @@ public class GameBoard {
         return map[x][y].getVisibilityMatrix();
     }
 
-    //public MatrixHelper getDistanceMatrix(int x,int y,int distance){}
+    private void initMatrixes(){
+        for(int i=0;i<rowLength;i++){
+            for (int j=0;j<colLength;j++){
+                if(map[i][j]!=null)
+                    composeMatrix(i,j);
+            }
+        }
+    }
 
     public void updateTrack(Player player, boolean hasOverkilled){
         killshotTrack.add(player);
         overkillTrack.add(hasOverkilled);
     }
 
+
+    //public MatrixHelper getDistanceMatrix(int x,int y,int distance){}
 }

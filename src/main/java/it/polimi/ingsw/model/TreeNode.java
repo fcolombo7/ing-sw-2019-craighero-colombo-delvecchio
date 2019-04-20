@@ -56,7 +56,6 @@ public class TreeNode<E> {
      */
     public void addChild(E value) {
         TreeNode<E> child = new TreeNode<>(value);
-        //child.setParent(this);
         this.children.add(child);
     }
 
@@ -65,7 +64,6 @@ public class TreeNode<E> {
      * @param child representing the child to add
      */
     public void addChild(TreeNode<E> child) {
-        //child.setParent(this);
         this.children.add(child);
     }
 

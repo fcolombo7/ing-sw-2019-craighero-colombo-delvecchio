@@ -43,7 +43,7 @@ public class TestTarget {
     @Test
     public void CorrectConstructor(){
         try{
-            String msg="Target:\n{type: PLAYER, minNumber: 0, maxNumber: 0, minPlayerIn: 0, maxPlayerIn: 0, prevConstraints: { } }";
+            String msg="Target: {type: PLAYER, minNumber: 0, maxNumber: 0, minPlayerIn: 0, maxPlayerIn: 0, prevConstraints: { } }";
             assertEquals(msg,new Target(TargetType.PLAYER, 0,0,0,0,new ArrayList<>()).toString());
         }catch(Exception ex){
             ex.printStackTrace();

@@ -111,7 +111,7 @@ public class Target {
     @Override
     public String toString() {
         StringBuilder msg=new StringBuilder();
-        msg.append("Target:\n{type: ").append(type.name()).append(", minNumber: ").append(minNumber).append(", maxNumber: ").append(maxNumber)
+        msg.append("Target: {type: ").append(type.name()).append(", minNumber: ").append(minNumber).append(", maxNumber: ").append(maxNumber)
                 .append(", minPlayerIn: ").append(minPlayerIn).append(", maxPlayerIn: ").append(maxPlayerIn).append(", prevConstraints: { ");
         for(int i=0;i<prevConstraints.size();i++)
             msg.append(prevConstraints.get(i)).append(" ");

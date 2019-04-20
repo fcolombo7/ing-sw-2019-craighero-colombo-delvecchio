@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.sun.media.sound.EmergencySoundbank;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -94,6 +95,10 @@ public class Effect {
         }
     }
 
+    /**
+     * This method instantiates the requirements of the Effect
+     * @param item representing the XML node to read
+     */
     private void setRequirements(Node item) {
         requirements=new ArrayList<>();
         NodeList requirementsNodeList=item.getChildNodes();
@@ -108,6 +113,10 @@ public class Effect {
         }
     }
 
+    /**
+     * This method instantiates the cost of the Effect
+     * @param item representing the XML node to read
+     */
     private void setCost(Node item) {
         NodeList ammoNodeList=item.getChildNodes();
         Node ammoNode=null;
@@ -133,6 +142,10 @@ public class Effect {
         }
     }
 
+    /**
+     * This method instantiates the extra of the Effect
+     * @param item representing the XML node to read
+     */
     private void setExtras(Node item) {
         extra=new ArrayList<>();
         NodeList extraNodeList=item.getChildNodes();
@@ -147,6 +160,10 @@ public class Effect {
         }
     }
 
+    /**
+     * This method instantiates the actions of the Effect
+     * @param item representing the XML node to read
+     */
     private void setActions(Node item) {
         actions=new ArrayList<>();
         NodeList actionsNodeList=item.getChildNodes();
@@ -176,6 +193,10 @@ public class Effect {
         }
     }
 
+    /**
+     * This method instantiates the target of the Effect
+     * @param node representing the XML node to read
+     */
     private void setTarget(Node node) {
         NodeList targetNodeList=node.getChildNodes();
         TargetType type=null;
@@ -201,6 +222,10 @@ public class Effect {
         target=new Target(type,minNumber,maxNumber,minPlayerIn,maxPlayerIn,prevConstraints);
     }
 
+    /**
+     * This method instantiates the constraints of the Effect target
+     * @param childNodes representing the XML nodeList to read
+     */
     private List<String> getTargetConstraints(NodeList childNodes) {
         List<String> constraints=new ArrayList<>();
         for(int j=0;j<childNodes.getLength();j++){
@@ -209,7 +234,10 @@ public class Effect {
         }
         return constraints;
     }
-
+    /**
+     * This method return the TargetType of the target associated to the Target Name (string)
+     * @param nodeValue representing the name of the TargetType you want
+     */
     private TargetType getTargetType(String nodeValue) {
         if(nodeValue.equalsIgnoreCase("PLAYER")) return TargetType.PLAYER;
         if(nodeValue.equalsIgnoreCase("ROOM")) return TargetType.ROOM;
@@ -273,5 +301,58 @@ public class Effect {
     public static void initRequirements(){
         //TODO
         requirementsMap=new HashMap<>();
+    }
+
+    /**
+     * This method return the string representation of the Effect object
+     * @return String representing the Effect object
+     */
+    @Override
+    public String toString() {
+        StringBuilder msg= new StringBuilder();
+        msg.append("Effect {\n");
+        //id
+        msg.append("ref_id: ").append(refId).append("\n");
+        //name
+        msg.append("name: ").append(name).append("\n");
+        //cost
+        msg.append("cost: ");
+        if(!cost.isEmpty()) {
+            for(int i=0;i<cost.size()-1;i++)
+                msg.append(cost.get(i).name()).append(", ");
+            msg.append(cost.get(cost.size()-1).name()).append("\n");
+        }
+        else msg.append("none").append("\n");
+        //target
+        msg.append(target.toString()).append("\n");
+        //Requirements
+        msg.append("requirements: ");
+        if(!requirements.isEmpty()) {
+            msg.append("{");
+            for(int i=0;i<requirements.size()-1;i++)
+                msg.append(requirements.get(i)[0]).append(": ").append(requirements.get(i)[1]).append(", ");
+            msg.append(requirements.get(requirements.size()-1)[0]).append(": ").append(requirements.get(requirements.size()-1)[1]).append("}\n");
+        }
+        else msg.append("none").append("\n");
+        //actions
+        msg.append("actions: ");
+        if(!actions.isEmpty()) {
+            msg.append("{");
+            for(int i=0;i<actions.size()-1;i++)
+                msg.append(actions.get(i).getActionType().name()).append(": ").append(actions.get(i).getValue()).append(", ");
+            msg.append(actions.get(actions.size()-1).getActionType().name()).append(": ").append(actions.get(actions.size()-1).getValue()).append("}\n");
+        }
+        else msg.append("none").append("\n");
+        //extras
+        msg.append("extra: ");
+        if(!extra.isEmpty()) {
+            msg.append("{");
+            for(int i=0;i<extra.size()-1;i++)
+                msg.append(extra.get(i)[0]).append(": ").append(extra.get(i)[1]).append(", ");
+            msg.append(extra.get(extra.size()-1)[0]).append(": ").append(extra.get(extra.size()-1)[1]).append("}\n");
+        }
+        else msg.append("none").append("\n");
+        msg.append("}");
+        return msg.toString();
     }
 }
