@@ -21,12 +21,12 @@ public abstract class Square {
     /**
      * This attribute represents the x index of this in the GameBoard map
      */
-    int xIndex;
+    private int xIndex;
 
     /**
      * This attribute represents the x index of this in the GameBoard map
      */
-    int yIndex;
+    private int yIndex;
 
     /**
      * This constructor instantiates a Square
@@ -102,9 +102,9 @@ public abstract class Square {
         msg.append("{\n");
         msg.append("Room color: ").append(roomColor.name()).append(",\n");
         msg.append("Doors: ").append("{NORTH: ").append(doors[Direction.NORTH.ordinal()]).append(",")
-        .append(" EAST: ").append(doors[Direction.EAST.ordinal()]).append(",")
-        .append(" SOUTH: ").append(doors[Direction.SOUTH.ordinal()]).append(",")
-        .append(" WEST: ").append(doors[Direction.WEST.ordinal()]).append("},\n");
+                .append(" EAST: ").append(doors[Direction.EAST.ordinal()]).append(",")
+                .append(" SOUTH: ").append(doors[Direction.SOUTH.ordinal()]).append(",")
+                .append(" WEST: ").append(doors[Direction.WEST.ordinal()]).append("},\n");
         msg.append("Visibility Matrix: ");
         if(visibilityMatrix==null) msg.append("null\n");
         else msg.append(visibilityMatrix.toString()).append("\n");

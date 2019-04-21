@@ -1,4 +1,4 @@
-package it.polimi.ingsw.exceptions.playerException;
+package it.polimi.ingsw.exceptions;
 
 public class PlayerWeaponsException extends RuntimeException {
 

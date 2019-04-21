@@ -2,16 +2,40 @@ package it.polimi.ingsw.model;
 
 import org.w3c.dom.*;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+/**
+ * This class represents the game board
+ */
 public class GameBoard {
 
+    /**
+     * This attribute represents the map of the game board
+     */
     private Square[][] map;
+
+    /**
+     * This attribute represents the number of row of square contained in the map
+     */
     private int rowLength;
+
+    /**
+     * This attribute represents the number of column of square contained in the map
+     */
     private int colLength;
+
+    /**
+     * This attribute represents the player killed contained in the killshot track on the board
+     */
     private ArrayList<Player> killshotTrack;
+
+    /**
+     * This attribute represents if the players on the killshot track have overkilled
+     */
     private ArrayList<Boolean> overkillTrack;
     private int skullNumber;
 
@@ -60,6 +84,13 @@ public class GameBoard {
         return rowCount+1;
     }
 
+    /**
+     * This method construct the square at rowCount row in colCount position
+     * @param square square to be constructed
+     * @param colCount index of the column where the square is added
+     * @param rowCount index of the row where the square is added
+     * @return integer representing the next column of the map
+     */
     private int composeColumn(Node square, int colCount, int rowCount) {
         if(colCount>=colLength) throw new IllegalArgumentException("ColLength does not correspond to columns number.");
         boolean []doors=null;
@@ -153,18 +184,36 @@ public class GameBoard {
         }
     }
 
+    /**
+     * This method returns the number of skulls still on the board
+     * @return integer representing the skull number still on the board
+     */
     public int getSkullNumber() {
         return skullNumber;
     }
 
+    /**
+     * This method returns the players having killed at least once
+     * @return List of Player representing the killshot track on the board
+     */
     public List<Player> getKillshotTrack() {
         return new ArrayList<>(killshotTrack);
     }
 
+    /**
+     * This method returns the positions on the killshot track where an overkill death has happened
+     * @return List of Boolean representing which kills are overkills
+     */
     public List<Boolean> getOverkillTrack() {
         return new ArrayList<>(overkillTrack);
     }
 
+    /**
+     * This method returns the visibility matrix based on a position
+     * @param x represents the x coordinate of the position
+     * @param y represents the y coordinate of the position
+     * @return MatrixHelper representing the visibility matrix of the square chosen
+     */
     public MatrixHelper getVisibilityMatrix(int x,int y){
         if(map[x][y]==null) return null;
         return map[x][y].getVisibilityMatrix();
@@ -179,11 +228,80 @@ public class GameBoard {
         }
     }
 
+    /**
+     * This method update the killshot track when someone is killed
+     * @param player represents the killer player
+     * @param hasOverkilled represents if the player has overkilled
+     */
     public void updateTrack(Player player, boolean hasOverkilled){
         killshotTrack.add(player);
         overkillTrack.add(hasOverkilled);
     }
 
+    /**
+     * This method returns a matrix that represent where a player could move if it has a given number of movement
+     * @param x represents the x coordinate of the square the player is at
+     * @param y represents the y coordinate of the square the player is at
+     * @param distance represents the maximum number of movement the player can do
+     * @return MatrixHelper representing the distance matrix as described above
+     */
+    public MatrixHelper getDistanceMatrix(int x,int y,int distance){
+        Queue<Square> nodeQueue = new ArrayDeque<>();
+        nodeQueue.add(map[x][y]);
 
-    //public MatrixHelper getDistanceMatrix(int x,int y,int distance){}
+        boolean[][] matrix = new boolean[rowLength][colLength];
+        int currentDepth = 0;
+        int elementsToDepthIncrease = 1;
+        int nextElementsToDepthIncrease = 0;
+        List<Square> checkAroundList;
+
+        while (!nodeQueue.isEmpty()) {
+            Square current = nodeQueue.poll();
+            matrix[current.getBoardIndexes()[0]][current.getBoardIndexes()[1]]=true;
+            checkAroundList = checkAround(current, matrix);
+            nextElementsToDepthIncrease += checkAroundList.size();
+            if (--elementsToDepthIncrease == 0) {
+                if (++currentDepth > distance) return new MatrixHelper(matrix);
+                elementsToDepthIncrease = nextElementsToDepthIncrease;
+                nextElementsToDepthIncrease = 0;
+            }
+            nodeQueue.addAll(checkAroundList);
+        }
+        return new MatrixHelper(matrix);
+    }
+
+    private List<Square> checkAround(Square co, boolean[][] matrix){
+        List<Square> retList= new ArrayList<>();
+        for(Direction d: Direction.values()){
+            int x = co.getBoardIndexes()[0];
+            int y = co.getBoardIndexes()[1];
+            switch(d){
+                case NORTH:
+                    if(x>0)
+                        x--;
+                    break;
+                case EAST:
+                    if(y<colLength-1)
+                        y++;
+                    break;
+                case SOUTH:
+                    if(x<rowLength-1)
+                        x++;
+                    break;
+                case WEST:
+                    if(y>0)
+                        y--;
+                    break;
+            }
+            if(map[x][y]!=null && !matrix[x][y] && checkAdjacentAccessibility(co, map[x][y], d)){
+                    retList.add(map[x][y]);
+            }
+        }
+        return retList;
+    }
+
+
+    private boolean checkAdjacentAccessibility(Square curr, Square access, Direction d){
+        return access != null && (curr.getRoomColor() == access.getRoomColor() || curr.hasDoor(d));
+    }
 }
