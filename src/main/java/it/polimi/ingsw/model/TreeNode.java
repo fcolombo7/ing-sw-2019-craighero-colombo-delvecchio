@@ -105,4 +105,19 @@ public class TreeNode<E> {
     public void removeParent() {
         this.parent = null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder msg=new StringBuilder();
+        msg.append("TreeNode<").append(value.getClass().getSimpleName()).append(">: {value: ").append(value).append(", children {");
+        if(children.isEmpty())
+            msg.append("none");
+        else{
+            for(int i=0;i<children.size()-1;i++)
+                msg.append(children.get(i).toString()).append(", ");
+            msg.append(children.get(children.size()-1).toString());
+        }
+        msg.append("}}");
+        return msg.toString();
+    }
 }

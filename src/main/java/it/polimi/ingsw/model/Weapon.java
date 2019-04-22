@@ -284,4 +284,40 @@ public class Weapon extends Card{
             throw new WeaponLoadException("The weapon is already unloaded.");
         this.loaded=false;
     }
+
+    /**
+     * This method return the String representation of the Weapon object instantiated
+     * @return String representing the Weapon object instantiated
+     */
+    @Override
+    public String toString() {
+        StringBuilder msg= new StringBuilder();
+        msg.append("Weapon {\n");
+        //card parameters
+        msg.append(super.toString()).append("\n");
+        //initialized
+        msg.append("initialized: ").append(initialized).append("\n");
+        if(initialized){
+            //ammo
+            msg.append("ammo: ");
+            for(int i=0;i<ammo.size()-1;i++){
+                msg.append(ammo.get(i).name()).append(", ");
+            }
+            msg.append(ammo.get(ammo.size()-1).name()).append("\n");
+            //loaded
+            msg.append("loaded: ").append(loaded).append("\n");
+            //effects
+            msg.append("Effects {");
+            for(int i=0;i<effects.size()-1;i++)
+                msg.append(effects.get(i).getRefId()).append(": ").append(effects.get(i).getName()).append(", ");
+            msg.append(effects.get(effects.size()-1).getRefId()).append(": ").append(effects.get(effects.size()-1).getName()).append("}\n");
+            //order
+            msg.append("effectOrder: roots {\n");
+            for (int i=0;i<effectOrder.size();i++)
+                msg.append(i).append(": ").append(effectOrder.get(i).toString()).append("\n");
+            msg.append("}\n");
+        }
+        msg.append("}");
+        return msg.toString();
+    }
 }

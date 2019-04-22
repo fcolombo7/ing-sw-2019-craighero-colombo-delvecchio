@@ -112,10 +112,14 @@ public class Target {
     public String toString() {
         StringBuilder msg=new StringBuilder();
         msg.append("Target: {type: ").append(type.name()).append(", minNumber: ").append(minNumber).append(", maxNumber: ").append(maxNumber)
-                .append(", minPlayerIn: ").append(minPlayerIn).append(", maxPlayerIn: ").append(maxPlayerIn).append(", prevConstraints: { ");
-        for(int i=0;i<prevConstraints.size();i++)
-            msg.append(prevConstraints.get(i)).append(" ");
-        msg.append("} }");
+                .append(", minPlayerIn: ").append(minPlayerIn).append(", maxPlayerIn: ").append(maxPlayerIn).append(", prevConstraints: {");
+        if(!prevConstraints.isEmpty())
+        {
+            for(int i=0;i<prevConstraints.size()-1;i++)
+                msg.append(prevConstraints.get(i)).append(", ");
+            msg.append(prevConstraints.size()-1).append("}");
+        }else msg.append("none");
+        msg.append("}");
         return msg.toString();
     }
 }

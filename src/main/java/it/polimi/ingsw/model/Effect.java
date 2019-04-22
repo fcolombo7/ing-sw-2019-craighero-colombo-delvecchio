@@ -54,27 +54,6 @@ public class Effect {
 
     /**
      * This constructor instantiates an Effect
-     * @param name String representing the name of the effect to be instantiated
-     * @param cost List<Color> representing the cost of the effect to be instantiated
-     * @param requirements NodeList representing the preconditions of the effect to be instantiated
-     * @param actions List<Action> representing all the actions of the effect to be instantiated
-     * @param target Target of the effect to be instantiated
-     */
-    public Effect(int refId, String name, List<Color> cost, List<String[]> requirements, List<Action> actions, List<String[]> extra, Target target) {
-        this.refId = refId;
-        this.name = name;
-        this.cost = new ArrayList<>(cost);
-        this.requirements = new ArrayList<>(requirements);
-        this.actions = new ArrayList<>(actions);
-        this.target = target;
-        if(extra!=null)
-            this.extra=new ArrayList<>(extra);
-        else
-            this.extra=new ArrayList<>();
-    }
-
-    /**
-     * This constructor instantiates an Effect
      * @param node representing the xml structure used to declare the Effect parameters
      */
     public Effect(Node node){

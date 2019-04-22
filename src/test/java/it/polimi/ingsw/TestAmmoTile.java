@@ -160,4 +160,31 @@ public class TestAmmoTile {
             fail("An unexpected a AmmoTileNotValidException has been thrown");
         }
     }
+
+    /**
+     * Test of the method hasPowerup()
+     */
+    @Test
+    public void HasPowerupTest(){
+        try {
+            AmmoTile ammo=new AmmoTile(Color.RED,Color.RED,null,true);
+            assertTrue(ammo.hasPowerup());
+        } catch (AmmoTileNotValidException e) {
+            fail("An unexpected AmmoTileNotValidException has been thrown");
+        }
+    }
+
+    /**
+     * Test of the method getId()
+     */
+    @Test
+    public void GetIdTest(){
+        try {
+            AmmoTile ammo=new AmmoTile(Color.RED,Color.RED,null,true);
+            ammo.setId("id");
+            assertEquals(ammo.getId(),"id");
+        } catch (AmmoTileNotValidException e) {
+            fail("An unexpected AmmoTileNotValidException has been thrown");
+        }
+    }
 }

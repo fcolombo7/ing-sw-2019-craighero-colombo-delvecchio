@@ -67,6 +67,11 @@ public class AmmoTile {
     }
 
     /**
+     * This method set the AmmoTile id
+     * @param id representing the Id of the AmmoTile
+     */
+    public void setId(String id){ this.id=id;}
+    /**
      * This method returns an ammo of the tile
      * @param index int representing the position of the ammo in the rep
      * @return Color representing the ammo at index 'index'

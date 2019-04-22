@@ -52,7 +52,7 @@ public class TestEffect {
                     "ref_id: 1\n" +
                     "name: nome\n" +
                     "cost: none\n" +
-                    "Target: {type: PLAYER, minNumber: 1, maxNumber: 1, minPlayerIn: 0, maxPlayerIn: 0, prevConstraints: { } }\n" +
+                    "Target: {type: PLAYER, minNumber: 1, maxNumber: 1, minPlayerIn: 0, maxPlayerIn: 0, prevConstraints: {none}\n" +
                     "requirements: {VISIBLE: TRUE}\n" +
                     "actions: {DAMAGE: 2, MARK: 1}\n" +
                     "extra: {extraName: value}\n" +

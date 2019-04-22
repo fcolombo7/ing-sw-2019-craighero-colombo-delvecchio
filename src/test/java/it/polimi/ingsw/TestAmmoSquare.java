@@ -102,4 +102,36 @@ public class TestAmmoSquare {
             fail("An unexpected AmmoTileNotValidException has been thrown");
         }
     }
+
+    /**
+     * Test of the method CanGrab()
+     */
+    @Test
+    public void CanGrabTest(){
+        boolean []doors=new boolean[]{true,false,false,true};
+        try {
+            AmmoTile ammo=new AmmoTile(Color.RED,Color.RED,null,true);
+            AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,doors,new int[]{2,3});
+            ammoSquare.setAmmoTile(ammo);
+            assertTrue(ammoSquare.canGrab());
+        } catch (AmmoTileNotValidException e) {
+            fail("An unexpected AmmoTileNotValidException has been thrown");
+        }
+    }
+
+    /**
+     * Test of the method CanGrab()
+     */
+    @Test
+    public void IsFullTest(){
+        boolean []doors=new boolean[]{true,false,false,true};
+        try {
+            AmmoTile ammo=new AmmoTile(Color.RED,Color.RED,null,true);
+            AmmoSquare ammoSquare=new AmmoSquare(RoomColor.RED,doors,new int[]{2,3});
+            ammoSquare.setAmmoTile(ammo);
+            assertTrue(ammoSquare.isFull());
+        } catch (AmmoTileNotValidException e) {
+            fail("An unexpected AmmoTileNotValidException has been thrown");
+        }
+    }
 }
