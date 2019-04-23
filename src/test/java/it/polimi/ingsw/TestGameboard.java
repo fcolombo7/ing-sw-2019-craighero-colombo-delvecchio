@@ -82,4 +82,6 @@ public class TestGameboard {
     public void getDistanceMatrixThirdTest() throws IOException, SAXException, ParserConfigurationException {
         assertThat(parsingXMLFile().getDistanceMatrix(1, 3, 0).toString(), is((new MatrixHelper(new boolean[][] {{false, false, false, false}, {false, false, false, true}, {false, false, false, false}})).toString()));
     }
+
+
 }

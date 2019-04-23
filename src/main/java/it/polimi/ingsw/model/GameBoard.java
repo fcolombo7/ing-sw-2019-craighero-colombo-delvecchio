@@ -86,7 +86,7 @@ public class GameBoard {
 
     /**
      * This method construct the square at rowCount row in colCount position
-     * @param square square to be constructed
+     * @param square represents square to be constructed
      * @param colCount index of the column where the square is added
      * @param rowCount index of the row where the square is added
      * @return integer representing the next column of the map
@@ -119,6 +119,11 @@ public class GameBoard {
         return colCount+1;
     }
 
+    /**
+     * This method returns the array representing the cardinal coordinates of the doors read from the XML
+     * @param nodeList represents the doors of the square
+     * @return an array of boolean representing the cardinal coordinates of the doors
+     */
     private boolean[] getDoors(NodeList nodeList) {
         boolean []door=new boolean[4];
         int count=0;
@@ -134,6 +139,11 @@ public class GameBoard {
         return door;
     }
 
+    /**
+     * This method returns the room color read from the XML file
+     * @param stringColor represents the color read
+     * @return RoomColor parsed from the String parameter
+     */
     private RoomColor getRoomColor(String stringColor) {
         if(stringColor.equalsIgnoreCase("RED")) return RoomColor.RED;
         if(stringColor.equalsIgnoreCase("YELLOW")) return RoomColor.YELLOW;
@@ -141,7 +151,7 @@ public class GameBoard {
         if(stringColor.equalsIgnoreCase("GREEN")) return RoomColor.GREEN;
         if(stringColor.equalsIgnoreCase("WHITE")) return RoomColor.WHITE;
         if(stringColor.equalsIgnoreCase("PURPLE")) return RoomColor.PURPLE;
-        throw  new IllegalArgumentException("RoomColor error");
+        throw new IllegalArgumentException("RoomColor error");
     }
 
     private void composeMatrix(int x,int y){
@@ -240,6 +250,7 @@ public class GameBoard {
 
     /**
      * This method returns a matrix that represent where a player could move if it has a given number of movement
+     * The method implements a sort of breadth first search with maximum depth
      * @param x represents the x coordinate of the square the player is at
      * @param y represents the y coordinate of the square the player is at
      * @param distance represents the maximum number of movement the player can do
@@ -270,6 +281,12 @@ public class GameBoard {
         return new MatrixHelper(matrix);
     }
 
+    /**
+     * This method check which square around the chosen one is accessible
+     * @param co represents the square chosen for the checking
+     * @param matrix represents which squares were already visited
+     * @return List of Square representing which squares is accessible
+     */
     private List<Square> checkAround(Square co, boolean[][] matrix){
         List<Square> retList= new ArrayList<>();
         for(Direction d: Direction.values()){
@@ -300,7 +317,13 @@ public class GameBoard {
         return retList;
     }
 
-
+    /**
+     * This method check if a access square is accessible from curr square with one "step"
+     * @param curr represents the square start
+     * @param access represents the square destination
+     * @param d represents the direction where the access square is, compared to the curr one
+     * @return boolean representing if access is accessibility
+     */
     private boolean checkAdjacentAccessibility(Square curr, Square access, Direction d){
         return access != null && (curr.getRoomColor() == access.getRoomColor() || curr.hasDoor(d));
     }
