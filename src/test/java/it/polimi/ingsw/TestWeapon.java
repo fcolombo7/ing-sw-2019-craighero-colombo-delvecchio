@@ -19,9 +19,8 @@ import static org.junit.Assert.*;
  * Unit test for the class Weapon
  */
 public class TestWeapon {
-//    TODO: tutti i test sono da rivedere a causa delle modifiche alla classe
 
-    @Test
+   @Test
     public void CorrectInitialization(){
         Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
         try {
