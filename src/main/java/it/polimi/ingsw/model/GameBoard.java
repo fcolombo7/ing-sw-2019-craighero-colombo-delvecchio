@@ -16,17 +16,17 @@ public class GameBoard {
     /**
      * This attribute represents the map of the game board
      */
-    private Square[][] map;
+    private static Square[][] map;
 
     /**
      * This attribute represents the number of row of square contained in the map
      */
-    private int rowLength;
+    private static int rowLength;
 
     /**
      * This attribute represents the number of column of square contained in the map
      */
-    private int colLength;
+    private static int colLength;
 
     /**
      * This attribute represents the player killed contained in the killshot track on the board
@@ -37,6 +37,7 @@ public class GameBoard {
      * This attribute represents if the players on the killshot track have overkilled
      */
     private ArrayList<Boolean> overkillTrack;
+
     private int skullNumber;
 
     /**
@@ -224,9 +225,18 @@ public class GameBoard {
      * @param y represents the y coordinate of the position
      * @return MatrixHelper representing the visibility matrix of the square chosen
      */
-    public MatrixHelper getVisibilityMatrix(int x,int y){
-        if(map[x][y]==null) return null;
+    public static MatrixHelper getVisibilityMatrix(int x,int y){
+        if(!hasSquare(x,y)) throw new IllegalArgumentException("Can't get the visibility of the selected square (null).");
         return map[x][y].getVisibilityMatrix();
+    }
+
+    public static boolean hasSquare(int x,int y){
+        return map[x][y]!=null;
+    }
+
+    public static Square getSquare(int x,int y){
+        if(!hasSquare(x,y)) throw new NullPointerException("Gameboard map has not square at "+x+" - "+y+".");
+        return map[x][y];
     }
 
     private void initMatrixes(){
@@ -256,7 +266,7 @@ public class GameBoard {
      * @param distance represents the maximum number of movement the player can do
      * @return MatrixHelper representing the distance matrix as described above
      */
-    public MatrixHelper getDistanceMatrix(int x,int y,int distance){
+    public static MatrixHelper getDistanceMatrix(int x,int y,int distance){
         Queue<Square> nodeQueue = new ArrayDeque<>();
         nodeQueue.add(map[x][y]);
 
@@ -287,7 +297,7 @@ public class GameBoard {
      * @param matrix represents which squares were already visited
      * @return List of Square representing which squares is accessible
      */
-    private List<Square> checkAround(Square co, boolean[][] matrix){
+    private static List<Square> checkAround(Square co, boolean[][] matrix){
         List<Square> retList= new ArrayList<>();
         for(Direction d: Direction.values()){
             int x = co.getBoardIndexes()[0];
@@ -324,7 +334,15 @@ public class GameBoard {
      * @param d represents the direction where the access square is, compared to the curr one
      * @return boolean representing if access is accessibility
      */
-    private boolean checkAdjacentAccessibility(Square curr, Square access, Direction d){
+    private static boolean checkAdjacentAccessibility(Square curr, Square access, Direction d){
         return access != null && (curr.getRoomColor() == access.getRoomColor() || curr.hasDoor(d));
+    }
+
+    public static MatrixHelper getGameboardMatrix(){
+        boolean[][] mat=new boolean[rowLength][colLength];
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++) mat[i][j]=map[i][j]!=null;
+        }
+        return new MatrixHelper(mat);
     }
 }

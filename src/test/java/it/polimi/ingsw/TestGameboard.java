@@ -54,9 +54,7 @@ public class TestGameboard {
     @Test
     public void testParsing() {
         try {
-
             parsingXMLFile();
-
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             fail("Unexpected ParserConfigurationException has been thrown");

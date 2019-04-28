@@ -108,7 +108,7 @@ public class MatrixHelper {
      * This method calculate the Bitwise-Not of the current matrix
      * @return a MatrixHelper object representing the Bitwise-Not of the current matrix
      */
-    public MatrixHelper bitwiseNot(){
+    public MatrixHelper bitWiseNot(){
         boolean[][] ret= new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
             for(int j=0;j<colLength;j++)

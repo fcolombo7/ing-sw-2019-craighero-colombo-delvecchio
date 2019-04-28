@@ -1,5 +1,5 @@
 package it.polimi.ingsw.model;
 
 public interface Requirement {
-    //TODO
+    MatrixHelper checkRequirement(String value, int[] curPos, int[] lastPos, MatrixHelper matrix);
 }

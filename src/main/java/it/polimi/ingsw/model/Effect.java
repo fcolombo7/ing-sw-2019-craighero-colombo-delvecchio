@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model;
 
-//import com.sun.media.sound.EmergencySoundbank;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * This class represents a single effect of a card (powerup or weapon)
@@ -275,11 +275,130 @@ public class Effect {
     }
 
     /**
-     * TODO
+     * This method initialized the HashMap used to check the Effect Requirements
      */
     public static void initRequirements(){
-        //TODO
+        /*
+        TODO
+        SONO TUTTI DA VERIFICARE
+        - VISIBLE       x
+        - MIN_DISTANCE  x
+        - MAX_DISTANCE  x
+        - PREV_VISIBLE  x
+        - PREV_POSITION x
+        - ON_DIRECTION  x
+        - SHIFTABLE     x
+        - NOT_IN_ROOM   x
+         */
         requirementsMap=new HashMap<>();
+
+        /*
+        This requirement check update the matrix with the only squares visible/not visible from the current position (not if value is false)
+         */
+        requirementsMap.put("VISIBLE",(value, curPos, lastPos, matrix) -> {
+            if(Boolean.parseBoolean(value)) return matrix.bitWiseAnd(GameBoard.getVisibilityMatrix(curPos[0],curPos[1]));
+            else return matrix.bitWiseAnd(GameBoard.getGameboardMatrix()
+                    .bitWiseAnd(GameBoard.getVisibilityMatrix(curPos[0],curPos[1]).bitWiseNot()));
+        });
+
+        /*
+        This requirement check update the matrix with the only squares which distance from the current position is at least 'value'
+         */
+        requirementsMap.put("MIN_DISTANCE",(value, curPos, lastPos, matrix) -> {
+            int val=Integer.parseInt(value);
+            return matrix.bitWiseAnd(GameBoard.getDistanceMatrix(curPos[0],curPos[1],val)
+                    .bitWiseNot()
+                    .bitWiseAnd(GameBoard.getGameboardMatrix()));
+        });
+
+        /*
+        This requirement check update the matrix with the only squares which distance from the current position is at last 'value'
+         */
+        requirementsMap.put("MAX_DISTANCE",(value, curPos, lastPos, matrix) -> {
+            int val=Integer.parseInt(value);
+            return matrix.bitWiseAnd(GameBoard.getDistanceMatrix(curPos[0],curPos[1],val));
+        });
+
+        /*
+        This requirement check update the matrix with the only squares visible (not) from the last position (not if value is false)
+         */
+        requirementsMap.put("PREV_VISIBLE",(value, curPos, lastPos, matrix) -> {
+            if(Boolean.parseBoolean(value)) return matrix.bitWiseAnd(GameBoard.getVisibilityMatrix(lastPos[0],lastPos[1]));
+            else return matrix.bitWiseAnd(GameBoard.getGameboardMatrix()
+                    .bitWiseAnd(GameBoard.getVisibilityMatrix(lastPos[0],lastPos[1]).bitWiseNot()));
+        });
+
+        /*
+        This requirement check update the matrix with the only square which correspond to the last position
+         */
+        requirementsMap.put("PREV_POSITION",(value, curPos, lastPos, matrix) -> {
+            boolean val=Boolean.parseBoolean(value);
+            int colLength=GameBoard.getGameboardMatrix().getColLength();
+            int rowLength=GameBoard.getGameboardMatrix().getRowLength();
+            boolean [][]mat=new boolean[rowLength][colLength];
+            for(int i=0;i<rowLength;i++){
+                for(int j=0;j<colLength;j++)
+                    mat[i][i]=val==(i==lastPos[0]&&j==lastPos[1]);
+            }
+            return matrix.bitWiseAnd(new MatrixHelper(mat));
+        });
+
+        /*
+        This requirement check update the matrix with the only squares which are (not) NORTH|EAST|SOUTH|WEST of the current position. (not if value is false)
+         */
+        requirementsMap.put("ON_DIRECTION",(value, curPos, lastPos, matrix) -> {
+            boolean val=Boolean.parseBoolean(value);
+            int colLength=GameBoard.getGameboardMatrix().getColLength();
+            int rowLength=GameBoard.getGameboardMatrix().getRowLength();
+            boolean [][]mat=new boolean[rowLength][colLength];
+            for(int i=0;i<rowLength;i++){
+                for(int j=0;j<colLength;j++)
+                    mat[i][j]=(i==curPos[0]||j==curPos[1]);
+            }
+            MatrixHelper directionMatrix=new MatrixHelper(mat);
+            if(!val) directionMatrix=directionMatrix.bitWiseNot();
+            return matrix.bitWiseAnd(GameBoard.getGameboardMatrix()
+                    .bitWiseAnd(directionMatrix));
+        });
+
+        /*
+        This requirement check update the matrix with the only squares which are not (are) in the same room of the current position. (are if value is false)
+         */
+        requirementsMap.put("NOT_IN_ROOM",(value, curPos, lastPos, matrix) -> {
+            boolean val=Boolean.parseBoolean(value);
+            int colLength=GameBoard.getGameboardMatrix().getColLength();
+            int rowLength=GameBoard.getGameboardMatrix().getRowLength();
+            boolean [][]mat=new boolean[rowLength][colLength];
+            RoomColor roomColor=GameBoard.getSquare(curPos[0],curPos[1]).getRoomColor();
+
+            for(int i=0;i<rowLength;i++){
+                for(int j=0;j<colLength;j++)
+                    mat[i][j]=GameBoard.hasSquare(i,j)&&!GameBoard.getSquare(i,j).getRoomColor().equals(roomColor);
+            }
+            MatrixHelper notInRommMatrix=new MatrixHelper(mat);
+            if(val) return matrix.bitWiseAnd(notInRommMatrix);
+            else return matrix.bitWiseAnd(GameBoard.getGameboardMatrix()
+                    .bitWiseAnd(notInRommMatrix.bitWiseNot()));
+        });
+
+        /*
+        This requirement check update the matrix adding all the squares which are at distance 'value' from the current matrix.
+         */
+        requirementsMap.put("SHIFTABLE",(value, curPos, lastPos, matrix) -> {
+            int val=Integer.parseInt(value);
+            int colLength=GameBoard.getGameboardMatrix().getColLength();
+            int rowLength=GameBoard.getGameboardMatrix().getRowLength();
+            boolean[][] curMat=matrix.toBooleanMatrix();
+            MatrixHelper retMatrix=new MatrixHelper(curMat);
+            for(int i=0;i<rowLength;i++){
+                for(int j=0;j<colLength;j++) {
+                    if (curMat[i][j])
+                        retMatrix=retMatrix.bitWiseOr(GameBoard.getDistanceMatrix(i, j, val));
+                }
+            }
+            return retMatrix;
+        });
+
     }
 
     /**
