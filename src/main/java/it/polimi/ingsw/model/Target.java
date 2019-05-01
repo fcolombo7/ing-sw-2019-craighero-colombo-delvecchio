@@ -1,12 +1,31 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 
 /**
 * This class represent the target of the effect
  */
 public class Target {
+
+    /**
+     *
+     */
+    private static HashMap<String,Constraint> constraintHashMap=initConstraints();
+
+    private static HashMap<String, Constraint> initConstraints() {
+        HashMap<String,Constraint> constraintHashMap=new HashMap<>();
+        constraintHashMap.put("DIFFERENT",(availablePlayer, shotPlayers) -> !shotPlayers.contains(availablePlayer));
+        constraintHashMap.put("SAME",(availablePlayer, shotPlayers) -> !shotPlayers.isEmpty()&&shotPlayers.peek()==availablePlayer);
+        return constraintHashMap;
+    }
+
+    public static boolean checkConstraint(String name, Player availablePlayer, Deque<Player> shotPlayers){
+        return constraintHashMap.get(name).checkConstraint(availablePlayer,shotPlayers);
+    }
+
     /**
      * This attribute contains the target type of the effect
      */

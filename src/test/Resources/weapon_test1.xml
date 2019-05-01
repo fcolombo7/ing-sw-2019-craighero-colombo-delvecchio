@@ -11,7 +11,7 @@
                 <prevConstraints/>
             </target>
             <requirements>
-                <requirement name="VISIBILE">TRUE</requirement>
+                <requirement name="VISIBLE">TRUE</requirement>
             </requirements>
             <actions>
                 <action type="DAMAGE">
@@ -31,11 +31,11 @@
                 <minNumber>1</minNumber>
                 <maxNumber>1</maxNumber>
                 <prevConstraints>
-                    <constraint>DIFFERENT_S</constraint>
+                    <constraint>DIFFERENT</constraint>
                 </prevConstraints>
             </target>
             <requirements>
-                <requirement name="VISIBILE">TRUE</requirement>
+                <requirement name="VISIBLE">TRUE</requirement>
             </requirements>
             <actions>
                 <action type="MARK">

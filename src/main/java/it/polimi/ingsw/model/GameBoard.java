@@ -52,7 +52,7 @@ public class GameBoard {
         if(rowLength<=0) throw new IllegalArgumentException("Invalid attribute: rowLength must be >0.");
         if(colLength<=0) throw new IllegalArgumentException("Invalid attribute: colLength must be >0.");
 
-        this.map=new Square[rowLength][colLength];
+        GameBoard.map=new Square[rowLength][colLength];
         NodeList nodeList=map.getChildNodes();
         int rowCount=0;
         for(int i=0; i<nodeList.getLength();i++){

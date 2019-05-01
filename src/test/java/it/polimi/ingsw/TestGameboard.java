@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 public class TestGameboard {
 
-    private GameBoard parsingXMLFile() throws ParserConfigurationException, IOException, SAXException {
+    public static GameBoard parsingXMLFile() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         DocumentBuilder builder = factory.newDocumentBuilder();

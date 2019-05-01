@@ -118,6 +118,35 @@ public class MatrixHelper {
     }
 
     /**
+     * This method return a matrix composed by only false values
+     * @param rowLength represent the matrix rows number
+     * @param colLength represent the matrix columns number
+     * @return a MatrixHelper object representing the matrix matrix composed by only false values
+     */
+    public static MatrixHelper allFalseMatrix(int rowLength,int colLength){
+        boolean[][] mat=new boolean[rowLength][colLength];
+        for (boolean[] row:mat) for (int i = 0; i < colLength; i++) row[i] = false;
+        return new MatrixHelper(mat);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null) return false;
+        if(obj==this) return true;
+        if(obj.getClass()!=this.getClass())
+            return false;
+        MatrixHelper mat=(MatrixHelper)obj;
+        if(mat.rowLength!=this.rowLength||mat.colLength!=this.colLength) return false;
+        boolean[][] matrixObj=mat.toBooleanMatrix();
+        for(int i=0;i<rowLength;i++) {
+            for(int j=0;j<colLength;j++){
+                if(this.matrix[i][j]!=matrixObj[i][j]) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * This method return a String representation of the instantiated MatrixHelper
      * @return String representing the instantiated MatrixHelper
      */

@@ -28,6 +28,11 @@ public class Weapon extends Card{
     private List<TreeNode<Integer>> effectOrder;
 
     /**
+     * This attribute contains the current node of the effectOrder tree used during the navigation
+     */
+    private TreeNode<Integer> currentNode=null;
+
+    /**
      * This attribute contains a list of color that determines the ammo of the weapon
      */
     private List<Color> ammo;
@@ -69,7 +74,8 @@ public class Weapon extends Card{
     }
 
     /**
-     * TODO
+     * TODO: insert the validation with DTD
+     * This method initialize the Weapon: it set-up the effects and the order in which they can be used.
      */
     public void init() throws ParserConfigurationException, IOException, SAXException {
         this.effects=new ArrayList<>();
@@ -123,6 +129,10 @@ public class Weapon extends Card{
         loaded=true;
     }
 
+    /**
+     * This method set up the Effect order reading all the possible execution sequences from a NodeList
+     * @param sequences representing all the possible execution sequences of the weapon effects
+     */
     private void setEffectOrder(NodeList sequences) {
         for(int i=0;i<sequences.getLength();i++){
             if(sequences.item(i).getNodeType()!=Node.TEXT_NODE) {
@@ -132,6 +142,10 @@ public class Weapon extends Card{
         }
     }
 
+    /**
+     * This method update the effect order (tree) reading the sequence value
+     * @param idSequence representing the sequence value
+     */
     private void updateTree(List<Integer> idSequence) {
         List<TreeNode<Integer>> orderLevel=effectOrder;
         int count=0;
@@ -158,6 +172,11 @@ public class Weapon extends Card{
         }
     }
 
+    /**
+     * This method return all the id of the effect used in a sequence
+     * @param childNodes representing the sequence of the effect
+     * @return List<Integer> representing all the id in the sequence
+     */
     private List<Integer> getIdSequence(NodeList childNodes) {
         List<Integer> list =new ArrayList<>();
         for(int i=0;i<childNodes.getLength();i++){
@@ -177,6 +196,10 @@ public class Weapon extends Card{
         return list;
     }
 
+    /**
+     * This method add an effect to the Weapon
+     * @param effectNode representing the Effect you want to add to the weapon
+     */
     private void addEffect(Node effectNode) {
         Effect effect=new Effect(effectNode);
         for (Effect e:effects)
@@ -184,6 +207,10 @@ public class Weapon extends Card{
         effects.add(effect);
     }
 
+    /**
+     * This method is used to set up the ammo of the weapon
+     * @param ammoNodeList representing the ammo of the weapon
+     */
     private void setAmmo(NodeList ammoNodeList) {
         Node ammoNode=null;
         int count=0;
@@ -283,6 +310,31 @@ public class Weapon extends Card{
         if(!isLoaded())
             throw new WeaponLoadException("The weapon is already unloaded.");
         this.loaded=false;
+    }
+
+    /**
+     * This method is used to set up the current node used during the navigation of the effectOrder tree
+     */
+    public void initNavigation(){
+        currentNode=null;
+    }
+
+    /**
+     * This method set the effect as current node used during the navigation of the effectOrder tree
+     * @param effect representing the effect to be set as current node used during the navigation of the effectOrder tree
+     */
+    public void setCurrentNode(Effect effect){
+        if(effect==null) throw new NullPointerException("The effect can't be null.");
+        List<TreeNode<Integer>> nodes;
+        if(currentNode==null) nodes=effectOrder;
+        else nodes=currentNode.getChildren();
+        for(TreeNode<Integer> node: nodes){
+            if(node.getValue()==effect.getRefId()) {
+                currentNode = node;
+                return;
+            }
+        }
+        throw new IllegalArgumentException("The effect "+effect.getName()+" cannot be selected.");
     }
 
     /**

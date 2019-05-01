@@ -240,6 +240,18 @@ public class Player {
         }
     }
 
+    public Direction isInDirection(Player player){
+        int []playerPos=player.getPosition().getBoardIndexes();
+        int []thisPos=this.getPosition().getBoardIndexes();
+        if(playerPos[0]!=thisPos[0]&&playerPos[1]!=thisPos[1]) return null;
+        if(player.getPosition()==getPosition()) return null;
+        if(playerPos[0]==thisPos[0]&&playerPos[1]>thisPos[1]) return Direction.EAST;
+        else if(playerPos[0]==thisPos[0]&&playerPos[1]<thisPos[1]) return Direction.WEST;
+        else if(playerPos[1]==thisPos[1]&&playerPos[0]>thisPos[0]) return Direction.SOUTH;
+        else if(playerPos[1]==thisPos[1]&&playerPos[0]<thisPos[0]) return Direction.NORTH;
+        else return null;
+    }
+
     @Override
     public String toString(){
         StringBuilder msg = new StringBuilder();

@@ -3,10 +3,7 @@ package it.polimi.ingsw.model;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.*;
 
 /**
  * This class represents a single effect of a card (powerup or weapon)
@@ -15,7 +12,7 @@ public class Effect {
     /**
      * TODO
      */
-    private static HashMap<String,Requirement> requirementsMap;
+    private static HashMap<String,Requirement> requirementsMap=initRequirements();
 
     /**
      * This This attribute contains the effect reference id
@@ -202,82 +199,9 @@ public class Effect {
     }
 
     /**
-     * This method instantiates the constraints of the Effect target
-     * @param childNodes representing the XML nodeList to read
-     */
-    private List<String> getTargetConstraints(NodeList childNodes) {
-        List<String> constraints=new ArrayList<>();
-        for(int j=0;j<childNodes.getLength();j++){
-            if(childNodes.item(j).getNodeType()!=Node.TEXT_NODE)
-                constraints.add(childNodes.item(j).getFirstChild().getNodeValue());
-        }
-        return constraints;
-    }
-    /**
-     * This method return the TargetType of the target associated to the Target Name (string)
-     * @param nodeValue representing the name of the TargetType you want
-     */
-    private TargetType getTargetType(String nodeValue) {
-        if(nodeValue.equalsIgnoreCase("PLAYER")) return TargetType.PLAYER;
-        if(nodeValue.equalsIgnoreCase("ROOM")) return TargetType.ROOM;
-        if(nodeValue.equalsIgnoreCase("SQUARE")) return TargetType.SQUARE;
-        if(nodeValue.equalsIgnoreCase("DIRECTION")) return TargetType.DIRECTION;
-        throw  new IllegalArgumentException("TargetType error");
-    }
-
-    /**
-     * This method returns the effect reference id used during the navigation in the weapon tree
-     * @return int representing the reference id of the effect
-     * */
-    public int getRefId() {
-        return refId;
-    }
-
-
-    /**
-     * This method returns the effect name
-     * @return String representing the name of the effect
-     * */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * This method returns the cost of the effect
-     * @return List<Color> representing the cost of the effect
-     * */
-    public List<Color> getCost() {
-        return new ArrayList<>(cost);
-    }
-
-    /**
-     * This method returns all the actions performed by the current effect
-     * @return List<Action> representing all the actions performed by the current effect
-     * */
-    public List<Action> getActions() {
-        return new ArrayList<>(actions);
-    }
-
-    /**
-     * This method returns the target of the effect
-     * @return Target of the effect
-     * */
-    public Target getTarget() {
-        return target;
-    }
-
-    /**
-     * this method returns the additional conditions that must be evaluated after the execution of the effect
-     * @return List<String> representing all the additional conditions that must be evaluated after the execution of the effect
-     * */
-    public List<String[]> getExtra(){
-        return new ArrayList<>(extra);
-    }
-
-    /**
      * This method initialized the HashMap used to check the Effect Requirements
      */
-    public static void initRequirements(){
+    private static HashMap<String,Requirement> initRequirements(){
         /*
         TODO
         SONO TUTTI DA VERIFICARE
@@ -290,7 +214,7 @@ public class Effect {
         - SHIFTABLE     x
         - NOT_IN_ROOM   x
          */
-        requirementsMap=new HashMap<>();
+        HashMap<String,Requirement> requirementsMap=new HashMap<>();
 
         /*
         This requirement check update the matrix with the only squares visible/not visible from the current position (not if value is false)
@@ -306,7 +230,7 @@ public class Effect {
          */
         requirementsMap.put("MIN_DISTANCE",(value, curPos, lastPos, matrix) -> {
             int val=Integer.parseInt(value);
-            return matrix.bitWiseAnd(GameBoard.getDistanceMatrix(curPos[0],curPos[1],val)
+            return matrix.bitWiseAnd(GameBoard.getDistanceMatrix(curPos[0],curPos[1],val-1)
                     .bitWiseNot()
                     .bitWiseAnd(GameBoard.getGameboardMatrix()));
         });
@@ -399,7 +323,222 @@ public class Effect {
             return retMatrix;
         });
 
+        return requirementsMap;
     }
+
+    /**
+     * This method instantiates the constraints of the Effect target
+     * @param childNodes representing the XML nodeList to read
+     */
+    private List<String> getTargetConstraints(NodeList childNodes) {
+        List<String> constraints=new ArrayList<>();
+        for(int j=0;j<childNodes.getLength();j++){
+            if(childNodes.item(j).getNodeType()!=Node.TEXT_NODE)
+                constraints.add(childNodes.item(j).getFirstChild().getNodeValue());
+        }
+        return constraints;
+    }
+    /**
+     * This method return the TargetType of the target associated to the Target Name (string)
+     * @param nodeValue representing the name of the TargetType you want
+     */
+    private TargetType getTargetType(String nodeValue) {
+        if(nodeValue.equalsIgnoreCase("PLAYER")) return TargetType.PLAYER;
+        if(nodeValue.equalsIgnoreCase("ROOM")) return TargetType.ROOM;
+        if(nodeValue.equalsIgnoreCase("SQUARE")) return TargetType.SQUARE;
+        if(nodeValue.equalsIgnoreCase("DIRECTION")) return TargetType.DIRECTION;
+        throw  new IllegalArgumentException("TargetType error");
+    }
+
+    /**
+     * This method returns the effect reference id used during the navigation in the weapon tree
+     * @return int representing the reference id of the effect
+     * */
+    public int getRefId() {
+        return refId;
+    }
+
+
+    /**
+     * This method returns the effect name
+     * @return String representing the name of the effect
+     * */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * This method returns the cost of the effect
+     * @return List<Color> representing the cost of the effect
+     * */
+    public List<Color> getCost() {
+        return new ArrayList<>(cost);
+    }
+
+    /**
+     * This method returns all the actions performed by the current effect
+     * @return List<Action> representing all the actions performed by the current effect
+     * */
+    public List<Action> getActions() {
+        return new ArrayList<>(actions);
+    }
+
+    /**
+     * This method returns the target of the effect
+     * @return Target of the effect
+     * */
+    public Target getTarget() {
+        return target;
+    }
+
+    /**
+     * this method returns the additional conditions that must be evaluated after the execution of the effect
+     * @return List<String> representing all the additional conditions that must be evaluated after the execution of the effect
+     * */
+    public List<String[]> getExtra(){
+        return new ArrayList<>(extra);
+    }
+
+
+    /** TODO: need to be tested
+     * TODO: IF TARGET IS CURRENT_PLAYER? Devo ritornare la matrice per spostarmi...
+     * This method return true if using this Effect the current player could shoot a player
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param players representing all the players (current player excluded)
+     * @param shotPlayers represent all the last player shooted using the Weapon
+     * @return boolean representing if if using this Effect the current player could shoot a player
+     */
+    public boolean canUse(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers){
+        List<List<Player>> shootablePlayers=getShootablePlayers(currentPlayer, players, shotPlayers);
+        return !shootablePlayers.isEmpty();
+    }
+
+    /** TODO: need to be tested
+     * This method is used to obtain all the players which can be shot group by the effect target type
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param players representing all the players (current player excluded)
+     * @param shotPlayers represent all the last player shot using the Weapon
+     * @return List<List<Player>> representing all the players which can be shot group by the effect target type
+     */
+    public List<List<Player>> getShootablePlayers(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers) {
+        //TODO: Last position is the last shooted player position
+        int[] lastPos=null;
+        if(shotPlayers.peek()!=null && shotPlayers.peek().getPosition() != null)
+            lastPos=shotPlayers.peek().getPosition().getBoardIndexes();
+        MatrixHelper effectMatrix=calcEffectMatrix(currentPlayer.getPosition().getBoardIndexes(),lastPos);
+        List<Player> availablePlayer=getAvailablePlayer(players,shotPlayers,effectMatrix);
+        return composeTargetPlayers(currentPlayer,availablePlayer);
+    }
+
+    /** TODO: need to be tested
+     * This method is used by the effect to get the Matrix of the effect for the situation described by the parameters passed
+     * @param curPos representing the indexes of the Gameboard of the current position
+     * @param lastPos representing the indexes of the Gameboard of the last position
+     * @return MatrixHelper object representing the Matrix of the effect for the situation described by the parameters passed
+     */
+    private MatrixHelper calcEffectMatrix(int[] curPos, int[] lastPos) {
+        MatrixHelper matrix=GameBoard.getGameboardMatrix();
+        for (String[] requirement:requirements) {
+            //TODO:This line is used to set the shiftable matrix in turn class
+            //if(requirement[0].equalsIgnoreCase("SHIFTABLE")) Turn.setShiftableMatrix(matrix);
+            matrix=requirementsMap.get(requirement[0]).checkRequirement(requirement[1],curPos,lastPos,matrix);
+        }
+        return matrix;
+    }
+
+    /** TODO: need to be tested
+     * This method is used to obtain all the player which can be shot using the effect
+     * @param players representing all the players (current player excluded)
+     * @param shotPlayers represent all the last player shot using the Weapon
+     * @param effectMatrix representing the Matrix of the effect for the situation described by the parameters passed
+     * @return List<Player> representing the players which can be shot using the effect
+     */
+    private List<Player> getAvailablePlayer(List<Player> players, Deque<Player> shotPlayers, MatrixHelper effectMatrix) {
+        ArrayList<Player> availablePlayer=new ArrayList<>();
+        for (Player p:players) {
+            int[] pos=p.getPosition().getBoardIndexes();
+            if(effectMatrix.toBooleanMatrix()[pos[0]][pos[1]])
+                availablePlayer.add(p);
+        }
+        ArrayList<Player> realAvailablePlayer=new ArrayList<>(availablePlayer);
+        for (String constraint:target.getPrevConstraints()) {
+            for(Player p:availablePlayer) {
+                if(!Target.checkConstraint(constraint,p,shotPlayers)) realAvailablePlayer.remove(p);
+            }
+        }
+        return realAvailablePlayer;
+    }
+
+    /** TODO: need to be tested
+     * This method is used to group the players which can be shot by the effect target type
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param availablePlayer representing the players which can be shot using the effect
+     * @return List<List<Player>> representing all the players which can be shot group by the effect target type
+     */
+    private List<List<Player>> composeTargetPlayers(Player currentPlayer, List<Player> availablePlayer) {
+        List<List<Player>> list=new ArrayList<>();
+        if(availablePlayer.isEmpty()) return list;
+        if(target.getType().equals(TargetType.PLAYER)) {
+            list.add(new ArrayList<>(availablePlayer));
+        } else if(target.getType().equals(TargetType.SQUARE)){
+            for (Player p:availablePlayer) {
+                boolean found=false;
+                for (List<Player> l:list) {
+                    if(l.get(0).getPosition().getBoardIndexes()[0]==p.getPosition().getBoardIndexes()[0]&&
+                            l.get(0).getPosition().getBoardIndexes()[1]==p.getPosition().getBoardIndexes()[1]) {
+                        l.add(p);
+                        found=true;
+                    }
+                }
+                if(!found) {
+                    ArrayList<Player> l=new ArrayList<>();
+                    l.add(p);
+                    list.add(l);
+                }
+            }
+        }else if(target.getType().equals(TargetType.DIRECTION)){
+            ArrayList<Player> arrayList=new ArrayList<>();
+            for (Player p:availablePlayer) {
+                boolean found=false;
+                if(currentPlayer.getPosition()==p.getPosition()) {
+                    arrayList.add(p);
+                    found=true;
+                }
+                else for (List<Player> l:list) {
+                    if(currentPlayer.isInDirection(l.get(0))==currentPlayer.isInDirection(p)) {
+                        l.add(p);
+                        found=true;
+                    }
+                }
+                if(!found) {
+                    ArrayList<Player> l=new ArrayList<>();
+                    l.add(p);
+                    list.add(l);
+                }
+            }
+            if(list.isEmpty())list.add(new ArrayList<>(arrayList));
+            else for (List<Player> l:list) {
+                l.addAll(arrayList);
+            }
+        }else if(target.getType().equals(TargetType.ROOM)){
+            for (Player p:availablePlayer) {
+                boolean found=false;
+                for (List<Player> l:list) {
+                    if(l.get(0).getPosition().getRoomColor()==p.getPosition().getRoomColor()) {
+                        l.add(p);
+                        found=true;
+                    }
+                }
+                if(!found) {
+                    ArrayList<Player> l=new ArrayList<>();
+                    l.add(p);
+                    list.add(l);
+                }
+            }
+        }
+        return list;
+    }
+
 
     /**
      * This method return the string representation of the Effect object
