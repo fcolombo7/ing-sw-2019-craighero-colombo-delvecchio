@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class represent a boolean matrix
  */
@@ -144,6 +147,24 @@ public class MatrixHelper {
             }
         }
         return true;
+    }
+
+    /**
+     * This method perform a OR-decomposition of the MatrixHelper object
+     * @return List<MatrixHelper> representing the OR-decomposition of the MatrixHelper object
+     */
+    public List<MatrixHelper> decompose() {
+        List<MatrixHelper> matrixes= new ArrayList<>();
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++){
+                if(matrix[i][j]){
+                   boolean[][] mat=MatrixHelper.allFalseMatrix(rowLength,colLength).toBooleanMatrix();
+                   mat[i][j]=true;
+                   matrixes.add(new MatrixHelper(mat));
+                }
+            }
+        }
+        return matrixes;
     }
 
     /**

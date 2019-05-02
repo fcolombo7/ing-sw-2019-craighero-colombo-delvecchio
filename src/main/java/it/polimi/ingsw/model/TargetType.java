@@ -4,5 +4,6 @@ public enum TargetType {
     PLAYER,
     ROOM,
     SQUARE,
-    DIRECTION
+    DIRECTION,
+    ME
 }

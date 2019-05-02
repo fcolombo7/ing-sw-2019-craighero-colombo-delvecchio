@@ -128,9 +128,12 @@ public class Effect {
         for(int i=0;i<extraNodeList.getLength();i++){
             if(extraNodeList.item(i).getNodeType()!=Node.TEXT_NODE){
                 String[] element=new String[2];
-                Node requirementNode=extraNodeList.item(i);
-                element[0]=requirementNode.getAttributes().getNamedItem("name").getNodeValue();
-                element[1]=requirementNode.getFirstChild().getNodeValue();
+                Node extraNode=extraNodeList.item(i);
+                element[0]=extraNode.getAttributes().getNamedItem("name").getNodeValue();
+                if(extraNode.getFirstChild()!=null)
+                    element[1]=extraNode.getFirstChild().getNodeValue();
+                else
+                    element[1]="none";
                 extra.add(element);
             }
         }
@@ -213,6 +216,8 @@ public class Effect {
         - ON_DIRECTION  x
         - SHIFTABLE     x
         - NOT_IN_ROOM   x
+        - IF_FIRST_CHECK_VISIBILITY_AFTER_SHIFT
+        - IF_FIRST_CHECK_IN_SQUARE_AFTER_SHIFT
          */
         HashMap<String,Requirement> requirementsMap=new HashMap<>();
 
@@ -255,7 +260,7 @@ public class Effect {
         /*
         This requirement check update the matrix with the only square which correspond to the last position
          */
-        requirementsMap.put("PREV_POSITION",(value, curPos, lastPos, matrix) -> {
+        requirementsMap.put("PREV_PLAYER_POSITION",(value, curPos, lastPos, matrix) -> {
             boolean val=Boolean.parseBoolean(value);
             int colLength=GameBoard.getGameboardMatrix().getColLength();
             int rowLength=GameBoard.getGameboardMatrix().getRowLength();
@@ -323,6 +328,21 @@ public class Effect {
             return retMatrix;
         });
 
+        /*
+        This requirement check is used when target is 'ME' and it update the matrix adding all the squares which are visible from the current matrix.
+         */
+        requirementsMap.put("IF_FIRST_CHECK_VISIBILITY_AFTER_SHIFT", (value, curPos, lastPos, matrix) -> requirementsMap.get("VISIBLE").checkRequirement(value,curPos,lastPos,matrix));
+
+        /*
+        This requirement check is used when target is 'ME' and it update the matrix setting/not setting the curPos
+         */
+        requirementsMap.put("IF_FIRST_CHECK_IN_SQUARE_AFTER_SHIFT", (value, curPos, lastPos, matrix) -> {
+            if(Boolean.parseBoolean(value))
+                return requirementsMap.get("MAX_DISTANCE").checkRequirement("0",curPos,lastPos,matrix);
+            else
+                return requirementsMap.get("MIN_DISTANCE").checkRequirement("1",curPos,lastPos,matrix);
+        });
+
         return requirementsMap;
     }
 
@@ -348,6 +368,7 @@ public class Effect {
         if(nodeValue.equalsIgnoreCase("ROOM")) return TargetType.ROOM;
         if(nodeValue.equalsIgnoreCase("SQUARE")) return TargetType.SQUARE;
         if(nodeValue.equalsIgnoreCase("DIRECTION")) return TargetType.DIRECTION;
+        if(nodeValue.equalsIgnoreCase("ME")) return TargetType.ME;
         throw  new IllegalArgumentException("TargetType error");
     }
 
@@ -401,8 +422,8 @@ public class Effect {
     }
 
 
-    /** TODO: need to be tested
-     * TODO: IF TARGET IS CURRENT_PLAYER? Devo ritornare la matrice per spostarmi...
+    /**
+     * TODO: NEED TO BE TESTED
      * This method return true if using this Effect the current player could shoot a player
      * @param currentPlayer representing the player whose playing the Turn
      * @param players representing all the players (current player excluded)
@@ -410,11 +431,81 @@ public class Effect {
      * @return boolean representing if if using this Effect the current player could shoot a player
      */
     public boolean canUse(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers){
+        if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())){
+            boolean[][] mat=getMovementMatrix(currentPlayer,players,shotPlayers).toBooleanMatrix();
+            for(int i=0;i<mat.length;i++){
+                for(int j=0;j<mat[0].length;j++) if(mat[i][j]) return true;
+            }
+            return false;
+        }
         List<List<Player>> shootablePlayers=getShootablePlayers(currentPlayer, players, shotPlayers);
         return !shootablePlayers.isEmpty();
     }
 
-    /** TODO: need to be tested
+    /** TODO: NEED TO BE TESTED
+     * This method is used to obtain a matrix representing where the current player can move to
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param players representing all the players (current player excluded)
+     * @param shotPlayers represent all the last player shot using the Weapon
+     * @return MatrixHelper representing where the current player can move to
+     */
+    public MatrixHelper getMovementMatrix(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers) {
+        if(!target.getType().name().equalsIgnoreCase(TargetType.ME.name())) return MatrixHelper.allFalseMatrix(GameBoard.getGameboardMatrix().getRowLength(),GameBoard.getGameboardMatrix().getColLength());
+        int[] lastPos=null;
+        if(shotPlayers.peek()!=null && shotPlayers.peek().getPosition() != null)
+            lastPos=shotPlayers.peek().getPosition().getBoardIndexes();
+        return calcMovementMatrix(currentPlayer.getPosition().getBoardIndexes(),lastPos,players,shotPlayers.isEmpty());
+    }
+
+    /**
+     * This method is used by the effect to get the Matrix of the effect for the situation described by the parameters passed
+     * @param curPos representing the indexes of the Gameboard of the current position
+     * @param lastPos representing the indexes of the Gameboard of the last position
+     * @param players representing all the players (current player excluded)
+     * @return MatrixHelper object representing the Matrix of the effect for the situation described by the parameters passed
+     */
+    private MatrixHelper calcMovementMatrix(int[] curPos, int[] lastPos, List<Player> players,boolean first) {
+        List<String[]> eRequirements=new ArrayList<>(this.requirements);
+        String shiftableValue="";
+        for (String[] requirement:eRequirements) {
+            if(requirement[0].equalsIgnoreCase("SHIFTABLE")){
+                shiftableValue=requirement[1];
+                eRequirements.remove(requirement);
+                break;
+            }
+        }
+        MatrixHelper matrix=GameBoard.getGameboardMatrix();
+        //SET UP MATRIX
+        matrix=requirementsMap.get("MAX_DISTANCE").checkRequirement("0",curPos,lastPos,matrix);
+        matrix=requirementsMap.get("SHIFTABLE").checkRequirement(shiftableValue,curPos,lastPos,matrix);
+        //if there are shot players you can move everywhere without check
+        if(!first) return matrix;
+
+        List<MatrixHelper> decMatrixes=matrix.decompose();
+        List<MatrixHelper> selMatrixes=new ArrayList<>();
+        for(MatrixHelper mat:decMatrixes){
+            MatrixHelper curMatrix=GameBoard.getGameboardMatrix();
+            int x=0;int y=0;
+            for(int i=0;i<mat.getRowLength();i++){
+                for(int j=0;j<mat.getColLength();j++){
+                    if(mat.toBooleanMatrix()[i][j]){x=i;y=j;break;}
+                }
+            }
+            for (String[] requirement:eRequirements) {
+                curMatrix=requirementsMap.get(requirement[0]).checkRequirement(requirement[1],new int[]{x,y},lastPos,curMatrix);
+            }
+            if(!getAvailablePlayer(players,new ArrayDeque<>(),curMatrix).isEmpty())
+                selMatrixes.add(mat);
+        }
+        MatrixHelper retMatrix=MatrixHelper.allFalseMatrix(matrix.getRowLength(),matrix.getColLength());
+        for (MatrixHelper mat:selMatrixes){
+            retMatrix=retMatrix.bitWiseOr(mat);
+        }
+
+        return retMatrix;
+    }
+
+    /**
      * This method is used to obtain all the players which can be shot group by the effect target type
      * @param currentPlayer representing the player whose playing the Turn
      * @param players representing all the players (current player excluded)
@@ -423,6 +514,7 @@ public class Effect {
      */
     public List<List<Player>> getShootablePlayers(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers) {
         //TODO: Last position is the last shooted player position
+        if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())) return new ArrayList<>();
         int[] lastPos=null;
         if(shotPlayers.peek()!=null && shotPlayers.peek().getPosition() != null)
             lastPos=shotPlayers.peek().getPosition().getBoardIndexes();
@@ -431,7 +523,7 @@ public class Effect {
         return composeTargetPlayers(currentPlayer,availablePlayer);
     }
 
-    /** TODO: need to be tested
+    /**
      * This method is used by the effect to get the Matrix of the effect for the situation described by the parameters passed
      * @param curPos representing the indexes of the Gameboard of the current position
      * @param lastPos representing the indexes of the Gameboard of the last position
@@ -447,7 +539,7 @@ public class Effect {
         return matrix;
     }
 
-    /** TODO: need to be tested
+    /**
      * This method is used to obtain all the player which can be shot using the effect
      * @param players representing all the players (current player excluded)
      * @param shotPlayers represent all the last player shot using the Weapon
@@ -470,73 +562,112 @@ public class Effect {
         return realAvailablePlayer;
     }
 
-    /** TODO: need to be tested
+    /**
      * This method is used to group the players which can be shot by the effect target type
      * @param currentPlayer representing the player whose playing the Turn
      * @param availablePlayer representing the players which can be shot using the effect
      * @return List<List<Player>> representing all the players which can be shot group by the effect target type
      */
     private List<List<Player>> composeTargetPlayers(Player currentPlayer, List<Player> availablePlayer) {
-        List<List<Player>> list=new ArrayList<>();
-        if(availablePlayer.isEmpty()) return list;
-        if(target.getType().equals(TargetType.PLAYER)) {
-            list.add(new ArrayList<>(availablePlayer));
-        } else if(target.getType().equals(TargetType.SQUARE)){
-            for (Player p:availablePlayer) {
-                boolean found=false;
-                for (List<Player> l:list) {
-                    if(l.get(0).getPosition().getBoardIndexes()[0]==p.getPosition().getBoardIndexes()[0]&&
-                            l.get(0).getPosition().getBoardIndexes()[1]==p.getPosition().getBoardIndexes()[1]) {
-                        l.add(p);
-                        found=true;
-                    }
-                }
-                if(!found) {
-                    ArrayList<Player> l=new ArrayList<>();
+        if(availablePlayer.isEmpty()) return new ArrayList<>();
+        if(target.getType().equals(TargetType.PLAYER)) return composePlayer(availablePlayer);
+        else if(target.getType().equals(TargetType.SQUARE)) return composeSquare(availablePlayer);
+        else if(target.getType().equals(TargetType.DIRECTION)) return composeDirection(currentPlayer,availablePlayer);
+        else if(target.getType().equals(TargetType.ROOM)) return composeRoom(availablePlayer);
+        return new ArrayList<>();
+    }
+
+    /**
+     * This method is used to group the players which can be shot by room
+     * @param availablePlayer representing the players which can be shot using the effect
+     * @return List<List<Player>> representing all the players which can be shot group by room
+     */
+    private List<List<Player>> composeRoom(List<Player> availablePlayer) {
+        List<List<Player>> list= new ArrayList<>();
+        for (Player p:availablePlayer) {
+            boolean found=false;
+            for (List<Player> l:list) {
+                if(l.get(0).getPosition().getRoomColor()==p.getPosition().getRoomColor()) {
                     l.add(p);
-                    list.add(l);
-                }
-            }
-        }else if(target.getType().equals(TargetType.DIRECTION)){
-            ArrayList<Player> arrayList=new ArrayList<>();
-            for (Player p:availablePlayer) {
-                boolean found=false;
-                if(currentPlayer.getPosition()==p.getPosition()) {
-                    arrayList.add(p);
                     found=true;
                 }
-                else for (List<Player> l:list) {
-                    if(currentPlayer.isInDirection(l.get(0))==currentPlayer.isInDirection(p)) {
-                        l.add(p);
-                        found=true;
-                    }
-                }
-                if(!found) {
-                    ArrayList<Player> l=new ArrayList<>();
-                    l.add(p);
-                    list.add(l);
-                }
             }
-            if(list.isEmpty())list.add(new ArrayList<>(arrayList));
-            else for (List<Player> l:list) {
-                l.addAll(arrayList);
-            }
-        }else if(target.getType().equals(TargetType.ROOM)){
-            for (Player p:availablePlayer) {
-                boolean found=false;
-                for (List<Player> l:list) {
-                    if(l.get(0).getPosition().getRoomColor()==p.getPosition().getRoomColor()) {
-                        l.add(p);
-                        found=true;
-                    }
-                }
-                if(!found) {
-                    ArrayList<Player> l=new ArrayList<>();
-                    l.add(p);
-                    list.add(l);
-                }
+            if(!found) {
+                ArrayList<Player> l=new ArrayList<>();
+                l.add(p);
+                list.add(l);
             }
         }
+        return list;
+    }
+
+    /**
+     * This method is used to group the players which can be shot by direction
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param availablePlayer representing the players which can be shot using the effect
+     * @return List<List<Player>> representing all the players which can be shot group by direction
+     */
+    private List<List<Player>> composeDirection(Player currentPlayer, List<Player> availablePlayer) {
+        List<List<Player>> list= new ArrayList<>();
+        ArrayList<Player> arrayList=new ArrayList<>();
+        for (Player p:availablePlayer) {
+            boolean found=false;
+            if(currentPlayer.getPosition()==p.getPosition()) {
+                arrayList.add(p);
+                found=true;
+            }
+            else for (List<Player> l:list) {
+                if(currentPlayer.isInDirection(l.get(0))==currentPlayer.isInDirection(p)) {
+                    l.add(p);
+                    found=true;
+                }
+            }
+            if(!found) {
+                ArrayList<Player> l=new ArrayList<>();
+                l.add(p);
+                list.add(l);
+            }
+        }
+        if(list.isEmpty())list.add(new ArrayList<>(arrayList));
+        else for (List<Player> l:list) {
+            l.addAll(arrayList);
+        }
+        return list;
+    }
+
+    /**
+     * This method is used to group the players which can be shot by square
+     * @param availablePlayer representing the players which can be shot using the effect
+     * @return List<List<Player>> representing all the players which can be shot group by square
+     */
+    private List<List<Player>> composeSquare(List<Player> availablePlayer) {
+        List<List<Player>> list= new ArrayList<>();
+        for (Player p:availablePlayer) {
+            boolean found=false;
+            for (List<Player> l:list) {
+                if(l.get(0).getPosition().getBoardIndexes()[0]==p.getPosition().getBoardIndexes()[0]&&
+                        l.get(0).getPosition().getBoardIndexes()[1]==p.getPosition().getBoardIndexes()[1]) {
+                    l.add(p);
+                    found=true;
+                }
+            }
+            if(!found) {
+                ArrayList<Player> l=new ArrayList<>();
+                l.add(p);
+                list.add(l);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * This method is used to group the players which can be shot by player
+     * @param availablePlayer representing the players which can be shot using the effect
+     * @return List<List<Player>> representing all the players which can be shot group by player
+     */
+    private List<List<Player>> composePlayer(List<Player> availablePlayer) {
+        List<List<Player>> list= new ArrayList<>();
+        list.add(new ArrayList<>(availablePlayer));
         return list;
     }
 

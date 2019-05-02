@@ -8,6 +8,8 @@
 				<type>ROOM</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -27,8 +29,8 @@
 				<type>SQUARE</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
-				<minPlayerIn/>
-				<maxPlayerIn/>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>

@@ -20,7 +20,7 @@
 				</action>
 			</actions>
 			<extras>
-				<extra>AGAIN_DIRECTION</extra>
+				<extra name="AGAIN_DIRECTION"/>
 			</extras>	
 		</effect>
 		<effect ref_id="2" name="">
@@ -43,7 +43,7 @@
 				</action>
 			</actions>
 			<extras>
-				<extra name="AGAIN_DIRECTION">1</extra>
+				<extra name="AGAIN_DIRECTION"/>
 			</extras>
 		</effect>
 	</effects>

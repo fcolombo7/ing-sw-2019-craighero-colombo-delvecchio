@@ -49,7 +49,7 @@
 				</prevConstraints>	
 			</target>
 			<requirements>
-				<requirement name="ON_DIRECTION"/>
+				<requirement name="ON_DIRECTION">true</requirement>
 			</requirements>
 			<actions>
 				<action type="MOVE">

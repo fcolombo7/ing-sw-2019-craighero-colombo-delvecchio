@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -198,6 +199,33 @@ public class TestWeapon {
     @Test
     public void GetNameTest(){
         Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
-        assertEquals(w.getName(),"distruttore");
+        assertEquals("distruttore",w.getName());
+    }
+
+    @Test
+    public void TestParsingWeapons(){
+        String folderName="src/main/Resources/weapons";
+        String path="";
+        File folder = new File(folderName);
+        File[] listOfFiles = folder.listFiles();
+        try{
+            for (File file:listOfFiles) {
+                if (file.isFile()) {
+                    System.out.println("Weapon: " + file.getName());
+                    path=folderName.concat("/").concat(file.getName());
+                    Weapon w= new Weapon("weapon_id","name",path);
+                    w.init();
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            fail("An unexpected ParserConfigurationException has been thrown.("+path+")");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("An unexpected IOException has been thrown.("+path+")");
+        } catch (SAXException e) {
+            e.printStackTrace();
+            fail("An unexpected SAXException has been thrown.("+path+")");
+        }
     }
 }

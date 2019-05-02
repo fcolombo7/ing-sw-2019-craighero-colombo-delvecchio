@@ -24,11 +24,12 @@
 			<cost/>
 			<target>
 				<type>ME</type>
-				<minNumber/>
-				<maxNumber/>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
 				<prevConstraints/>
 			</target>
 			<requirements>
+				<requirement name="SHIFTABLE">1</requirement>
 				<requirement name="IF_FIRST_CHECK_IN_SQUARE_AFTER_SHIFT">TRUE</requirement>
 			</requirements>
 			<actions>

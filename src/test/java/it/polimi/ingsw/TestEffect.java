@@ -430,4 +430,162 @@ public class TestEffect {
         }
 
     }
+
+    @Test
+    public void TestEffectSyntaxWeapons(){
+        String folderName="src/main/Resources/weapons";
+        String path="";
+        File folder = new File(folderName);
+        File[] listOfFiles = folder.listFiles();
+        try{
+            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            Player first=new Player("first","first_motto",true);
+            Player second=new Player("second","second_motto",false);
+            Player third=new Player("third","third_motto",false);
+            Player fourth=new Player("fourth","fourth_motto",false);
+
+            first.setPosition(GameBoard.getSquare(1,0));
+            second.setPosition(GameBoard.getSquare(1,2));
+            third.setPosition(GameBoard.getSquare(2,3));
+            fourth.setPosition(GameBoard.getSquare(0,0));
+
+            for (File file:listOfFiles) {
+                if (file.isFile()) {
+                    System.out.println("Weapon: " + file.getName());
+                    path=folderName.concat("/").concat(file.getName());
+                    Weapon w= new Weapon("weapon_id","name",path);
+                    w.init();
+
+                    ArrayList<Player> players= new ArrayList<>(3);
+                    ArrayDeque<Player> shotPlayers= new ArrayDeque<>();
+
+                    players.add(second);
+                    players.add(third);
+                    players.add(fourth);
+                    w.getEffect(1).canUse(first,players, shotPlayers);
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            fail("An unexpected ParserConfigurationException has been thrown.("+path+")");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("An unexpected IOException has been thrown.("+path+")");
+        } catch (SAXException e) {
+            e.printStackTrace();
+            fail("An unexpected SAXException has been thrown.("+path+")");
+        }
+    }
+
+    @Test
+    public void TestShiftable(){
+        try {
+            Weapon weapon=new Weapon("weapon1","distruttore","src/main/Resources/weapons/cannonevortex.xml");
+            weapon.init();
+            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            Player first=new Player("first","first_motto",true);
+            Player second=new Player("second","second_motto",false);
+            Player third=new Player("third","third_motto",false);
+            Player fourth=new Player("fourth","fourth_motto",false);
+
+            first.setPosition(GameBoard.getSquare(1,0));
+            second.setPosition(GameBoard.getSquare(2,3));
+            third.setPosition(GameBoard.getSquare(2,3));
+            fourth.setPosition(GameBoard.getSquare(2,3));
+
+            Effect base= weapon.getEffect(1);
+
+            ArrayList<Boolean> values= new ArrayList<>();
+            ArrayList<Player> players= new ArrayList<>(3);
+
+            //FIRST: false
+            players.add(second);
+            players.add(third);
+            players.add(fourth);
+            values.add(base.canUse(first,players, new ArrayDeque<>()));
+
+            //SECOND: true
+            second.setPosition(GameBoard.getSquare(1,3));
+            players.add(second);
+            players.add(third);
+            players.add(fourth);
+            values.add(base.canUse(first,players, new ArrayDeque<>()));
+
+            //THIRD: true
+            second.setPosition(GameBoard.getSquare(1,2));
+            players.add(second);
+            players.add(third);
+            players.add(fourth);
+            values.add(base.canUse(first,players, new ArrayDeque<>()));
+
+            //FOURTH: true
+            second.setPosition(GameBoard.getSquare(1,0));
+            players.add(second);
+            players.add(third);
+            players.add(fourth);
+            values.add(base.canUse(first,players, new ArrayDeque<>()));
+
+            assertThat(new Boolean[]{false,true,true,true},is(values.toArray()));
+        } catch (ParserConfigurationException e) {
+            fail("Unhandled ParserConfigurationException has been thrown.");
+        } catch (IOException e) {
+            fail("Unhandled IOException has been thrown.");
+        } catch (SAXException e) {
+            fail("Unhandled SAXException has been thrown.");
+        }
+    }
+
+    @Test
+    public void TestMeTarget(){
+        try {
+            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new File("src/test/Resources/effect_test6.xml"));
+            document.normalizeDocument();
+            Element root = document.getDocumentElement();
+            root.normalize();
+
+            Effect effect = new Effect(root);
+
+            Player first = new Player("first", "first_motto", true);
+            Player second = new Player("second", "second_motto", false);
+            Player third = new Player("third", "third_motto", false);
+
+            first.setPosition(GameBoard.getSquare(1, 1));
+            second.setPosition(GameBoard.getSquare(2, 3));
+            third.setPosition(GameBoard.getSquare(2, 3));
+
+            ArrayList<Boolean> values = new ArrayList<>();
+            ArrayList<Player> players = new ArrayList<>(2);
+
+            //FIRST: true
+            players.add(second);
+            players.add(third);
+            values.add(effect.canUse(first, players, new ArrayDeque<>()));
+
+            //SECOND: true
+            second.setPosition(GameBoard.getSquare(1, 1));
+            third.setPosition(GameBoard.getSquare(1, 1));
+            values.add(effect.canUse(first, players, new ArrayDeque<>()));
+
+            //THIRD: false
+            first.setPosition(GameBoard.getSquare(0, 1));
+            second.setPosition(GameBoard.getSquare(2, 1));
+            third.setPosition(GameBoard.getSquare(2, 2));
+            values.add(effect.canUse(first, players, new ArrayDeque<>()));
+
+            assertThat(new Boolean[]{true,true,false},is(values.toArray()));
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            fail("Unexpected ParserConfigurationException has been thrown");
+        } catch (SAXException e) {
+            e.printStackTrace();
+            fail("Unexpected SAXException has been thrown");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Unexpected IOException has been thrown");
+        }
+    }
 }

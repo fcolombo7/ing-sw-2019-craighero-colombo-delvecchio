@@ -38,7 +38,12 @@ public class GameBoard {
      */
     private ArrayList<Boolean> overkillTrack;
 
+    /**
+     * This attribute contains the starting skull number
+     */
     private int skullNumber;
+
+    private List<WeaponSquare> spawnPoint;
 
     /**
      * This constructor instantiates a GameBoard object
@@ -46,9 +51,10 @@ public class GameBoard {
      * @param skullNumber representing the number of the skull placed on the board
      */
     public GameBoard(Node map, int skullNumber){
+        this.spawnPoint=new ArrayList<>(Color.values().length);
         NamedNodeMap attributes=map.getAttributes();
-        rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
-        colLength=Integer.parseInt(attributes.getNamedItem("colLength").getNodeValue());
+        GameBoard.rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
+        GameBoard.colLength=Integer.parseInt(attributes.getNamedItem("colLength").getNodeValue());
         if(rowLength<=0) throw new IllegalArgumentException("Invalid attribute: rowLength must be >0.");
         if(colLength<=0) throw new IllegalArgumentException("Invalid attribute: colLength must be >0.");
 
@@ -111,12 +117,15 @@ public class GameBoard {
             }
             count++;
         }
-        if(type.equalsIgnoreCase("Weapon"))
-            this.map[rowCount][colCount]=new WeaponSquare(roomColor,doors,new int[]{rowCount,colCount});
+        if(type.equalsIgnoreCase("Weapon")) {
+            WeaponSquare weaponSquare=new WeaponSquare(roomColor, doors, new int[]{rowCount, colCount});
+            GameBoard.map[rowCount][colCount] = weaponSquare;
+            spawnPoint.add(weaponSquare);
+        }
         else if(type.equalsIgnoreCase("Ammo"))
-            this.map[rowCount][colCount]=new AmmoSquare(roomColor,doors,new int[]{rowCount,colCount});
+            GameBoard.map[rowCount][colCount]=new AmmoSquare(roomColor,doors,new int[]{rowCount,colCount});
         else
-            this.map[rowCount][colCount]=null;
+            GameBoard.map[rowCount][colCount]=null;
         return colCount+1;
     }
 
@@ -230,7 +239,11 @@ public class GameBoard {
         return map[x][y].getVisibilityMatrix();
     }
 
-    public static boolean hasSquare(int x,int y){
+    public List<Square> getSpawnPoint() {
+        return new ArrayList<>(spawnPoint);
+    }
+
+    public static boolean hasSquare(int x, int y){
         return map[x][y]!=null;
     }
 

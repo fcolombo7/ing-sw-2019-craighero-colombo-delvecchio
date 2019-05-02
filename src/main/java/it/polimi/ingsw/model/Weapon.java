@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.CardNotInitializedException;
 import it.polimi.ingsw.exceptions.WeaponEffectException;
 import it.polimi.ingsw.exceptions.WeaponLoadException;
-import jdk.internal.org.objectweb.asm.TypeReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -349,7 +348,7 @@ public class Weapon extends Card{
         throw new IllegalArgumentException("The effect "+effect.getName()+" cannot be selected.");
     }
 
-    /**TODO: HAVE TO BE TESTED
+    /**TODO: NEED TO BE TESTED
      * This method is used to get all the effect the player could perform using this weapon in the current turn
      * @param currentPlayer representing the player whose playing the Turn
      * @param players representing all the players (current player excluded)
@@ -375,7 +374,7 @@ public class Weapon extends Card{
         return iterateEffects(nodes,currentPlayer, players, shotPlayers, updateAmmo(currentPlayer.getBoard().getAmmos(),ammo));
     }
 
-    /**TODO: HAVE TO BE TESTED
+    /**TODO: NEED TO BE TESTED
      * This method get all the effect the player could perform which are in the nodes list,
      * @param nodes representing the set of effect that will be analyzed
      * @param currentPlayer representing the player whose playing the Turn
@@ -400,17 +399,16 @@ public class Weapon extends Card{
                             break;
                         }
                     }
-                    if(!end&&!iterateEffects(children,currentPlayer,players,shotPlayers,updateAmmo(ammo,eCost)).isEmpty())
+                    if(end||!iterateEffects(children,currentPlayer,players,shotPlayers,updateAmmo(ammo,eCost)).isEmpty())
                         availableEffects.add(getEffect(node.getValue()));
-                    else if(end)
-                        availableEffects.add(getEffect(node.getValue()));
+
                 }
             }
         }
         return availableEffects;
     }
 
-    /**TODO: HAVE TO BE TESTED
+    /**TODO: NEED TO BE TESTED
      * This method check if the first list of color contains all the colors which are in the second one
      * @param ammo representing the list 'container'
      * @param cost representing the list that 'is contained'
@@ -423,7 +421,7 @@ public class Weapon extends Card{
         return true;
     }
 
-    /**TODO: HAVE TO BE TESTED
+    /**TODO: NEED TO BE TESTED
      * This method return the occurrences number if the color in the ammo list
      * @param ammo representing a list of color
      * @param color representing the color which you want to get the occurrences number
@@ -438,7 +436,7 @@ public class Weapon extends Card{
         return count;
     }
 
-    /**TODO: HAVE TO BE TESTED
+    /**TODO: NEED TO BE TESTED
      * This method remove form the ammo list all the color which are in the cost list
      * @param ammo representing the ammo list
      * @param cost representing the cost list
