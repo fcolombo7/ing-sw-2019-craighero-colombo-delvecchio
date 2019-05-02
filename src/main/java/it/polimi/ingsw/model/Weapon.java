@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.CardNotInitializedException;
 import it.polimi.ingsw.exceptions.WeaponEffectException;
 import it.polimi.ingsw.exceptions.WeaponLoadException;
+import jdk.internal.org.objectweb.asm.TypeReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -244,10 +246,8 @@ public class Weapon extends Card{
 
     /**
      * This method returns an effect of the weapon
-     * @param name representing  the name of the weapon
+     * @param name representing  the name of the effect
      * @return Effect representing an effect of the weapon
-     * @throws CardNotInitializedException when the card is not initialized
-     * @throws WeaponEffectException when the weapon doesn't have that effect
      */
     public Effect getEffect(String name) {
         if(!initialized) throw new CardNotInitializedException("The effects list of the weapon is not set: the card is not initialized.");
@@ -255,7 +255,19 @@ public class Weapon extends Card{
             if(name.equals(e.getName()))
                 return e;
         throw new WeaponEffectException ("The weapon does not have the effect '"+name+"'.");
+    }
 
+    /**
+     * This method returns an effect of the weapon
+     * @param id representing the id of the effect
+     * @return Effect representing an effect of the weapon
+     */
+    public Effect getEffect(int id) {
+        if(!initialized) throw new CardNotInitializedException("The effects list of the weapon is not set: the card is not initialized.");
+        for(Effect e: effects)
+            if(id==e.getRefId())
+                return e;
+        throw new WeaponEffectException ("The weapon does not have the effect '"+id+"'.");
     }
 
     /**
@@ -265,7 +277,7 @@ public class Weapon extends Card{
      */
     public List<Effect> getEffects() {
         if(!initialized) throw new CardNotInitializedException("The effects list of the weapon is not set: the card is not initialized.");
-        return effects;
+        return new ArrayList<>(effects);
     }
 
     /**
@@ -335,6 +347,110 @@ public class Weapon extends Card{
             }
         }
         throw new IllegalArgumentException("The effect "+effect.getName()+" cannot be selected.");
+    }
+
+    /**TODO: HAVE TO BE TESTED
+     * This method is used to get all the effect the player could perform using this weapon in the current turn
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param players representing all the players (current player excluded)
+     * @param shotPlayers represent all the last player shot using this Weapon
+     * @return List<Effect> representing all the effect the player could perform using this weapon in the current turn
+     */
+    public List<Effect> getUsableEffect(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers){
+        //Effects that use PrevConstraints if precede by another which use also PrevConstraints may be set as usable also when it can't
+        if(!initialized) throw new CardNotInitializedException("Can't get the usable effects: the card is not initialized.");
+        if(!loaded) return new ArrayList<>(); //if not loaded return an empty list
+        if(!haveAmmo(currentPlayer.getBoard().getAmmos(),ammo)) return new ArrayList<>();//if player doesn't have sufficient ammo, return an empty list.
+        ArrayList<TreeNode<Integer>> nodes;
+        if(currentNode==null) nodes=new ArrayList<>(effectOrder);
+        else{
+            nodes= new ArrayList<>(currentNode.getChildren());
+            for(int i=0;i<nodes.size();i++){
+                if(nodes.get(i).getValue()==-1) {
+                    nodes.remove(i);
+                    break;
+                }
+            }
+        }
+        return iterateEffects(nodes,currentPlayer, players, shotPlayers, updateAmmo(currentPlayer.getBoard().getAmmos(),ammo));
+    }
+
+    /**TODO: HAVE TO BE TESTED
+     * This method get all the effect the player could perform which are in the nodes list,
+     * @param nodes representing the set of effect that will be analyzed
+     * @param currentPlayer representing the player whose playing the Turn
+     * @param players representing all the players (current player excluded)
+     * @param shotPlayers represent all the last player shot using this Weapon
+     * @param ammo representing the ammo of the current player
+     * @return List<Effect> representing all the effect the player could perform which are in the nodes list
+     */
+    private List<Effect> iterateEffects(List<TreeNode<Integer>> nodes, Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, List<Color> ammo) {
+        List<Effect> availableEffects= new ArrayList<>();
+        for (TreeNode<Integer> node: nodes) {
+            List<Color> eCost=getEffect(node.getValue()).getCost();
+            boolean val=haveAmmo(ammo,eCost);
+            if(val){
+                boolean usable=getEffect(node.getValue()).canUse(currentPlayer,players,shotPlayers);
+                if(usable){
+                    List<TreeNode<Integer>> children=node.getChildren();
+                    boolean end=false;
+                    for (TreeNode<Integer> child: children) {
+                        if(child.getValue()==-1) {
+                            end = true;
+                            break;
+                        }
+                    }
+                    if(!end&&!iterateEffects(children,currentPlayer,players,shotPlayers,updateAmmo(ammo,eCost)).isEmpty())
+                        availableEffects.add(getEffect(node.getValue()));
+                    else if(end)
+                        availableEffects.add(getEffect(node.getValue()));
+                }
+            }
+        }
+        return availableEffects;
+    }
+
+    /**TODO: HAVE TO BE TESTED
+     * This method check if the first list of color contains all the colors which are in the second one
+     * @param ammo representing the list 'container'
+     * @param cost representing the list that 'is contained'
+     * @return true if the first list of color contains all the colors which are in the second one
+     */
+    private boolean haveAmmo(List<Color> ammo, List<Color> cost) {
+        for (Color c:Color.values()) {
+            if(numberAmmo(ammo,c)<numberAmmo(cost,c)) return false;
+        }
+        return true;
+    }
+
+    /**TODO: HAVE TO BE TESTED
+     * This method return the occurrences number if the color in the ammo list
+     * @param ammo representing a list of color
+     * @param color representing the color which you want to get the occurrences number
+     * @return the occurrences number if the color in the ammo list
+     */
+    private int numberAmmo(List<Color> ammo,Color color){
+        int count=0;
+        for(Color c:ammo){
+            if(c.name().equalsIgnoreCase(color.name()))
+                count++;
+        }
+        return count;
+    }
+
+    /**TODO: HAVE TO BE TESTED
+     * This method remove form the ammo list all the color which are in the cost list
+     * @param ammo representing the ammo list
+     * @param cost representing the cost list
+     * @return a new List<Color> which contains all the color that are in the ammo list, without the ones that are in the cost list
+     */
+    private List<Color> updateAmmo(List<Color> ammo, List<Color> cost){
+        List<Color> ret=new ArrayList<>(ammo);
+        for (Color c:Color.values()) {
+            int len=numberAmmo(cost,c);
+            for(int i=0;i<len;i++) ret.remove(c);
+        }
+        return ret;
     }
 
     /**

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--Board 3: good for 4 or 5 players-->
+<!DOCTYPE board SYSTEM "board_schema.dtd">
+<board>
+    <row>
+        <square>
+            <type>Ammo</type>
+            <color>RED</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">true</door>
+                <door direction="S">false</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>BLUE</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">false</door>
+                <door direction="S">true</door>
+                <door direction="W">true</door>
+            </doors>
+        </square>
+        <square>
+            <type>Weapon</type>
+            <color>BLUE</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">true</door>
+                <door direction="S">true</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>GREEN</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">false</door>
+                <door direction="S">true</door>
+                <door direction="W">true</door>
+            </doors>
+        </square>
+    </row>
+    <row>
+        <square>
+            <type>Weapon</type>
+            <color>RED</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">false</door>
+                <door direction="S">true</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>PURPLE</color>
+            <doors>
+                <door direction="N">true</door>
+                <door direction="E">false</door>
+                <door direction="S">true</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>YELLOW</color>
+            <doors>
+                <door direction="N">true</door>
+                <door direction="E">false</door>
+                <door direction="S">false</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>YELLOW</color>
+            <doors>
+                <door direction="N">true</door>
+                <door direction="E">false</door>
+                <door direction="S">false</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+    </row>
+    <row>
+        <square>
+            <type>Ammo</type>
+            <color>WHITE</color>
+            <doors>
+                <door direction="N">true</door>
+                <door direction="E">false</door>
+                <door direction="S">false</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>WHITE</color>
+            <doors>
+                <door direction="N">true</door>
+                <door direction="E">true</door>
+                <door direction="S">false</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+        <square>
+            <type>Ammo</type>
+            <color>YELLOW</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">false</door>
+                <door direction="S">false</door>
+                <door direction="W">true</door>
+            </doors>
+        </square>
+        <square>
+            <type>WEAPON</type>
+            <color>YELLOW</color>
+            <doors>
+                <door direction="N">false</door>
+                <door direction="E">false</door>
+                <door direction="S">false</door>
+                <door direction="W">false</door>
+            </doors>
+        </square>
+    </row>
+</board>
