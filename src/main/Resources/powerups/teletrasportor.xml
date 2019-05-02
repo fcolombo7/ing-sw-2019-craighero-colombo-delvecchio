@@ -1,0 +1,21 @@
+<powerup id="0212"> 
+	<name>TELETRASPORTO</name>
+	<color>R</color>
+	<timing>BEFORE_END_TURN</timing>
+	<effect ref_id="" name="">
+		<cost/>
+		<target>
+			<type>ME</type>
+			<minNumber>1</minNumber>
+			<maxNumber>1</maxNumber>
+			<prevConstraints/>
+		</target>
+		<requirements/>
+		<actions>
+			<action type="MOVE">
+				<value>-1</value>
+			</action>
+		</actions>
+		<extras/>
+	</effect>
+</powerup>

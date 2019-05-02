@@ -1,0 +1,23 @@
+<powerup id="026"> 
+	<name>MIRINO</name>
+	<color>R</color>
+	<timing>ATTACK</timing>
+	<effect ref_id="" name="">
+		<cost>1</cost>
+		<target>
+			<type>PLAYER</type>
+			<minNumber>1</minNumber>
+			<maxNumber>1</maxNumber>
+			<prevConstraints/>
+		</target>
+		<requirements>
+			<requirement name="DAMAGED_PLAYER"/>
+		</requirements>
+		<actions>
+			<action type="DAMAGE">
+				<value>1</value>
+			</action>
+		</actions>
+		<extras/>
+	</effect>
+</powerup>
