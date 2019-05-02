@@ -1,0 +1,61 @@
+<weapon id="19">
+	<name>CYBERGUANTO</name>
+	<ammo>YB</ammo>
+	<effects>
+		<effect ref_id="1" name="">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="MIN_DISTANCE">1</requirement>
+				<requirement name="MAX_DISTANCE">1</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+					<extras/>
+				</action>
+				<action type="MARK">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras>
+				<extra name="GO_THERE"/>
+			</extras>	
+		</effect>
+		<effect ref_id="2" name="">
+			<cost>B</cost>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="MIN_DISTANCE">1</requirement>
+				<requirement name="MAX_DISTANCE">1</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras>
+				<extra name="GO_THERE"/>
+				<extra name="AGAIN_DIRECTION"/>
+			</extras>	
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

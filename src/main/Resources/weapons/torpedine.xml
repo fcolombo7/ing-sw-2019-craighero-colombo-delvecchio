@@ -1,0 +1,78 @@
+<weapon id="3">
+	<name>TORPEDINE</name>
+	<ammo>BR</ammo>
+	<effects>
+		<effect ref_id="1" name="">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="">
+			<cost>B</cost>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints>
+					<constraint>DIFFERENT</constraint>
+				</prevConstraints>
+			</target>
+			<requirements>
+				<requirement name="PREV_VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="3" name="">
+			<cost>B</cost>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints>
+					<constraint>DIFFERENT</constraint>
+				</prevConstraints>
+			</target>
+			<requirements>
+				<requirement name="PREV_VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+			<node>3</node>
+		</sequence>
+	</order>
+</weapon>

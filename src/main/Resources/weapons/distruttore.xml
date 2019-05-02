@@ -1,0 +1,58 @@
+<!-- ARMI ADRENALINA -->
+
+<weapon id="1">
+	<name>DISTRUTTORE</name>
+	<ammo>BB</ammo>
+	<effects>
+		<effect ref_id="1" name="">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>2</value>
+				</action>
+				<action type="MARK">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="">
+			<cost>R</cost>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints>
+					<constraint>DIFFERENT</constraint>
+				</prevConstraints>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="MARK">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

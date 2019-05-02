@@ -1,0 +1,87 @@
+<weapon id="13">
+	<name>LANCIAGRANATE</name>
+	<ammo>R</ammo>
+	<effects>
+		<effect ref_id="1" name="">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="">
+			<cost>R</cost>
+			<target>
+				<type>SQUARE</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn/>
+				<maxPlayerIn/>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="3" name="shift player">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<prevConstraints>
+					<constraint>SAME</constraint>
+				</prevConstraints>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="MOVE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>3</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+			<node>3</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>3</node>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>
