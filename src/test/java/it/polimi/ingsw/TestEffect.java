@@ -480,7 +480,7 @@ public class TestEffect {
     @Test
     public void TestShiftable(){
         try {
-            Weapon weapon=new Weapon("weapon1","distruttore","src/main/Resources/weapons/cannonevortex.xml");
+            Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/cannonevortex.xml");
             weapon.init();
             TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
             Player first=new Player("first","first_motto",true);

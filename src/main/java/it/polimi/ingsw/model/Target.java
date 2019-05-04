@@ -18,7 +18,9 @@ public class Target {
     private static HashMap<String, Constraint> initConstraints() {
         HashMap<String,Constraint> constraintHashMap=new HashMap<>();
         constraintHashMap.put("DIFFERENT",(availablePlayer, shotPlayers) -> !shotPlayers.contains(availablePlayer));
-        constraintHashMap.put("SAME",(availablePlayer, shotPlayers) -> !shotPlayers.isEmpty()&&shotPlayers.peek()==availablePlayer);
+        constraintHashMap.put("DIFFERENT_PREV",(availablePlayer, shotPlayers) -> !shotPlayers.isEmpty()&&shotPlayers.peek()!=availablePlayer);
+        constraintHashMap.put("SAME_PREV",(availablePlayer, shotPlayers) -> !shotPlayers.isEmpty()&&shotPlayers.peek()==availablePlayer);
+        constraintHashMap.put("SAME",(availablePlayer, shotPlayers) -> shotPlayers.contains(availablePlayer));
         return constraintHashMap;
     }
 

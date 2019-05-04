@@ -67,6 +67,18 @@ public class Weapon extends Card{
     }
 
     /**
+     * This constructor instantiates and initialized a weapon
+     * @param card representing the card object you want to instantiate
+     * @throws IOException when IO errors occur
+     * @throws SAXException when SAX errors occur
+     * @throws ParserConfigurationException when ParserConfiguration errors occur
+     */
+    public Weapon(Card card) throws IOException, SAXException, ParserConfigurationException {
+        this(card.getId(),card.getName(),card.getInitXML());
+        init();
+    }
+
+    /**
      * This method returns true if the weapon is initialized
      * @return boolean as true if the weapon is initialized
      */
@@ -76,7 +88,10 @@ public class Weapon extends Card{
 
     /**
      * TODO: insert the validation with DTD
-     * This method initialize the Weapon: it set-up the effects and the order in which they can be used.
+     * This method initialized a weapon
+     * @throws IOException when IO errors occur
+     * @throws SAXException when SAX errors occur
+     * @throws ParserConfigurationException when ParserConfiguration errors occur
      */
     public void init() throws ParserConfigurationException, IOException, SAXException {
         this.effects=new ArrayList<>();
@@ -334,7 +349,7 @@ public class Weapon extends Card{
      * This method set the effect as current node used during the navigation of the effectOrder tree
      * @param effect representing the effect to be set as current node used during the navigation of the effectOrder tree
      */
-    public void setCurrentNode(Effect effect){
+    public void setNavigationNode(Effect effect){
         if(effect==null) throw new NullPointerException("The effect can't be null.");
         List<TreeNode<Integer>> nodes;
         if(currentNode==null) nodes=effectOrder;

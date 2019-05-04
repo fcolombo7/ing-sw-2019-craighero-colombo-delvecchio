@@ -50,6 +50,18 @@ public class Powerup extends Card {
     }
 
     /**
+     * This constructor instantiates and initialized a powerup
+     * @param card representing the card object you want to instantiate
+     * @throws IOException when IO errors occur
+     * @throws SAXException when SAX errors occur
+     * @throws ParserConfigurationException when ParserConfiguration errors occur
+     */
+    public Powerup(Card card) throws IOException, SAXException, ParserConfigurationException {
+        this(card.getId(),card.getName(),card.getInitXML());
+        init();
+    }
+
+    /**
      * This method returns true if the power up is initialized
      * @return boolean as true if the power up is initialized
      */
@@ -58,7 +70,11 @@ public class Powerup extends Card {
     }
 
     /**
-     * This method initializes the power up card
+     * TODO: insert the validation with DTD
+     * This method initialized a powerup
+     * @throws IOException when IO errors occur
+     * @throws SAXException when SAX errors occur
+     * @throws ParserConfigurationException when ParserConfiguration errors occur
      */
     public void init() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
