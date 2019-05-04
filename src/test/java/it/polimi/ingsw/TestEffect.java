@@ -83,17 +83,17 @@ public class TestEffect {
             Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
             weapon.init();
 
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
 
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(1,2));
-            third.setPosition(GameBoard.getSquare(2,3));
-            fourth.setPosition(GameBoard.getSquare(0,0));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(2,3));
+            fourth.setPosition(board.getSquare(0,0));
 
             Effect base= weapon.getEffect("base");
 
@@ -104,28 +104,28 @@ public class TestEffect {
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(first,players, new ArrayDeque<>()));
+            values.add(base.canUse(first,players, new ArrayDeque<>(), board));
 
             //SECOND: TRUE
             players.clear();
             players.add(first);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(second,players, new ArrayDeque<>()));
+            values.add(base.canUse(second,players, new ArrayDeque<>(), board));
 
             //THIRD: FALSE
             players.clear();
             players.add(first);
             players.add(second);
             players.add(fourth);
-            values.add(base.canUse(third,players, new ArrayDeque<>()));
+            values.add(base.canUse(third,players, new ArrayDeque<>(), board));
 
             //FOURTH: TRUE
             players.clear();
             players.add(first);
             players.add(second);
             players.add(third);
-            values.add(base.canUse(fourth,players, new ArrayDeque<>()));
+            values.add(base.canUse(fourth,players, new ArrayDeque<>(), board));
 
             assertThat(new Boolean[]{true,true,false,true},is(values.toArray()));
         } catch (ParserConfigurationException e) {
@@ -143,16 +143,16 @@ public class TestEffect {
         try {
             Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
             weapon.init();
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(1,2));
-            third.setPosition(GameBoard.getSquare(2,3));
-            fourth.setPosition(GameBoard.getSquare(0,0));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(2,3));
+            fourth.setPosition(board.getSquare(0,0));
 
             Effect base= weapon.getEffect("opzionale");
 
@@ -166,7 +166,7 @@ public class TestEffect {
             players.add(fourth);
             shotPlayers.add(second);
             shotPlayers.add(third);
-            values.add(base.canUse(first,players, shotPlayers));
+            values.add(base.canUse(first,players, shotPlayers,board));
 
             //SECOND: FALSE
             players.clear();
@@ -177,7 +177,7 @@ public class TestEffect {
             shotPlayers.add(first);
             shotPlayers.add(third);
             shotPlayers.add(fourth);
-            values.add(base.canUse(second,players, shotPlayers));
+            values.add(base.canUse(second,players, shotPlayers, board));
 
             //THIRD: FALSE
             players.clear();
@@ -185,7 +185,7 @@ public class TestEffect {
             players.add(first);
             players.add(second);
             players.add(fourth);
-            values.add(base.canUse(third,players, shotPlayers));
+            values.add(base.canUse(third,players, shotPlayers, board));
 
             //FOURTH: TRUE
             players.clear();
@@ -194,7 +194,7 @@ public class TestEffect {
             players.add(third);
             shotPlayers.add(second);
             shotPlayers.add(third);
-            values.add(base.canUse(fourth,players, shotPlayers));
+            values.add(base.canUse(fourth,players, shotPlayers, board));
 
             //EXTRA: TRUE
             players.clear();
@@ -202,7 +202,7 @@ public class TestEffect {
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(first,players, shotPlayers));
+            values.add(base.canUse(first,players, shotPlayers, board));
 
             assertThat(new Boolean[]{true,false,false,true,true},is(values.toArray()));
         } catch (ParserConfigurationException e) {
@@ -217,7 +217,7 @@ public class TestEffect {
     @Test
     public void testDistance(){
         try{
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test2.xml"));
@@ -231,9 +231,9 @@ public class TestEffect {
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(0,2));
-            third.setPosition(GameBoard.getSquare(1,3));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(0,2));
+            third.setPosition(board.getSquare(1,3));
 
             ArrayList<Boolean> values= new ArrayList<>();
             ArrayList<Player> players= new ArrayList<>(2);
@@ -241,19 +241,19 @@ public class TestEffect {
             //FIRST: FALSE
             players.add(second);
             players.add(third);
-            values.add(effect.canUse(first,players, new ArrayDeque<>()));
+            values.add(effect.canUse(first,players, new ArrayDeque<>(), board));
 
             //SECOND: true
             players.clear();
             players.add(first);
             players.add(third);
-            values.add(effect.canUse(second,players, new ArrayDeque<>()));
+            values.add(effect.canUse(second,players, new ArrayDeque<>(), board));
 
             //THIRD: true
             players.clear();
             players.add(first);
             players.add(second);
-            values.add(effect.canUse(third,players, new ArrayDeque<>()));
+            values.add(effect.canUse(third,players, new ArrayDeque<>(), board));
 
             assertThat(new Boolean[]{false,true,true},is(values.toArray()));
 
@@ -273,7 +273,7 @@ public class TestEffect {
     @Test
     public void testDirectionAndSquareTarget(){
         try{
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test3.xml"));
@@ -287,9 +287,9 @@ public class TestEffect {
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(1,2));
-            third.setPosition(GameBoard.getSquare(1,2));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(1,2));
 
             ArrayList<Boolean> values= new ArrayList<>();
             ArrayList<Player> players= new ArrayList<>(2);
@@ -298,13 +298,13 @@ public class TestEffect {
             //FIRST: TRUE
             players.add(second);
             players.add(third);
-            values.add(effect.canUse(first,players, shotPlayers));
+            values.add(effect.canUse(first,players, shotPlayers, board));
 
             //SECOND: FALSE
             players.add(first);
             players.add(third);
             shotPlayers.add(first);
-            values.add(effect.canUse(second,players, shotPlayers));
+            values.add(effect.canUse(second,players, shotPlayers, board));
 
             assertThat(new Boolean[]{true,false},is(values.toArray()));
 
@@ -324,7 +324,7 @@ public class TestEffect {
     @Test
     public void testRoomTarget(){
         try{
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test4.xml"));
@@ -339,10 +339,10 @@ public class TestEffect {
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
-            first.setPosition(GameBoard.getSquare(0,0));
-            second.setPosition(GameBoard.getSquare(1,2));
-            third.setPosition(GameBoard.getSquare(1,1));
-            fourth.setPosition(GameBoard.getSquare(2,3));
+            first.setPosition(board.getSquare(0,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(1,1));
+            fourth.setPosition(board.getSquare(2,3));
 
             ArrayList<Boolean> values= new ArrayList<>();
             ArrayList<Player> players= new ArrayList<>(2);
@@ -352,13 +352,13 @@ public class TestEffect {
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(effect.canUse(first,players, shotPlayers));
+            values.add(effect.canUse(first,players, shotPlayers, board));
 
             //SECOND: FALSE
             players.add(first);
             players.add(second);
             players.add(third);
-            values.add(effect.canUse(fourth,players, shotPlayers));
+            values.add(effect.canUse(fourth,players, shotPlayers, board));
 
             assertThat(new Boolean[]{true,false},is(values.toArray()));
 
@@ -378,7 +378,7 @@ public class TestEffect {
     @Test
     public void testDirectionTarget(){
         try{
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test5.xml"));
@@ -394,11 +394,11 @@ public class TestEffect {
             Player fourth=new Player("fourth","fourth_motto",false);
             Player fifth=new Player("fifth","fifth_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,3));
-            second.setPosition(GameBoard.getSquare(1,0));
-            third.setPosition(GameBoard.getSquare(2,1));
-            fourth.setPosition(GameBoard.getSquare(1,2));
-            fifth.setPosition(GameBoard.getSquare(1,1));
+            first.setPosition(board.getSquare(1,3));
+            second.setPosition(board.getSquare(1,0));
+            third.setPosition(board.getSquare(2,1));
+            fourth.setPosition(board.getSquare(1,2));
+            fifth.setPosition(board.getSquare(1,1));
 
             ArrayList<Boolean> values= new ArrayList<>();
             ArrayList<Player> players= new ArrayList<>(2);
@@ -410,14 +410,14 @@ public class TestEffect {
             players.add(third);
             players.add(fourth);
             shotPlayers.add(first);
-            values.add(effect.canUse(fifth,players,shotPlayers));
+            values.add(effect.canUse(fifth,players,shotPlayers, board));
 
             //SECOND: TRUE
-            first.setPosition(GameBoard.getSquare(1,1));
-            second.setPosition(GameBoard.getSquare(1,1));
-            values.add(effect.canUse(fifth,players,new ArrayDeque<>()));
+            first.setPosition(board.getSquare(1,1));
+            second.setPosition(board.getSquare(1,1));
+            values.add(effect.canUse(fifth,players,new ArrayDeque<>(), board));
 
-            List<List<Player>> list=effect.getShootablePlayers(fifth,players,new ArrayDeque<>());
+            List<List<Player>> list=effect.getShootablePlayers(fifth,players,new ArrayDeque<>(), board);
             values.add(list.size()==2&&list.get(0).size()==3&&list.get(1).size()==3);
             assertThat(new Boolean[]{true,true,true},is(values.toArray()));
         } catch (ParserConfigurationException e) {
@@ -440,16 +440,16 @@ public class TestEffect {
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
         try{
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(1,2));
-            third.setPosition(GameBoard.getSquare(2,3));
-            fourth.setPosition(GameBoard.getSquare(0,0));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(2,3));
+            fourth.setPosition(board.getSquare(0,0));
 
             for (File file:listOfFiles) {
                 if (file.isFile()) {
@@ -464,7 +464,7 @@ public class TestEffect {
                     players.add(second);
                     players.add(third);
                     players.add(fourth);
-                    w.getEffect(1).canUse(first,players, shotPlayers);
+                    w.getEffect(1).canUse(first,players, shotPlayers, board);
                 }
             }
         } catch (ParserConfigurationException e) {
@@ -484,16 +484,16 @@ public class TestEffect {
         try {
             Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/cannonevortex.xml");
             weapon.init();
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(2,3));
-            third.setPosition(GameBoard.getSquare(2,3));
-            fourth.setPosition(GameBoard.getSquare(2,3));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(2,3));
+            third.setPosition(board.getSquare(2,3));
+            fourth.setPosition(board.getSquare(2,3));
 
             Effect base= weapon.getEffect(1);
 
@@ -504,28 +504,28 @@ public class TestEffect {
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(first,players, new ArrayDeque<>()));
+            values.add(base.canUse(first,players, new ArrayDeque<>(), board));
 
             //SECOND: true
-            second.setPosition(GameBoard.getSquare(1,3));
+            second.setPosition(board.getSquare(1,3));
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(first,players, new ArrayDeque<>()));
+            values.add(base.canUse(first,players, new ArrayDeque<>(), board));
 
             //THIRD: true
-            second.setPosition(GameBoard.getSquare(1,2));
+            second.setPosition(board.getSquare(1,2));
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(first,players, new ArrayDeque<>()));
+            values.add(base.canUse(first,players, new ArrayDeque<>(), board));
 
             //FOURTH: true
-            second.setPosition(GameBoard.getSquare(1,0));
+            second.setPosition(board.getSquare(1,0));
             players.add(second);
             players.add(third);
             players.add(fourth);
-            values.add(base.canUse(first,players, new ArrayDeque<>()));
+            values.add(base.canUse(first,players, new ArrayDeque<>(), board));
 
             assertThat(new Boolean[]{false,true,true,true},is(values.toArray()));
         } catch (ParserConfigurationException e) {
@@ -540,7 +540,7 @@ public class TestEffect {
     @Test
     public void TestMeTarget(){
         try {
-            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test6.xml"));
@@ -554,9 +554,9 @@ public class TestEffect {
             Player second = new Player("second", "second_motto", false);
             Player third = new Player("third", "third_motto", false);
 
-            first.setPosition(GameBoard.getSquare(1, 1));
-            second.setPosition(GameBoard.getSquare(2, 3));
-            third.setPosition(GameBoard.getSquare(2, 3));
+            first.setPosition(board.getSquare(1, 1));
+            second.setPosition(board.getSquare(2, 3));
+            third.setPosition(board.getSquare(2, 3));
 
             ArrayList<Boolean> values = new ArrayList<>();
             ArrayList<Player> players = new ArrayList<>(2);
@@ -564,18 +564,18 @@ public class TestEffect {
             //FIRST: true
             players.add(second);
             players.add(third);
-            values.add(effect.canUse(first, players, new ArrayDeque<>()));
+            values.add(effect.canUse(first, players, new ArrayDeque<>(), board));
 
             //SECOND: true
-            second.setPosition(GameBoard.getSquare(1, 1));
-            third.setPosition(GameBoard.getSquare(1, 1));
-            values.add(effect.canUse(first, players, new ArrayDeque<>()));
+            second.setPosition(board.getSquare(1, 1));
+            third.setPosition(board.getSquare(1, 1));
+            values.add(effect.canUse(first, players, new ArrayDeque<>(), board));
 
             //THIRD: false
-            first.setPosition(GameBoard.getSquare(0, 1));
-            second.setPosition(GameBoard.getSquare(2, 1));
-            third.setPosition(GameBoard.getSquare(2, 2));
-            values.add(effect.canUse(first, players, new ArrayDeque<>()));
+            first.setPosition(board.getSquare(0, 1));
+            second.setPosition(board.getSquare(2, 1));
+            third.setPosition(board.getSquare(2, 2));
+            values.add(effect.canUse(first, players, new ArrayDeque<>(), board));
 
             assertThat(new Boolean[]{true,true,false},is(values.toArray()));
 

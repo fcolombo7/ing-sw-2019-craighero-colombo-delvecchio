@@ -374,7 +374,7 @@ public class Weapon extends Card{
      * @param shotPlayers represent all the last player shot using this Weapon
      * @return List<Effect> representing all the effect the player could perform using this weapon in the current turn
      */
-    public List<Effect> getUsableEffect(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers){
+    public List<Effect> getUsableEffect(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board){
         //Effects that use PrevConstraints if precede by another which use also PrevConstraints may be set as usable also when it can't
         if(!initialized) throw new CardNotInitializedException("Can't get the usable effects: the card is not initialized.");
         if(!loaded) return new ArrayList<>(); //if not loaded return an empty list
@@ -390,7 +390,7 @@ public class Weapon extends Card{
                 }
             }
         }
-        return iterateEffects(nodes,currentPlayer, players, shotPlayers, updateAmmo(currentPlayer.getBoard().getAmmos(),ammo));
+        return iterateEffects(nodes,currentPlayer, players, shotPlayers, board, updateAmmo(currentPlayer.getBoard().getAmmos(),ammo));
     }
 
     /**TODO: NEED TO BE TESTED
@@ -399,16 +399,17 @@ public class Weapon extends Card{
      * @param currentPlayer representing the player whose playing the Turn
      * @param players representing all the players (current player excluded)
      * @param shotPlayers represent all the last player shot using this Weapon
+     * @param board representing the current gameboard
      * @param ammo representing the ammo of the current player
      * @return List<Effect> representing all the effect the player could perform which are in the nodes list
      */
-    private List<Effect> iterateEffects(List<TreeNode<Integer>> nodes, Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, List<Color> ammo) {
+    private List<Effect> iterateEffects(List<TreeNode<Integer>> nodes, Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board, List<Color> ammo) {
         List<Effect> availableEffects= new ArrayList<>();
         for (TreeNode<Integer> node: nodes) {
             List<Color> eCost=getEffect(node.getValue()).getCost();
             boolean val=haveAmmo(ammo,eCost);
             if(val){
-                boolean usable=getEffect(node.getValue()).canUse(currentPlayer,players,shotPlayers);
+                boolean usable=getEffect(node.getValue()).canUse(currentPlayer,players,shotPlayers,board);
                 if(usable){
                     List<TreeNode<Integer>> children=node.getChildren();
                     boolean end=false;
@@ -418,7 +419,7 @@ public class Weapon extends Card{
                             break;
                         }
                     }
-                    if(end||!iterateEffects(children,currentPlayer,players,shotPlayers,updateAmmo(ammo,eCost)).isEmpty())
+                    if(end||!iterateEffects(children,currentPlayer,players,shotPlayers, board, updateAmmo(ammo,eCost)).isEmpty())
                         availableEffects.add(getEffect(node.getValue()));
 
                 }

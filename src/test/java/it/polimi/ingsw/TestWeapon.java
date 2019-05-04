@@ -182,7 +182,7 @@ public class TestWeapon {
         {
             Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/vulcanizzatore.xml");
             weapon.init();
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
@@ -197,21 +197,21 @@ public class TestWeapon {
             ammo.add(Color.BLUE);
             first.getBoard().addAmmos(ammo);
 
-            first.setPosition(GameBoard.getSquare(1,1));
-            second.setPosition(GameBoard.getSquare(2,3));
-            third.setPosition(GameBoard.getSquare(2,2));
-            fourth.setPosition(GameBoard.getSquare(2,2));
+            first.setPosition(board.getSquare(1,1));
+            second.setPosition(board.getSquare(2,3));
+            third.setPosition(board.getSquare(2,2));
+            fourth.setPosition(board.getSquare(2,2));
             players.add(second);
             players.add(third);
             players.add(fourth);
 
-            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>());
+            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
-            third.setPosition(GameBoard.getSquare(1,2));
-            fourth.setPosition(GameBoard.getSquare(1,2));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>());
+            third.setPosition(board.getSquare(1,2));
+            fourth.setPosition(board.getSquare(1,2));
+            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
             assertThat(effects.get(0).getRefId(),is(2));
 
         } catch (ParserConfigurationException e) {
@@ -229,7 +229,7 @@ public class TestWeapon {
         {
             Weapon weapon=new Weapon("weapon1","myWeapon","src/test/Resources/weapon_test2.xml");
             weapon.init();
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
@@ -245,25 +245,25 @@ public class TestWeapon {
             first.getBoard().addAmmos(ammo);
 
 
-            first.setPosition(GameBoard.getSquare(1,0));
-            second.setPosition(GameBoard.getSquare(1,2));
-            third.setPosition(GameBoard.getSquare(1,1));
-            fourth.setPosition(GameBoard.getSquare(2,2));
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(1,1));
+            fourth.setPosition(board.getSquare(2,2));
             players.add(second);
             players.add(third);
             players.add(fourth);
 
-            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>());
+            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             weapon.setNavigationNode(weapon.getEffect(1));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>());
+            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
             assertThat(effects.get(0).getRefId(),is(2));
 
             effects.clear();
-            third.setPosition(GameBoard.getSquare(2,2));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>());
+            third.setPosition(board.getSquare(2,2));
+            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
             assertTrue(effects.isEmpty());
 
         } catch (ParserConfigurationException e) {

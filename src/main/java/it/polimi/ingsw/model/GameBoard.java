@@ -16,17 +16,17 @@ public class GameBoard {
     /**
      * This attribute represents the map of the game board
      */
-    private static Square[][] map;
+    private Square[][] map;
 
     /**
      * This attribute represents the number of row of square contained in the map
      */
-    private static int rowLength;
+    private int rowLength;
 
     /**
      * This attribute represents the number of column of square contained in the map
      */
-    private static int colLength;
+    private int colLength;
 
     /**
      * This attribute represents the player killed contained in the killshot track on the board
@@ -53,12 +53,12 @@ public class GameBoard {
     public GameBoard(Node map, int skullNumber){
         this.spawnPoint=new ArrayList<>(Color.values().length);
         NamedNodeMap attributes=map.getAttributes();
-        GameBoard.rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
-        GameBoard.colLength=Integer.parseInt(attributes.getNamedItem("colLength").getNodeValue());
+        rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
+        colLength=Integer.parseInt(attributes.getNamedItem("colLength").getNodeValue());
         if(rowLength<=0) throw new IllegalArgumentException("Invalid attribute: rowLength must be >0.");
         if(colLength<=0) throw new IllegalArgumentException("Invalid attribute: colLength must be >0.");
 
-        GameBoard.map=new Square[rowLength][colLength];
+        this.map=new Square[rowLength][colLength];
         NodeList nodeList=map.getChildNodes();
         int rowCount=0;
         for(int i=0; i<nodeList.getLength();i++){
@@ -119,13 +119,13 @@ public class GameBoard {
         }
         if(type.equalsIgnoreCase("Weapon")) {
             WeaponSquare weaponSquare=new WeaponSquare(roomColor, doors, new int[]{rowCount, colCount});
-            GameBoard.map[rowCount][colCount] = weaponSquare;
+            map[rowCount][colCount] = weaponSquare;
             spawnPoint.add(weaponSquare);
         }
         else if(type.equalsIgnoreCase("Ammo"))
-            GameBoard.map[rowCount][colCount]=new AmmoSquare(roomColor,doors,new int[]{rowCount,colCount});
+            map[rowCount][colCount]=new AmmoSquare(roomColor,doors,new int[]{rowCount,colCount});
         else
-            GameBoard.map[rowCount][colCount]=null;
+            map[rowCount][colCount]=null;
         return colCount+1;
     }
 
@@ -234,7 +234,7 @@ public class GameBoard {
      * @param y represents the y coordinate of the position
      * @return MatrixHelper representing the visibility matrix of the square chosen
      */
-    public static MatrixHelper getVisibilityMatrix(int x,int y){
+    public MatrixHelper getVisibilityMatrix(int x,int y){
         if(!hasSquare(x,y)) throw new IllegalArgumentException("Can't get the visibility of the selected square (null).");
         return map[x][y].getVisibilityMatrix();
     }
@@ -243,11 +243,11 @@ public class GameBoard {
         return new ArrayList<>(spawnPoint);
     }
 
-    public static boolean hasSquare(int x, int y){
+    public boolean hasSquare(int x, int y){
         return map[x][y]!=null;
     }
 
-    public static Square getSquare(int x,int y){
+    public Square getSquare(int x,int y){
         if(!hasSquare(x,y)) throw new NullPointerException("Gameboard map has not square at "+x+" - "+y+".");
         return map[x][y];
     }
@@ -279,7 +279,7 @@ public class GameBoard {
      * @param distance represents the maximum number of movement the player can do
      * @return MatrixHelper representing the distance matrix as described above
      */
-    public static MatrixHelper getDistanceMatrix(int x,int y,int distance){
+    public MatrixHelper getDistanceMatrix(int x,int y,int distance){
         Queue<Square> nodeQueue = new ArrayDeque<>();
         nodeQueue.add(map[x][y]);
 
@@ -310,7 +310,7 @@ public class GameBoard {
      * @param matrix represents which squares were already visited
      * @return List of Square representing which squares is accessible
      */
-    private static List<Square> checkAround(Square co, boolean[][] matrix){
+    private List<Square> checkAround(Square co, boolean[][] matrix){
         List<Square> retList= new ArrayList<>();
         for(Direction d: Direction.values()){
             int x = co.getBoardIndexes()[0];
@@ -347,11 +347,11 @@ public class GameBoard {
      * @param d represents the direction where the access square is, compared to the curr one
      * @return boolean representing if access is accessibility
      */
-    private static boolean checkAdjacentAccessibility(Square curr, Square access, Direction d){
+    private boolean checkAdjacentAccessibility(Square curr, Square access, Direction d){
         return access != null && (curr.getRoomColor() == access.getRoomColor() || curr.hasDoor(d));
     }
 
-    public static MatrixHelper getGameboardMatrix(){
+    public MatrixHelper getGameboardMatrix(){
         boolean[][] mat=new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
             for(int j=0;j<colLength;j++) mat[i][j]=map[i][j]!=null;
