@@ -25,54 +25,37 @@ public class TestWeapon {
    @Test
     public void CorrectInitialization(){
         Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
-        try {
-            weapon.init();
-            String expected="Weapon {\n" +
-                    "Card {id: weapon1, name: distruttore, xmlFile: src/test/Resources/weapon_test1.xml}\n" +
-                    "initialized: true\n" +
-                    "ammo: BLUE, BLUE\n" +
-                    "loaded: true\n" +
-                    "Effects {1: base, 2: opzionale}\n" +
-                    "effectOrder: roots {\n" +
-                    "0: TreeNode<Integer>: {value: 1, children {TreeNode<Integer>: {value: -1, children {none}}, TreeNode<Integer>: {value: 2, children {TreeNode<Integer>: {value: -1, children {none}}}}}}\n" +
-                    "}\n" +
-                    "}";
-            assertEquals(expected,weapon.toString());
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
-        }
+        weapon.init();
+        String expected="Weapon {\n" +
+                "Card {id: weapon1, name: distruttore, xmlFile: src/test/Resources/weapon_test1.xml}\n" +
+                "initialized: true\n" +
+                "ammo: BLUE, BLUE\n" +
+                "loaded: true\n" +
+                "Effects {1: base, 2: opzionale}\n" +
+                "effectOrder: roots {\n" +
+                "0: TreeNode<Integer>: {value: 1, children {TreeNode<Integer>: {value: -1, children {none}}, TreeNode<Integer>: {value: 2, children {TreeNode<Integer>: {value: -1, children {none}}}}}}\n" +
+                "}\n" +
+                "}";
+        assertEquals(expected,weapon.toString());
     }
 
     /**
      * Test if Weapon's method getEffect throws WeaponEffectException when the effect isn't in the list of the effects of the weapon
      */
     @Test
-    public void GetEffectNotPresent(){
-        String eName="effetto1";
-        try{
-            Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+    public void GetEffectNotPresent() {
+        String eName = "effetto1";
+        try {
+            Weapon w = new Weapon("weapon1", "distruttore", "src/test/Resources/weapon_test1.xml");
             w.init();
             w.getEffect(eName);
             fail("Expected a WeaponEffectException to be thrown.");
-        } catch(WeaponEffectException aWeaponEffectException){
-            assertThat(aWeaponEffectException.getMessage(), is("Effect not valid: The weapon does not have the effect '"+eName+"'."));
-        } catch (ParserConfigurationException e) {
+        } catch (WeaponEffectException aWeaponEffectException) {
+            assertThat(aWeaponEffectException.getMessage(), is("Effect not valid: The weapon does not have the effect '" + eName + "'."));
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
-
     }
 
    /**
@@ -86,15 +69,9 @@ public class TestWeapon {
             assertThat(w.getEffect("base").getName(), is("base"));
         } catch(WeaponEffectException aWeaponEffectException){
             fail("An unexpected WeaponEffectException has been thrown.");
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
     }
 
@@ -110,15 +87,9 @@ public class TestWeapon {
             fail("Expected a WeaponLoadException to be thrown.");
         } catch (WeaponLoadException aWeaponLoadException){
             assertThat(aWeaponLoadException.getMessage(), is("Loaded value not valid: The weapon is already loaded."));
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
     }
 
@@ -135,15 +106,9 @@ public class TestWeapon {
             fail("Expected a WeaponLoadException to be thrown.");
         } catch (WeaponLoadException aWeaponLoadException){
             assertThat(aWeaponLoadException.getMessage(), is("Loaded value not valid: The weapon is already unloaded."));
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
     }
 
@@ -160,15 +125,9 @@ public class TestWeapon {
             assertTrue(w.isLoaded());
         } catch (WeaponLoadException aWeaponLoadException){
             fail("An unexpected WeaponLoadException has been thrown.");
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
     }
 
@@ -184,15 +143,9 @@ public class TestWeapon {
             assertFalse(w.isLoaded());
         } catch (WeaponLoadException aWeaponLoadException){
             fail("An unexpected WeaponLoadException has been thrown.");
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
     }
 
@@ -217,15 +170,9 @@ public class TestWeapon {
                     w.init();
                 }
             }
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("An unexpected ParserConfigurationException has been thrown.("+path+")");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.("+path+")");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.("+path+")");
+            fail("An unexpected exception has been thrown.");
         }
     }
 

@@ -28,14 +28,9 @@ public class TestPowerup {
                     "Timing: COUNTERATTACK\n" +
                     "}";
             assertEquals(expected,powerup.toString());
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("An unexpected IOException has been thrown.");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail("An unexpected SAXException has been thrown.");
+            fail("An unexpected exception has been thrown.");
         }
     }
 }

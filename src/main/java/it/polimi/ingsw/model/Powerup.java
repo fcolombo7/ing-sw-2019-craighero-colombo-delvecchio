@@ -52,11 +52,8 @@ public class Powerup extends Card {
     /**
      * This constructor instantiates and initialized a powerup
      * @param card representing the card object you want to instantiate
-     * @throws IOException when IO errors occur
-     * @throws SAXException when SAX errors occur
-     * @throws ParserConfigurationException when ParserConfiguration errors occur
      */
-    public Powerup(Card card) throws IOException, SAXException, ParserConfigurationException {
+    public Powerup(Card card){
         this(card.getId(),card.getName(),card.getInitXML());
         init();
     }
@@ -72,14 +69,12 @@ public class Powerup extends Card {
     /**
      * TODO: insert the validation with DTD
      * This method initialized a powerup
-     * @throws IOException when IO errors occur
-     * @throws SAXException when SAX errors occur
-     * @throws ParserConfigurationException when ParserConfiguration errors occur
      */
-    public void init() throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        /*
+    public void init(){
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            /*
         factory.setValidating(true);
 
         builder.setErrorHandler(new ErrorHandler() {
@@ -102,20 +97,29 @@ public class Powerup extends Card {
             }
         });
         */
-        Document document = builder.parse(new File(getInitXML()));
-        document.normalizeDocument();
-        Element root = document.getDocumentElement();
-        root.normalize();
-        /*TODO: Controllo per la verifica che id e name siano giusti?
-         * String id=root.getAttribute("id");
-         * if(!id.equals(getId())) throw new InvalidInitializationException;
-         */
-        setColor(root.getElementsByTagName("color").item(0));
-        setTiming(root.getElementsByTagName("timing").item(0));
-        effect=new Effect(root.getElementsByTagName("effect").item(0));
+            Document document = builder.parse(new File(getInitXML()));
+            document.normalizeDocument();
+            Element root = document.getDocumentElement();
+            root.normalize();
+            /*TODO: Controllo per la verifica che id e name siano giusti?
+             * String id=root.getAttribute("id");
+             * if(!id.equals(getId())) throw new InvalidInitializationException;
+             */
+            setColor(root.getElementsByTagName("color").item(0));
+            setTiming(root.getElementsByTagName("timing").item(0));
+            effect = new Effect(root.getElementsByTagName("effect").item(0));
 
-        //da controllare
-        this.initialized=true;
+            this.initialized = true;
+        } catch (ParserConfigurationException e) {
+            System.out.println("Parsing errors occur during the initialization of the powerup:\n"+this.toString());
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("IO errors occur during the initialization of the powerup:\n"+this.toString());
+            e.printStackTrace();
+        } catch (SAXException e) {
+            System.out.println("SAX errors occur during the initialization of the powerup:\n"+this.toString());
+            e.printStackTrace();
+        }
     }
 
     private void setColor(Node node) {

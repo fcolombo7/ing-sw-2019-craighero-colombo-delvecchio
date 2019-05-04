@@ -69,11 +69,8 @@ public class Weapon extends Card{
     /**
      * This constructor instantiates and initialized a weapon
      * @param card representing the card object you want to instantiate
-     * @throws IOException when IO errors occur
-     * @throws SAXException when SAX errors occur
-     * @throws ParserConfigurationException when ParserConfiguration errors occur
      */
-    public Weapon(Card card) throws IOException, SAXException, ParserConfigurationException {
+    public Weapon(Card card){
         this(card.getId(),card.getName(),card.getInitXML());
         init();
     }
@@ -89,15 +86,13 @@ public class Weapon extends Card{
     /**
      * TODO: insert the validation with DTD
      * This method initialized a weapon
-     * @throws IOException when IO errors occur
-     * @throws SAXException when SAX errors occur
-     * @throws ParserConfigurationException when ParserConfiguration errors occur
      */
-    public void init() throws ParserConfigurationException, IOException, SAXException {
+    public void init(){
         this.effects=new ArrayList<>();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        /*
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            /*
         factory.setValidating(true);
 
         builder.setErrorHandler(new ErrorHandler() {
@@ -120,29 +115,38 @@ public class Weapon extends Card{
             }
         });
         */
-        Document document = builder.parse(new File(getInitXML()));
-        document.normalizeDocument();
-        Element root = document.getDocumentElement();
-        root.normalize();
-        /*TODO: Controllo per la verifica che id e name siano giusti?
-        * String id=root.getAttribute("id");
-        * if(!id.equals(getId())) throw new InvalidInitializationException;
-        * */
-        setAmmo(root.getElementsByTagName("ammo"));
-        NodeList effectsList=root.getElementsByTagName("effects").item(0).getChildNodes();
-        int count=0;
-        while(count<effectsList.getLength()){
-            Node effectNode= effectsList.item(count);
-            if(effectNode.getNodeType()!=Node.TEXT_NODE)
-                addEffect(effectNode);
-            count++;
-        }
-        effectOrder=new ArrayList<>();
-        setEffectOrder(root.getElementsByTagName("order").item(0).getChildNodes());
+            Document document = builder.parse(new File(getInitXML()));
+            document.normalizeDocument();
+            Element root = document.getDocumentElement();
+            root.normalize();
+            /*TODO: Controllo per la verifica che id e name siano giusti?
+             * String id=root.getAttribute("id");
+             * if(!id.equals(getId())) throw new InvalidInitializationException;
+             * */
+            setAmmo(root.getElementsByTagName("ammo"));
+            NodeList effectsList = root.getElementsByTagName("effects").item(0).getChildNodes();
+            int count = 0;
+            while (count < effectsList.getLength()) {
+                Node effectNode = effectsList.item(count);
+                if (effectNode.getNodeType() != Node.TEXT_NODE)
+                    addEffect(effectNode);
+                count++;
+            }
+            effectOrder = new ArrayList<>();
+            setEffectOrder(root.getElementsByTagName("order").item(0).getChildNodes());
 
-        //da controllare
-        initialized=true;
-        loaded=true;
+            initialized = true;
+            loaded = true;
+        } catch (ParserConfigurationException e) {
+            System.out.println("Parsing errors occur during the initialization of the weapon:\n"+this.toString());
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("IO errors occur during the initialization of the weapon:\n"+this.toString());
+            e.printStackTrace();
+        } catch (SAXException e) {
+            System.out.println("SAX errors occur during the initialization of the weapon:\n"+this.toString());
+            e.printStackTrace();
+        }
     }
 
     /**
