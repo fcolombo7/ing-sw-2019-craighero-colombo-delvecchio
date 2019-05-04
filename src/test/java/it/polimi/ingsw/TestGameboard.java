@@ -67,17 +67,23 @@ public class TestGameboard {
 
     @Test
     public void getDistanceMatrixFirstTest() throws IOException, SAXException, ParserConfigurationException {
-        assertThat(new GameBoard(parsingXMLFile("src/test/Resources/gameboard_test1.xml"), 5).getDistanceMatrix(1, 2, 2).toString(), is((new MatrixHelper(new boolean[][] {{false, true, true, false}, {true, true, true, true}, {false, true, false, true}})).toString()));
+        Node node = parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+        new GameBoard(node,5);
+        assertThat(GameBoard.getDistanceMatrix(1, 2, 2).toString(), is((new MatrixHelper(new boolean[][] {{false, true, true, false}, {true, true, true, true}, {false, true, false, true}})).toString()));
     }
 
     @Test
     public void getDistanceMatrixSecondTest() throws IOException, SAXException, ParserConfigurationException {
-        assertThat(new GameBoard(parsingXMLFile("src/test/Resources/gameboard_test1.xml"), 5).getDistanceMatrix(0, 0, 2).toString(), is((new MatrixHelper(new boolean[][] {{true, true, true, false}, {true, true, false, false}, {false, false, false, false}})).toString()));
+        Node node = parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+        new GameBoard(node,5);
+        assertThat(GameBoard.getDistanceMatrix(0, 0, 2).toString(), is((new MatrixHelper(new boolean[][] {{true, true, true, false}, {true, true, false, false}, {false, false, false, false}})).toString()));
     }
 
     @Test
     public void getDistanceMatrixThirdTest() throws IOException, SAXException, ParserConfigurationException {
-        assertThat(new GameBoard(parsingXMLFile("src/test/Resources/gameboard_test1.xml"), 5).getDistanceMatrix(1, 3, 0).toString(), is((new MatrixHelper(new boolean[][] {{false, false, false, false}, {false, false, false, true}, {false, false, false, false}})).toString()));
+        Node node = parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+        new GameBoard(node,5);
+        assertThat(GameBoard.getDistanceMatrix(1, 3, 0).toString(), is((new MatrixHelper(new boolean[][] {{false, false, false, false}, {false, false, false, true}, {false, false, false, false}})).toString()));
     }
 
     @Test

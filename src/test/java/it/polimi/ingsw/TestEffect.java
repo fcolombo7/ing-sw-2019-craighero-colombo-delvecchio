@@ -82,7 +82,9 @@ public class TestEffect {
         try {
             Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
             weapon.init();
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
+
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
@@ -141,7 +143,7 @@ public class TestEffect {
         try {
             Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
             weapon.init();
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
@@ -215,7 +217,7 @@ public class TestEffect {
     @Test
     public void testDistance(){
         try{
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test2.xml"));
@@ -271,7 +273,7 @@ public class TestEffect {
     @Test
     public void testDirectionAndSquareTarget(){
         try{
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test3.xml"));
@@ -322,7 +324,7 @@ public class TestEffect {
     @Test
     public void testRoomTarget(){
         try{
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test4.xml"));
@@ -376,7 +378,7 @@ public class TestEffect {
     @Test
     public void testDirectionTarget(){
         try{
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test5.xml"));
@@ -438,7 +440,7 @@ public class TestEffect {
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
         try{
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
@@ -482,7 +484,7 @@ public class TestEffect {
         try {
             Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/cannonevortex.xml");
             weapon.init();
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
@@ -538,7 +540,7 @@ public class TestEffect {
     @Test
     public void TestMeTarget(){
         try {
-            TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml");
+            new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File("src/test/Resources/effect_test6.xml"));

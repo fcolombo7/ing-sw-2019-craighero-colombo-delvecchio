@@ -182,7 +182,7 @@ public class TestAmmoTile {
         try {
             AmmoTile ammo=new AmmoTile(Color.RED,Color.RED,null,true);
             ammo.setId("id");
-            assertEquals(ammo.getId(),"id");
+            assertEquals("id",ammo.getId());
         } catch (AmmoTileNotValidException e) {
             fail("An unexpected AmmoTileNotValidException has been thrown");
         }

@@ -485,7 +485,8 @@ public class Effect {
         List<MatrixHelper> selMatrixes=new ArrayList<>();
         for(MatrixHelper mat:decMatrixes){
             MatrixHelper curMatrix=GameBoard.getGameboardMatrix();
-            int x=0;int y=0;
+            int x=0;
+            int y=0;
             for(int i=0;i<mat.getRowLength();i++){
                 for(int j=0;j<mat.getColLength();j++){
                     if(mat.toBooleanMatrix()[i][j]){x=i;y=j;break;}
