@@ -14,13 +14,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class TestGameboard {
 
-    public static GameBoard parsingXMLFile(String filename) throws ParserConfigurationException, IOException, SAXException {
+    public static Node parsingXMLFile(String filename) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -48,7 +47,7 @@ public class TestGameboard {
         Element root = document.getDocumentElement();
         root.normalize();
 
-        return new GameBoard(root, 5);
+        return root;
     }
 
     @Test
@@ -68,17 +67,17 @@ public class TestGameboard {
 
     @Test
     public void getDistanceMatrixFirstTest() throws IOException, SAXException, ParserConfigurationException {
-        assertThat(parsingXMLFile("src/test/Resources/gameboard_test1.xml").getDistanceMatrix(1, 2, 2).toString(), is((new MatrixHelper(new boolean[][] {{false, true, true, false}, {true, true, true, true}, {false, true, false, true}})).toString()));
+        assertThat(new GameBoard(parsingXMLFile("src/test/Resources/gameboard_test1.xml"), 5).getDistanceMatrix(1, 2, 2).toString(), is((new MatrixHelper(new boolean[][] {{false, true, true, false}, {true, true, true, true}, {false, true, false, true}})).toString()));
     }
 
     @Test
     public void getDistanceMatrixSecondTest() throws IOException, SAXException, ParserConfigurationException {
-        assertThat(parsingXMLFile("src/test/Resources/gameboard_test1.xml").getDistanceMatrix(0, 0, 2).toString(), is((new MatrixHelper(new boolean[][] {{true, true, true, false}, {true, true, false, false}, {false, false, false, false}})).toString()));
+        assertThat(new GameBoard(parsingXMLFile("src/test/Resources/gameboard_test1.xml"), 5).getDistanceMatrix(0, 0, 2).toString(), is((new MatrixHelper(new boolean[][] {{true, true, true, false}, {true, true, false, false}, {false, false, false, false}})).toString()));
     }
 
     @Test
     public void getDistanceMatrixThirdTest() throws IOException, SAXException, ParserConfigurationException {
-        assertThat(parsingXMLFile("src/test/Resources/gameboard_test1.xml").getDistanceMatrix(1, 3, 0).toString(), is((new MatrixHelper(new boolean[][] {{false, false, false, false}, {false, false, false, true}, {false, false, false, false}})).toString()));
+        assertThat(new GameBoard(parsingXMLFile("src/test/Resources/gameboard_test1.xml"), 5).getDistanceMatrix(1, 3, 0).toString(), is((new MatrixHelper(new boolean[][] {{false, false, false, false}, {false, false, false, true}, {false, false, false, false}})).toString()));
     }
 
     @Test
