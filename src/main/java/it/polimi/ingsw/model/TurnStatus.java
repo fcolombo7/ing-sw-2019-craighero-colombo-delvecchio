@@ -6,6 +6,7 @@ package it.polimi.ingsw.model;
 
 public enum TurnStatus {
     WAITING,
-    COUNTERATTACK
+    PLAYING,
+    COUNTER_ATTACK
     //other possible status of the turn
 }

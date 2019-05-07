@@ -1,14 +1,8 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Weapon;
+import it.polimi.ingsw.model.*;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,14 +37,53 @@ public class TestGame {
         }
     }
 
-    /*@Test
+    @Test
     public void drawWeaponTest(){
         Game game = new Game();
-        if(game.getWeaponDeck().contains(game.drawWeapon())){
-            for(int i=0; i<30; i++)
-                Weapon w = (Weapon)game.drawWeapon();
+        List<Weapon> drawed= new ArrayList<>();
+        for(int i=0; i<game.getWeaponDeck().size(); i++)
+            drawed.add(game.drawWeapon());
+        for(int i=0; i<game.getWeaponDeck().size(); i++){
+            assertEquals(drawed.get(i).getId(), game.getWeaponDeck().get(i).getId());
+            assertEquals(drawed.get(i).getName(), game.getWeaponDeck().get(i).getName());
+            assertEquals(drawed.get(i).getInitXML(), game.getWeaponDeck().get(i).getInitXML());
+        }
+    }
+
+    @Test
+    public void drawAmmoTileTest(){
+        Game game = new Game();
+        List<AmmoTile> drawed= new ArrayList<>();
+        for(int j=0; j<2; j++) {
+            for (int i = 0; i < game.getAmmoTileDeck().size(); i++)
+                drawed.add(game.drawAmmoTile());
+            for (int i = 0; i < game.getAmmoTileDeck().size(); i++) {
+                assertEquals(drawed.get(i).getId(), game.getAmmoTileDeck().get(i).getId());
+                assertEquals(drawed.get(i).hasPowerup(), game.getAmmoTileDeck().get(i).hasPowerup());
+                assertEquals(drawed.get(i).getAmmo(0), game.getAmmoTileDeck().get(i).getAmmo(0));
+                assertEquals(drawed.get(i).getAmmo(1), game.getAmmoTileDeck().get(i).getAmmo(1));
+                assertEquals(drawed.get(i).getAmmo(2), game.getAmmoTileDeck().get(i).getAmmo(2));
+            }
+            drawed.clear();
+        }
+    }
+
+    /*@Test
+    public void drawPowerupTest(){
+        Game game = new Game();
+        List<Powerup> drawed= new ArrayList<>();
+        for(int j=0; j<2; j++) {
+            for (int i = 0; i < game.getPowerupDeck().size(); i++)
+                drawed.add(game.drawPowerup());
+            for (int i = 0; i < game.getWeaponDeck().size(); i++) {
+                assertEquals(drawed.get(i).getId(), game.getPowerupDeck().get(i).getId());
+                assertEquals(drawed.get(i).getName(), game.getPowerupDeck().get(i).getName());
+                assertEquals(drawed.get(i).getInitXML(), game.getPowerupDeck().get(i).getInitXML());
+            }
+            drawed.clear();
         }
     }*/
+
 
     @Test
     public void winnerCalculatorTest(){
@@ -60,7 +93,7 @@ public class TestGame {
         game.addPlayers(new Player("c", "ccc", false));
         game.addPlayers(new Player("d", "ddd", false));
         game.addPlayers(new Player("e", "eee", false));
-        game.getPlayers().get(0).updateScore(12);
+        game.getPlayers().get(0).updateScore(11);
         game.getPlayers().get(1).updateScore(0);
         game.getPlayers().get(2).updateScore(2);
         game.getPlayers().get(3).updateScore(34);
@@ -81,7 +114,7 @@ public class TestGame {
                 ", Player\n" +
                 "Nickname: a\n" +
                 "Motto: aaa\n" +
-                "Score: 12\n" +
+                "Score: 11\n" +
                 "Room: Nowhere\n" +
                 ", Player\n" +
                 "Nickname: c\n" +

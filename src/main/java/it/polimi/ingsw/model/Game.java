@@ -37,13 +37,7 @@ public class Game {
         ammoTileDeck = new ArrayList<>();
         players = new ArrayList<>();
 
-        Node root = null;
-        try {
-            root = parsingXMLFile("src/test/Resources/config.xml");
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-            throw new NullPointerException("Configuration parsing failed");
-        }
+        Node root = parsingXMLFile("src/main/Resources/config.xml");
         NodeList nodeList = root.getChildNodes();
         for(int i=0; i<nodeList.getLength();i++) {
             Node cardNode = nodeList.item(i);
@@ -146,35 +140,39 @@ public class Game {
         }
     }
 
-    private Node parsingXMLFile(String path) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        builder.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void warning(SAXParseException e) throws SAXException {
-                System.out.println("WARNING : " + e.getMessage()); // do nothing
-                throw e;
-            }
+    private Node parsingXMLFile(String path){
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setValidating(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(new ErrorHandler() {
+                @Override
+                public void warning(SAXParseException e) throws SAXException {
+                    System.out.println("WARNING : " + e.getMessage()); // do nothing
+                    throw e;
+                }
 
-            @Override
-            public void error(SAXParseException e) throws SAXException {
-                System.out.println("ERROR : " + e.getMessage());
-                throw e;
-            }
+                @Override
+                public void error(SAXParseException e) throws SAXException {
+                    System.out.println("ERROR : " + e.getMessage());
+                    throw e;
+                }
 
-            @Override
-            public void fatalError(SAXParseException e) throws SAXException {
-                System.out.println("FATAL : " + e.getMessage());
-                throw e;
-            }
-        });
-        Document document = builder.parse(new File(path));
-        document.normalizeDocument();
-        Element root = document.getDocumentElement();
-        root.normalize();
-
-        return root;
+                @Override
+                public void fatalError(SAXParseException e) throws SAXException {
+                    System.out.println("FATAL : " + e.getMessage());
+                    throw e;
+                }
+            });
+            Document document = builder.parse(new File(path));
+            document.normalizeDocument();
+            Element root = document.getDocumentElement();
+            root.normalize();
+            return root;
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            e.printStackTrace();
+            throw new NullPointerException("Parsing failed");
+        }
     }
 
     public List<AmmoTile> getAmmoTileDeck() {
@@ -193,12 +191,32 @@ public class Game {
         return new ArrayList<>(players);
     }
 
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
+
+    public void setGameBoard(int mapNumber, int skullNumber) {
+        switch(mapNumber){
+            case 1:
+                this.gameBoard = new GameBoard(parsingXMLFile("1"), skullNumber);
+                break;
+            case 2:
+                this.gameBoard = new GameBoard(parsingXMLFile("2"), skullNumber);
+                break;
+            case 3:
+                this.gameBoard = new GameBoard(parsingXMLFile("3"), skullNumber);
+                break;
+            default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
+        }
+    }
+
     public Weapon drawWeapon(){
         if(weaponIndex>weaponDeck.size()-1)
             throw new IndexOutOfBoundsException("All the weapons are already on the boards");
         return new Weapon(weaponDeck.get(weaponIndex++));
     }
 
+    //TODO NEED TEST
     public Powerup drawPowerup(){
         if(powerupIndex>powerupDeck.size()-1) {
             shuffleDeck(powerupDeck);
@@ -238,10 +256,6 @@ public class Game {
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-    }
-
-    public GameBoard getGameBoard() {
-        return gameBoard;
     }
 /*
     public void setStatus(GameStatus status){}
