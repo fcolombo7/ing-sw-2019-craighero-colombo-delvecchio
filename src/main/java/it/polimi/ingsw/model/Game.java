@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class Game {
 
     private Player currentPlayer;
-    //private GameSatus status;
     private Turn currentTurn;
     private int ammoIndex = 0;
     private List<AmmoTile> ammoTileDeck;
@@ -30,6 +29,9 @@ public class Game {
     private List<Card> powerupDeck;
     private List<Player> players;
     private GameBoard gameBoard;
+
+    private boolean frenzyMode = false;
+    private Player lastPlayer=null;
 
     public Game(){
         weaponDeck = new ArrayList<>();
@@ -257,26 +259,22 @@ public class Game {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
-/*
-    public void setStatus(GameStatus status){}
 
-    public void createTurn(Game game) {
+
+    public boolean isFrenzy() {
+        return frenzyMode;
     }
 
-    public Requirement getRequirement(String requirement) {
-        return req;
+    public void setFrenzy(Player lastPlayer){
+        frenzyMode=true;
+        this.lastPlayer=lastPlayer;
     }
 
-    public Player getCurrentPlayer() {
+    protected Player getLastPlayer() {
+        return lastPlayer;
+    }
+
+    protected Player getCurrentPlayer() {
         return currentPlayer;
     }
-
-    public GameSatus getStatus() {
-        return status;
-    }
-
-    public Turn getCurrentTurn() {
-        return currentTurn;
-    }
-*/
 }

@@ -11,7 +11,7 @@ import static it.polimi.ingsw.model.PlayerStatus.*;
 /**
  * This class represents a player
  * */
-public class Player {
+public class Player implements Cloneable{
 
     /**
      * This attribute contains the nickname chosen by the player
@@ -272,5 +272,17 @@ public class Player {
                 msg.append(((Card)powerup).toString() + /*" " + powerup.getColor() + */"\n");
         }
         return msg.toString();
+    }
+
+    public Player(Player p){
+        this.weapons=new ArrayList<>(p.weapons);
+        this.powerups=new ArrayList<>(p.powerups);
+        this.board=new PlayerBoard(p.board);
+        this.first=p.first;
+        this.motto=p.motto;
+        this.nickname=p.nickname;
+        this.position=p.position;
+        this.score=p.score;
+        this.status=p.status;
     }
 }

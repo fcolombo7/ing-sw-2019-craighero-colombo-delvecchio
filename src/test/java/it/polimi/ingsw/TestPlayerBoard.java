@@ -98,7 +98,7 @@ public class TestPlayerBoard {
         for(int i=0; i<12; i++)
             isList.add(p2);
 
-        assertThat(pb.getDamages(), is(isList));
+        assertThat(pb.getHealthBar(), is(isList));
     }
 
     /**

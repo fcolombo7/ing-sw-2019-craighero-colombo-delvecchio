@@ -374,10 +374,10 @@ public class Weapon extends Card{
      * @param shotPlayers represent all the last player shot using this Weapon
      * @return List<Effect> representing all the effect the player could perform using this weapon in the current turn
      */
-    public List<Effect> getUsableEffect(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board){
+    public List<Effect> getUsableEffect(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board, boolean checkLoaded){
         //Effects that use PrevConstraints if precede by another which use also PrevConstraints may be set as usable also when it can't
         if(!initialized) throw new CardNotInitializedException("Can't get the usable effects: the card is not initialized.");
-        if(!loaded) return new ArrayList<>(); //if not loaded return an empty list
+        if(!checkLoaded&&!loaded) return new ArrayList<>(); //if not loaded return an empty list
         if(!haveAmmo(currentPlayer.getBoard().getAmmos(),ammo)) return new ArrayList<>();//if player doesn't have sufficient ammo, return an empty list.
         ArrayList<TreeNode<Integer>> nodes;
         if(currentNode==null) nodes=new ArrayList<>(effectOrder);

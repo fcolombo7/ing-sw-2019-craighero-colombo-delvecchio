@@ -53,7 +53,7 @@ public class PlayerBoard {
      * This method returns the list of player that has dealt damages
      * @return List containing Player representing dealt damages to the player linked to the player board
      */
-    public List<Player> getDamages() {
+    public List<Player> getHealthBar() {
         return new ArrayList<>(damages);
     }
 
@@ -256,5 +256,14 @@ public class PlayerBoard {
      */
     public void clearDamage(){
         this.damages.clear();
+    }
+
+
+    public PlayerBoard(PlayerBoard pBoard) {
+        ammos=new ArrayList<>(pBoard.ammos);
+        damages=new ArrayList<>(pBoard.damages);
+        marks=new ArrayList<>(pBoard.marks);
+        deathCounter=pBoard.deathCounter;
+        frenzyMode=pBoard.frenzyMode;
     }
 }

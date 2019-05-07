@@ -205,13 +205,13 @@ public class TestWeapon {
             players.add(third);
             players.add(fourth);
 
-            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
+            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             third.setPosition(board.getSquare(1,2));
             fourth.setPosition(board.getSquare(1,2));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
+            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
             assertThat(effects.get(0).getRefId(),is(2));
 
         } catch (ParserConfigurationException e) {
@@ -253,17 +253,17 @@ public class TestWeapon {
             players.add(third);
             players.add(fourth);
 
-            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
+            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             weapon.setNavigationNode(weapon.getEffect(1));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
+            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
             assertThat(effects.get(0).getRefId(),is(2));
 
             effects.clear();
             third.setPosition(board.getSquare(2,2));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board);
+            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
             assertTrue(effects.isEmpty());
 
         } catch (ParserConfigurationException e) {

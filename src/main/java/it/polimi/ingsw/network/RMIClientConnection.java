@@ -40,7 +40,7 @@ public class RMIClientConnection  extends Observable<String> implements ClientCo
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        });
+        }).start();
     }
 
     @Override

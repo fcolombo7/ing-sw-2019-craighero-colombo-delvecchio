@@ -15,7 +15,7 @@ import static org.junit.Assert.fail;
  */
 public class TestPowerup {
 
-    @Test
+    /*@Test
     public void CorrectInitialization(){
         Powerup powerup=new Powerup("powerup1","Granata","src/test/Resources/powerup_test1.xml");
         try {
@@ -33,4 +33,6 @@ public class TestPowerup {
             fail("An unexpected exception has been thrown.");
         }
     }
+
+     */
 }
