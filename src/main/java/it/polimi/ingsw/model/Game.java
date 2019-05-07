@@ -260,7 +260,6 @@ public class Game {
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-
     public boolean isFrenzy() {
         return frenzyMode;
     }
