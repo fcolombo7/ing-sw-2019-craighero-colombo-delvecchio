@@ -1,80 +1,141 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Observable;
 
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.HashMap;
 
 public class SocketClientConnection extends Observable<String> implements ClientConnection,Runnable {
+    private String nickname;
+
+    private String motto;
+
+    private boolean online;
+
+    private Room room;
 
     private Socket socket;
 
-    private PrintStream out;
-
     private Server server;
 
-    private boolean active = true;
+    private ObjectInputStream inputStream;
 
-    public SocketClientConnection(Socket socket, Server server) {
+    private ObjectOutputStream outputStream;
+
+    private HashMap<Object, RequestManager> requestMap;
+
+    public SocketClientConnection(Socket socket, Server server) throws IOException {
         this.socket = socket;
         this.server = server;
+        outputStream=new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        inputStream=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+        online=true;
+
+        requestMap = new HashMap<>();
+        loadRequests();
     }
 
-    private synchronized boolean isActive(){
-        return active;
+    private void loadRequests() {
+        requestMap.put(Costants.MSG_CLIENT_LOGIN, this::loginRequest);
+        requestMap.put(Costants.MSG_CLIENT_CLOSE,this::closeRequest);
     }
 
-    private void close() {
-        closeConnection();
-        server.deregisterConnection(this);
+    public String getNickname() {
+        return nickname;
     }
 
-    public synchronized void closeConnection() {
-        send("CLOSE_CONNECTION");
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    private void closeConnection() {
         try {
+            outputStream.writeObject(Costants.MSG_SERVER_CLOSE);
+            outputStream.flush();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        active = false;
+        online = false;
     }
 
-    private void send(String message) {
-        out.println(message);
-        out.flush();
-    }
+    @Override
+    public void asyncAction(String message) {
 
-    public void asyncAction(final String message){
-        new Thread(()-> send(message)).start();
     }
 
     @Override
     public void run() {
-        String name;
-        try(Scanner in=new Scanner(socket.getInputStream()))
-        {
-            out = new PrintStream(socket.getOutputStream());
-            String read = in.nextLine();
-            name = read;
-            if(server.firstLogin(name)) {
-                server.addInWaitingRoom(this, name);
-                while (isActive()) {
-                    read = in.nextLine();
-                    String msg=read;
-                    //COMPOSE MESSAGE---SERIALIZATION
-                    notify(msg);
-                    if(msg.equalsIgnoreCase("close")) close();
-                }
+        try{
+            while(true){
+                Object object = inputStream.readObject();
+                requestMap.get(object).exec();
             }
-        } catch (IOException | NoSuchElementException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        }finally{
-            close();
         }
     }
 
-}
+    private void loginRequest() {
+        try {
+            String clientName = (String) inputStream.readObject();
+            String clientMotto = (String) inputStream.readObject();
+            String msg;
+            if (server.checkClientLogin(clientName, this)) {
+                msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
+            } else {
+                msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
+            }
 
+            outputStream.writeObject(msg);
+            outputStream.flush();
+            if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
+                nickname=clientName;
+                motto=clientMotto;
+                server.joinAvailableRoom(this);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void closeRequest() {
+        closeConnection();
+        //server.deregisterConnection(this);
+    }
+
+
+
+    @FunctionalInterface
+    private interface RequestManager {
+
+        void exec();
+    }
+}

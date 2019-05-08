@@ -11,7 +11,7 @@ import static it.polimi.ingsw.model.PlayerStatus.*;
 /**
  * This class represents a player
  * */
-public class Player implements Cloneable{
+public class Player{
 
     /**
      * This attribute contains the nickname chosen by the player

@@ -4,11 +4,11 @@ import it.polimi.ingsw.utils.Observer;
 
 public interface ClientConnection{
 
-    void closeConnection();
+    String getNickname();
+
+    void setRoom(Room room);
 
     void asyncAction(String message);
-
-    void run();
 
     void register(Observer<String> observer);
 
