@@ -3,7 +3,7 @@ package it.polimi.ingsw.utils;
 public class Costants {
     /* NETWORKING PARAMETERS */
     public static final int SOCKET_PORT=12345;
-    public static final int RMI_PORT=1099;
+    public static final int RMI_PORT=12346;
     public static final String RMI_SERVER_NAME="ADRENALINE_SERVER";
 
     /* SOCKET MESSAGES */
@@ -17,7 +17,6 @@ public class Costants {
     public static final int ROOM_MIN_PLAYERS=2;
     public static final int ROOM_MAX_PLAYERS=5;
     public static final int WAITING_ROOM_TIMER=10; //seconds
-
 
     private Costants(){}
 }
