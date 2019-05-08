@@ -5,7 +5,6 @@ import it.polimi.ingsw.network.JoinRoomException;
 import it.polimi.ingsw.network.Room;
 import it.polimi.ingsw.utils.Costants;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,7 @@ public class Server{
 
     private HashMap<String, ClientConnection> players;
 
-    public Server() throws RemoteException {
+    public Server() {
         players=new HashMap<>();
         rooms=new ArrayList<>();
         rmiServer=new RMIServer(this);
@@ -34,7 +33,7 @@ public class Server{
 
 
     public synchronized boolean checkClientLogin(String nickname, ClientConnection client){
-        System.out.println("New login request received: "+nickname);
+        System.out.println("Login request received from "+nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
             players.put(nickname, client);
             System.out.println(nickname+" is in.");
@@ -42,6 +41,20 @@ public class Server{
         }else{
             System.out.println(nickname+" is already in.");
             return false;
+        }
+    }
+
+    public synchronized void deregisterConnection(ClientConnection client){
+        System.out.println("Logout request received from "+client.getNickname());
+        players.remove(client.getNickname());
+        Room room=client.getRoom();
+        if(room.remove(client)){
+            for(Room r:rooms){
+                if(r.getRoomNumber()>room.getRoomNumber()) {
+                    r.setRoomNumber(r.getRoomNumber()-1);
+                }
+            }
+            rooms.remove(room);
         }
     }
 
@@ -64,7 +77,17 @@ public class Server{
     private synchronized void addNewRoom(ClientConnection client) {
         Room room = new Room(client);
         rooms.add(room);
+        room.setRoomNumber(rooms.size()-1);
         client.setRoom(room);
+    }
+
+    public ClientConnection getClientConnection(String nickname){
+        for (String key:players.keySet()) {
+            if(key.equalsIgnoreCase(nickname)){
+                return players.get(nickname);
+            }
+        }
+        throw new IllegalArgumentException("No player connected with nickname "+nickname);
     }
 
     public static void main(String[] args) {
@@ -72,10 +95,9 @@ public class Server{
             Server server = new Server();
             server.startServer();
 
-            System.out.print(Costants.RMI_SERVER_NAME+" started: \n");
+            System.out.print(Costants.RMI_SERVER_NAME + " started: \n");
             System.out.println("(RMI: " + Costants.RMI_PORT + ", socket: " + Costants.SOCKET_PORT + ")");
-            System.out.println();
-        } catch (ServerException | RemoteException e) {
+        } catch (ServerException e) {
             e.printStackTrace();
         }
     }

@@ -7,6 +7,7 @@ import it.polimi.ingsw.utils.Observable;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class SocketClientConnection extends Observable<String> implements ClientConnection,Runnable {
     private String nickname;
@@ -21,17 +22,17 @@ public class SocketClientConnection extends Observable<String> implements Client
 
     private Server server;
 
-    private ObjectInputStream inputStream;
+    private Scanner in;
 
-    private ObjectOutputStream outputStream;
+    private PrintStream out;
 
-    private HashMap<Object, RequestManager> requestMap;
+    private HashMap<String, RequestManager> requestMap;
 
     public SocketClientConnection(Socket socket, Server server) throws IOException {
         this.socket = socket;
         this.server = server;
-        outputStream=new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        inputStream=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+        in = new Scanner(socket.getInputStream());
+        out = new PrintStream(socket.getOutputStream());
         online=true;
 
         requestMap = new HashMap<>();
@@ -43,6 +44,7 @@ public class SocketClientConnection extends Observable<String> implements Client
         requestMap.put(Costants.MSG_CLIENT_CLOSE,this::closeRequest);
     }
 
+    @Override
     public String getNickname() {
         return nickname;
     }
@@ -59,6 +61,7 @@ public class SocketClientConnection extends Observable<String> implements Client
         this.motto = motto;
     }
 
+    @Override
     public boolean isOnline() {
         return online;
     }
@@ -77,8 +80,8 @@ public class SocketClientConnection extends Observable<String> implements Client
 
     private void closeConnection() {
         try {
-            outputStream.writeObject(Costants.MSG_SERVER_CLOSE);
-            outputStream.flush();
+            out.println(Costants.MSG_SERVER_CLOSE);
+            out.flush();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,20 +96,21 @@ public class SocketClientConnection extends Observable<String> implements Client
 
     @Override
     public void run() {
-        try{
+        try(Scanner in = new Scanner(socket.getInputStream())){
             while(true){
-                Object object = inputStream.readObject();
-                requestMap.get(object).exec();
+                String s=in.nextLine();
+                requestMap.get(s).exec();
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void loginRequest() {
-        try {
-            String clientName = (String) inputStream.readObject();
-            String clientMotto = (String) inputStream.readObject();
+        try{
+            System.out.println("[Received a login request form socket]");
+            String clientName = in.nextLine();
+            String clientMotto = in.nextLine();
             String msg;
             if (server.checkClientLogin(clientName, this)) {
                 msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
@@ -114,28 +118,26 @@ public class SocketClientConnection extends Observable<String> implements Client
                 msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
             }
 
-            outputStream.writeObject(msg);
-            outputStream.flush();
+            out.println(msg);
+            out.flush();
             if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
                 nickname=clientName;
                 motto=clientMotto;
                 server.joinAvailableRoom(this);
             }
-        } catch (IOException | ClassNotFoundException e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
     private void closeRequest() {
         closeConnection();
-        //server.deregisterConnection(this);
+        server.deregisterConnection(this);
     }
-
-
 
     @FunctionalInterface
     private interface RequestManager {
-
         void exec();
     }
 }

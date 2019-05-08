@@ -3,7 +3,6 @@ package it.polimi.ingsw.network.server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-//String will be changed with MessageClass
 public interface RMIClientHandler extends Remote {
 
     void actionRequest(String msg) throws RemoteException;

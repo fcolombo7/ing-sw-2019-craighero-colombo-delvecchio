@@ -8,6 +8,10 @@ public interface ClientConnection{
 
     void setRoom(Room room);
 
+    Room getRoom();
+
+    boolean isOnline();
+
     void asyncAction(String message);
 
     void register(Observer<String> observer);

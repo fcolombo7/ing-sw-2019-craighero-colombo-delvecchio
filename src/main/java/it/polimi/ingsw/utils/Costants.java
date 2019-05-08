@@ -14,8 +14,8 @@ public class Costants {
     public static final String MSG_SERVER_CLOSE = "CLOSING CONNECTION";
 
     /* ROOM PARAMETERS */
-    public static final int ROOM_MIN_PLAYERS=2;
-    public static final int ROOM_MAX_PLAYERS=5;
+    public static final int ROOM_MIN_PLAYERS=1;
+    public static final int ROOM_MAX_PLAYERS=2;
     public static final int WAITING_ROOM_TIMER=10; //seconds
 
     private Costants(){}

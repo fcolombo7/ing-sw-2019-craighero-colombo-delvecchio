@@ -14,8 +14,6 @@ public class Room {
 
     private static final int maxPlayers = Costants.ROOM_MAX_PLAYERS;
 
-    private static int roomsSize=0;
-
     private List<ClientConnection> players;
 
     private boolean full;
@@ -27,9 +25,6 @@ public class Room {
 
     public Room(ClientConnection client) {
 
-        roomNumber=roomsSize;
-        roomsSize++;
-
         players = new ArrayList<>();
         players.add(client);
 
@@ -39,6 +34,8 @@ public class Room {
     public int getRoomNumber() {
         return roomNumber;
     }
+
+    public void setRoomNumber(int number){ roomNumber=number;}
 
     public boolean canJoin(){
         return !full;
@@ -52,7 +49,7 @@ public class Room {
         if (!full) {
             players.add(client);
 
-            String message = client.getNickname() + "has joined to room " + roomNumber;
+            String message = client.getNickname() + " has joined the room " + roomNumber;
             //logToPlayer(player, message);
             System.out.println(message);
 
@@ -67,7 +64,21 @@ public class Room {
             throw new JoinRoomException("full");
         }
     }
-/*
+    public synchronized boolean remove(ClientConnection client){
+        if(!players.contains(client)) throw new IllegalArgumentException("Client "+client.getNickname()+" is not in room "+roomNumber);
+        players.remove(client);
+        String message = client.getNickname() + "has left to room " + roomNumber;
+        //logToPlayer(player, message);
+        System.out.println(message);
+        if(players.size()<Costants.ROOM_MIN_PLAYERS)
+            stopCountdown();
+        return players.isEmpty();
+    }
+
+    private void stopCountdown() {
+    }
+
+    /*
     private void startCountDown(int time) {
         logToAllPlayers("Time to start the game: "+ time + "sec");
 

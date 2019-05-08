@@ -5,15 +5,14 @@ import it.polimi.ingsw.network.SocketClientConnection;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SocketServer {
-    private Server server;
-    private ServerSocket serverSocket;
 
-    private HashMap<String,String> socketClients;
+    private Server server;
+
+    private ServerSocket serverSocket;
 
     public SocketServer(Server server){
         this.server=server;
