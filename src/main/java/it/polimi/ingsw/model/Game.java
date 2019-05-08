@@ -21,6 +21,10 @@ public class Game {
     private Player currentPlayer;
     private Turn currentTurn;
     private int ammoIndex = 0;
+
+    /**
+     * This attribute contains the all the ammo tiles
+     */
     private List<AmmoTile> ammoTileDeck;
     private int weaponIndex = 0;
     private List<Card> weaponDeck;
@@ -245,7 +249,7 @@ public class Game {
         Collections.shuffle(deck);
     }
 
-    public void addPlayers(Player player) {
+    public void addPlayer(Player player) {
         if(getPlayers().size()>4)
             throw new IndexOutOfBoundsException("Maximum number of player reached [5]");
         players.add(player);

@@ -24,13 +24,13 @@ public class TestGame {
     @Test
     public void playerMaxNumberTest(){
         Game game = new Game();
-        game.addPlayers(new Player("a", "aaa", false));
-        game.addPlayers(new Player("b", "bbb", false));
-        game.addPlayers(new Player("c", "ccc", false));
-        game.addPlayers(new Player("d", "ddd", false));
-        game.addPlayers(new Player("e", "eee", false));
+        game.addPlayer(new Player("a", "aaa", false));
+        game.addPlayer(new Player("b", "bbb", false));
+        game.addPlayer(new Player("c", "ccc", false));
+        game.addPlayer(new Player("d", "ddd", false));
+        game.addPlayer(new Player("e", "eee", false));
         try{
-            game.addPlayers(new Player("f", "fff", false));
+            game.addPlayer(new Player("f", "fff", false));
             fail("Expected an IndexOutOfBoundException to be thrown");
         } catch (IndexOutOfBoundsException anIndexOutOfBoundException) {
             assertEquals(5, game.getPlayers().size());
@@ -88,11 +88,11 @@ public class TestGame {
     @Test
     public void winnerCalculatorTest(){
         Game game = new Game();
-        game.addPlayers(new Player("a", "aaa", false));
-        game.addPlayers(new Player("b", "bbb", false));
-        game.addPlayers(new Player("c", "ccc", false));
-        game.addPlayers(new Player("d", "ddd", false));
-        game.addPlayers(new Player("e", "eee", false));
+        game.addPlayer(new Player("a", "aaa", false));
+        game.addPlayer(new Player("b", "bbb", false));
+        game.addPlayer(new Player("c", "ccc", false));
+        game.addPlayer(new Player("d", "ddd", false));
+        game.addPlayer(new Player("e", "eee", false));
         game.getPlayers().get(0).updateScore(11);
         game.getPlayers().get(1).updateScore(0);
         game.getPlayers().get(2).updateScore(2);
