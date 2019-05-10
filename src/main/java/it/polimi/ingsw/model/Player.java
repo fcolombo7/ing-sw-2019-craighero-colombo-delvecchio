@@ -169,7 +169,7 @@ public class Player{
      * @param weapon representing the weapon to add
      * @throws PlayerWeaponsException when player already has 3 weapons
      * */
-    public void addWeapon(Weapon weapon)throws PlayerWeaponsException {
+    public void addWeapon(Weapon weapon) {
         if(weapons.size()>2)
             throw new PlayerWeaponsException("Player can't have more than 3 weapons");
         else weapons.add(weapon);
@@ -181,7 +181,7 @@ public class Player{
      * @return Weapon representing the weapon just popped
      * @throws PlayerWeaponsException when player does not have any weapons to pop
      * */
-    public Weapon popWeapon(Card card)throws PlayerWeaponsException{
+    public Weapon popWeapon(Card card) {
         if(weapons.isEmpty()){
             throw new PlayerWeaponsException("Player does not have any weapon");
             }
@@ -201,7 +201,7 @@ public class Player{
      * @param powerup representing the powerup to add
      * @throws PlayerPowerupsException when player already has 3 powerups
      */
-    public void addPowerup(Powerup powerup)throws PlayerPowerupsException {
+    public void addPowerup(Powerup powerup) {
         if(powerups.size()>2)
             throw new PlayerPowerupsException("Player can't have more than 3 powerups");
         else powerups.add(powerup);
@@ -213,7 +213,7 @@ public class Player{
      * @return Powerup representing the powerup just popped
      * @throws PlayerPowerupsException when player does not have any powerup to pop
      */
-    public Powerup popPowerup(Card card)throws PlayerPowerupsException{
+    public Powerup popPowerup(Card card){
         if(powerups.isEmpty()){
             throw new PlayerPowerupsException("Player does not have any powerup");
         }

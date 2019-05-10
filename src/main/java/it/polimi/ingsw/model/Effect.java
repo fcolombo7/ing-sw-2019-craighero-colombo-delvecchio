@@ -514,7 +514,7 @@ public class Effect {
      * @param shotPlayers represent all the last player shot using the Weapon
      * @param board representing the current Gameboard
      * @return List<List<Player>> representing all the players which can be shot group by the effect target type
-     */
+     *///TODO: da aggiugnere la ROUTINE DI SPARO come parametro, non metodi statici!!!
     public List<List<Player>> getShootablePlayers(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board) {
         //TODO: Last position is the last shooted player position
         if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())) return new ArrayList<>();

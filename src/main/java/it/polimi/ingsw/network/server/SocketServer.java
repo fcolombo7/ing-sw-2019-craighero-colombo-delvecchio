@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.SocketClientConnection;
+import it.polimi.ingsw.utils.Logger;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -21,7 +21,7 @@ public class SocketServer {
     public void startServer(int port) throws ServerException {
         try {
             serverSocket = new ServerSocket(port);
-            System.out.println("Socket server started.");
+            Logger.log("Socket server started.");
             new SocketManager(server).start();
         } catch (IOException e) {
             throw new ServerException("Error occurs while starting the socket server (IOException):\n" + e.getMessage());
@@ -42,7 +42,7 @@ public class SocketServer {
                     SocketClientConnection client= new SocketClientConnection(socket,server);
                     executor.submit(client);
                 } catch (IOException e) {
-                    System.out.println("Error occurs while accepting a socket connection:\n" + e.getMessage());
+                    Logger.log("Error occurs while accepting a socket connection:\n" + e.getMessage());
                     break;
                 }
             }

@@ -30,7 +30,7 @@ public class AmmoTile {
      * @param powerup representing the possibility of a tile of having a powerup
      * @throws AmmoTileNotValidException when parameters does not respect Adrenalina's rules
      */
-    public AmmoTile(Color a1, Color a2, Color a3, boolean powerup) throws AmmoTileNotValidException {
+    public AmmoTile(Color a1, Color a2, Color a3, boolean powerup) {
         if(a1==null||a2==null)
             throw  new AmmoTileNotValidException("AmmoTile can't have a1 or a2 as null.");
         if(a3!=null&&powerup)

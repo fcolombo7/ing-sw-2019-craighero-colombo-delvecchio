@@ -1,9 +1,9 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.ClientConnection;
-import it.polimi.ingsw.network.JoinRoomException;
-import it.polimi.ingsw.network.Room;
+import it.polimi.ingsw.network.controller.JoinRoomException;
+import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,19 +33,19 @@ public class Server{
 
 
     public synchronized boolean checkClientLogin(String nickname, ClientConnection client){
-        System.out.println("Login request received from "+nickname);
+        Logger.log("Login request received from " + nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
             players.put(nickname, client);
-            System.out.println(nickname+" is in.");
+            Logger.log(nickname+" is in.");
             return true;
         }else{
-            System.out.println(nickname+" is already in.");
+            Logger.log(nickname+" is already in.");
             return false;
         }
     }
 
     public synchronized void deregisterConnection(ClientConnection client){
-        System.out.println("Logout request received from "+client.getNickname());
+        Logger.log("Logout request received from "+client.getNickname());
         players.remove(client.getNickname());
         Room room=client.getRoom();
         if(room.remove(client)){
@@ -63,13 +63,17 @@ public class Server{
             joinRoom(client);
         } catch (JoinRoomException e) {
             addNewRoom(client);
-            System.out.println("New room has been created");
+            Logger.log("New room has been created");
         }
     }
 
     private void joinRoom(ClientConnection client) throws JoinRoomException {
         if(rooms.isEmpty()) throw  new JoinRoomException("No room created");
-        Room lastRoom = rooms.get(rooms.size() - 1);
+        Room lastRoom=rooms.get(rooms.size() - 1);
+        for(int i=0;i<rooms.size();i++){
+            if(rooms.get(i).canJoin())
+                lastRoom = rooms.get(i);
+        }
         lastRoom.joinRequest(client);
         client.setRoom(lastRoom);
     }
@@ -95,10 +99,10 @@ public class Server{
             Server server = new Server();
             server.startServer();
 
-            System.out.print(Costants.RMI_SERVER_NAME + " started: \n");
-            System.out.println("(RMI: " + Costants.RMI_PORT + ", socket: " + Costants.SOCKET_PORT + ")");
+            Logger.log(Costants.RMI_SERVER_NAME + " started:");
+            Logger.log("(RMI: " + Costants.RMI_PORT + ", socket: " + Costants.SOCKET_PORT + ")");
         } catch (ServerException e) {
-            e.printStackTrace();
+            Logger.logErr(e.getMessage());
         }
     }
 

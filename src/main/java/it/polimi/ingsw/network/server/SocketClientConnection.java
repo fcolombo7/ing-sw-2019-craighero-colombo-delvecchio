@@ -1,7 +1,11 @@
-package it.polimi.ingsw.network;
+package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.server.Server;
+import com.google.gson.Gson;
+import it.polimi.ingsw.model.messages.MatchAnswer;
+import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
 
 import java.io.*;
@@ -9,7 +13,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class SocketClientConnection extends Observable<String> implements ClientConnection,Runnable {
+public class SocketClientConnection extends Observable<MatchAnswer> implements ClientConnection,Runnable {
     private String nickname;
 
     private String motto;
@@ -42,6 +46,7 @@ public class SocketClientConnection extends Observable<String> implements Client
     private void loadRequests() {
         requestMap.put(Costants.MSG_CLIENT_LOGIN, this::loginRequest);
         requestMap.put(Costants.MSG_CLIENT_CLOSE,this::closeRequest);
+        requestMap.put(Costants.MSG_CLIENT_ANSWER,this::onAnswerRequest);
     }
 
     @Override
@@ -70,10 +75,12 @@ public class SocketClientConnection extends Observable<String> implements Client
         this.online = online;
     }
 
+    @Override
     public Room getRoom() {
         return room;
     }
 
+    @Override
     public void setRoom(Room room) {
         this.room = room;
     }
@@ -84,56 +91,59 @@ public class SocketClientConnection extends Observable<String> implements Client
             out.flush();
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.logErr(e.getMessage());
         }
         online = false;
     }
 
     @Override
-    public void asyncAction(String message) {
-
+    public void sendMatchMessage(MatchMessage message) {
+        Gson gson = new Gson();
+        Logger.log("[Socket] MatchMessage sending to "+nickname+":");
+        Logger.log(gson.toJson(message));
+        out.println(gson.toJson(message));
     }
 
     @Override
     public void run() {
-        try(Scanner in = new Scanner(socket.getInputStream())){
-            while(true){
-                String s=in.nextLine();
-                requestMap.get(s).exec();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       while(true){
+           String s=in.nextLine();
+           requestMap.get(s).exec();
+       }
     }
 
     private void loginRequest() {
-        try{
-            System.out.println("[Received a login request form socket]");
-            String clientName = in.nextLine();
-            String clientMotto = in.nextLine();
-            String msg;
-            if (server.checkClientLogin(clientName, this)) {
-                msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
-            } else {
-                msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
-            }
-
-            out.println(msg);
-            out.flush();
-            if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
-                nickname=clientName;
-                motto=clientMotto;
-                server.joinAvailableRoom(this);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        Logger.log("[Received a login request from socket]");
+        String clientName = in.nextLine();
+        String clientMotto = in.nextLine();
+        String msg;
+        if (server.checkClientLogin(clientName, this)) {
+            msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
+        } else {
+            msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
         }
 
+        out.println(msg);
+        out.flush();
+        if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
+            nickname=clientName;
+            motto=clientMotto;
+            server.joinAvailableRoom(this);
+        }
     }
 
     private void closeRequest() {
         closeConnection();
         server.deregisterConnection(this);
+    }
+
+    private void onAnswerRequest(){
+        Logger.log("[Received an answer request from socket]");
+        Gson gson=new Gson();
+        String msg=in.nextLine();
+        Logger.log("[JSON answer] "+msg);
+        MatchAnswer matchAnswer=gson.fromJson(msg,MatchAnswer.class);
+        notify(matchAnswer);
     }
 
     @FunctionalInterface

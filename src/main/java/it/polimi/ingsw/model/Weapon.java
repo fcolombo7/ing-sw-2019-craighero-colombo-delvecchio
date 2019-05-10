@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.CardNotInitializedException;
 import it.polimi.ingsw.exceptions.WeaponEffectException;
 import it.polimi.ingsw.exceptions.WeaponLoadException;
+import it.polimi.ingsw.utils.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -98,19 +99,19 @@ public class Weapon extends Card{
         builder.setErrorHandler(new ErrorHandler() {
             @Override
             public void warning(SAXParseException e) throws SAXException {
-                System.out.println("WARNING : " + e.getMessage()); // do nothing
+                Logger.log("WARNING : " + e.getMessage()); // do nothing
                 throw e;
             }
 
             @Override
             public void error(SAXParseException e) throws SAXException {
-                System.out.println("ERROR : " + e.getMessage());
+                Logger.log("ERROR : " + e.getMessage());
                 throw e;
             }
 
             @Override
             public void fatalError(SAXParseException e) throws SAXException {
-                System.out.println("FATAL : " + e.getMessage());
+                Logger.log("FATAL : " + e.getMessage());
                 throw e;
             }
         });
@@ -138,14 +139,14 @@ public class Weapon extends Card{
             initialized = true;
             loaded = true;
         } catch (ParserConfigurationException e) {
-            System.out.println("Parsing errors occur during the initialization of the weapon:\n"+this.toString());
-            e.printStackTrace();
+            Logger.log("Parsing errors occur during the initialization of the weapon:\n"+this.toString());
+            Logger.logErr(e.getMessage());
         } catch (IOException e) {
-            System.out.println("IO errors occur during the initialization of the weapon:\n"+this.toString());
-            e.printStackTrace();
+            Logger.log("IO errors occur during the initialization of the weapon:\n"+this.toString());
+            Logger.logErr(e.getMessage());
         } catch (SAXException e) {
-            System.out.println("SAX errors occur during the initialization of the weapon:\n"+this.toString());
-            e.printStackTrace();
+            Logger.log("SAX errors occur during the initialization of the weapon:\n"+this.toString());
+            Logger.logErr(e.getMessage());
         }
     }
 

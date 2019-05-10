@@ -9,6 +9,7 @@ public class Costants {
     /* SOCKET MESSAGES */
     public static final String MSG_CLIENT_LOGIN="LoginRequest";
     public static final String MSG_CLIENT_CLOSE = "CloseConnectionRequest";
+    public static final String MSG_CLIENT_ANSWER = "SendAnswerRequest";
     public static final String MSG_SERVER_POSITIVE_ANSWER="OK";
     public static final String MSG_SERVER_NEGATIVE_ANSWER="LOGIN ERROR";
     public static final String MSG_SERVER_CLOSE = "CLOSING CONNECTION";

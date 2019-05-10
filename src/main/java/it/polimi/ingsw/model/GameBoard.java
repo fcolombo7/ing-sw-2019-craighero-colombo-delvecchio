@@ -72,6 +72,32 @@ public class GameBoard {
         initMatrixes();
     }
 
+    public GameBoard(GameBoard other){
+        this.rowLength=other.rowLength;
+        this.colLength=other.colLength;
+        this.overkillTrack=new ArrayList<>(other.overkillTrack);
+        this.killshotTrack=new ArrayList<>(other.killshotTrack);
+        this.skullNumber=other.skullNumber;
+        this.spawnPoint=new ArrayList<>(Color.values().length);
+        this.map=new Square[rowLength][colLength];
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++){
+                if(other.map[i][j]!=null){
+                    boolean weaponS=false;
+                    for(WeaponSquare w:other.spawnPoint){
+                        if(w.getBoardIndexes()[0]==i&&w.getBoardIndexes()[1]==j)
+                            weaponS=true;
+                    }
+                    if(weaponS){
+                        map[i][j]=new WeaponSquare((WeaponSquare) other.map[i][j]);
+                        spawnPoint.add((WeaponSquare)map[i][j]);
+                    }
+                    else map[i][j]=new AmmoSquare((AmmoSquare) other.map[i][j]);
+                }
+            }
+        }
+    }
+
     /**
      * This method construct the row of the map at index rowNode.
      * @param rowNode index of the row the method constructs

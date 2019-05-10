@@ -20,6 +20,11 @@ public class AmmoSquare extends Square{
         super(roomColor, doors, indexes);
     }
 
+    public AmmoSquare(AmmoSquare other){
+        super(other.getRoomColor(),new boolean[]{other.hasDoor(Direction.NORTH),other.hasDoor(Direction.EAST),other.hasDoor(Direction.SOUTH),other.hasDoor(Direction.WEST)},other.getBoardIndexes());
+        this.ammoTile=new AmmoTile(other.ammoTile);
+    }
+
     /**
      * This method return a true value if the user can grab the AmmoTile object from the square
      * @return boolean representing the possibility of the user to grab the AmmoTile object in the square

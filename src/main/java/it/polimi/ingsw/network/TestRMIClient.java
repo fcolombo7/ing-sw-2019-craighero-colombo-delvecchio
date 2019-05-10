@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.model.messages.MatchMessage;
 import it.polimi.ingsw.network.server.RMIClientHandler;
 import it.polimi.ingsw.network.server.RMIServerHandler;
 import it.polimi.ingsw.utils.Costants;
@@ -44,17 +45,7 @@ public class TestRMIClient implements RMIClientHandler {
     }
 
     @Override
-    public void actionRequest(String msg) throws RemoteException {
-
-    }
-
-    @Override
-    public boolean hasAnswered() throws RemoteException {
-        return false;
-    }
-
-    @Override
-    public String actionAnswer() throws RemoteException {
-        return null;
+    public synchronized void sendMatchMessage(MatchMessage message) throws RemoteException {
+        System.out.println(message.getRequest());
     }
 }

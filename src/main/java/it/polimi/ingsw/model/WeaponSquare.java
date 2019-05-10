@@ -24,6 +24,11 @@ public class WeaponSquare extends Square {
         weapons=new ArrayList<>();
     }
 
+    public WeaponSquare(WeaponSquare other){
+        super(other.getRoomColor(),new boolean[]{other.hasDoor(Direction.NORTH),other.hasDoor(Direction.EAST),other.hasDoor(Direction.SOUTH),other.hasDoor(Direction.WEST)},other.getBoardIndexes());
+        this.weapons=new ArrayList<>(other.weapons);
+    }
+
     /**
      * This method return a true value if the user can grab a Weapon object from the square
      * @return boolean representing the possibility of the user to grab a Weapon object from the square

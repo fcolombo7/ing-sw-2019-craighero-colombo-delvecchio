@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.CardNotInitializedException;
+import it.polimi.ingsw.utils.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -111,14 +112,14 @@ public class Powerup extends Card {
 
             this.initialized = true;
         } catch (ParserConfigurationException e) {
-            System.out.println("Parsing errors occur during the initialization of the powerup:\n"+this.toString());
-            e.printStackTrace();
+            Logger.log("Parsing errors occur during the initialization of the powerup:\n"+this.toString());
+            Logger.logErr(e.getMessage());
         } catch (IOException e) {
-            System.out.println("IO errors occur during the initialization of the powerup:\n"+this.toString());
-            e.printStackTrace();
+            Logger.log("IO errors occur during the initialization of the powerup:\n"+this.toString());
+            Logger.logErr(e.getMessage());
         } catch (SAXException e) {
-            System.out.println("SAX errors occur during the initialization of the powerup:\n"+this.toString());
-            e.printStackTrace();
+            Logger.log("SAX errors occur during the initialization of the powerup:\n"+this.toString());
+            Logger.logErr(e.getMessage());
         }
     }
 

@@ -149,6 +149,11 @@ public class MatrixHelper {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     /**
      * This method perform a OR-decomposition of the MatrixHelper object
      * @return List<MatrixHelper> representing the OR-decomposition of the MatrixHelper object

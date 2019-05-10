@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.utils.Logger;
+import it.polimi.ingsw.utils.Observable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,7 +19,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Game {
+public class Game extends Observable<MatchMessage> {
 
     private Player currentPlayer;
     private Turn currentTurn;
@@ -154,19 +157,19 @@ public class Game {
             builder.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException e) throws SAXException {
-                    System.out.println("WARNING : " + e.getMessage()); // do nothing
+                    Logger.logErr("WARNING : " + e.getMessage()); // do nothing
                     throw e;
                 }
 
                 @Override
                 public void error(SAXParseException e) throws SAXException {
-                    System.out.println("ERROR : " + e.getMessage());
+                    Logger.logErr("ERROR : " + e.getMessage());
                     throw e;
                 }
 
                 @Override
                 public void fatalError(SAXParseException e) throws SAXException {
-                    System.out.println("FATAL : " + e.getMessage());
+                    Logger.logErr("FATAL : " + e.getMessage());
                     throw e;
                 }
             });
@@ -176,7 +179,7 @@ public class Game {
             root.normalize();
             return root;
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
+            Logger.logErr(e.getMessage());
             throw new NullPointerException("Parsing failed");
         }
     }
@@ -280,4 +283,5 @@ public class Game {
     protected Player getCurrentPlayer() {
         return currentPlayer;
     }
+
 }
