@@ -236,8 +236,7 @@ public class Weapon extends Card{
         Node ammoNode=null;
         int count=0;
         while(ammoNode==null&&count<ammoNodeList.getLength()){
-            if(ammoNodeList.item(count).getNodeType()!=Node.TEXT_NODE) ammoNode=ammoNodeList.item(count);
-            count++;
+            if(ammoNodeList.item(count).getNodeType()!=Node.TEXT_NODE) ammoNode=ammoNodeList.item(count++);
         }
         if(ammoNode==null) throw new IllegalArgumentException("Ammo of the weapon '"+getName()+"' is not set.");
         String ammoStr=ammoNode.getFirstChild().getNodeValue();
