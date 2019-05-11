@@ -1,8 +1,8 @@
 package it.polimi.ingsw.network.view;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.messages.MatchAnswer;
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 

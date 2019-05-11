@@ -115,12 +115,13 @@ public class Room {
                 first = false;
             }
             Player p=new Player(client.getNickname(),client.getMotto(),val);
+            model.addPlayer(p);
             View pView=new RemoteView(p,client);
-
             model.register(pView);
             pView.register(controller);
         }
         playing=true;
+        controller.start();
     }
 
 }

@@ -12,12 +12,19 @@ public class Costants {
     public static final String MSG_CLIENT_ANSWER = "SendAnswerRequest";
     public static final String MSG_SERVER_POSITIVE_ANSWER="OK";
     public static final String MSG_SERVER_NEGATIVE_ANSWER="LOGIN ERROR";
+    public static final String MSG_SERVER_ALREADY_LOGGED ="CLIENT ALREADY LOGGED IN";
     public static final String MSG_SERVER_CLOSE = "CLOSING CONNECTION";
 
     /* ROOM PARAMETERS */
     public static final int ROOM_MIN_PLAYERS=1;
     public static final int ROOM_MAX_PLAYERS=2;
     public static final int WAITING_ROOM_TIMER=10; //seconds
+
+    /*MODEL MESSAGES*/
+    public static final String CREATION_MESSAGE="MATCH CREATED";
+
+    /*MODEL ANSWER*/
+    public static final String BOARD_SETTING_ANSWER="BOARD PREFERENCE";
 
     private Costants(){}
 }

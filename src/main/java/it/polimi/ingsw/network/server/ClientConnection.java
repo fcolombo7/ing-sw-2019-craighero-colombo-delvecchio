@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.MatchAnswer;
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Observer;
 

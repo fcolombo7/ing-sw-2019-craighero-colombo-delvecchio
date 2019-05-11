@@ -1,8 +1,8 @@
 package it.polimi.ingsw.network.view;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.messages.MatchAnswer;
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.server.ClientConnection;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observer;
@@ -32,8 +32,8 @@ public class RemoteView extends View{
 
     @Override
     public void update(MatchMessage message) {
-        Player recipient=message.getRecipient();
-        if(recipient==null||recipient.equals(getPlayer()))
+        String recipient=message.getRecipient();
+        if(recipient==null||recipient.equalsIgnoreCase(getPlayer().getNickname()))
             show(message);
     }
 }

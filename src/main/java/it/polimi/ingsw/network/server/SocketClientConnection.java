@@ -1,8 +1,8 @@
 package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.model.messages.MatchAnswer;
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
@@ -37,7 +37,7 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         this.server = server;
         in = new Scanner(socket.getInputStream());
         out = new PrintStream(socket.getOutputStream());
-        online=true;
+        online=false;
 
         requestMap = new HashMap<>();
         loadRequests();
@@ -114,11 +114,16 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
 
     private void loginRequest() {
         Logger.log("[Received a login request from socket]");
+        if(online){
+            out.println(Costants.MSG_SERVER_ALREADY_LOGGED);
+            out.flush();
+        }
         String clientName = in.nextLine();
         String clientMotto = in.nextLine();
         String msg;
         if (server.checkClientLogin(clientName, this)) {
             msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
+            online=true;
         } else {
             msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
         }

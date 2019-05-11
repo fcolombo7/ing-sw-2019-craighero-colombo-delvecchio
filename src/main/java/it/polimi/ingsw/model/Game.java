@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchmessages.MatchCreationMessage;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
 import org.w3c.dom.Document;
@@ -36,9 +37,11 @@ public class Game extends Observable<MatchMessage> {
     private List<Card> powerupDeck;
     private List<Player> players;
     private GameBoard gameBoard;
+    private int skullNumber;
 
     private boolean frenzyMode = false;
-    private Player lastPlayer=null;
+
+    private Player lastPlayerBeforeFrenzy =null;
 
     public Game(){
         weaponDeck = new ArrayList<>();
@@ -60,6 +63,9 @@ public class Game extends Observable<MatchMessage> {
                         break;
                     case "ammos":
                         buildAmmoDeck(ammoTileDeck, cardNode);
+                        break;
+                    case "skull":
+                        setSkullNumber(cardNode);
                         break;
                         default: break;
                 }
@@ -98,6 +104,18 @@ public class Game extends Observable<MatchMessage> {
                 for(int j=0; j<quantity; j++)
                     deck.add(new Card(id, name, path));
         }
+    }
+
+    private void setSkullNumber(Node node){
+        NodeList nodeList = node.getChildNodes();
+        for(int i=0; i<nodeList.getLength();i++){
+            Node sNode = nodeList.item(i);
+            if(sNode.getNodeType()!=Node.TEXT_NODE){
+                skullNumber=Integer.parseInt(sNode.getFirstChild().getNodeValue());
+                return;
+            }
+        }
+
     }
 
     private void buildAmmoDeck(List<AmmoTile> deck, Node ammo){
@@ -204,16 +222,16 @@ public class Game extends Observable<MatchMessage> {
         return gameBoard;
     }
 
-    public void setGameBoard(int mapNumber, int skullNumber) {
+    public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
-                this.gameBoard = new GameBoard(parsingXMLFile("1"), skullNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("1"), skullNumber,mapNumber);
                 break;
             case 2:
-                this.gameBoard = new GameBoard(parsingXMLFile("2"), skullNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("2"), skullNumber,mapNumber);
                 break;
             case 3:
-                this.gameBoard = new GameBoard(parsingXMLFile("3"), skullNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("3"), skullNumber,mapNumber);
                 break;
             default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
         }
@@ -273,15 +291,22 @@ public class Game extends Observable<MatchMessage> {
 
     public void setFrenzy(Player lastPlayer){
         frenzyMode=true;
-        this.lastPlayer=lastPlayer;
+        this.lastPlayerBeforeFrenzy =lastPlayer;
     }
 
-    protected Player getLastPlayer() {
-        return lastPlayer;
+    protected Player getLastPlayerBeforeFrenzy() {
+        return lastPlayerBeforeFrenzy;
     }
 
     protected Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    public void startMessage() {
+        for(int i=0;i<players.size();i++) {
+            //first turn number is 1 (not 0)!
+            MatchCreationMessage msg= new MatchCreationMessage(players.get(i).getNickname(),i+1,players);
+            notify(msg);
+        }
+    }
 }

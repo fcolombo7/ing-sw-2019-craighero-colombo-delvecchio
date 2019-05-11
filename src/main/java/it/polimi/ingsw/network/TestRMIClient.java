@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.server.RMIClientHandler;
 import it.polimi.ingsw.network.server.RMIServerHandler;
 import it.polimi.ingsw.utils.Costants;

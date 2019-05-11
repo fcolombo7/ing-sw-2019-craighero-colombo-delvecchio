@@ -18,6 +18,8 @@ public class GameBoard {
      */
     private Square[][] map;
 
+    private int sourceReference;
+
     /**
      * This attribute represents the number of row of square contained in the map
      */
@@ -50,7 +52,7 @@ public class GameBoard {
      * @param map representing the Node read from the XML file
      * @param skullNumber representing the number of the skull placed on the board
      */
-    public GameBoard(Node map, int skullNumber){
+    public GameBoard(Node map, int skullNumber, int sourceReference){
         this.spawnPoint=new ArrayList<>(Color.values().length);
         NamedNodeMap attributes=map.getAttributes();
         rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
@@ -69,10 +71,12 @@ public class GameBoard {
         this.skullNumber=skullNumber;
         this.killshotTrack=new ArrayList<>(skullNumber);
         this.overkillTrack=new ArrayList<>(skullNumber);
+        this.sourceReference=sourceReference;
         initMatrixes();
     }
 
     public GameBoard(GameBoard other){
+        this.sourceReference=other.sourceReference;
         this.rowLength=other.rowLength;
         this.colLength=other.colLength;
         this.overkillTrack=new ArrayList<>(other.overkillTrack);
@@ -268,6 +272,8 @@ public class GameBoard {
     public List<Square> getSpawnPoint() {
         return new ArrayList<>(spawnPoint);
     }
+
+    public int getSourceReference(){return sourceReference;}
 
     public boolean hasSquare(int x, int y){
         return map[x][y]!=null;

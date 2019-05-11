@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

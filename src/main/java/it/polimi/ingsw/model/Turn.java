@@ -13,7 +13,7 @@ public class Turn {
     public Turn(Game game){
         this.game=game;
         if(game.isFrenzy()){
-            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayer())>game.getPlayers().indexOf(game.getCurrentPlayer()))
+            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()))
                 routineNumber=1;
         }
         else routineNumber=2;
@@ -28,7 +28,7 @@ public class Turn {
     public boolean canRun(){
         if(routineNumber>0){
             if(game.isFrenzy()){
-                return !(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayer())>game.getPlayers().indexOf(game.getCurrentPlayer()));
+                return !(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()));
             }else return true;
         }
         return false;
@@ -77,7 +77,7 @@ public class Turn {
 
     private int maxGrabDistance() {
         if(game.isFrenzy()){
-            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayer())>game.getPlayers().indexOf(game.getCurrentPlayer()))
+            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()))
                 return 3;
             else
                 return 2;
@@ -92,7 +92,7 @@ public class Turn {
 
     private int maxShotDistance() {
         if(game.isFrenzy()){
-            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayer())>game.getPlayers().indexOf(game.getCurrentPlayer()))
+            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()))
                 return 2;
             else
                 return 1;

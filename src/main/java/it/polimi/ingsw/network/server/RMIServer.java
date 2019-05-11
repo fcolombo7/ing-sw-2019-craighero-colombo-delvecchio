@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.MatchAnswer;
+import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 
