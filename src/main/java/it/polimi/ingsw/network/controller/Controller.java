@@ -2,8 +2,11 @@ package it.polimi.ingsw.network.controller;
 
 import it.polimi.ingsw.exceptions.MatchConfigurationException;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
+import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchmessages.MatchUpdateMessage;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observer;
@@ -34,7 +37,7 @@ public class Controller implements Observer<MatchAnswer> {
 
     @Override
     public void update(MatchAnswer message) {
-        Logger.log("Received '"+message.getAnswer()+"' from "+message.getSender().getNickname());
+        Logger.log("Received '"+message.getAnswer()+"' from "+message.getSender());
         answerMap.get(message.getAnswer()).exec(message);
     }
 
@@ -44,7 +47,7 @@ public class Controller implements Observer<MatchAnswer> {
 
     private void roomPreferenceManager(MatchAnswer message) {
         BoardPreferenceAnswer answer=(BoardPreferenceAnswer)message;
-        String folderName="src/main/Resources/boards";
+        String folderName=Costants.BOARD_FOLDER;
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles==null) throw new MatchConfigurationException("No boards in "+folderName);
@@ -57,7 +60,6 @@ public class Controller implements Observer<MatchAnswer> {
         if(boardPreference.size()==game.getPlayers().size()){
             int selBoard=mostCommonBoard();
             game.setGameBoard(selBoard);
-            //populate gameboard & send broadcast message
         }
     }
 
@@ -80,7 +82,6 @@ public class Controller implements Observer<MatchAnswer> {
 
     @FunctionalInterface
     private interface AnswerManager {
-
         void exec(MatchAnswer message);
     }
 }

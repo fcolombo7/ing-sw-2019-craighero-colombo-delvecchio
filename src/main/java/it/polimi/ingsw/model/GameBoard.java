@@ -273,10 +273,23 @@ public class GameBoard {
         return new ArrayList<>(spawnPoint);
     }
 
+    boolean isSpawnPoint(int x,int y){
+        if(!hasSquare(x,y)) return false;
+        for(WeaponSquare ws:spawnPoint){
+            if(ws.getBoardIndexes()[0]==x&&ws.getBoardIndexes()[1]==y)
+                return true;
+        }
+        return false;
+    }
+
     public int getSourceReference(){return sourceReference;}
 
-    public boolean hasSquare(int x, int y){
+    boolean hasSquare(int x, int y){
         return map[x][y]!=null;
+    }
+
+    int[] getBoardDimension(){
+        return new int[]{rowLength,colLength};
     }
 
     public Square getSquare(int x,int y){
@@ -383,7 +396,7 @@ public class GameBoard {
         return access != null && (curr.getRoomColor() == access.getRoomColor() || curr.hasDoor(d));
     }
 
-    public MatrixHelper getGameboardMatrix(){
+    MatrixHelper getGameboardMatrix(){
         boolean[][] mat=new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
             for(int j=0;j<colLength;j++) mat[i][j]=map[i][j]!=null;

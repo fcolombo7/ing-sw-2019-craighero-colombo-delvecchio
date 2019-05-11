@@ -1,15 +1,13 @@
 package it.polimi.ingsw.model.messages.matchanswer;
 
-import it.polimi.ingsw.model.Player;
-
 public abstract class MatchAnswer {
-    private Player sender;
+    private String sender;
 
-    public MatchAnswer(Player sender){
+    public MatchAnswer(String sender){
         this.sender=sender;
     }
 
-    public Player getSender() {
+    public String getSender() {
         return sender;
     }
 

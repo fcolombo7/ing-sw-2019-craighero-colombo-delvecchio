@@ -1,6 +1,14 @@
 package it.polimi.ingsw.utils;
 
 public class Costants {
+    /*CONFIGURATION RESOURCES*/
+    public static final String GAME_CONFIG_FILEPATH="src/main/Resources/config.xml";
+    public static final String BOARD_FOLDER = "src/main/Resources/boards";
+    public static final String BOARD1_FILEPATH="src/main/Resources/boards/board1.xml";
+    public static final String BOARD2_FILEPATH="src/main/Resources/boards/board2.xml";
+    public static final String BOARD3_FILEPATH="src/main/Resources/boards/board3.xml";
+    public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
+
     /* NETWORKING PARAMETERS */
     public static final int SOCKET_PORT=12345;
     public static final int RMI_PORT=12346;
@@ -22,6 +30,7 @@ public class Costants {
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";
+    public static final String UPDATE_MESSAGE="MATCH UPDATE";
 
     /*MODEL ANSWER*/
     public static final String BOARD_SETTING_ANSWER="BOARD PREFERENCE";

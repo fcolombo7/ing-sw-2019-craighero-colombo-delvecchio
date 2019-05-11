@@ -1,12 +1,11 @@
 package it.polimi.ingsw.model.messages.matchanswer;
 
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.utils.Costants;
 
 public class BoardPreferenceAnswer extends MatchAnswer {
     int boardReference;
 
-    public BoardPreferenceAnswer(Player sender, int boardReference){
+    public BoardPreferenceAnswer(String sender, int boardReference){
         super(sender);
         this.boardReference=boardReference;
     }

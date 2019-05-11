@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.Room;
@@ -147,8 +148,17 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         Gson gson=new Gson();
         String msg=in.nextLine();
         Logger.log("[JSON answer] "+msg);
-        MatchAnswer matchAnswer=gson.fromJson(msg,MatchAnswer.class);
-        notify(matchAnswer);
+
+        //foreach class which extends the MatchAnswer one. [the class parameters of 'gson.fromJson' method must be the class of the dynamic type]
+        try{
+            MatchAnswer matchAnswer=gson.fromJson(msg, BoardPreferenceAnswer.class);
+            notify(matchAnswer);
+            return;
+        }catch (Exception e){
+            Logger.log("Tried but failed to get a BoardPreferenceAnswer from the received Json String.");
+        }
+
+        Logger.logErr("Cannot get a correct MatchAnswer from the received Json string.");
     }
 
     @FunctionalInterface

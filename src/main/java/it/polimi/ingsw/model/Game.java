@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.messages.matchmessages.MatchCreationMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.model.messages.matchmessages.MatchUpdateMessage;
+import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
 import org.w3c.dom.Document;
@@ -49,7 +51,7 @@ public class Game extends Observable<MatchMessage> {
         ammoTileDeck = new ArrayList<>();
         players = new ArrayList<>();
 
-        Node root = parsingXMLFile("src/main/Resources/config.xml");
+        Node root = parsingXMLFile(Costants.GAME_CONFIG_FILEPATH);
         NodeList nodeList = root.getChildNodes();
         for(int i=0; i<nodeList.getLength();i++) {
             Node cardNode = nodeList.item(i);
@@ -225,22 +227,32 @@ public class Game extends Observable<MatchMessage> {
     public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
-                this.gameBoard = new GameBoard(parsingXMLFile("1"), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD1_FILEPATH), skullNumber,mapNumber);
                 break;
             case 2:
-                this.gameBoard = new GameBoard(parsingXMLFile("2"), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD2_FILEPATH), skullNumber,mapNumber);
                 break;
             case 3:
-                this.gameBoard = new GameBoard(parsingXMLFile("3"), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD3_FILEPATH), skullNumber,mapNumber);
+                break;
+            case 4:
+                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD4_FILEPATH), skullNumber,mapNumber);
                 break;
             default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
         }
+        fillGameboard();
+        MatchMessage update=new MatchUpdateMessage(players,new GameBoard(gameBoard));
+        notify(update);
     }
 
     public Weapon drawWeapon(){
         if(weaponIndex>weaponDeck.size()-1)
             throw new IndexOutOfBoundsException("All the weapons are already on the boards");
         return new Weapon(weaponDeck.get(weaponIndex++));
+    }
+
+    private boolean canDrawWeapon(){
+        return (weaponIndex<=weaponDeck.size()-1);
     }
 
     //TODO NEED TEST
@@ -302,10 +314,37 @@ public class Game extends Observable<MatchMessage> {
         return currentPlayer;
     }
 
+    protected void fillGameboard(){
+        int[] boardDimension=gameBoard.getBoardDimension();
+        for(int i=0;i<boardDimension[0];i++){
+            for(int j=0;j<boardDimension[1];j++){
+                if(gameBoard.hasSquare(i,j)){
+                    fillSquare(i,j);
+                }
+            }
+        }
+    }
+
+    private void fillSquare(int x, int y) {
+        Square square=gameBoard.getSquare(x,y);
+        if(!square.isFull()){
+            if(!gameBoard.isSpawnPoint(x,y)){
+                AmmoSquare ammoSquare=(AmmoSquare)square;
+                ammoSquare.setAmmoTile(this.drawAmmoTile());
+            }
+            else{
+                WeaponSquare weaponSquare=(WeaponSquare)square;
+                while(!this.canDrawWeapon()||weaponSquare.isFull()){
+                    weaponSquare.addWeapon(this.drawWeapon());
+                }
+            }
+        }
+    }
+
     public void startMessage() {
         for(int i=0;i<players.size();i++) {
             //first turn number is 1 (not 0)!
-            MatchCreationMessage msg= new MatchCreationMessage(players.get(i).getNickname(),i+1,players);
+            MatchMessage msg= new MatchCreationMessage(players.get(i).getNickname(),i+1,players);
             notify(msg);
         }
     }
