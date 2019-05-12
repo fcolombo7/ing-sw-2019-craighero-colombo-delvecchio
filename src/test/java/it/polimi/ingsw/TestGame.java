@@ -130,4 +130,10 @@ public class TestGame {
 
          */
     }
+
+    @Test
+    public void FillGameboardTest(){
+        Game game = new Game();
+        game.setGameBoard(1);
+    }
 }

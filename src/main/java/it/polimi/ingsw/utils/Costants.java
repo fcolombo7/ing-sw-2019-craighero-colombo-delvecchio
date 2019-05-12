@@ -30,6 +30,7 @@ public class Costants {
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";
+    public static final String BOARD_CREATED_MESSAGE ="BOARD CREATED";
     public static final String UPDATE_MESSAGE="MATCH UPDATE";
 
     /*MODEL ANSWER*/

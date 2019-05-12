@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchCreationMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchUpdateMessage;
@@ -242,9 +243,10 @@ public class Game extends Observable<MatchMessage> {
                 break;
             default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
         }
-        fillGameboard();
-        MatchMessage update=new MatchUpdateMessage(players,new GameBoard(gameBoard));
-        notify(update);
+        //fillGameboard();
+        BoardCreationMessage createdMessage=new BoardCreationMessage(gameBoard);
+        Logger.log("Sending board created message...");
+        notify(createdMessage);
     }
 
     public Weapon drawWeapon(){
@@ -336,8 +338,12 @@ public class Game extends Observable<MatchMessage> {
             }
             else{
                 WeaponSquare weaponSquare=(WeaponSquare)square;
-                while(!this.canDrawWeapon()||weaponSquare.isFull()){
-                    weaponSquare.addWeapon(this.drawWeapon());
+                while(this.canDrawWeapon()&&!weaponSquare.isFull()){
+                    try {
+                        weaponSquare.addWeapon(this.drawWeapon());
+                    }catch(Exception e) {
+                        Logger.logErr(e.getMessage());
+                    }
                 }
             }
         }

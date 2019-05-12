@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network;
 
+import com.google.gson.Gson;
+import it.polimi.ingsw.model.messages.LoginMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.server.RMIClientHandler;
 import it.polimi.ingsw.network.server.RMIServerHandler;
@@ -24,15 +26,12 @@ public class TestRMIClient implements RMIClientHandler {
         for (int i = 0; i < e.length; i++)
             System.out.println(e[i]);
 
-
         System.out.print("nickname: ");
         String nickname=stdin.nextLine();
         System.out.print("motto: ");
         String motto=stdin.nextLine();
 
-
         TestRMIClient rmiClient=new TestRMIClient();
-        Registry reg = LocateRegistry.createRegistry(Costants.RMI_PORT+1);
         RMIClientHandler stub= (RMIClientHandler) UnicastRemoteObject.exportObject(rmiClient, Costants.RMI_PORT+1);
         registry.bind(nickname,stub);
 
@@ -40,7 +39,7 @@ public class TestRMIClient implements RMIClientHandler {
         String remoteObjectName = Costants.RMI_SERVER_NAME;
         RMIServerHandler serverRMI = (RMIServerHandler) registry.lookup(remoteObjectName);
 
-        String session = serverRMI.login(nickname,motto,stub);
+        String session = serverRMI.login(new LoginMessage(nickname,motto),stub);
         System.out.println(session);
     }
 
