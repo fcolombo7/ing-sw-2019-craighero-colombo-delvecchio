@@ -62,7 +62,8 @@ public class TestGame {
                 assertEquals(drawed.get(i).hasPowerup(), game.getAmmoTileDeck().get(i).hasPowerup());
                 assertEquals(drawed.get(i).getAmmo(0), game.getAmmoTileDeck().get(i).getAmmo(0));
                 assertEquals(drawed.get(i).getAmmo(1), game.getAmmoTileDeck().get(i).getAmmo(1));
-                assertEquals(drawed.get(i).getAmmo(2), game.getAmmoTileDeck().get(i).getAmmo(2));
+                if(!drawed.get(i).hasPowerup())
+                    assertEquals(drawed.get(i).getAmmo(2), game.getAmmoTileDeck().get(i).getAmmo(2));
             }
             drawed.clear();
         }

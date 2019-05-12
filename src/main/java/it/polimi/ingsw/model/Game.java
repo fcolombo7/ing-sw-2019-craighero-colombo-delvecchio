@@ -105,6 +105,7 @@ public class Game extends Observable<MatchMessage> {
             if(stringNode.getLength()!=0)
                 for(int j=0; j<quantity; j++)
                     deck.add(new Card(id, name, path));
+            count = 0;
         }
     }
 
@@ -143,6 +144,7 @@ public class Game extends Observable<MatchMessage> {
             }
             if(stringNode.getLength()!=0)
                 deck.add(createAmmo(id, powerup, colors));
+            count = 0;
         }
     }
 
