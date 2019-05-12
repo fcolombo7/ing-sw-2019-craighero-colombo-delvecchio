@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.messages.matchmessages;
 
-public abstract class MatchMessage {
+import java.io.Serializable;
+
+public abstract class MatchMessage implements Serializable {
     private String recipient;
 
     public MatchMessage(String recipient){

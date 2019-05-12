@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.model.messages.LoginMessage;
 import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
@@ -40,15 +41,15 @@ public class RMIServer implements RMIServerHandler, Serializable {
     }
 
     @Override
-    public synchronized String login(String clientName, String clientMotto, RMIClientHandler client) {
+    public synchronized String login(LoginMessage msg, RMIClientHandler client) {
         Logger.log("[Received a login request form RMI]");
         RMIClientConnection clientConnection = new RMIClientConnection(client);
-        if(server.checkClientLogin(clientName,clientConnection)){
-            clientConnection.setNickname(clientName);
-            clientConnection.setMotto(clientMotto);
+        if(server.checkClientLogin(msg.getNickname(),clientConnection)){
+            clientConnection.setNickname(msg.getNickname());
+            clientConnection.setMotto(msg.getMotto());
             server.joinAvailableRoom(clientConnection);
             String session= UUID.randomUUID().toString();
-            rmiClients.put(session,clientName);
+            rmiClients.put(session,msg.getNickname());
             return session;
         }
         return null;

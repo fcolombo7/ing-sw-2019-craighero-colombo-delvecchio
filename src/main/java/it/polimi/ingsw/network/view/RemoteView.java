@@ -14,9 +14,13 @@ public class RemoteView extends View{
         @Override
         public void update(MatchAnswer message) {
             Logger.log("Ricevuto " + message);
+            //TODO: CONTROLLI SUL MESSAGGIO RICEVUTO PRE CONTROLLER
+            if(message.getSender().equalsIgnoreCase(getPlayer().getNickname()))
+                RemoteView.this.notify(message);
         }
 
     }
+
     private ClientConnection clientConnection;
 
     public RemoteView(Player player, ClientConnection client) {

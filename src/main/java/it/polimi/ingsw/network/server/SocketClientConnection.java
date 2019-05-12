@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.model.messages.LoginMessage;
 import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
@@ -101,8 +102,12 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
     public void sendMatchMessage(MatchMessage message) {
         Gson gson = new Gson();
         Logger.log("[Socket] MatchMessage sending to "+nickname+":");
-        Logger.log(gson.toJson(message));
-        out.println(gson.toJson(message));
+        try {
+            Logger.log(gson.toJson(message));
+            out.println(gson.toJson(message));
+        }catch(Exception e){
+            Logger.logErr(e.getMessage());
+        }
     }
 
     @Override
@@ -118,23 +123,30 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         if(online){
             out.println(Costants.MSG_SERVER_ALREADY_LOGGED);
             out.flush();
+            Logger.log("Invalid request: client already logged in");
         }
-        String clientName = in.nextLine();
-        String clientMotto = in.nextLine();
-        String msg;
-        if (server.checkClientLogin(clientName, this)) {
-            msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
-            online=true;
-        } else {
-            msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
-        }
+        Gson gson=new Gson();
+        String msg=in.nextLine();
+        try{
+            LoginMessage loginMessage=gson.fromJson(msg, LoginMessage.class);
+            String cNickname = loginMessage.getNickname();
+            String cMotto = loginMessage.getMotto();
+            if (server.checkClientLogin(cNickname, this)) {
+                msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
+                online=true;
+            } else {
+                msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
+            }
 
-        out.println(msg);
-        out.flush();
-        if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
-            nickname=clientName;
-            motto=clientMotto;
-            server.joinAvailableRoom(this);
+            out.println(msg);
+            out.flush();
+            if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
+                this.nickname=cNickname;
+                this.motto=cMotto;
+                server.joinAvailableRoom(this);
+            }
+        }catch (Exception e){
+            Logger.logErr("Cannot get a correct LoginMessage from the received Json string.");
         }
     }
 

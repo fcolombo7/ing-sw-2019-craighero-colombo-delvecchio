@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.PlayerPowerupsException;
 import it.polimi.ingsw.exceptions.PlayerWeaponsException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import static it.polimi.ingsw.model.PlayerStatus.*;
 /**
  * This class represents a player
  * */
-public class Player{
+public class Player {
 
     /**
      * This attribute contains the nickname chosen by the player
