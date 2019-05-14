@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.PlayerPowerupsException;
 import it.polimi.ingsw.exceptions.PlayerWeaponsException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -22,7 +22,7 @@ public class AmmoSquare extends Square{
 
     public AmmoSquare(AmmoSquare other){
         super(other.getRoomColor(),new boolean[]{other.hasDoor(Direction.NORTH),other.hasDoor(Direction.EAST),other.hasDoor(Direction.SOUTH),other.hasDoor(Direction.WEST)},other.getBoardIndexes());
-        this.ammoTile=new AmmoTile(other.ammoTile);
+        if(other.ammoTile!=null) this.ammoTile=new AmmoTile(other.ammoTile);
     }
 
     /**

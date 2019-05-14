@@ -100,7 +100,7 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
 
     @Override
     public void sendMatchMessage(MatchMessage message) {
-        Gson gson = new Gson();
+        Gson gson= new Gson();
         Logger.log("[Socket] MatchMessage sending to "+nickname+":");
         try {
             Logger.log(gson.toJson(message));

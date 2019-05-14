@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchCreationMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchUpdateMessage;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
@@ -243,10 +242,16 @@ public class Game extends Observable<MatchMessage> {
                 break;
             default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
         }
-        //fillGameboard();
-        BoardCreationMessage createdMessage=new BoardCreationMessage(gameBoard);
+        fillGameboard();
+        BoardCreationMessage createdMessage=new BoardCreationMessage(new GameBoard(gameBoard));
         Logger.log("Sending board created message...");
         notify(createdMessage);
+        for (Player p:players) {
+            if(p.isFirst()) {
+                currentPlayer=p;
+                return;
+            }
+        }
     }
 
     public Weapon drawWeapon(){
@@ -355,5 +360,15 @@ public class Game extends Observable<MatchMessage> {
             MatchMessage msg= new MatchCreationMessage(players.get(i).getNickname(),i+1,players);
             notify(msg);
         }
+    }
+
+    public void createTurn(){
+        if(currentPlayer.getStatus()==PlayerStatus.FIRST_SPAWN)
+            respawnPlayer(currentPlayer, true);
+        //TODO
+    }
+
+    private void respawnPlayer(Player player, boolean firstSpawn) {
+        //TODO
     }
 }

@@ -1,17 +1,18 @@
 package it.polimi.ingsw.model.messages.matchmessages;
 
 import it.polimi.ingsw.model.GameBoard;
+import it.polimi.ingsw.model.messages.SimpleBoard;
 import it.polimi.ingsw.utils.Costants;
 
 public class BoardCreationMessage extends MatchMessage {
-    GameBoard gameBoard;
+    SimpleBoard gameBoard;
 
     public BoardCreationMessage(GameBoard gameBoard) {
         super(null);
-        this.gameBoard=gameBoard;
+        this.gameBoard=new SimpleBoard(gameBoard);
     }
 
-    public GameBoard getGameBoard() {
+    public SimpleBoard getGameBoard() {
         return gameBoard;
     }
 

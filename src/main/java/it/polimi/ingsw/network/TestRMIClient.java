@@ -2,17 +2,22 @@ package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.messages.LoginMessage;
+import it.polimi.ingsw.model.messages.SimpleBoard;
+import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.server.RMIClientHandler;
 import it.polimi.ingsw.network.server.RMIServerHandler;
 import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Logger;
 
+import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class TestRMIClient implements RMIClientHandler {

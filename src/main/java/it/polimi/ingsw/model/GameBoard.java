@@ -33,12 +33,12 @@ public class GameBoard {
     /**
      * This attribute represents the player killed contained in the killshot track on the board
      */
-    private ArrayList<Player> killshotTrack;
+    private List<Player> killshotTrack;
 
     /**
      * This attribute represents if the players on the killshot track have overkilled
      */
-    private ArrayList<Boolean> overkillTrack;
+    private List<Boolean> overkillTrack;
 
     /**
      * This attribute contains the starting skull number
@@ -269,11 +269,11 @@ public class GameBoard {
         return map[x][y].getVisibilityMatrix();
     }
 
-    public List<Square> getSpawnPoint() {
+    public List<WeaponSquare> getSpawnPoint() {
         return new ArrayList<>(spawnPoint);
     }
 
-    boolean isSpawnPoint(int x,int y){
+    public boolean isSpawnPoint(int x,int y){
         if(!hasSquare(x,y)) return false;
         for(WeaponSquare ws:spawnPoint){
             if(ws.getBoardIndexes()[0]==x&&ws.getBoardIndexes()[1]==y)
@@ -284,7 +284,7 @@ public class GameBoard {
 
     public int getSourceReference(){return sourceReference;}
 
-    boolean hasSquare(int x, int y){
+    public boolean hasSquare(int x, int y){
         return map[x][y]!=null;
     }
 
@@ -402,5 +402,21 @@ public class GameBoard {
             for(int j=0;j<colLength;j++) mat[i][j]=map[i][j]!=null;
         }
         return new MatrixHelper(mat);
+    }
+
+    public Square[][] getMap(){
+        Square[][] mat=new Square[rowLength][colLength];
+        for(int i=0;i<rowLength;i++) {
+            for(int j=0;j<colLength;j++){
+                if(map[i][j]!=null){
+                    if(isSpawnPoint(i,j))
+                        mat[i][j]=new WeaponSquare((WeaponSquare) map[i][j]);
+                    else
+                        mat[i][j]=new AmmoSquare((AmmoSquare) map[i][j]);
+                }
+                else mat[i][j]=null;
+            }
+        }
+        return mat;
     }
 }

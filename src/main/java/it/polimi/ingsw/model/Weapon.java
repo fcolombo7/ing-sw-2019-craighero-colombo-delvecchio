@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.exceptions.CardNotInitializedException;
 import it.polimi.ingsw.exceptions.WeaponEffectException;
 import it.polimi.ingsw.exceptions.WeaponLoadException;
@@ -37,16 +38,19 @@ public class Weapon extends Card{
     /**
      * This attribute contains a list of color that determines the ammo of the weapon
      */
+    @Expose
     private List<Color> ammo;
 
     /**
      * This attribute specifies if the weapon is initialized or not
      */
+    @Expose
     private boolean initialized;
 
     /**
      * This attribute specifies the status of the weapon (loaded or unloaded)
      */
+    @Expose
     private boolean loaded;
 
     /**

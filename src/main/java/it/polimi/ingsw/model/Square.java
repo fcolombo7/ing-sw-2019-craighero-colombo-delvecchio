@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+
 /**
  * This abstract class represents a Square
  */

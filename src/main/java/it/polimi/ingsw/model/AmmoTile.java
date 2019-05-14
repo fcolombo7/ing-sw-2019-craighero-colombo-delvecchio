@@ -2,11 +2,14 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
 
+import java.io.Serializable;
+
 /**
  * This class represents an ammo tile
  */
-public class AmmoTile {
+public class AmmoTile implements Serializable {
 
+    private static final long serialVersionUID = 3619112453600975846L;
     /**
      * This attribute contains the tile id (in order to identify the associated resources)
      */

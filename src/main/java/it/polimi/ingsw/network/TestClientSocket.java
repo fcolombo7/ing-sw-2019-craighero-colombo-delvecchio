@@ -3,6 +3,7 @@ package it.polimi.ingsw.network;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.GameBoard;
 import it.polimi.ingsw.model.messages.LoginMessage;
+import it.polimi.ingsw.model.messages.SimpleBoard;
 import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
@@ -48,7 +49,7 @@ public class TestClientSocket {
                     if (aBoolean) {
                         try{
                             BoardCreationMessage msg=gson.fromJson(socketLine, BoardCreationMessage.class);
-                            GameBoard board=msg.getGameBoard();
+                            SimpleBoard board=msg.getGameBoard();
                         }catch (Exception e){
                             Logger.log("Tried but failed to get a BoardPreferenceAnswer from the received Json String.");
                         }

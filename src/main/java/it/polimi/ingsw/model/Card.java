@@ -1,9 +1,13 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
+
 /**
  * This class represents a generic card
  */
-public class Card {
+public class Card implements Serializable {
+
+    private static final long serialVersionUID = -1009346372317168375L;
 
     /**
      * This attribute contains the path of the XML file used for the card initialization
@@ -30,6 +34,14 @@ public class Card {
         this.id=id;
         this.name=name;
         this.initXML=initXML;
+    }
+
+    /**
+     * This constructor instantiates a generic card coping another one
+     * @param card the card which is copied
+     */
+    public Card(Card card){
+        this(card.id,card.name,card.getInitXML());
     }
 
     /**

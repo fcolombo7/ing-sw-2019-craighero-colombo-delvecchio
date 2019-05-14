@@ -28,7 +28,7 @@ public class PlayerBoard {
     /**
      * This attribute contains which face of the player board to consider during the game
      */
-    private boolean frenzyMode;
+    private boolean switched;
 
     /**
      * This attribute contains the marks landed on the player board
@@ -44,7 +44,7 @@ public class PlayerBoard {
         ammos.add(YELLOW);
         ammos.add(BLUE);
         deathCounter=0;
-        frenzyMode=false;
+        switched=false;
         this.damages=new ArrayList<>(12);
         this.marks=new ArrayList<>();
     }
@@ -128,16 +128,16 @@ public class PlayerBoard {
     /**
      * This method changes the face of the player board to the frenzy mode face
      */
-    public void enableFrenzy(){
-        this.frenzyMode=true;
+    public void switchBoard(){
+        this.switched=true;
     }
 
     /**
      * This method returns which face of the player board is on
      * @return boolean representing if the frenzy mode face of the player board is on
      */
-    public boolean isFrenzy(){
-        return frenzyMode;
+    public boolean isSwitched(){
+        return switched;
     }
 
     /**
@@ -264,6 +264,6 @@ public class PlayerBoard {
         damages=new ArrayList<>(pBoard.damages);
         marks=new ArrayList<>(pBoard.marks);
         deathCounter=pBoard.deathCounter;
-        frenzyMode=pBoard.frenzyMode;
+        switched=pBoard.switched;
     }
 }
