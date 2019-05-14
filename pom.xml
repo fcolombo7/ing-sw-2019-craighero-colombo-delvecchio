@@ -9,8 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>AM53</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://github.com/fcolombo7/ing-sw-2019-craighero-colombo-delvecchio</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,11 +26,21 @@
             <scope>test</scope>
         </dependency>
 
+        <!--GSON-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.5</version>
         </dependency>
+
+        <!--JAVA FX-->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>11.0.2</version>
+        </dependency>
+        <!--end of JAVA FX-->
+
     </dependencies>
 
     <build>
@@ -90,6 +99,7 @@
                     <target>12</target>
                 </configuration>
             </plugin>
+
             <!-- jacoco added manually -->
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -101,7 +111,6 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-
                     <!-- jacoco doesn't work: trying other solution on stackoverflow-->
                     <!-- attached to Maven test phase -->
                     <!--
@@ -118,6 +127,18 @@
                     <destFile>${sonar.jacoco.reportPath}</destFile>
                 </configuration>
             </plugin>
+
+            <!--JAVA FX-->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.1</version>
+                <configuration>
+                    <mainClass>org.openjfx.App</mainClass>
+                </configuration>
+            </plugin>
+            <!--end of JAVA FX-->
+
         </plugins>
     </build>
 
