@@ -95,7 +95,7 @@ public class Turn {
         game.sendLoadableWeapons(loadableWeapons);
     }
 
-    protected boolean canReload() {
+    private boolean canReload() {
         List<Color> startingAmmo=game.getCurrentPlayer().getBoard().getAmmo();
         for (Powerup p:game.getCurrentPlayer().getPowerups()) {
             startingAmmo.add(p.getColor());
