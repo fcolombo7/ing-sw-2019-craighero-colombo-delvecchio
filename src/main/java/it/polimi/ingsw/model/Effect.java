@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.ActionType;
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.RoomColor;
+import it.polimi.ingsw.model.enums.TargetType;
+import it.polimi.ingsw.utils.MatrixHelper;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -727,5 +732,10 @@ public class Effect {
         else msg.append("none").append("\n");
         msg.append("}");
         return msg.toString();
+    }
+
+    @FunctionalInterface
+    private interface Requirement {
+        MatrixHelper checkRequirement(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix);
     }
 }

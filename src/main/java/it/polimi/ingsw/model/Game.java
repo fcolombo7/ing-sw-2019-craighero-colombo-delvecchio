@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchCreationMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.PlayerStatus;
+import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.RespawnAnswer;
+import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
@@ -243,7 +246,7 @@ public class Game extends Observable<MatchMessage> {
             default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
         }
         fillGameboard();
-        BoardCreationMessage createdMessage=new BoardCreationMessage(new GameBoard(gameBoard));
+        BoardUpdateMessage createdMessage=new BoardUpdateMessage(new GameBoard(gameBoard));
         Logger.log("Sending board created message...");
         notify(createdMessage);
         for (Player p:players) {
@@ -315,15 +318,15 @@ public class Game extends Observable<MatchMessage> {
         this.lastPlayerBeforeFrenzy =lastPlayer;
     }
 
-    protected Player getLastPlayerBeforeFrenzy() {
+    Player getLastPlayerBeforeFrenzy() {
         return lastPlayerBeforeFrenzy;
     }
 
-    protected Player getCurrentPlayer() {
+    Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    protected void fillGameboard(){
+    void fillGameboard(){
         int[] boardDimension=gameBoard.getBoardDimension();
         for(int i=0;i<boardDimension[0];i++){
             for(int j=0;j<boardDimension[1];j++){
@@ -332,6 +335,10 @@ public class Game extends Observable<MatchMessage> {
                 }
             }
         }
+    }
+
+    void routineMessage(TurnRoutineMessage message){
+        notify(message);
     }
 
     private void fillSquare(int x, int y) {
@@ -362,13 +369,76 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
-    public void createTurn(){
-        if(currentPlayer.getStatus()==PlayerStatus.FIRST_SPAWN)
-            respawnPlayer(currentPlayer, true);
-        //TODO
+    public void createTurn() {
+        if (currentPlayer == null)
+            throw new IllegalStateException("Cannot create turn without having instantiated the Gameboard.");
+        if (currentPlayer.getStatus() == PlayerStatus.FIRST_SPAWN)
+            throw new IllegalStateException("Current player need to be Spawned.");
+        if (currentPlayer.getStatus() != PlayerStatus.WAITING)
+            throw new IllegalStateException("Cannot create turn.[Illegal player status: " + currentPlayer.getStatus().name() + "]");
+        if (currentTurn!=null&&currentTurn.getStatus()!= TurnStatus.END)
+            throw new IllegalStateException("Cannot create turn. [Another one is still being played]");
+        //TODO create turn
     }
 
-    private void respawnPlayer(Player player, boolean firstSpawn) {
-        //TODO
+    public void respawnPlayerRequest(Player player, boolean firstSpawn) {
+        if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN) throw new IllegalStateException("Cannot respawn the player '"+player.getNickname()+"'. ["+player.getStatus().name()+"]");
+        ArrayList<Card> drawnPowerups= new ArrayList<>(2);
+        if(firstSpawn) {
+            drawnPowerups.add(new Card(drawPowerup()));
+        }
+        drawnPowerups.add(new Card(drawPowerup()));
+        for(Card card:drawnPowerups)
+            player.addPowerup(new Powerup(card));
+        MatchMessage message=new RespawnRequestMessage(player.getNickname(),drawnPowerups);
+        notify(message);
+    }
+
+    public void respawnPlayer(Player player, RespawnAnswer answer){
+        if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN){
+            Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: status]");
+            MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
+            notify(message);
+            return;
+        }
+        Card recPowerup=answer.getPowerup();
+        for (Powerup powerup:player.getPowerups()) {
+            if(powerup.getId().equals(recPowerup.getId())){
+                player.popPowerup(powerup);
+                for (WeaponSquare square:gameBoard.getSpawnPoints()){
+                    if(powerup.getColor().name().equalsIgnoreCase(square.getRoomColor().name()))
+                        player.setPosition(square);
+                }
+                MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup);
+                notify(message);
+                return;
+            }
+        }
+        Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: missing powerup]");
+        MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
+        notify(message);
+    }
+
+    public void endTurn() {
+    }
+
+    void sendAvailableActions(List<String> actions) {
+        MatchMessage message=new TurnActionsMessage(currentPlayer.getNickname(),actions);
+        notify(message);
+    }
+
+    void sendInvalidAction(String msg){
+        MatchMessage message=new InvalidAnswerMessage(currentPlayer.getNickname(),msg);
+        notify(message);
+    }
+
+    void sendUsablePowerups(List<Card> powerups){
+        MatchMessage message=new AvailablePowerupsMessage(currentPlayer.getNickname(),powerups);
+        notify(message);
+    }
+
+    void sendLoadableWeapons(List<Card> weapons){
+        MatchMessage message=new LoadableWeaponsMessage(currentPlayer.getNickname(),weapons);
+        notify(message);
     }
 }

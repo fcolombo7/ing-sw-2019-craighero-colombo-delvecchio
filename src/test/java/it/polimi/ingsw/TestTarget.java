@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.Target;
-import it.polimi.ingsw.model.TargetType;
+import it.polimi.ingsw.model.enums.TargetType;
 import org.junit.Test;
 
 import java.util.ArrayList;

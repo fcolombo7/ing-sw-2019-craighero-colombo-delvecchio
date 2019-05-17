@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
-import com.google.gson.annotations.Expose;
-import it.polimi.ingsw.exceptions.CardNotInitializedException;
-import it.polimi.ingsw.exceptions.WeaponEffectException;
-import it.polimi.ingsw.exceptions.WeaponLoadException;
+import it.polimi.ingsw.model.exceptions.CardNotInitializedException;
+import it.polimi.ingsw.model.exceptions.WeaponEffectException;
+import it.polimi.ingsw.model.exceptions.WeaponLoadException;
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.utils.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,35 +28,32 @@ public class Weapon extends Card{
     /**
      * This attribute contains a list of TreeNode that determines the tree of the possible using orders of the effects of a weapon
      */
-    private List<TreeNode<Integer>> effectOrder;
+    private transient List<TreeNode<Integer>> effectOrder;
 
     /**
      * This attribute contains the current node of the effectOrder tree used during the navigation
      */
-    private TreeNode<Integer> currentNode=null;
+    private transient TreeNode<Integer> currentNode=null;
 
     /**
      * This attribute contains a list of color that determines the ammo of the weapon
      */
-    @Expose
-    private List<Color> ammo;
+    private transient List<Color> ammo;
 
     /**
      * This attribute specifies if the weapon is initialized or not
      */
-    @Expose
-    private boolean initialized;
+    private transient boolean initialized;
 
     /**
      * This attribute specifies the status of the weapon (loaded or unloaded)
      */
-    @Expose
-    private boolean loaded;
+    private transient boolean loaded;
 
     /**
      * This attribute contains the list of the effects of the weapon
      */
-    private List<Effect> effects;
+    private transient List<Effect> effects;
 
     /**
      * This constructor instantiates a weapon calling the constructor of Card (Weapon extends Card)
@@ -377,13 +374,23 @@ public class Weapon extends Card{
      * @param currentPlayer representing the player whose playing the Turn
      * @param players representing all the players (current player excluded)
      * @param shotPlayers represent all the last player shot using this Weapon
+     * @param board
+     * @param checkLoaded
      * @return List<Effect> representing all the effect the player could perform using this weapon in the current turn
      */
     public List<Effect> getUsableEffect(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board, boolean checkLoaded){
         //Effects that use PrevConstraints if precede by another which use also PrevConstraints may be set as usable also when it can't
         if(!initialized) throw new CardNotInitializedException("Can't get the usable effects: the card is not initialized.");
-        if(!checkLoaded&&!loaded) return new ArrayList<>(); //if not loaded return an empty list
-        if(!haveAmmo(currentPlayer.getBoard().getAmmos(),ammo)) return new ArrayList<>();//if player doesn't have sufficient ammo, return an empty list.
+        List<Color> startingAmmo=currentPlayer.getBoard().getAmmo();
+        for (Powerup p:currentPlayer.getPowerups()) {
+            startingAmmo.add(p.getColor());
+        }
+        if(checkLoaded&&!loaded)
+            return new ArrayList<>(); //if need to check if it is loaded and it's not, return an empty list
+        if(!checkLoaded&&!loaded&&!haveAmmo(startingAmmo,ammo))
+            return new ArrayList<>();//if player doesn't have sufficient ammo, return an empty list.
+        else if(!checkLoaded&&!loaded&&haveAmmo(startingAmmo,ammo))
+            startingAmmo=updateAmmo(startingAmmo,ammo);
         ArrayList<TreeNode<Integer>> nodes;
         if(currentNode==null) nodes=new ArrayList<>(effectOrder);
         else{
@@ -395,7 +402,7 @@ public class Weapon extends Card{
                 }
             }
         }
-        return iterateEffects(nodes,currentPlayer, players, shotPlayers, board, updateAmmo(currentPlayer.getBoard().getAmmos(),ammo));
+        return iterateEffects(nodes,currentPlayer, players, shotPlayers, board, startingAmmo);
     }
 
     /**TODO: NEED TO BE TESTED

@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.MatrixHelper;
+import it.polimi.ingsw.utils.MatrixHelper;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

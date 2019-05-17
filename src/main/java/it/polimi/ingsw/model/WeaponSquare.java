@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.SquareContentException;
+import it.polimi.ingsw.model.exceptions.SquareContentException;
+import it.polimi.ingsw.model.enums.Direction;
+import it.polimi.ingsw.model.enums.RoomColor;
 
 import java.util.ArrayList;
 import java.util.List;

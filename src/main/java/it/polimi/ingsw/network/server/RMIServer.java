@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.LoginMessage;
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.network.controller.messages.LoginMessage;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 
@@ -17,6 +17,7 @@ import java.util.UUID;
 
 public class RMIServer implements RMIServerHandler, Serializable {
 
+    private static final long serialVersionUID = -6063956040408133376L;
     private transient Server server;
     private transient HashMap<String,String> rmiClients;
 
@@ -43,13 +44,14 @@ public class RMIServer implements RMIServerHandler, Serializable {
     @Override
     public synchronized String login(LoginMessage msg, RMIClientHandler client) {
         Logger.log("[Received a login request form RMI]");
-        RMIClientConnection clientConnection = new RMIClientConnection(client);
+        RMIClientConnection clientConnection = new RMIClientConnection(client,this);
         if(server.checkClientLogin(msg.getNickname(),clientConnection)){
             clientConnection.setNickname(msg.getNickname());
             clientConnection.setMotto(msg.getMotto());
             server.joinAvailableRoom(clientConnection);
             String session= UUID.randomUUID().toString();
             rmiClients.put(session,msg.getNickname());
+            clientConnection.setSession(session);
             return session;
         }
         return null;

@@ -1,8 +1,8 @@
 <powerup id="028"> 
 	<name>RAGGIO CINETICO</name>
 	<color>B</color>
-	<timing>BEFORE_END_TURN</timing>
-	<effect ref_id="" name="">
+	<timing>WAITING_PLAYER</timing>
+	<effect ref_id="1" name="RAGGIO CINETICO">
 		<cost/>
 		<target>
 			<type>PLAYER</type>

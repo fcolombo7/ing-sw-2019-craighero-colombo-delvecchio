@@ -1,12 +1,9 @@
 package it.polimi.ingsw.network.controller;
 
-import it.polimi.ingsw.exceptions.MatchConfigurationException;
+import it.polimi.ingsw.model.exceptions.MatchConfigurationException;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
-import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchUpdateMessage;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observer;

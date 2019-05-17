@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.ActionType;
+
 /**
 * This class represents a single action of an effect of a generic card (powerup or weapon)
 * */

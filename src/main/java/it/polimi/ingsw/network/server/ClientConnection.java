@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.model.messages.room.RoomMessage;
 import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.Room;
@@ -20,4 +21,8 @@ public interface ClientConnection{
     void register(Observer<MatchAnswer> observer);
 
     void sendMatchMessage(MatchMessage message);
+
+    void sendRoomMessage(RoomMessage message);
+
+    void closeConnection();
 }

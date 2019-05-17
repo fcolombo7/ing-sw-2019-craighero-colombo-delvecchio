@@ -1,14 +1,21 @@
 package it.polimi.ingsw.model;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.TurnRoutineType;
+import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
+import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
+import it.polimi.ingsw.utils.Logger;
+
+import java.util.*;
 
 public class Turn {
     private Game game;
     private TurnStatus status;
     private Deque<Player> shotPlayer;
     private int routineNumber;
+    private TurnRoutine curRoutine;
+    private List<String> actions;
 
     public Turn(Game game){
         this.game=game;
@@ -17,109 +24,152 @@ public class Turn {
                 routineNumber=1;
         }
         else routineNumber=2;
-        status=TurnStatus.WAITING;
+        status=TurnStatus.WAITING_PLAYER;
         shotPlayer=new ArrayDeque<>();
+        curRoutine=null;
+        actions=null;
+        availableActions();
     }
 
-    public void startRoutine(String type){
-
-    }
-
-    public boolean canRun(){
-        if(routineNumber>0){
-            if(game.isFrenzy()){
-                return !(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()));
-            }else return true;
-        }
-        return false;
-    }
-
-    public boolean canGrab(){
-        if(routineNumber>0){
-            int maxDistance=maxGrabDistance();
-            int []position=game.getCurrentPlayer().getPosition().getBoardIndexes();
-            MatrixHelper distMat=game.getGameBoard().getDistanceMatrix(position[0],position[1],maxDistance);
-            boolean[][] mat=distMat.toBooleanMatrix();
-            int xLen=distMat.getRowLength();
-            int yLen=distMat.getColLength();
-            for(int i=0;i<xLen;i++){
-                for(int j=0;j<yLen;j++){
-                    if(mat[i][j]&&game.getGameBoard().hasSquare(i,j)&&game.getGameBoard().getSquare(i,j).canGrab()) return true;
+    public void selectAction(ActionSelectedAnswer answer){
+        for(String action:actions){
+            if(answer.getSelection().equalsIgnoreCase(action)){
+                if(action.equalsIgnoreCase("SHOT")) {
+                    createRoutine("SHOT");
+                    return;
+                }else if(action.equalsIgnoreCase("RUN")) {
+                    createRoutine("RUN");
+                    return;
+                }
+                else if(action.equalsIgnoreCase("GRAB")) {
+                    createRoutine("GRAB");
+                    return;
+                }
+                else if(action.equalsIgnoreCase("RELOAD")) {
+                    sendWeapons();
+                    return;
+                }else if(action.equalsIgnoreCase("POWERUP")) {
+                    sendPowerups();
+                    return;
                 }
             }
         }
-        return false;
+        Logger.log("Invalid action received");
+        game.sendInvalidAction("Invalid action received");
     }
 
-    public boolean canShoot(){
-        if(routineNumber>0){
-            int maxDistance=maxShotDistance();
-            Player currPlayer=game.getCurrentPlayer();
-            int[]pos=currPlayer.getPosition().getBoardIndexes();
-            List<Player>players = game.getPlayers();
-            players.remove(currPlayer);
-
-            MatrixHelper distanceMatrix=game.getGameBoard().getDistanceMatrix(pos[0],pos[1],maxDistance);
-            boolean [][]mat=distanceMatrix.toBooleanMatrix();
-
-            for(int i=0;i<distanceMatrix.getRowLength();i++){
-                for(int j=0;j<distanceMatrix.getColLength();j++){
-                    if(mat[i][j]){
-                        Player p= new Player(currPlayer);
-                        p.setPosition(game.getGameBoard().getSquare(i,j));
-                        if(canWeaponShoot(p,players,!game.isFrenzy())) return true;
-                    }
-                }
-            }
+    private void availableActions() {
+        actions=new ArrayList<>();
+        for(TurnRoutineType type:TurnRoutineType.values()){
+            if(canPerformRoutine(type.name()))
+                actions.add(type.name());
         }
-        return false;
-    }
-
-    private int maxGrabDistance() {
-        if(game.isFrenzy()){
-            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()))
-                return 3;
-            else
-                return 2;
+        if(game.getCurrentPlayer().hasTimingPowerup(status))actions.add("POWERUP");
+        if(canReload())actions.add("RELOAD");
+        if(actions.isEmpty()){
+            status=TurnStatus.END;
+            game.endTurn();
         }else
-        {
-            if(game.getCurrentPlayer().getBoard().getHealthBar().size()<3) //not adrenalinic action
-                return 1;
-            else //adrenalinic action
-                return 2;
-        }
+            game.sendAvailableActions(actions);
     }
 
-    private int maxShotDistance() {
-        if(game.isFrenzy()){
-            if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()))
-                return 2;
-            else
-                return 1;
-        }else
-        {
-            if(game.getCurrentPlayer().getBoard().getHealthBar().size()<6)
-                //not adrenalinic action
-                return 0;
-
-            else
-                //adrenalinic action
-                return 1;
+    private void sendPowerups(){
+        List<Card> usablePowerups=new ArrayList<>();
+        for (Powerup p:game.getCurrentPlayer().getPowerups()) {
+            if(p.getTiming()==status)
+                usablePowerups.add(new Card(p));
         }
+        game.sendUsablePowerups(usablePowerups);
     }
 
-    private boolean canWeaponShoot(Player p, List<Player> players, boolean checkLoaded) {
-        for (Weapon w: p.getWeapons()) {
-            w.initNavigation();
-            List<Effect> usableEffects=w.getUsableEffect(p,players,shotPlayer,game.getGameBoard(),checkLoaded);
-            if(!usableEffects.isEmpty()) return true;
+    private void sendWeapons(){
+        List<Card> loadableWeapons=new ArrayList<>();
+        List<Color> startingAmmo=game.getCurrentPlayer().getBoard().getAmmo();
+        for (Powerup p:game.getCurrentPlayer().getPowerups()) {
+            startingAmmo.add(p.getColor());
+        }
+        for (Weapon w:game.getCurrentPlayer().getWeapons()){
+            if(!w.isLoaded()&&canBeReloaded(w,startingAmmo))
+                loadableWeapons.add(new Card(w));
+        }
+        game.sendLoadableWeapons(loadableWeapons);
+    }
+
+    protected boolean canReload() {
+        List<Color> startingAmmo=game.getCurrentPlayer().getBoard().getAmmo();
+        for (Powerup p:game.getCurrentPlayer().getPowerups()) {
+            startingAmmo.add(p.getColor());
+        }
+        for(Weapon w:game.getCurrentPlayer().getWeapons()){
+            if(!w.isLoaded()&&canBeReloaded(w,startingAmmo))
+                return true;
         }
         return false;
     }
 
-    public void end(){
-        //punti?
-        //respawn? -- no c'è anche il primo turno
-        //ripopola gameboard
+    private boolean canBeReloaded(Weapon w, List<Color> ammo) {
+        List<Color> tempAmmo=new ArrayList<>(ammo);
+        for (Color color:w.getAmmo()){
+            if(tempAmmo.contains(color))
+                tempAmmo.remove(color);
+            else
+                return false;
+        }
+        return true;
+    }
+
+    private void createRoutine(String type){
+        if(!canPerformRoutine(type)) throw new IllegalArgumentException();
+        TurnRoutineFactory factory=new TurnRoutineFactory(this);
+        TurnRoutineType rType=getRoutineType(type);
+        curRoutine=factory.getTurnRoutine(rType);
+        curRoutine.updateTurnStatus();
+        routineNumber--;
+    }
+
+    private boolean canPerformRoutine(String type){
+        TurnRoutineType rType=getRoutineType(type);
+        if(rType!=null){
+            TurnRoutineFactory factory=new TurnRoutineFactory(this);
+            return factory.getTurnRoutine(rType)!=null;
+        }
+        return false;
+    }
+
+    private TurnRoutineType getRoutineType(String type) {
+        for(TurnRoutineType t:TurnRoutineType.values()){
+            if(t.name().equalsIgnoreCase(type))
+                return t;
+        }
+        return null;
+    }
+
+    public int getRoutineNumber() {
+        return routineNumber;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public Deque<Player> getShotPlayer() {
+        return new ArrayDeque<>(shotPlayer);
+    }
+
+    public TurnStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TurnStatus status) {
+        this.status = status;
+    }
+
+    public void sendRoutineMessage(TurnRoutineMessage message) {
+        game.routineMessage(message);
+    }
+
+    public void endRoutine() {
+        //inviare le nuove azioni eseguibili
+        curRoutine=null;
     }
 }

@@ -1,8 +1,8 @@
 <powerup id="0211"> 
 	<name>TELETRASPORTO</name>
 	<color>B</color>
-	<timing>BEFORE_END_TURN</timing>
-	<effect ref_id="" name="">
+	<timing>WAITING_PLAYER</timing>
+	<effect ref_id="1" name="TELETRASPORTO">
 		<cost/>
 		<target>
 			<type>ME</type>

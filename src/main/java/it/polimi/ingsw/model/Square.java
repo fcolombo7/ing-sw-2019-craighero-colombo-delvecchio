@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.model.enums.Direction;
+import it.polimi.ingsw.model.enums.RoomColor;
+import it.polimi.ingsw.utils.MatrixHelper;
+
 /**
  * This abstract class represents a Square
  */

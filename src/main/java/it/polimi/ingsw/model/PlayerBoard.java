@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
+
 import java.util.*;
 import java.util.stream.*;
 
-import static it.polimi.ingsw.model.Color.*;
+import static it.polimi.ingsw.model.enums.Color.*;
 
 /**
  * This class represents a player board
@@ -18,7 +20,7 @@ public class PlayerBoard {
     /**
      * This attribute contains the ammo owned by the player linked to the player board
      */
-    private List<Color> ammos;
+    private List<Color> ammo;
 
     /**
      * This attribute contains the number of deaths of the player linked to the player board
@@ -39,10 +41,10 @@ public class PlayerBoard {
      * This constructor initializes the player board
      */
     public PlayerBoard(){
-        this.ammos=new ArrayList<>();
-        ammos.add(RED);
-        ammos.add(YELLOW);
-        ammos.add(BLUE);
+        this.ammo =new ArrayList<>();
+        ammo.add(RED);
+        ammo.add(YELLOW);
+        ammo.add(BLUE);
         deathCounter=0;
         switched=false;
         this.damages=new ArrayList<>(12);
@@ -77,8 +79,8 @@ public class PlayerBoard {
      * This method returns the ammo owned by the player linked to the player board
      * @return List containing Color representing the ammo owned by the player linked to the player board
      */
-    public List<Color> getAmmos(){
-        return new ArrayList<>(ammos);
+    public List<Color> getAmmo(){
+        return new ArrayList<>(ammo);
     }
 
     /**
@@ -105,8 +107,8 @@ public class PlayerBoard {
      */
     public void addAmmos(List<Color> ammos){
         for(Color c: ammos)
-            if (Collections.frequency(this.ammos, c) < 3)
-                this.ammos.add(c);
+            if (Collections.frequency(this.ammo, c) < 3)
+                this.ammo.add(c);
     }
 
     /**
@@ -122,7 +124,7 @@ public class PlayerBoard {
      */
     public void removeAmmos(List<Color> ammos){
         for(Color c: ammos)
-            this.ammos.remove(c);
+            this.ammo.remove(c);
     }
 
     /**
@@ -260,7 +262,7 @@ public class PlayerBoard {
 
 
     public PlayerBoard(PlayerBoard pBoard) {
-        ammos=new ArrayList<>(pBoard.ammos);
+        ammo =new ArrayList<>(pBoard.ammo);
         damages=new ArrayList<>(pBoard.damages);
         marks=new ArrayList<>(pBoard.marks);
         deathCounter=pBoard.deathCounter;

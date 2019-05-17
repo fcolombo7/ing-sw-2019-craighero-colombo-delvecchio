@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.Direction;
+import it.polimi.ingsw.model.enums.RoomColor;
+import it.polimi.ingsw.utils.MatrixHelper;
 import org.w3c.dom.*;
 
 import java.util.ArrayDeque;
@@ -45,7 +49,7 @@ public class GameBoard {
      */
     private int skullNumber;
 
-    private List<WeaponSquare> spawnPoint;
+    private List<WeaponSquare> spawnPoints;
 
     /**
      * This constructor instantiates a GameBoard object
@@ -53,7 +57,7 @@ public class GameBoard {
      * @param skullNumber representing the number of the skull placed on the board
      */
     public GameBoard(Node map, int skullNumber, int sourceReference){
-        this.spawnPoint=new ArrayList<>(Color.values().length);
+        this.spawnPoints=new ArrayList<>(Color.values().length);
         NamedNodeMap attributes=map.getAttributes();
         rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
         colLength=Integer.parseInt(attributes.getNamedItem("colLength").getNodeValue());
@@ -82,19 +86,19 @@ public class GameBoard {
         this.overkillTrack=new ArrayList<>(other.overkillTrack);
         this.killshotTrack=new ArrayList<>(other.killshotTrack);
         this.skullNumber=other.skullNumber;
-        this.spawnPoint=new ArrayList<>(Color.values().length);
+        this.spawnPoints=new ArrayList<>(Color.values().length);
         this.map=new Square[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
             for(int j=0;j<colLength;j++){
                 if(other.map[i][j]!=null){
                     boolean weaponS=false;
-                    for(WeaponSquare w:other.spawnPoint){
+                    for(WeaponSquare w:other.spawnPoints){
                         if(w.getBoardIndexes()[0]==i&&w.getBoardIndexes()[1]==j)
                             weaponS=true;
                     }
                     if(weaponS){
                         map[i][j]=new WeaponSquare((WeaponSquare) other.map[i][j]);
-                        spawnPoint.add((WeaponSquare)map[i][j]);
+                        spawnPoints.add((WeaponSquare)map[i][j]);
                     }
                     else map[i][j]=new AmmoSquare((AmmoSquare) other.map[i][j]);
                 }
@@ -150,7 +154,7 @@ public class GameBoard {
         if(type.equalsIgnoreCase("Weapon")) {
             WeaponSquare weaponSquare=new WeaponSquare(roomColor, doors, new int[]{rowCount, colCount});
             map[rowCount][colCount] = weaponSquare;
-            spawnPoint.add(weaponSquare);
+            spawnPoints.add(weaponSquare);
         }
         else if(type.equalsIgnoreCase("Ammo"))
             map[rowCount][colCount]=new AmmoSquare(roomColor,doors,new int[]{rowCount,colCount});
@@ -269,13 +273,13 @@ public class GameBoard {
         return map[x][y].getVisibilityMatrix();
     }
 
-    public List<WeaponSquare> getSpawnPoint() {
-        return new ArrayList<>(spawnPoint);
+    public List<WeaponSquare> getSpawnPoints() {
+        return new ArrayList<>(spawnPoints);
     }
 
     public boolean isSpawnPoint(int x,int y){
         if(!hasSquare(x,y)) return false;
-        for(WeaponSquare ws:spawnPoint){
+        for(WeaponSquare ws:spawnPoints){
             if(ws.getBoardIndexes()[0]==x&&ws.getBoardIndexes()[1]==y)
                 return true;
         }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.LoginMessage;
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.network.controller.messages.LoginMessage;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

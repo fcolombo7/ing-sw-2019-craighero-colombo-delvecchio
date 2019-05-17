@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
+import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -9,4 +10,5 @@ public interface RMIClientHandler extends Remote {
 
     void sendMatchMessage(MatchMessage message) throws RemoteException;
 
+    void sendRoomMessage(RoomMessage message) throws RemoteException;
 }

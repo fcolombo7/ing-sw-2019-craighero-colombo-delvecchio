@@ -1,14 +1,11 @@
 package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
-import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
-
-import java.util.ArrayList;
+import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.network.controller.messages.matchmessages.BoardUpdateMessage;
+import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 
 public class TestGson {
     public static void main(String[] args){
@@ -19,7 +16,7 @@ public class TestGson {
         game.addPlayer(new Player("Ciao","",true));
         game.addPlayer(new Player("Ciaooo","",false));
         game.setGameBoard(1);
-        MatchMessage m=new BoardCreationMessage(game.getGameBoard());
+        MatchMessage m=new BoardUpdateMessage(game.getGameBoard());
         //Gson gson1=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         System.out.println(gson.toJson(m));
 

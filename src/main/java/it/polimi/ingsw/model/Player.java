@@ -1,12 +1,15 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.PlayerPowerupsException;
-import it.polimi.ingsw.exceptions.PlayerWeaponsException;
+import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.model.exceptions.PlayerPowerupsException;
+import it.polimi.ingsw.model.exceptions.PlayerWeaponsException;
+import it.polimi.ingsw.model.enums.Direction;
+import it.polimi.ingsw.model.enums.PlayerStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.model.PlayerStatus.*;
+import static it.polimi.ingsw.model.enums.PlayerStatus.*;
 
 /**
  * This class represents a player
@@ -284,5 +287,13 @@ public class Player {
         this.position=p.position;
         this.score=p.score;
         this.status=p.status;
+    }
+
+    public boolean hasTimingPowerup(TurnStatus timing){
+        for(Powerup powerup: powerups){
+            if(powerup.getTiming()==timing)
+                return true;
+        }
+        return false;
     }
 }

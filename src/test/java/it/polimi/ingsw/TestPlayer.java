@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.exceptions.PlayerPowerupsException;
-import it.polimi.ingsw.exceptions.PlayerWeaponsException;
+import it.polimi.ingsw.model.exceptions.PlayerPowerupsException;
+import it.polimi.ingsw.model.exceptions.PlayerWeaponsException;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Powerup;

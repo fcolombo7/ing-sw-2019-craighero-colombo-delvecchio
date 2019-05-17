@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.utils.MatrixHelper;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

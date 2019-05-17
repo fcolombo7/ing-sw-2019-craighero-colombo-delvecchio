@@ -1,10 +1,12 @@
 package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.model.messages.LoginMessage;
-import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.LoginMessage;
+import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.room.PongMessage;
+import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
 import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
@@ -49,6 +51,7 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         requestMap.put(Costants.MSG_CLIENT_LOGIN, this::loginRequest);
         requestMap.put(Costants.MSG_CLIENT_CLOSE,this::closeRequest);
         requestMap.put(Costants.MSG_CLIENT_ANSWER,this::onAnswerRequest);
+        requestMap.put(Costants.MSG_ROOM_RECEIVED,this::onRoomMsgRequest);
     }
 
     @Override
@@ -87,7 +90,8 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         this.room = room;
     }
 
-    private void closeConnection() {
+    @Override
+    public void closeConnection() {
         try {
             out.println(Costants.MSG_SERVER_CLOSE);
             out.flush();
@@ -102,6 +106,18 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
     public void sendMatchMessage(MatchMessage message) {
         Gson gson= new Gson();
         Logger.log("[Socket] MatchMessage sending to "+nickname+":");
+        try {
+            Logger.log(gson.toJson(message));
+            out.println(gson.toJson(message));
+        }catch(Exception e){
+            Logger.logErr(e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendRoomMessage(RoomMessage message) {
+        Gson gson= new Gson();
+        Logger.log("[Socket] RoomMessage sending to "+nickname+":");
         try {
             Logger.log(gson.toJson(message));
             out.println(gson.toJson(message));
@@ -154,6 +170,27 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         closeConnection();
         server.deregisterConnection(this);
     }
+
+
+    private void onRoomMsgRequest() {
+        Logger.log("[Received a room message request request from socket]");
+        Gson gson=new Gson();
+        String msg=in.nextLine();
+        Logger.log("[JSON room] "+msg);
+
+        //foreach class which extends the RoomMessage one. [the class parameters of 'gson.fromJson' method must be the class of the dynamic type]
+        try{
+            PongMessage pongMessage=gson.fromJson(msg, PongMessage.class);
+            if(!pongMessage.getType().equalsIgnoreCase(Costants.PONG_ANSWER)) throw new IllegalArgumentException("Not Pong message");
+            room.onPongReceived(this);
+            return;
+        }catch (Exception e){
+            Logger.log("Tried but failed to get a BoardPreferenceAnswer from the received Json String.");
+        }
+
+        Logger.logErr("Cannot get a correct MatchAnswer from the received Json string.");
+    }
+
 
     private void onAnswerRequest(){
         Logger.log("[Received an answer request from socket]");

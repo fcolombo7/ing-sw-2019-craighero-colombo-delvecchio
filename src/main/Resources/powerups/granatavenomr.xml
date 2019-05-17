@@ -2,7 +2,7 @@
 	<name>GRANATA VENOM</name>
 	<color>R</color>
 	<timing>COUNTER_ATTACK</timing>
-	<effect ref_id="" name="">
+	<effect ref_id="1" name="GRANATA VENOM">
 		<cost/>
 		<target>
 			<type>PLAYER</type>

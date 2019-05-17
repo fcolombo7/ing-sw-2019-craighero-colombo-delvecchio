@@ -1,7 +1,8 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
+import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
@@ -9,14 +10,17 @@ import it.polimi.ingsw.utils.Observable;
 import java.rmi.RemoteException;
 
 public class RMIClientConnection extends Observable<MatchAnswer> implements ClientConnection {
+    private RMIServer server;
     private boolean online;
     private RMIClientHandler clientStub;
     private String nickname;
     private String motto;
     private Room room;
+    private String session;
 
-    public RMIClientConnection(RMIClientHandler clientStub){
+    public RMIClientConnection(RMIClientHandler clientStub,RMIServer server){
         this.clientStub=clientStub;
+        this.server=server;
         online=true;
     }
 
@@ -34,6 +38,10 @@ public class RMIClientConnection extends Observable<MatchAnswer> implements Clie
 
     public void setOnline(boolean online) {
         this.online = online;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 
     synchronized void getMatchAnswer(MatchAnswer message){
@@ -68,5 +76,20 @@ public class RMIClientConnection extends Observable<MatchAnswer> implements Clie
             Logger.logErr("RemoteException has been thrown.");
             Logger.logErr(e.getMessage());
         }
+    }
+
+    @Override
+    public void sendRoomMessage(RoomMessage message) {
+        try{
+            clientStub.sendRoomMessage(message);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown.");
+            Logger.logErr(e.getMessage());
+        }
+    }
+
+    @Override
+    public void closeConnection() {
+        server.deregister(session);
     }
 }

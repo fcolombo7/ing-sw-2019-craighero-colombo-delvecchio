@@ -1,13 +1,9 @@
 package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.model.GameBoard;
-import it.polimi.ingsw.model.messages.LoginMessage;
-import it.polimi.ingsw.model.messages.SimpleBoard;
-import it.polimi.ingsw.model.messages.matchanswer.BoardPreferenceAnswer;
-import it.polimi.ingsw.model.messages.matchanswer.MatchAnswer;
-import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.LoginMessage;
+import it.polimi.ingsw.network.controller.messages.SimpleBoard;
+import it.polimi.ingsw.network.controller.messages.matchmessages.BoardUpdateMessage;
 import it.polimi.ingsw.utils.Costants;
 import it.polimi.ingsw.utils.Logger;
 
@@ -46,15 +42,12 @@ public class TestClientSocket {
                 while (true) {
                     String socketLine = socketIn.nextLine();
                     System.out.println("[SERVER] "+socketLine);
-                    if (aBoolean) {
-                        try{
-                            BoardCreationMessage msg=gson.fromJson(socketLine, BoardCreationMessage.class);
-                            SimpleBoard board=msg.getGameBoard();
-                        }catch (Exception e){
-                            Logger.log("Tried but failed to get a BoardPreferenceAnswer from the received Json String.");
-                        }
+                    try{
+                        BoardUpdateMessage msg=gson.fromJson(socketLine, BoardUpdateMessage.class);
+                        SimpleBoard board=msg.getGameBoard();
+                    }catch (Exception e){
+                        Logger.log("Tried but failed to get a BoardPreferenceAnswer from the received Json String.");
                     }
-
                 }
 
             }catch(NoSuchElementException e) {

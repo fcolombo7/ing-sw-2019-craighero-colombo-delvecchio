@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.CardNotInitializedException;
+import it.polimi.ingsw.model.exceptions.CardNotInitializedException;
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.utils.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

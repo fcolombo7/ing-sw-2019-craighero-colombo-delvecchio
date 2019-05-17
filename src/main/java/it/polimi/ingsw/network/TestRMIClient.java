@@ -1,23 +1,20 @@
 package it.polimi.ingsw.network;
 
-import com.google.gson.Gson;
-import it.polimi.ingsw.model.messages.LoginMessage;
-import it.polimi.ingsw.model.messages.SimpleBoard;
-import it.polimi.ingsw.model.messages.matchmessages.BoardCreationMessage;
-import it.polimi.ingsw.model.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.LoginMessage;
+import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.network.controller.messages.room.ExitMessage;
+import it.polimi.ingsw.network.controller.messages.room.JoinMessage;
+import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
 import it.polimi.ingsw.network.server.RMIClientHandler;
 import it.polimi.ingsw.network.server.RMIServerHandler;
 import it.polimi.ingsw.utils.Costants;
-import it.polimi.ingsw.utils.Logger;
 
-import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class TestRMIClient implements RMIClientHandler {
@@ -51,5 +48,27 @@ public class TestRMIClient implements RMIClientHandler {
     @Override
     public synchronized void sendMatchMessage(MatchMessage message) throws RemoteException {
         System.out.println(message.getRequest());
+    }
+
+    @Override
+    public void sendRoomMessage(RoomMessage message) throws RemoteException {
+        if(message.getType().equalsIgnoreCase(Costants.PING_CHECK)){
+            //
+        }else if(message.getType().equalsIgnoreCase(Costants.PLAYER_EXIT)){
+            System.out.println("User "+ ((ExitMessage)message).getPlayer()+" has left the room...");
+        }else if(message.getType().equalsIgnoreCase(Costants.PLAYER_JOIN)){
+            System.out.println("User "+ ((JoinMessage)message).getPlayer()+" has joined the room...");
+        }else if(message.getType().equalsIgnoreCase(Costants.FIRST_PLAYER)){
+            System.out.println("You are the first player in the room!");
+        }
+    }
+
+    private static void loadMap() {
+
+    }
+
+    @FunctionalInterface
+    private interface RoomManager {
+        void exec();
     }
 }

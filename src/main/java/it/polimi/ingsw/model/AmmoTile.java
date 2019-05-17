@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.AmmoTileNotValidException;
+import it.polimi.ingsw.model.exceptions.AmmoTileNotValidException;
+import it.polimi.ingsw.model.enums.Color;
 
 import java.io.Serializable;
 

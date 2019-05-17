@@ -1,8 +1,9 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.exceptions.WeaponEffectException;
-import it.polimi.ingsw.exceptions.WeaponLoadException;
+import it.polimi.ingsw.model.exceptions.WeaponEffectException;
+import it.polimi.ingsw.model.exceptions.WeaponLoadException;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.Color;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -13,7 +14,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.model.TargetType.PLAYER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 

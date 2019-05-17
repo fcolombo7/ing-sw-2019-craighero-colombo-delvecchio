@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.Color;
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.PlayerBoard;
 import org.junit.Test;
@@ -125,7 +125,7 @@ public class TestPlayerBoard {
         ammoRes.add(Color.YELLOW);
         ammoRes.add(Color.YELLOW);
 
-        assertThat(pb.getAmmos(), is(ammoRes));
+        assertThat(pb.getAmmo(), is(ammoRes));
     }
 
     /**
@@ -168,6 +168,6 @@ public class TestPlayerBoard {
         pb.removeAmmos(ammoRmv);
         pb.removeAmmos(ammoRmv);
 
-        assertThat(pb.getAmmos(), is(ammoRes));
+        assertThat(pb.getAmmo(), is(ammoRes));
     }
 }

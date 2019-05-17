@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.TargetType;
+
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -142,5 +144,10 @@ public class Target {
         }else msg.append("none");
         msg.append("}");
         return msg.toString();
+    }
+
+    @FunctionalInterface
+    private interface Constraint {
+        boolean checkConstraint(Player availablePlayer, Deque<Player> shotPlayers);
     }
 }
