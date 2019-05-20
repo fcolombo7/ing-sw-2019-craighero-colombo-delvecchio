@@ -8,7 +8,7 @@ import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.messages.room.PongMessage;
 import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
 import it.polimi.ingsw.network.controller.Room;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
 
@@ -48,10 +48,10 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
     }
 
     private void loadRequests() {
-        requestMap.put(Costants.MSG_CLIENT_LOGIN, this::loginRequest);
-        requestMap.put(Costants.MSG_CLIENT_CLOSE,this::closeRequest);
-        requestMap.put(Costants.MSG_CLIENT_ANSWER,this::onAnswerRequest);
-        requestMap.put(Costants.MSG_ROOM_RECEIVED,this::onRoomMsgRequest);
+        requestMap.put(Constants.MSG_CLIENT_LOGIN, this::loginRequest);
+        requestMap.put(Constants.MSG_CLIENT_CLOSE,this::closeRequest);
+        requestMap.put(Constants.MSG_CLIENT_ANSWER,this::onAnswerRequest);
+        requestMap.put(Constants.MSG_ROOM_RECEIVED,this::onRoomMsgRequest);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
     @Override
     public void closeConnection() {
         try {
-            out.println(Costants.MSG_SERVER_CLOSE);
+            out.println(Constants.MSG_SERVER_CLOSE);
             out.flush();
             socket.close();
         } catch (IOException e) {
@@ -137,7 +137,7 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
     private void loginRequest() {
         Logger.log("[Received a login request from socket]");
         if(online){
-            out.println(Costants.MSG_SERVER_ALREADY_LOGGED);
+            out.println(Constants.MSG_SERVER_ALREADY_LOGGED);
             out.flush();
             Logger.log("Invalid request: client already logged in");
         }
@@ -148,15 +148,15 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
             String cNickname = loginMessage.getNickname();
             String cMotto = loginMessage.getMotto();
             if (server.checkClientLogin(cNickname, this)) {
-                msg = Costants.MSG_SERVER_POSITIVE_ANSWER;
+                msg = Constants.MSG_SERVER_POSITIVE_ANSWER;
                 online=true;
             } else {
-                msg = Costants.MSG_SERVER_NEGATIVE_ANSWER;
+                msg = Constants.MSG_SERVER_NEGATIVE_ANSWER;
             }
 
             out.println(msg);
             out.flush();
-            if (msg.equalsIgnoreCase(Costants.MSG_SERVER_POSITIVE_ANSWER)) {
+            if (msg.equalsIgnoreCase(Constants.MSG_SERVER_POSITIVE_ANSWER)) {
                 this.nickname=cNickname;
                 this.motto=cMotto;
                 server.joinAvailableRoom(this);
@@ -181,7 +181,7 @@ public class SocketClientConnection extends Observable<MatchAnswer> implements C
         //foreach class which extends the RoomMessage one. [the class parameters of 'gson.fromJson' method must be the class of the dynamic type]
         try{
             PongMessage pongMessage=gson.fromJson(msg, PongMessage.class);
-            if(!pongMessage.getType().equalsIgnoreCase(Costants.PONG_ANSWER)) throw new IllegalArgumentException("Not Pong message");
+            if(!pongMessage.getType().equalsIgnoreCase(Constants.PONG_ANSWER)) throw new IllegalArgumentException("Not Pong message");
             room.onPongReceived(this);
             return;
         }catch (Exception e){

@@ -41,7 +41,7 @@
 				</action>
 			</actions>
 			<extras>
-				<extra name="SHIFT_IN_MY_SQUARE"/>
+				<extra name="SHIFT_IN_SQUARE"/>
 			</extras>	
 		</effect>
 	</effects>

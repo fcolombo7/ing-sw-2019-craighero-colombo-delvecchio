@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,6 @@ public class RespawnRequestMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.RESPAWN_REQUEST_MESSAGE;
+        return Constants.RESPAWN_REQUEST_MESSAGE;
     }
 }

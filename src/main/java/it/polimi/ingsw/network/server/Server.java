@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.network.controller.JoinRoomException;
 import it.polimi.ingsw.network.controller.Room;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class Server{
     }
 
     public void startServer() throws ServerException {
-        rmiServer.start(Costants.RMI_PORT);
-        socketServer.startServer(Costants.SOCKET_PORT);
+        rmiServer.start(Constants.RMI_PORT);
+        socketServer.startServer(Constants.SOCKET_PORT);
     }
 
 
@@ -99,8 +99,8 @@ public class Server{
             Server server = new Server();
             server.startServer();
 
-            Logger.log(Costants.RMI_SERVER_NAME + " started:");
-            Logger.log("(RMI: " + Costants.RMI_PORT + ", socket: " + Costants.SOCKET_PORT + ")");
+            Logger.log(Constants.RMI_SERVER_NAME + " started:");
+            Logger.log("(RMI: " + Constants.RMI_PORT + ", socket: " + Constants.SOCKET_PORT + ")");
         } catch (ServerException e) {
             Logger.logErr(e.getMessage());
         }

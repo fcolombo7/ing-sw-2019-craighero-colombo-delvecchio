@@ -164,9 +164,10 @@ public class TestPlayerBoard {
         ammoRmv.add(Color.RED);
         ammoRes.add(Color.YELLOW);
         ammoRes.add(Color.BLUE);
-
-        pb.removeAmmos(ammoRmv);
-        pb.removeAmmos(ammoRmv);
+        for(Color color:ammoRmv)
+            pb.removeAmmo(color);
+        for(Color color:ammoRmv)
+            pb.removeAmmo(color);
 
         assertThat(pb.getAmmo(), is(ammoRes));
     }

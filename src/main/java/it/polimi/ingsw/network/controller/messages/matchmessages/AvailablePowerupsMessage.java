@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,6 @@ public class AvailablePowerupsMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.AVAILABLE_POWERUPS_MESSAGE;
+        return Constants.AVAILABLE_POWERUPS_MESSAGE;
     }
 }

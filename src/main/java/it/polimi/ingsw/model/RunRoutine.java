@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.RunRoutineAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.TurnRoutineAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
@@ -31,11 +31,11 @@ public class RunRoutine implements TurnRoutine {
 
     @Override
     public void handleAnswer(TurnRoutineAnswer answer) {
-        if(answer.getRoutineAnswer().equals(Costants.RUN_ROUTINE_ANSWER)){
+        if(answer.getRoutineAnswer().equals(Constants.RUN_ROUTINE_ANSWER)){
             RunRoutineAnswer msg=(RunRoutineAnswer)answer;
             if(distanceMatrix.toBooleanMatrix()[msg.getNewPosition()[0]][msg.getNewPosition()[1]]){
                 turn.getGame().getCurrentPlayer().setPosition(turn.getGame().getGameBoard().getSquare(msg.getNewPosition()[0],msg.getNewPosition()[1]));
-                TurnRoutineMessage message=new RunRoutineCompleted(new SimplePlayer(turn.getGame().getCurrentPlayer()));
+                TurnRoutineMessage message=new RunRoutineCompleted(new SimplePlayer(turn.getGame().getCurrentPlayer()),msg.getNewPosition());
                 turn.sendRoutineMessage(message);
                 turn.endRoutine();
             }else{

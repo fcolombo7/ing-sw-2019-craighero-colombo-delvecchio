@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.room;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class PongMessage extends RoomMessage{
     private static final long serialVersionUID = 6724469736435389115L;
@@ -9,6 +9,6 @@ public class PongMessage extends RoomMessage{
 
     @Override
     public String getType() {
-        return Costants.PONG_ANSWER;
+        return Constants.PONG_ANSWER;
     }
 }

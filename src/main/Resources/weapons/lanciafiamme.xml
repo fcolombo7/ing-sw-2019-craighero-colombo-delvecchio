@@ -30,7 +30,7 @@
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
 				<minPlayerIn>1</minPlayerIn>
-				<maxPlayerIn>4</maxPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>

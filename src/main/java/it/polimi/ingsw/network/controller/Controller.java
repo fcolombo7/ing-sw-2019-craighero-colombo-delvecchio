@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.exceptions.MatchConfigurationException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observer;
 
@@ -39,12 +39,12 @@ public class Controller implements Observer<MatchAnswer> {
     }
 
     private void loadAnswer() {
-        answerMap.put(Costants.BOARD_SETTING_ANSWER,this::roomPreferenceManager);
+        answerMap.put(Constants.BOARD_SETTING_ANSWER,this::roomPreferenceManager);
     }
 
     private void roomPreferenceManager(MatchAnswer message) {
         BoardPreferenceAnswer answer=(BoardPreferenceAnswer)message;
-        String folderName=Costants.BOARD_FOLDER;
+        String folderName= Constants.BOARD_FOLDER;
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles==null) throw new MatchConfigurationException("No boards in "+folderName);

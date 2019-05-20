@@ -52,15 +52,19 @@ public class TurnRoutineFactory {
             MatrixHelper distanceMatrix=turn.getGame().getGameBoard().getDistanceMatrix(pos[0],pos[1],maxDistance);
             boolean [][]mat=distanceMatrix.toBooleanMatrix();
 
+            Square correctPosition=currPlayer.getPosition();
             for(int i=0;i<distanceMatrix.getRowLength();i++){
                 for(int j=0;j<distanceMatrix.getColLength();j++){
                     if(mat[i][j]){
-                        Player p= new Player(currPlayer);
-                        p.setPosition(turn.getGame().getGameBoard().getSquare(i,j));
-                        if(canWeaponShoot(p,players,!turn.getGame().isFrenzy())) return true;
+                        currPlayer.setPosition(turn.getGame().getGameBoard().getSquare(i,j));
+                        if(canWeaponShoot(!turn.getGame().isFrenzy())) {
+                            currPlayer.setPosition(correctPosition);
+                            return true;
+                        }
                     }
                 }
             }
+            currPlayer.setPosition(correctPosition);
         }
         return false;
     }
@@ -98,10 +102,10 @@ public class TurnRoutineFactory {
         }
     }
 
-    private boolean canWeaponShoot(Player p, List<Player> players, boolean checkLoaded) {
-        for (Weapon w: p.getWeapons()) {
+    private boolean canWeaponShoot(boolean checkLoaded) {
+        for (Weapon w: turn.getGame().getCurrentPlayer().getWeapons()) {
             w.initNavigation();
-            List<Effect> usableEffects=w.getUsableEffect(p,players,turn.getShotPlayer(),turn.getGame().getGameBoard(),checkLoaded);
+            List<Effect> usableEffects=w.getUsableEffect(checkLoaded,turn);
             if(!usableEffects.isEmpty()) return true;
         }
         return false;

@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.model.GameBoard;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class BoardUpdateMessage extends MatchMessage {
     private static final long serialVersionUID = -5182145162653926540L;
@@ -19,6 +19,6 @@ public class BoardUpdateMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.BOARD_UPDATE_MESSAGE;
+        return Constants.BOARD_UPDATE_MESSAGE;
     }
 }

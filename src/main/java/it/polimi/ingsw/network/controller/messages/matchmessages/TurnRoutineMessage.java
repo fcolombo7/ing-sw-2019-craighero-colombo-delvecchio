@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public abstract class TurnRoutineMessage extends MatchMessage {
 
@@ -12,7 +12,7 @@ public abstract class TurnRoutineMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.TURN_ROUTINE_MESSAGE;
+        return Constants.TURN_ROUTINE_MESSAGE;
     }
 
     public abstract String getRoutineRequest();

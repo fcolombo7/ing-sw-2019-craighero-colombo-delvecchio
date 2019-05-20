@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils;
 
-public class Costants {
+public class Constants {
     /*CONFIGURATION RESOURCES*/
     public static final String GAME_CONFIG_FILEPATH="src/main/Resources/config.xml";
     public static final String BOARD_FOLDER = "src/main/Resources/boards";
@@ -41,6 +41,9 @@ public class Costants {
     public static final String TURN_AVAILABLE_ACTIONS = "AVAILABLE ACTIONS";
     public static final String AVAILABLE_POWERUPS_MESSAGE = "AVAILABLE POWERUPS";
     public static final String LOADABLE_WEAPONS_MESSAGE = "LOADABLE WEAPONS";
+    public static final String EFFECT_MOVE_REQUEST_MESSAGE = "MOVE REQUEST";
+    public static final String EFFECT_MARK_MESSAGE = "MARK MESSAGE";
+    public static final String EFFECT_DAMAGE_MESSAGE = "MARK MESSAGE";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
@@ -51,6 +54,9 @@ public class Costants {
     public static final String RESPAWN_ANSWER ="RESPAWN ACTION";
     public static final String TURN_ROUTINE_ANSWER ="ROUTINE ANSWER";
     public static final String ACTION_SELECTED = "ACTION SELECTED";
+    public static final String POWERUP_SELECTED = "POWERUP SELECTED";
+    public static final String LOADABLE_WEAPON_SELECTED = "LOADABLE WEAPON SELECTED";
+    public static final String EFFECT_MOVE_ANSWER = "MOVE ANSWER";
 
     /*ROUTINE ANSWERS*/
     public static final String RUN_ROUTINE_ANSWER ="RUN ROUTINE ANSWER";
@@ -62,5 +68,5 @@ public class Costants {
     public static final String PONG_ANSWER ="PONG";
     public static final String FIRST_PLAYER = "FIRST IN ROOM";
 
-    private Costants(){}
+    private Constants(){}
 }

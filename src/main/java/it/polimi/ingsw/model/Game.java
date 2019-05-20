@@ -6,8 +6,9 @@ import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.RespawnAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
+import it.polimi.ingsw.utils.MatrixHelper;
 import it.polimi.ingsw.utils.Observable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -54,7 +55,7 @@ public class Game extends Observable<MatchMessage> {
         ammoTileDeck = new ArrayList<>();
         players = new ArrayList<>();
 
-        Node root = parsingXMLFile(Costants.GAME_CONFIG_FILEPATH);
+        Node root = parsingXMLFile(Constants.GAME_CONFIG_FILEPATH);
         NodeList nodeList = root.getChildNodes();
         for(int i=0; i<nodeList.getLength();i++) {
             Node cardNode = nodeList.item(i);
@@ -232,16 +233,16 @@ public class Game extends Observable<MatchMessage> {
     public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
-                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD1_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD1_FILEPATH), skullNumber,mapNumber);
                 break;
             case 2:
-                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD2_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD2_FILEPATH), skullNumber,mapNumber);
                 break;
             case 3:
-                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD3_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD3_FILEPATH), skullNumber,mapNumber);
                 break;
             case 4:
-                this.gameBoard = new GameBoard(parsingXMLFile(Costants.BOARD4_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullNumber,mapNumber);
                 break;
             default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
         }
@@ -337,10 +338,6 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
-    void routineMessage(TurnRoutineMessage message){
-        notify(message);
-    }
-
     private void fillSquare(int x, int y) {
         Square square=gameBoard.getSquare(x,y);
         if(!square.isFull()){
@@ -381,6 +378,10 @@ public class Game extends Observable<MatchMessage> {
         //TODO create turn
     }
 
+    public void endTurn() {
+
+    }
+
     public void respawnPlayerRequest(Player player, boolean firstSpawn) {
         if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN) throw new IllegalStateException("Cannot respawn the player '"+player.getNickname()+"'. ["+player.getStatus().name()+"]");
         ArrayList<Card> drawnPowerups= new ArrayList<>(2);
@@ -419,7 +420,8 @@ public class Game extends Observable<MatchMessage> {
         notify(message);
     }
 
-    public void endTurn() {
+    void routineMessage(TurnRoutineMessage message){
+        notify(message);
     }
 
     void sendAvailableActions(List<String> actions) {
@@ -439,6 +441,33 @@ public class Game extends Observable<MatchMessage> {
 
     void sendLoadableWeapons(List<Card> weapons){
         MatchMessage message=new LoadableWeaponsMessage(currentPlayer.getNickname(),weapons);
+        notify(message);
+    }
+
+    void sendReloadMessage(List<Card> discardedPowerups){
+        MatchMessage message = new WeaponReloadMessage(new SimplePlayer(getCurrentPlayer()),discardedPowerups);
+        notify(message);
+    }
+
+
+    void sendDamageMessage(List<Player> selected, int value) {
+        MatchMessage message=new DamageMessage(currentPlayer.getNickname(),selected,value);
+        notify(message);
+    }
+
+    void sendMarkMessage(List<Player> selected, int value) {
+        MatchMessage message=new MarkMessage(currentPlayer.getNickname(),selected,value);
+        notify(message);
+    }
+
+    void sendMoveRequestMessage(String player, MatrixHelper matrix){
+        MatchMessage message= new MoveRequestMessage(getCurrentPlayer().getNickname(), player, matrix);
+        notify(message);
+
+    }
+
+    void sendMoveMessage(String player, int[] position) {
+        MatchMessage message=new MoveMessage(player, position);
         notify(message);
     }
 }
