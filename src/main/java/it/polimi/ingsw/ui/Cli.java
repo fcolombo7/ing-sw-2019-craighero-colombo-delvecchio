@@ -1,10 +1,8 @@
 package it.polimi.ingsw.ui;
 
-import it.polimi.ingsw.model.GameBoard;
-import it.polimi.ingsw.model.Square;
-import it.polimi.ingsw.model.WeaponSquare;
 import it.polimi.ingsw.model.enums.RoomColor;
-import it.polimi.ingsw.utils.Logger;
+import it.polimi.ingsw.network.controller.messages.SimpleBoard;
+import it.polimi.ingsw.network.controller.messages.SimpleSquare;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,11 +14,11 @@ import static it.polimi.ingsw.utils.Constants.*;
 
 public class Cli {
 
-    private GameBoard board;
+    private SimpleBoard board;
     private StringBuilder map = new StringBuilder();
     private final List<String> blankSquare = Collections.singletonList(" ");
 
-    public Cli(GameBoard board){
+    public Cli(SimpleBoard board){
         this.board = board;
         buildMap();
     }
@@ -32,14 +30,14 @@ public class Cli {
     private void buildMap(){
         List<List<String>> squareRow = new ArrayList<>();
 
-        for(int i=0; i<board.getMap()[0].length; i++)
+        for(int i=0; i<board.getBoard()[0].length; i++)
             map.append(String.format("|%7s%-6s", (char) (i +65), " "));
         map.append("|");
         map.append("\n");
 
-        for(int i=0; i<board.getMap().length; i++){
-            for(int j=0; j<board.getMap()[0].length; j++){
-                if(board.getMap()[i][j]!=null)
+        for(int i=0; i<board.getBoard().length; i++){
+            for(int j=0; j<board.getBoard()[0].length; j++){
+                if(board.getBoard()[i][j]!=null)
                     squareRow.add(buildSquare(i, j));
                 else squareRow.add(blankSquare);
             }
@@ -49,7 +47,7 @@ public class Cli {
     }
 
     private List<String> buildSquare(int x, int y){
-        Square building = board.getMap()[x][y];
+        SimpleSquare building = board.getBoard()[x][y];
         String color = parseColor(building.getRoomColor());
         StringBuilder squareLine = new StringBuilder();
         List<String> squareToString = new ArrayList<>();
@@ -85,7 +83,7 @@ public class Cli {
         }
     }
 
-    private List<String> makeColumns(Square building) {
+    private List<String> makeColumns(SimpleSquare building) {
         if (building.hasDoor(WEST)) {
             if (building.hasDoor(EAST)) return (buildDD(building));
             else if (board.sameRoom(building.getBoardIndexes(), EAST)) return (buildDR(building));
@@ -135,10 +133,10 @@ public class Cli {
         }
     }
 
-    private List<String> buildDD(Square b){
+    private List<String> buildDD(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , AMMO , RH_BLOCK));
         col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
@@ -152,10 +150,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildDR(Square b){
+    private List<String> buildDR(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RT_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , AMMO , RT_BLOCK));
         col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
@@ -169,10 +167,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildDW(Square b){
+    private List<String> buildDW(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , AMMO , RH_BLOCK));
         col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
@@ -186,10 +184,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildRD(Square b){
+    private List<String> buildRD(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RH_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LT_BLOCK , AMMO , RH_BLOCK));
         col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
@@ -203,10 +201,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildRR(Square b){
+    private List<String> buildRR(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RT_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LT_BLOCK , AMMO , RT_BLOCK));
         col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
@@ -220,10 +218,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildRW(Square b){
+    private List<String> buildRW(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RH_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LT_BLOCK , AMMO , RH_BLOCK));
         col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
@@ -237,10 +235,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildWR(Square b){
+    private List<String> buildWR(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RT_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , AMMO , RT_BLOCK));
         col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
@@ -254,10 +252,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildWD(Square b){
+    private List<String> buildWD(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , AMMO , RH_BLOCK));
         col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
@@ -271,10 +269,10 @@ public class Cli {
         return col;
     }
 
-    private List<String> buildWW(Square b){
+    private List<String> buildWW(SimpleSquare b){
         List<String> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
-        if(b instanceof WeaponSquare)
+        if(b.isSpawnPoint())
             col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
         else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , AMMO , RH_BLOCK));
         col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));

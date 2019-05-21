@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.controller.messages;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.enums.Direction;
 import it.polimi.ingsw.model.enums.RoomColor;
 
 import java.io.Serializable;
@@ -45,12 +46,22 @@ public class SimpleSquare implements Serializable {
         return true;
     }
 
-    public int getxIndex() {
-        return xIndex;
+    /**
+     * This method return a true value if there is a door connected to the square in the given direction.
+     * @param direction Direction representing the position of the door you want to evaluate.
+     * @return Boolean representing the presence of the door in the given direction.
+     */
+    public boolean hasDoor(Direction direction) {
+        if(direction==null) throw new NullPointerException("Param 'direction' is null.");
+        return doors[direction.ordinal()];
     }
 
-    public int getyIndex() {
-        return yIndex;
+    /**
+     * This method return the x-index and y-index of this in the GameBoard map
+     * @return RoomColor representing the color of the room
+     */
+    public int[] getBoardIndexes(){
+        return new int[]{xIndex,yIndex};
     }
 
     public AmmoTile getAmmoTile() {

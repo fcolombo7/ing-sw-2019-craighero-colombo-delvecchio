@@ -60,6 +60,34 @@ public class SimpleBoard implements Serializable{
         }
     }
 
+    /**
+     * This method check if in the direction given there is a square of the same color/room of the given one
+     * @param coordinates represents the array containing the coordinates of the square given
+     * @param direction represents the direction to check at
+     * @return boolean representing whether the check is positive or not
+     */
+    public boolean sameRoom(int[] coordinates, Direction direction){
+        switch(direction){
+            case NORTH:
+                if(coordinates[0]==0 || board[coordinates[0] - 1][coordinates[1]] == null)
+                    return false;
+                else return board[coordinates[0]][coordinates[1]].getRoomColor()==board[coordinates[0] - 1][coordinates[1]].getRoomColor();
+            case EAST:
+                if(coordinates[1]>=(board[0].length - 1) || board[coordinates[0]][coordinates[1] + 1] == null)
+                    return false;
+                else return board[coordinates[0]][coordinates[1]].getRoomColor()==board[coordinates[0]][coordinates[1] + 1].getRoomColor();
+            case SOUTH:
+                if(coordinates[0]>=(board.length - 1)|| board[coordinates[0] + 1][coordinates[1]] ==  null)
+                    return false;
+                else return board[coordinates[0]][coordinates[1]].getRoomColor()==board[coordinates[0] + 1][coordinates[1]].getRoomColor();
+            case WEST:
+                if(coordinates[1]==0 || board[coordinates[0]][coordinates[1] - 1] == null)
+                    return false;
+                else return board[coordinates[0]][coordinates[1]].getRoomColor()==board[coordinates[0]][coordinates[1] - 1].getRoomColor();
+            default: throw new IllegalArgumentException("Direction is not valid");
+        }
+    }
+
     public SimpleSquare[][] getBoard() {
         return board;
     }
