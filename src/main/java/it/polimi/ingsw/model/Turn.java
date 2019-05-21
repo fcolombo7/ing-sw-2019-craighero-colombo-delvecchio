@@ -67,6 +67,7 @@ public class Turn {
     }
 
     private void availableActions(boolean end) {
+        curEffect=null;
         if(!end) {
             actions = new ArrayList<>();
             for (TurnRoutineType type : TurnRoutineType.values()) {
@@ -101,8 +102,8 @@ public class Turn {
         for (Powerup powerup:game.getCurrentPlayer().getPowerups()){
             if(selPowerup.getId().equalsIgnoreCase(powerup.getId())){
                 if(powerup.getTiming()==status&&powerup.getEffect().canUse(this)){
-                    //TODO: PERFORM EFFECT
                     curEffect=powerup.getEffect();
+                    game.sendSelectedPowerup(powerup);
                     curEffect.perform(null,this);
                     availableActions(false);
                 }else {
@@ -115,7 +116,6 @@ public class Turn {
         game.sendInvalidAction("Current player doesn't have the selected powerup");
 
     }
-
 
     private void sendWeapons(){
         List<Card> loadableWeapons=new ArrayList<>();
@@ -213,8 +213,8 @@ public class Turn {
 
     public void endRoutine() {
         //inviare le nuove azioni eseguibili
-        availableActions(false);
         curRoutine=null;
+        availableActions(false);
     }
 
     public void setShiftableMatrix(MatrixHelper matrix) {

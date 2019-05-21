@@ -449,7 +449,6 @@ public class Game extends Observable<MatchMessage> {
         notify(message);
     }
 
-
     void sendDamageMessage(List<Player> selected, int value) {
         MatchMessage message=new DamageMessage(currentPlayer.getNickname(),selected,value);
         notify(message);
@@ -468,6 +467,11 @@ public class Game extends Observable<MatchMessage> {
 
     void sendMoveMessage(String player, int[] position) {
         MatchMessage message=new MoveMessage(player, position);
+        notify(message);
+    }
+
+    void sendSelectedPowerup(Powerup powerup) {
+        MatchMessage message=new SelectedPowerupMessage(currentPlayer.getNickname(),powerup);
         notify(message);
     }
 }

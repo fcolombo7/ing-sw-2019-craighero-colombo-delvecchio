@@ -44,6 +44,7 @@ public class Constants {
     public static final String EFFECT_MOVE_REQUEST_MESSAGE = "MOVE REQUEST";
     public static final String EFFECT_MARK_MESSAGE = "MARK MESSAGE";
     public static final String EFFECT_DAMAGE_MESSAGE = "MARK MESSAGE";
+    public static final String SELECTED_POWERUP ="SELECTED POWERUP";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
