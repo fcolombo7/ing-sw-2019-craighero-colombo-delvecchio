@@ -14,18 +14,6 @@ import static it.polimi.ingsw.TestGameboard.parsingXMLFile;
 
 public class TestCli {
 
-    /*public static void main(String[] arg){
-        Node node = null;
-        try {
-            node = parsingXMLFile("src/main/Resources/boards/board1.xml");
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-        }
-        GameBoard board=new GameBoard(node,5,1);
-        Cli cli = new Cli(board);
-        cli.printMap();
-    }*/
-
     @Test
     public void testBuildMap() throws IOException, SAXException, ParserConfigurationException {
         for(int i=1; i<5; i++) {

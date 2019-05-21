@@ -91,13 +91,13 @@ public class Cli {
         } else {
             if (building.hasDoor(EAST)) {
                 if (board.sameRoom(building.getBoardIndexes(), WEST)) return (buildRD(building));
-                else return (buildRW(building));
+                else return (buildWD(building));
             } else {
                 if (board.sameRoom(building.getBoardIndexes(), EAST)) {
                     if (board.sameRoom(building.getBoardIndexes(), WEST)) return (buildRR(building));
                     else return (buildWR(building));
                 } else {
-                    if (board.sameRoom(building.getBoardIndexes(), WEST)) return (buildWD(building));
+                    if (board.sameRoom(building.getBoardIndexes(), WEST)) return (buildRW(building));
                     else return (buildWW(building));
                 }
             }
