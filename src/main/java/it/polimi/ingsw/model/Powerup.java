@@ -24,23 +24,23 @@ public class Powerup extends Card {
     /**
      * This attribute contains the time when the power up card can be used
      */
-    private TurnStatus timing;
+    private transient TurnStatus timing;
 
     /**
      * This attribute contains the color of the power up card (a power up card can be used as a substitute
      * of an ammo tile of the same color)
      */
-    private Color color;
+    private transient Color color;
 
     /**
      * This attribute specifies if the power up card is initialized or not
      */
-    private boolean initialized;
+    private transient boolean initialized;
 
     /**
      * This attribute contains the effect of the power up
      */
-    private Effect effect;
+    private transient Effect effect;
 
     /**
      * This constructor instantiates a power up calling the constructor of Card (Powerup extends Card)

@@ -120,11 +120,10 @@ public class PlayerBoard {
 
     /**
      * This method removes ammo to the player board
-     * @param ammos representing the ammo to remove
+     * @param color representing the ammo to remove
      */
-    public void removeAmmos(List<Color> ammos){
-        for(Color c: ammos)
-            this.ammo.remove(c);
+    public void removeAmmo(Color color){
+        this.ammo.remove(color);
     }
 
     /**

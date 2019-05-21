@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchanswer;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class BoardPreferenceAnswer extends MatchAnswer {
     int boardReference;
@@ -16,6 +16,6 @@ public class BoardPreferenceAnswer extends MatchAnswer {
 
     @Override
     public String getAnswer() {
-        return Costants.BOARD_SETTING_ANSWER;
+        return Constants.BOARD_SETTING_ANSWER;
     }
 }

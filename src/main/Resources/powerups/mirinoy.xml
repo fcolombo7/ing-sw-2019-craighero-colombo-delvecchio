@@ -8,11 +8,11 @@
 			<type>PLAYER</type>
 			<minNumber>1</minNumber>
 			<maxNumber>1</maxNumber>
-			<prevConstraints/>
+			<prevConstraints>
+				<constraint>SAME</constraint>
+			</prevConstraints>
 		</target>
-		<requirements>
-			<requirement name="DAMAGED_PLAYER"/>
-		</requirements>
+		<requirements/>
 		<actions>
 			<action type="DAMAGE">
 				<value>1</value>

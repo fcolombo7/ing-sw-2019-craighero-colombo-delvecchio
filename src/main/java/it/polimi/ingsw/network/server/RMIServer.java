@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.Serializable;
@@ -30,7 +30,7 @@ public class RMIServer implements RMIServerHandler, Serializable {
         try{
             Registry registry = LocateRegistry.createRegistry(portNumber);
             RMIServerHandler stub = (RMIServerHandler) UnicastRemoteObject.exportObject(this, portNumber);
-            registry.bind(Costants.RMI_SERVER_NAME,stub);
+            registry.bind(Constants.RMI_SERVER_NAME,stub);
             Logger.log("RMI server started.");
         } catch (AccessException e) {
             throw new ServerException("RMI server not loaded (AccessException):\n"+e.getMessage());

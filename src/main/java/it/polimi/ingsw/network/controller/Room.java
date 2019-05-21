@@ -9,20 +9,20 @@ import it.polimi.ingsw.network.controller.messages.room.PingMessage;
 import it.polimi.ingsw.network.server.ClientConnection;
 import it.polimi.ingsw.network.view.RemoteView;
 import it.polimi.ingsw.network.view.View;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.util.*;
 
 public class Room {
 
-    private static final long ROOM_WAITING_TIME = Costants.WAITING_ROOM_TIMER;
+    private static final long ROOM_WAITING_TIME = Constants.WAITING_ROOM_TIMER;
 
-    private static final long ROOM_WAITING_PONG = Costants.WAITING_ROOM_PONG;
+    private static final long ROOM_WAITING_PONG = Constants.WAITING_ROOM_PONG;
 
-    private static final int MIN_PLAYERS = Costants.ROOM_MIN_PLAYERS;
+    private static final int MIN_PLAYERS = Constants.ROOM_MIN_PLAYERS;
 
-    private static final int MAX_PLAYERS = Costants.ROOM_MAX_PLAYERS;
+    private static final int MAX_PLAYERS = Constants.ROOM_MAX_PLAYERS;
 
     private List<ClientConnection> players;
 
@@ -83,7 +83,7 @@ public class Room {
         }
 
         Logger.log(client.getNickname() + " has left the room " + roomNumber);
-        if(players.size()<Costants.ROOM_MIN_PLAYERS)
+        if(players.size()< Constants.ROOM_MIN_PLAYERS)
             resetCountDown();
         return players.isEmpty();
     }

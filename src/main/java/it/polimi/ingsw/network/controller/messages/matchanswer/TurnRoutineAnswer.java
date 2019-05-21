@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchanswer;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public abstract class TurnRoutineAnswer extends MatchAnswer{
 
@@ -12,7 +12,7 @@ public abstract class TurnRoutineAnswer extends MatchAnswer{
 
     @Override
     public String getAnswer() {
-        return Costants.TURN_ROUTINE_ANSWER;
+        return Constants.TURN_ROUTINE_ANSWER;
     }
 
     public abstract String getRoutineAnswer();

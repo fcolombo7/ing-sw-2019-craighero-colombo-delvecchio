@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.GameBoard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,6 @@ public class MatchUpdateMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.UPDATE_MESSAGE;
+        return Constants.UPDATE_MESSAGE;
     }
 }

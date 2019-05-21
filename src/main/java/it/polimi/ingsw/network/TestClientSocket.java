@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.matchmessages.BoardUpdateMessage;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.*;
@@ -93,7 +93,7 @@ public class TestClientSocket {
 
     private void login() {
         Gson gson= new Gson();
-        String msg= Costants.MSG_CLIENT_LOGIN;
+        String msg= Constants.MSG_CLIENT_LOGIN;
         socketOut.println(msg);
         socketOut.flush();
 

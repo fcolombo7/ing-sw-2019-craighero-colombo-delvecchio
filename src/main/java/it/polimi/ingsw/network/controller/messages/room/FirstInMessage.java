@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.room;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class FirstInMessage extends RoomMessage {
     private static final long serialVersionUID = 5096439031397479438L;
@@ -10,6 +10,6 @@ public class FirstInMessage extends RoomMessage {
 
     @Override
     public String getType() {
-        return Costants.FIRST_PLAYER;
+        return Constants.FIRST_PLAYER;
     }
 }

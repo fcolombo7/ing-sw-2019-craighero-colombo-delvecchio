@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,6 @@ public class MatchCreationMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.CREATION_MESSAGE;
+        return Constants.CREATION_MESSAGE;
     }
 }

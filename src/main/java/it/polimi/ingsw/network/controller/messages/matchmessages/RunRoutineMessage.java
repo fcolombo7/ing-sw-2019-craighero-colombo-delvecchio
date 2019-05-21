@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.utils.MatrixHelper;
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class RunRoutineMessage extends TurnRoutineMessage {
     private static final long serialVersionUID = 4466037763772949493L;
@@ -18,6 +18,6 @@ public class RunRoutineMessage extends TurnRoutineMessage {
 
     @Override
     public String getRoutineRequest() {
-        return Costants.RUN_ROUTINE_MESSAGE;
+        return Constants.RUN_ROUTINE_MESSAGE;
     }
 }

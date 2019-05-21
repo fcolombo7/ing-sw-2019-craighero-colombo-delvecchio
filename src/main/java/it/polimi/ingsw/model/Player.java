@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.model.exceptions.PlayerPowerupsException;
 import it.polimi.ingsw.model.exceptions.PlayerWeaponsException;
@@ -295,5 +296,38 @@ public class Player {
                 return true;
         }
         return false;
+    }
+
+    public boolean canReloadedWeapon(Weapon weapon){
+        if(!this.getWeapons().contains(weapon)||weapon.isLoaded())return false;
+        List<Color> startingAmmo=new ArrayList<>(this.getBoard().getAmmo());
+        for (Powerup p:this.getPowerups()) {
+            startingAmmo.add(p.getColor());
+        }
+        for (Color color:weapon.getAmmo()){
+            if(startingAmmo.contains(color))
+                startingAmmo.remove(color);
+            else
+                return false;
+        }
+        return true;
+    }
+
+    public List<Card> reloadWeapon(Weapon weapon){
+        List<Card> discardedPowerups=new ArrayList<>();
+        if(!canReloadedWeapon(weapon))throw new IllegalArgumentException("The weapon cannot be reload.");
+        for(Color color:weapon.getAmmo()){
+            if(this.getBoard().getAmmo().contains(color))
+                this.getBoard().removeAmmo(color);
+            else {
+                for(Powerup p: this.getPowerups())
+                    if(p.getColor()==color) {
+                        discardedPowerups.add(new Card(p));
+                        this.popPowerup(p);
+                        break;
+                    }
+            }
+        }
+        return discardedPowerups;
     }
 }

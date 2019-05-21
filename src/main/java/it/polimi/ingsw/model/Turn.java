@@ -1,21 +1,26 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.LoadableWeaponSelectedAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.PowerupSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
 import it.polimi.ingsw.utils.Logger;
+import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.util.*;
 
 public class Turn {
     private Game game;
     private TurnStatus status;
-    private Deque<Player> shotPlayer;
+    private Deque<Player> shotPlayers;
     private int routineNumber;
     private TurnRoutine curRoutine;
     private List<String> actions;
+    private MatrixHelper shiftableMatrix;
+    private Map<String, MatrixHelper> movementMap;
+    private Effect curEffect;
 
     public Turn(Game game){
         this.game=game;
@@ -25,10 +30,13 @@ public class Turn {
         }
         else routineNumber=2;
         status=TurnStatus.WAITING_PLAYER;
-        shotPlayer=new ArrayDeque<>();
+        shotPlayers =new ArrayDeque<>();
         curRoutine=null;
         actions=null;
-        availableActions();
+        shiftableMatrix=null;
+        curEffect=null;
+        movementMap = new HashMap<>();
+        availableActions(false);
     }
 
     public void selectAction(ActionSelectedAnswer answer){
@@ -58,13 +66,15 @@ public class Turn {
         game.sendInvalidAction("Invalid action received");
     }
 
-    private void availableActions() {
-        actions=new ArrayList<>();
-        for(TurnRoutineType type:TurnRoutineType.values()){
-            if(canPerformRoutine(type.name()))
-                actions.add(type.name());
+    private void availableActions(boolean end) {
+        if(!end) {
+            actions = new ArrayList<>();
+            for (TurnRoutineType type : TurnRoutineType.values()) {
+                if (canPerformRoutine(type.name()))
+                    actions.add(type.name());
+            }
+            if (game.getCurrentPlayer().hasTimingPowerup(status)) actions.add("POWERUP");
         }
-        if(game.getCurrentPlayer().hasTimingPowerup(status))actions.add("POWERUP");
         if(canReload())actions.add("RELOAD");
         if(actions.isEmpty()){
             status=TurnStatus.END;
@@ -75,47 +85,72 @@ public class Turn {
 
     private void sendPowerups(){
         List<Card> usablePowerups=new ArrayList<>();
+        List<Player> other=game.getPlayers();
+        other.remove(game.getCurrentPlayer());
         for (Powerup p:game.getCurrentPlayer().getPowerups()) {
-            if(p.getTiming()==status)
+            if(p.getTiming()==status&&p.getEffect().canUse(this))
                 usablePowerups.add(new Card(p));
         }
         game.sendUsablePowerups(usablePowerups);
     }
 
+    private void onPowerupReceived(PowerupSelectedAnswer answer){
+        Card selPowerup=answer.getPowerup();
+        List<Player> other=game.getPlayers();
+        other.remove(game.getCurrentPlayer());
+        for (Powerup powerup:game.getCurrentPlayer().getPowerups()){
+            if(selPowerup.getId().equalsIgnoreCase(powerup.getId())){
+                if(powerup.getTiming()==status&&powerup.getEffect().canUse(this)){
+                    //TODO: PERFORM EFFECT
+                    curEffect=powerup.getEffect();
+                    curEffect.perform(null,this);
+                    availableActions(false);
+                }else {
+                    Logger.log("Invalid powerup received");
+                    game.sendInvalidAction("Cannot use the selected powerup");
+                }
+            }
+        }
+        Logger.log("Invalid powerup received");
+        game.sendInvalidAction("Current player doesn't have the selected powerup");
+
+    }
+
+
     private void sendWeapons(){
         List<Card> loadableWeapons=new ArrayList<>();
-        List<Color> startingAmmo=game.getCurrentPlayer().getBoard().getAmmo();
-        for (Powerup p:game.getCurrentPlayer().getPowerups()) {
-            startingAmmo.add(p.getColor());
-        }
         for (Weapon w:game.getCurrentPlayer().getWeapons()){
-            if(!w.isLoaded()&&canBeReloaded(w,startingAmmo))
+            if(game.getCurrentPlayer().canReloadedWeapon(w))
                 loadableWeapons.add(new Card(w));
         }
         game.sendLoadableWeapons(loadableWeapons);
     }
 
-    private boolean canReload() {
-        List<Color> startingAmmo=game.getCurrentPlayer().getBoard().getAmmo();
-        for (Powerup p:game.getCurrentPlayer().getPowerups()) {
-            startingAmmo.add(p.getColor());
-        }
+    private void onLoadableWeaponReceived(LoadableWeaponSelectedAnswer answer){
+        Card weapon=answer.getWeapon();
         for(Weapon w:game.getCurrentPlayer().getWeapons()){
-            if(!w.isLoaded()&&canBeReloaded(w,startingAmmo))
+            if(weapon.getId().equalsIgnoreCase(w.getId())){
+                if(game.getCurrentPlayer().canReloadedWeapon(w)){
+                    List<Card> discardedPowerups= game.getCurrentPlayer().reloadWeapon(w);
+                    game.sendReloadMessage(discardedPowerups);
+                    availableActions(true);
+                    return;
+                }else{
+                    Logger.log("Invalid weapon received");
+                    game.sendInvalidAction("Cannot reload the selected weeapon");
+                }
+            }
+        }
+        Logger.log("Invalid weapon received");
+        game.sendInvalidAction("Current player doesn't have the selected weapon");
+    }
+
+    private boolean canReload() {
+        for(Weapon w:game.getCurrentPlayer().getWeapons()){
+            if(game.getCurrentPlayer().canReloadedWeapon(w))
                 return true;
         }
         return false;
-    }
-
-    private boolean canBeReloaded(Weapon w, List<Color> ammo) {
-        List<Color> tempAmmo=new ArrayList<>(ammo);
-        for (Color color:w.getAmmo()){
-            if(tempAmmo.contains(color))
-                tempAmmo.remove(color);
-            else
-                return false;
-        }
-        return true;
     }
 
     private void createRoutine(String type){
@@ -152,8 +187,16 @@ public class Turn {
         return game;
     }
 
-    public Deque<Player> getShotPlayer() {
-        return new ArrayDeque<>(shotPlayer);
+    public Deque<Player> getShotPlayers() {
+        return new ArrayDeque<>(shotPlayers);
+    }
+
+    public void addShotPlayer(Player player) {
+        shotPlayers.add(player);
+    }
+
+    public void clearShotPlayers(){
+        shotPlayers.clear();
     }
 
     public TurnStatus getStatus() {
@@ -170,6 +213,39 @@ public class Turn {
 
     public void endRoutine() {
         //inviare le nuove azioni eseguibili
+        availableActions(false);
         curRoutine=null;
+    }
+
+    public void setShiftableMatrix(MatrixHelper matrix) {
+        this.shiftableMatrix=new MatrixHelper(matrix.toBooleanMatrix());
+    }
+
+    public MatrixHelper getShiftableMatrix() {
+        return new MatrixHelper(shiftableMatrix.toBooleanMatrix());
+    }
+
+    public void initShiftableMatrix(){
+        shiftableMatrix=new MatrixHelper(game.getGameBoard().getGameboardMatrix().toBooleanMatrix());
+    }
+
+    public void clearMovementMap(){
+        movementMap.clear();
+    }
+
+    public void insertPlayerMatrix(Player p, MatrixHelper mat){
+        movementMap.put(p.getNickname(),mat);
+    }
+
+    public MatrixHelper getPlayerMatrix(Player p){
+        return movementMap.get(p.getNickname());
+    }
+
+    public Effect getCurEffect() {
+        return curEffect;
+    }
+
+    public void setCurEffect(Effect curEffect) {
+        this.curEffect = curEffect;
     }
 }

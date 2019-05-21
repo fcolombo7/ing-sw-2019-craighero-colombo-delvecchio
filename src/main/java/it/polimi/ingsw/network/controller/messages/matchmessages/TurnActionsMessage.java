@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,6 @@ public class TurnActionsMessage extends MatchMessage{
 
     @Override
     public String getRequest() {
-        return Costants.TURN_AVAILABLE_ACTIONS;
+        return Constants.TURN_AVAILABLE_ACTIONS;
     }
 }

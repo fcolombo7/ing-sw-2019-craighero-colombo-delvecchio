@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.room;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class PingMessage extends RoomMessage{
 
@@ -10,6 +10,6 @@ public class PingMessage extends RoomMessage{
 
     @Override
     public String getType() {
-        return Costants.PING_CHECK;
+        return Constants.PING_CHECK;
     }
 }

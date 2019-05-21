@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class InvalidAnswerMessage extends MatchMessage {
     private static final long serialVersionUID = -2318735885536553587L;
@@ -18,6 +18,6 @@ public class InvalidAnswerMessage extends MatchMessage {
 
     @Override
     public String getRequest() {
-        return Costants.INVALID_ANSWER;
+        return Constants.INVALID_ANSWER;
     }
 }

@@ -182,14 +182,21 @@ public class TestWeapon {
         {
             Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/vulcanizzatore.xml");
             weapon.init();
-            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5,1);
+            Game game=new Game();
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
+            game.addPlayer(first);
+            game.addPlayer(second);
+            game.addPlayer(third);
+            game.addPlayer(fourth);
+
+            game.setGameBoard(1);
+            GameBoard board=game.getGameBoard();
+
             weapon.initNavigation();
-            ArrayList<Player> players= new ArrayList<>(3);
             List<Color> ammo=new ArrayList<>();
             ammo.add(Color.RED);
             ammo.add(Color.RED);
@@ -201,25 +208,18 @@ public class TestWeapon {
             second.setPosition(board.getSquare(2,3));
             third.setPosition(board.getSquare(2,2));
             fourth.setPosition(board.getSquare(2,2));
-            players.add(second);
-            players.add(third);
-            players.add(fourth);
 
-            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
+            List<Effect> effects=weapon.getUsableEffect(true, new Turn(game));
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             third.setPosition(board.getSquare(1,2));
             fourth.setPosition(board.getSquare(1,2));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
+            effects=weapon.getUsableEffect(true,new Turn(game));
             assertThat(effects.get(0).getRefId(),is(2));
 
-        } catch (ParserConfigurationException e) {
-            fail("Unhandled ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            fail("Unhandled IOException has been thrown.");
-        } catch (SAXException e) {
-            fail("Unhandled SAXException has been thrown.");
+        } catch (Exception e) {
+            fail("Unhandled Exception has been thrown.");
         }
     }
 
@@ -229,14 +229,21 @@ public class TestWeapon {
         {
             Weapon weapon=new Weapon("weapon1","myWeapon","src/test/Resources/weapon_test2.xml");
             weapon.init();
-            GameBoard board=new GameBoard(TestGameboard.parsingXMLFile("src/test/Resources/gameboard_test1.xml"),5,1);
+            Game game=new Game();
             Player first=new Player("first","first_motto",true);
             Player second=new Player("second","second_motto",false);
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
+            game.addPlayer(first);
+            game.addPlayer(second);
+            game.addPlayer(third);
+            game.addPlayer(fourth);
+
+            game.setGameBoard(1);
+            GameBoard board=game.getGameBoard();
+
             weapon.initNavigation();
-            ArrayList<Player> players= new ArrayList<>(3);
             List<Color> ammo=new ArrayList<>();
             ammo.add(Color.RED);
             ammo.add(Color.RED);
@@ -249,29 +256,22 @@ public class TestWeapon {
             second.setPosition(board.getSquare(1,2));
             third.setPosition(board.getSquare(1,1));
             fourth.setPosition(board.getSquare(2,2));
-            players.add(second);
-            players.add(third);
-            players.add(fourth);
 
-            List<Effect> effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
+            List<Effect> effects=weapon.getUsableEffect(true,new Turn(game));
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             weapon.setNavigationNode(weapon.getEffect(1));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
+            effects=weapon.getUsableEffect(true,new Turn(game));
             assertThat(effects.get(0).getRefId(),is(2));
 
             effects.clear();
             third.setPosition(board.getSquare(2,2));
-            effects=weapon.getUsableEffect(first,players,new ArrayDeque<>(),board,true);
+            effects=weapon.getUsableEffect(true,new Turn(game));
             assertTrue(effects.isEmpty());
 
-        } catch (ParserConfigurationException e) {
-            fail("Unhandled ParserConfigurationException has been thrown.");
-        } catch (IOException e) {
-            fail("Unhandled IOException has been thrown.");
-        } catch (SAXException e) {
-            fail("Unhandled SAXException has been thrown.");
+        } catch (Exception e) {
+            fail("Unhandled exception has been thrown.");
         }
     }
 }

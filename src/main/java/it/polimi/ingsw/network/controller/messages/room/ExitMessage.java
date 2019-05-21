@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.room;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class ExitMessage extends RoomMessage {
     private static final long serialVersionUID = -4395931511968513882L;
@@ -15,6 +15,6 @@ public class ExitMessage extends RoomMessage {
 
     @Override
     public String getType() {
-        return Costants.PLAYER_EXIT;
+        return Constants.PLAYER_EXIT;
     }
 }

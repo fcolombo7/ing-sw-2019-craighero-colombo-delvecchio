@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchanswer;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class ActionSelectedAnswer extends MatchAnswer{
     private static final long serialVersionUID = -4358211396388669007L;
@@ -17,6 +17,6 @@ public class ActionSelectedAnswer extends MatchAnswer{
 
     @Override
     public String getAnswer() {
-        return Costants.ACTION_SELECTED;
+        return Constants.ACTION_SELECTED;
     }
 }

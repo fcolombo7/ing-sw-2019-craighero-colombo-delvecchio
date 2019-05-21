@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.room;
 
-import it.polimi.ingsw.utils.Costants;
+import it.polimi.ingsw.utils.Constants;
 
 public class JoinMessage extends RoomMessage{
 
@@ -18,6 +18,6 @@ public class JoinMessage extends RoomMessage{
 
     @Override
     public String getType() {
-        return Costants.PLAYER_JOIN;
+        return Constants.PLAYER_JOIN;
     }
 }

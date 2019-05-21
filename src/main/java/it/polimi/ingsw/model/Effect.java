@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.ActionType;
-import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.RoomColor;
-import it.polimi.ingsw.model.enums.TargetType;
+import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.network.controller.messages.matchanswer.MoveAnswer;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,6 +17,8 @@ public class Effect {
      * TODO
      */
     private static HashMap<String,Requirement> requirementsMap=initRequirements();
+
+    private static HashMap<String, Extra> extraMap= initExtra();
 
     /**
      * This This attribute contains the effect reference id
@@ -170,7 +171,7 @@ public class Effect {
                 }
                 if(actionValueNode==null) throw new NullPointerException("Action tag is empty.");
                 value=Integer.parseInt(actionValueNode.getFirstChild().getNodeValue());
-                if(value<=0) throw new IllegalArgumentException("The value of the action "+type.toUpperCase()+" can not be lesser than 1.");
+                if(value==0||value<-1) throw new IllegalArgumentException("The value of the action "+type.toUpperCase()+" can not be 0 or <-1.");
                 Action action= new Action(aType,value);
                 actions.add(action);
             }
@@ -351,6 +352,23 @@ public class Effect {
         return requirementsMap;
     }
 
+    private static HashMap<String, Extra> initExtra(){
+        /*
+        GO_THERE
+        AGAIN_DIRECTION
+        DAMAGE_ALL_SQUARE
+        MARK_ALL_SQUARE
+        SHIFT_IN_SQUARE
+         */
+        HashMap<String, Extra> map=new HashMap<>();
+        map.put("GO_THERE",Effect::goThereExtra);
+        map.put("AGAIN_DIRECTION",Effect::againDirectionExtra);
+        map.put("DAMAGE_ALL_SQUARE",Effect::damageSquareExtra);
+        map.put("MARK_ALL_SQUARE",Effect::markSquareExtra);
+        map.put("SHIFT_IN_SQUARE",Effect::shiftInSquareExtra);
+        return map;
+    }
+
     /**
      * This method instantiates the constraints of the Effect target
      * @param childNodes representing the XML nodeList to read
@@ -428,21 +446,20 @@ public class Effect {
     /**
      * TODO: NEED TO BE TESTED
      * This method return true if using this Effect the current player could shoot a player
-     * @param currentPlayer representing the player whose playing the Turn
-     * @param players representing all the players (current player excluded)
-     * @param shotPlayers represent all the last player shooted using the Weapon
-     * @param board representing the current Gameboard
+     * @param turn
      * @return boolean representing if if using this Effect the current player could shoot a player
      */
-    public boolean canUse(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board){
+    public boolean canUse(Turn turn){
+        List<Player> players=new ArrayList<>(turn.getGame().getPlayers());
+        players.remove(turn.getGame().getCurrentPlayer());
         if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())){
-            boolean[][] mat=getMovementMatrix(currentPlayer,players,shotPlayers,board).toBooleanMatrix();
+            boolean[][] mat=getMovementMatrix(turn.getGame().getCurrentPlayer(),players,turn.getShotPlayers(),turn.getGame().getGameBoard()).toBooleanMatrix();
             for(int i=0;i<mat.length;i++){
                 for(int j=0;j<mat[0].length;j++) if(mat[i][j]) return true;
             }
             return false;
         }
-        List<List<Player>> shootablePlayers=getShootablePlayers(currentPlayer, players, shotPlayers,board);
+        List<List<Player>> shootablePlayers=getShootablePlayers(turn);
         return !shootablePlayers.isEmpty();
     }
 
@@ -514,21 +531,20 @@ public class Effect {
 
     /**
      * This method is used to obtain all the players which can be shot group by the effect target type
-     * @param currentPlayer representing the player whose playing the Turn
-     * @param players representing all the players (current player excluded)
-     * @param shotPlayers represent all the last player shot using the Weapon
-     * @param board representing the current Gameboard
      * @return List<List<Player>> representing all the players which can be shot group by the effect target type
-     *///TODO: da aggiugnere la ROUTINE DI SPARO come parametro, non metodi statici!!!
-    public List<List<Player>> getShootablePlayers(Player currentPlayer, List<Player> players, Deque<Player> shotPlayers, GameBoard board) {
-        //TODO: Last position is the last shooted player position
+     */
+    public List<List<Player>> getShootablePlayers(Turn turn) {
+        List<Player> players=new ArrayList<>(turn.getGame().getPlayers());
+        players.remove(turn.getGame().getCurrentPlayer());
+        turn.initShiftableMatrix();
         if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())) return new ArrayList<>();
         int[] lastPos=null;
-        if(shotPlayers.peek()!=null && shotPlayers.peek().getPosition() != null)
-            lastPos=shotPlayers.peek().getPosition().getBoardIndexes();
-        MatrixHelper effectMatrix=calcEffectMatrix(currentPlayer.getPosition().getBoardIndexes(),lastPos,board);
-        List<Player> availablePlayer=getAvailablePlayer(players,shotPlayers,effectMatrix);
-        return composeTargetPlayers(currentPlayer,availablePlayer);
+        if(turn.getShotPlayers().peek()!=null && turn.getShotPlayers().peek().getPosition() != null)
+            lastPos=turn.getShotPlayers().peek().getPosition().getBoardIndexes();
+        int[] indexes=turn.getGame().getCurrentPlayer().getPosition()==null?null:turn.getGame().getCurrentPlayer().getPosition().getBoardIndexes();
+        MatrixHelper effectMatrix=calcEffectMatrix(indexes,lastPos,turn.getGame().getGameBoard(),turn);
+        List<Player> availablePlayer=getAvailablePlayer(players,turn.getShotPlayers(),effectMatrix);
+        return composeTargetPlayers(turn.getGame().getCurrentPlayer(),availablePlayer);
     }
 
     /**
@@ -536,13 +552,13 @@ public class Effect {
      * @param curPos representing the indexes of the Gameboard of the current position
      * @param lastPos representing the indexes of the Gameboard of the last position
      * @param board representing the current Gameboard
+     * @param turn
      * @return MatrixHelper object representing the Matrix of the effect for the situation described by the parameters passed
      */
-    private MatrixHelper calcEffectMatrix(int[] curPos, int[] lastPos,GameBoard board) {
+    private MatrixHelper calcEffectMatrix(int[] curPos, int[] lastPos, GameBoard board, Turn turn) {
         MatrixHelper matrix=board.getGameboardMatrix();
         for (String[] requirement:requirements) {
-            //TODO:This line is used to set the shiftable matrix in turn class
-            //if(requirement[0].equalsIgnoreCase("SHIFTABLE")) Turn.setShiftableMatrix(matrix);
+            if(requirement[0].equalsIgnoreCase("SHIFTABLE")) turn.setShiftableMatrix(matrix);
             matrix=requirementsMap.get(requirement[0]).checkRequirement(requirement[1],curPos,lastPos,board,matrix);
         }
         return matrix;
@@ -558,9 +574,11 @@ public class Effect {
     private List<Player> getAvailablePlayer(List<Player> players, Deque<Player> shotPlayers, MatrixHelper effectMatrix) {
         ArrayList<Player> availablePlayer=new ArrayList<>();
         for (Player p:players) {
-            int[] pos=p.getPosition().getBoardIndexes();
-            if(effectMatrix.toBooleanMatrix()[pos[0]][pos[1]])
-                availablePlayer.add(p);
+            if(p.getPosition()!=null) {
+                int[] pos = p.getPosition().getBoardIndexes();
+                if (effectMatrix.toBooleanMatrix()[pos[0]][pos[1]])
+                    availablePlayer.add(p);
+            }
         }
         ArrayList<Player> realAvailablePlayer=new ArrayList<>(availablePlayer);
         for (String constraint:target.getPrevConstraints()) {
@@ -680,6 +698,251 @@ public class Effect {
         return list;
     }
 
+    public void perform(List<Player> selected, Turn turn){
+        try{
+            checkSelected(selected,turn);
+            for(int i=0;i<actions.size();i++){
+                Action currAct=actions.get(i);
+                if(currAct.getActionType()==ActionType.MOVE){
+                    //SEND MOVE REQUEST
+                    if(target.getType()==TargetType.ME) {
+                        List<Player> players=new ArrayList<>(turn.getGame().getPlayers());
+                        players.remove(turn.getGame().getCurrentPlayer());
+                        turn.getGame().sendMoveRequestMessage(turn.getGame().getCurrentPlayer().getNickname(),getMovementMatrix(turn.getGame().getCurrentPlayer(),players,turn.getShotPlayers(),turn.getGame().getGameBoard()));
+                        return;
+                    }
+                    else{
+                        turn.clearMovementMap();
+                        for(Player p:selected){
+                            int[] pos=p.getPosition().getBoardIndexes();
+                            MatrixHelper matrix=turn.getGame().getGameBoard().getDistanceMatrix(pos[0],pos[1],currAct.getValue());
+                            matrix=matrix.bitWiseAnd(turn.getShiftableMatrix());
+                            turn.insertPlayerMatrix(p,matrix);
+                            turn.getGame().sendMoveRequestMessage(p.getNickname(),matrix);
+                        }
+                        return;
+                    }
+                }else if(currAct.getActionType()==ActionType.DAMAGE){
+                    for(Player p:selected){
+                        p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),currAct.getValue());
+                        turn.addShotPlayer(p);
+                    }
+                    turn.getGame().sendDamageMessage(selected, currAct.getValue());
+                }
+                else if(currAct.getActionType()==ActionType.MARK){
+                    for(Player p:selected){
+                        p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),currAct.getValue());
+                    }
+                    turn.getGame().sendMarkMessage(selected, currAct.getValue());
+                }
+            }
+            handleExtra(turn);
+        }
+        catch(IllegalArgumentException e){
+            turn.getGame().sendInvalidAction(e.getMessage());
+        }
+    }
+
+    public void handleMoveResponse(Turn turn, MoveAnswer answer){
+        Player selectedPlayer=null;
+        for(Player p:turn.getGame().getPlayers()){
+            if(p.getNickname().equalsIgnoreCase(answer.getTarget())) {
+                selectedPlayer = p;
+                break;
+            }
+        }
+        if(selectedPlayer==null){
+            Logger.log("Invalid target received");
+            turn.getGame().sendInvalidAction("INVALID TARGET RECEIVED");
+            return;
+        }
+        MatrixHelper playerMatrix=turn.getPlayerMatrix(selectedPlayer);
+        if(playerMatrix==null){
+            Logger.log("Invalid target received");
+            turn.getGame().sendInvalidAction("INVALID TARGET RECEIVED");
+            return;
+        }
+        if(playerMatrix.toBooleanMatrix()[answer.getNewPosition()[0]][answer.getNewPosition()[1]]){
+            selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(answer.getNewPosition()[0],answer.getNewPosition()[1]));
+            turn.getGame().sendMoveMessage(selectedPlayer.getNickname(),answer.getNewPosition());
+            Logger.log("Moving the selected player");
+            handleExtra(turn);
+        }else{
+            Logger.log("Invalid newPosition received");
+            turn.getGame().sendInvalidAction("UNREACHABLE POSITION RECEIVED");
+        }
+    }
+
+    private void checkSelected(List<Player> selected, Turn turn) {
+        //TODO: non è completo!
+        String exceptionMsg="INVALID SELECTED PLAYERS";
+        if(selected==null) throw new IllegalArgumentException(exceptionMsg);
+        if(target.getType()==TargetType.ME){
+            if(selected.size()!=1||selected.get(0)!=turn.getGame().getCurrentPlayer())
+                throw new IllegalArgumentException(exceptionMsg);
+            else
+                return;
+        }
+        for(Player player:selected){
+            boolean condition=false;
+            for(List<Player> list:getShootablePlayers(turn)){
+                for(Player p:list){
+                    if(player==p)
+                        condition=true;
+                }
+            }
+            if(!condition) throw new IllegalArgumentException(exceptionMsg);
+        }
+    }
+
+    private void handleExtra(Turn turn) {
+        for(String[] extra: extra){
+            extraMap.get(extra[0]).exec(turn,extra[1]);
+        }
+    }
+
+    private static void goThereExtra(Turn turn,String value){
+        Player last=turn.getShotPlayers().peek();
+        if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
+        Square lastPosition=last.getPosition();
+        turn.getGame().getCurrentPlayer().setPosition(lastPosition);
+        turn.getGame().sendMoveMessage(turn.getGame().getCurrentPlayer().getNickname(),lastPosition.getBoardIndexes());
+        Logger.log("Moving the current player due to Extra");
+    }
+
+    private static void againDirectionExtra(Turn turn, String value) {
+        Player last=turn.getShotPlayers().peek();
+        if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
+        Direction direction=turn.getGame().getCurrentPlayer().isInDirection(last);
+        int[] lastPosition=last.getPosition().getBoardIndexes();
+        int rowLength=turn.getGame().getGameBoard().getGameboardMatrix().getRowLength();
+        int colLength=turn.getGame().getGameBoard().getGameboardMatrix().getColLength();
+        if(direction==null) return;
+        Square position=null;
+        switch(direction){
+            case EAST:
+                if(lastPosition[1]<colLength-1&&turn.getGame().getGameBoard().hasSquare(lastPosition[0],lastPosition[1]+1))
+                    position=turn.getGame().getGameBoard().getSquare(lastPosition[0],lastPosition[1]+1);
+                break;
+            case NORTH:
+                if(lastPosition[0]>0&&turn.getGame().getGameBoard().hasSquare(lastPosition[0]-1,lastPosition[1]))
+                    position=turn.getGame().getGameBoard().getSquare(lastPosition[0]-1,lastPosition[1]);
+                break;
+            case WEST:
+                if(lastPosition[1]>0&&turn.getGame().getGameBoard().hasSquare(lastPosition[0],lastPosition[1]-1))
+                    position=turn.getGame().getGameBoard().getSquare(lastPosition[0],lastPosition[1]-1);
+                break;
+            case SOUTH:
+                if(lastPosition[0]<rowLength-1&&turn.getGame().getGameBoard().hasSquare(lastPosition[0]+1,lastPosition[1]))
+                    position=turn.getGame().getGameBoard().getSquare(lastPosition[0]+1,lastPosition[1]);
+                break;
+            default:
+                break;
+        }
+        repeatEffectInDirection(turn, value, position);
+    }
+
+    private static void repeatEffectInDirection(Turn turn, String value, Square position) {
+        if (turn.getCurEffect().target.getType() == TargetType.SQUARE) {
+            for (Action action : turn.getCurEffect().actions) {
+                if (action.getActionType() == ActionType.DAMAGE)
+                    repeatDamageInSquare(turn,value,position);
+                else if (action.getActionType() == ActionType.MARK)
+                    repeatMarkInSquare(turn,value,position);
+            }
+        } else if (turn.getCurEffect().target.getType() == TargetType.PLAYER) {
+            for (Action action : turn.getCurEffect().actions) {
+                if (action.getActionType() == ActionType.DAMAGE)
+                    repeatDamageToPlayer(turn,value,position);
+                else if (action.getActionType() == ActionType.MARK)
+                    repeatMarkToPlayer(turn,value,position);
+            }
+        }
+    }
+
+    private static void repeatMarkToPlayer(Turn turn, String value, Square position) {
+        List<Player> selected = new ArrayList<>();
+        for (Player p : turn.getGame().getPlayers()) {
+            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
+                p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
+                turn.getGame().sendMarkMessage(selected, Integer.parseInt(value));
+                return;
+            }
+        }
+    }
+
+    private static void repeatDamageToPlayer(Turn turn, String value, Square position) {
+        List<Player> selected = new ArrayList<>();
+        for (Player p : turn.getGame().getPlayers()) {
+            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
+                p.getBoard().addDamage(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
+                turn.addShotPlayer(p);
+                turn.getGame().sendDamageMessage(selected, Integer.parseInt(value));
+                return;
+            }
+        }
+    }
+
+    private static void repeatMarkInSquare(Turn turn, String value, Square position) {
+        List<Player> selected = new ArrayList<>();
+        for (Player p : turn.getGame().getPlayers()) {
+            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
+                p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
+            }
+        }
+        turn.getGame().sendMarkMessage(selected, Integer.parseInt(value));
+    }
+
+    private static void repeatDamageInSquare(Turn turn, String value, Square position) {
+        List<Player> selected = new ArrayList<>();
+        for (Player p : turn.getGame().getPlayers()) {
+            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
+                p.getBoard().addDamage(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
+                turn.addShotPlayer(p);
+            }
+        }
+        turn.getGame().sendDamageMessage(selected, Integer.parseInt(value));
+    }
+
+    private static void markSquareExtra(Turn turn, String value) {
+        Player last=turn.getShotPlayers().peek();
+        if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
+        Square position=last.getPosition();
+        List<Player> selected= new ArrayList<>();
+        for(Player p:turn.getGame().getPlayers()){
+            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
+                selected.add(p);
+                p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),Integer.parseInt(value));
+            }
+        }
+        turn.getGame().sendMarkMessage(selected,Integer.parseInt(value));
+        Logger.log("Mark all the player in the last square due to Extra");
+    }
+
+    private static void damageSquareExtra(Turn turn, String value) {
+        Player last=turn.getShotPlayers().peek();
+        if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
+        Square position=last.getPosition();
+        List<Player> selected= new ArrayList<>();
+        for(Player p:turn.getGame().getPlayers()){
+            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
+                selected.add(p);
+                p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),Integer.parseInt(value));
+            }
+        }
+        turn.getGame().sendMarkMessage(selected,Integer.parseInt(value));
+        Logger.log("Damage all the player in the last square due to Extra");
+    }
+
+    private static void shiftInSquareExtra(Turn turn, String value) {
+        Square position=turn.getGame().getCurrentPlayer().getPosition();
+        Player player=turn.getShotPlayers().peek();
+        if(player==null) throw new IllegalStateException("last shot player is null");
+        player.setPosition(position);
+
+        turn.getGame().sendMoveMessage(turn.getGame().getCurrentPlayer().getNickname(),position.getBoardIndexes());
+        Logger.log("Moving the last shot player due to Extra");
+    }
 
     /**
      * This method return the string representation of the Effect object
@@ -737,5 +1000,10 @@ public class Effect {
     @FunctionalInterface
     private interface Requirement {
         MatrixHelper checkRequirement(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix);
+    }
+
+    @FunctionalInterface
+    private interface Extra {
+        void exec(Turn turn, String value);
     }
 }
