@@ -400,6 +400,34 @@ public class GameBoard {
         return access != null && (curr.getRoomColor() == access.getRoomColor() || curr.hasDoor(d));
     }
 
+    /**
+     * This method check if in the direction given there is a square of the same color/room of the given one
+     * @param coordinates represents the array containing the coordinates of the square given
+     * @param direction represents the direction to check at
+     * @return boolean representing whether the check is positive or not
+     */
+    public boolean sameRoom(int[] coordinates, Direction direction){
+        switch(direction){
+            case NORTH:
+                if(coordinates[0]==0 || map[coordinates[0] - 1][coordinates[1]] == null)
+                    return false;
+                else return map[coordinates[0]][coordinates[1]].getRoomColor()==map[coordinates[0] - 1][coordinates[1]].getRoomColor();
+            case EAST:
+                if(coordinates[1]>=(map[0].length - 1) || map[coordinates[0]][coordinates[1] + 1] == null)
+                    return false;
+                else return map[coordinates[0]][coordinates[1]].getRoomColor()==map[coordinates[0]][coordinates[1] + 1].getRoomColor();
+            case SOUTH:
+                if(coordinates[0]>=(map.length - 1)|| map[coordinates[0] + 1][coordinates[1]] ==  null)
+                    return false;
+                else return map[coordinates[0]][coordinates[1]].getRoomColor()==map[coordinates[0] + 1][coordinates[1]].getRoomColor();
+            case WEST:
+                if(coordinates[1]==0 || map[coordinates[0]][coordinates[1] - 1] == null)
+                    return false;
+                else return map[coordinates[0]][coordinates[1]].getRoomColor()==map[coordinates[0]][coordinates[1] - 1].getRoomColor();
+            default: throw new IllegalArgumentException("Direction is not valid");
+        }
+    }
+
     MatrixHelper getGameboardMatrix(){
         boolean[][] mat=new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
