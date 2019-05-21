@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static it.polimi.ingsw.model.enums.Direction.*;
-import static it.polimi.ingsw.utils.Costants.*;
+import static it.polimi.ingsw.utils.Constants.*;
 
 
 public class Cli {

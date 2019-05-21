@@ -68,7 +68,6 @@ public class Constants {
     public static final String PONG_ANSWER ="PONG";
     public static final String FIRST_PLAYER = "FIRST IN ROOM";
 
-    private Constants(){}
     /*CLI CHARACTERS AND COLORS*/
     public static final String RESET = "\u001b[0m";
     public static final String	BLACK_W				= "\u001B[30m";
@@ -124,5 +123,5 @@ public class Constants {
     public static final String WEAPON_FORMAT = "%s%s%2s%s%10s";
     public static final String AMMO_FORMAT = "%s%s%2s%11s";
 
-    private Costants(){}
+    private Constants(){}
 }
