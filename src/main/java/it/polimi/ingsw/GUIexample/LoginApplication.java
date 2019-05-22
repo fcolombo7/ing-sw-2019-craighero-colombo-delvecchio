@@ -53,6 +53,7 @@ public class LoginApplication extends Application {
         grid.getChildren().add(loginButton);
         grid.getChildren().add(lb0);
         grid.getChildren().add(lb1);
+
         GridPane.setColumnIndex(nameText,0);
         GridPane.setRowIndex(nameText, 0);
         GridPane.setColumnIndex(mottoText, 0);
@@ -147,7 +148,8 @@ public class LoginApplication extends Application {
                         lb1.setText(msg);
                     } else {
                         if(players==4) {
-                            MainView.display();
+                            primaryStage.close();
+                            MapChoice.display();
                             //players=players+1;
                             //primaryStage.close();
                             //GridPane initialView = new GridPane();
