@@ -86,7 +86,7 @@ public class MapChoice {
             @Override
             public void handle(ActionEvent actionEvent) {
                 stage.close();
-                GameWindow.open();
+                GameWindow.open(image.getImage());
             }
         });
 
