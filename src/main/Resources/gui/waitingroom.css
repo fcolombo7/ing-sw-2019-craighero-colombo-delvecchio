@@ -1,0 +1,22 @@
+.root{
+    -fx-background-image: url("clessidra.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-border-color: black;
+    -fx-border-width: 10 ;
+}
+
+.label{
+    -fx-text-fill: black;
+    -fx-font-weight: bolder;
+    -fx-font-size: 20;
+}
+
+.button{
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-font-weight: bolder;
+    -fx-font-size: 20;
+    -fx-border-color: red;
+}

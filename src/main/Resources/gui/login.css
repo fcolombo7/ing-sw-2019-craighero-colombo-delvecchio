@@ -1,0 +1,26 @@
+.root{
+    -fx-background-image: url("adrenalina.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.label{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-size: 20;
+    -fx-font-weight: bolder;
+}
+
+.radio-button{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-size: 20;
+    -fx-font-weight: bolder;
+}
+
+.button{
+    -fx-background-color: blue;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
