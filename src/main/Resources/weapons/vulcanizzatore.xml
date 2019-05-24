@@ -2,7 +2,7 @@
 	<name>VULCANIZZATORE</name>
 	<ammo>RB</ammo>
 	<effects>
-		<effect ref_id="1" name="">
+		<effect ref_id="1" name="BASE">
 			<cost/>
 			<target>
 				<type>ROOM</type>
@@ -23,7 +23,7 @@
 			</actions>
 			<extras/>
 		</effect>
-		<effect ref_id="2" name="">
+		<effect ref_id="2" name="FUOCO CONFORTEVOLE">
 			<cost/>
 			<target>
 				<type>SQUARE</type>

@@ -2,12 +2,14 @@
 	<name>LANCIAFIAMME</name>
 	<ammo>R</ammo>
 	<effects>
-		<effect ref_id="1" name="">
+		<effect ref_id="1" name="BASE">
 			<cost/>
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -23,7 +25,7 @@
 				<extra name="AGAIN_DIRECTION"/>
 			</extras>	
 		</effect>
-		<effect ref_id="2" name="">
+		<effect ref_id="2" name="BARBECUE">
 			<cost>YY</cost>
 			<target>
 				<type>SQUARE</type>

@@ -2,12 +2,14 @@
 	<name>CANNONE VORTEX</name>
 	<ammo>BB</ammo>
 	<effects>
-		<effect ref_id="1" name="">
+		<effect ref_id="1" name="BASE">
 			<cost/>
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -25,12 +27,14 @@
 			</actions>
 			<extras/>
 		</effect>
-		<effect ref_id="2" name="">
+		<effect ref_id="2" name="BUCO NERO">
 			<cost>R</cost>
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
-				<maxNumber>2</maxNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>2</maxPlayerIn>
 				<prevConstraints>
 					<constraint>DIFFERENT</constraint>
 				</prevConstraints>

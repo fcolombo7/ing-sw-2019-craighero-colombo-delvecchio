@@ -7,7 +7,9 @@
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
-				<maxNumber>2</maxNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>2</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -26,6 +28,8 @@
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints>
 					<constraint>SAME</constraint>
 				</prevConstraints>
@@ -40,12 +44,14 @@
 			</actions>
 			<extras/>
 		</effect>
-				<effect ref_id="3" name="">
+				<effect ref_id="3" name="TRIPODE DI SUPPORTO">
 			<cost>B</cost>
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
-				<maxNumber>2</maxNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>2</maxPlayerIn>
 				<prevConstraints>
 					<constraint>DIFFERENT_PREV</constraint>
 				</prevConstraints>

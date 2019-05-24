@@ -8,6 +8,8 @@
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -44,6 +46,8 @@
 				<type>ME</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>

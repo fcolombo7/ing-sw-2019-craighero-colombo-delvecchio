@@ -2,12 +2,14 @@
 	<name>LANCIARAZZI</name>
 	<ammo>RR</ammo>
 	<effects>
-		<effect ref_id="1" name="">
+		<effect ref_id="1" name="BASE">
 			<cost/>
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -27,6 +29,8 @@
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints>
 					<constraint>SAME</constraint>
 				</prevConstraints>
@@ -42,12 +46,14 @@
 			</actions>
 			<extras/>
 		</effect>
-		<effect ref_id="3" name="">
+		<effect ref_id="3" name="RAZZI PORTATILI">
 			<cost>B</cost>
 			<target>
 				<type>ME</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints/>
 			</target>
 			<requirements>
@@ -62,12 +68,14 @@
 			</actions>
 			<extras/>
 		</effect>
-		<effect ref_id="4" name="">
+		<effect ref_id="4" name="TESTATA A FRAMMENTAZIONE">
 			<cost>Y</cost>
 			<target>
 				<type>PLAYER</type>
 				<minNumber>1</minNumber>
 				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
 				<prevConstraints>
 					<constraint>SAME</constraint>
 				</prevConstraints>
