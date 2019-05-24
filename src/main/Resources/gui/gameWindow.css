@@ -6,10 +6,9 @@
 }
 
 .button{
-    -fx-background-color: yellow;
-    -fx-font-size: 15;
-    -fx-text-fill: black;
+    -fx-background-color: blue;
+    -fx-font-size: 12;
+    -fx-text-fill: white;
     -fx-font-weight: bolder;
-    -fx-border-color: black;
     -fx-border-width: 1;
 }

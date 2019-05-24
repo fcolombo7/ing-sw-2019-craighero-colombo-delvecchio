@@ -1,20 +1,18 @@
 .root{
-    -fx-background-image: url("adrenalina.jpg");
+    -fx-background-image: url("blocks.jpg");
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
 }
 
 .label{
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-font-size: 20;
     -fx-font-weight: bolder;
 }
 
 .radio-button{
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-font-size: 20;
     -fx-font-weight: bolder;
 }
@@ -23,4 +21,14 @@
     -fx-background-color: blue;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-font-size: 20;
 }
+
+.title{
+    -fx-background-image: url("adr.png");
+
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
