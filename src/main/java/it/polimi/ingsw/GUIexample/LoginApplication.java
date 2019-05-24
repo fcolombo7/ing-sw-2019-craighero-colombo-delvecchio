@@ -22,9 +22,9 @@ public class LoginApplication extends Application {
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Login");
         primaryStage.setMinHeight(400);
-        primaryStage.setMinWidth(600);
+        primaryStage.setMinWidth(700);
         primaryStage.setHeight(400);
-        primaryStage.setWidth(600);
+        primaryStage.setWidth(700);
         RadioButton rmi= new RadioButton("RMI");
         RadioButton sock= new RadioButton("Socket");
         ToggleGroup connectionGroup= new ToggleGroup();
@@ -34,15 +34,24 @@ public class LoginApplication extends Application {
         Button loginButton= new Button("Login");
 
         Label nameText=new Label("Player name");
+        //nameText.setPadding(new Insets(50,0,0,0));
         TextField playerNameField= new TextField();
         TextField mottoField= new TextField();
         Label mottoText= new Label("Motto");
         Label lb0= new Label("");
         Label lb1= new Label("");
+        playerNameField.setPrefWidth(300);
+        mottoField.setPrefWidth(300);
+        lb0.setPrefWidth(300);
+        lb1.setPrefWidth(300);
         lb1.setStyle("-fx-text-fill: red");
+        Label title= new Label("");
+        title.setPrefWidth(400);
+        title.setPrefHeight(70);
+        title.getStyleClass().add("title");
         GridPane grid= new GridPane();
         grid.setPadding(new Insets(5));
-        grid.setHgap(10);
+        grid.setHgap(5);
         grid.setVgap(10);
         grid.getChildren().add(nameText);
         grid.getChildren().add(mottoText);
@@ -53,25 +62,28 @@ public class LoginApplication extends Application {
         grid.getChildren().add(loginButton);
         grid.getChildren().add(lb0);
         grid.getChildren().add(lb1);
+        grid.getChildren().add(title);
 
+        GridPane.setColumnIndex(title,1);
+        GridPane.setRowIndex(title, 0);
         GridPane.setColumnIndex(nameText,0);
-        GridPane.setRowIndex(nameText, 0);
+        GridPane.setRowIndex(nameText, 1);
         GridPane.setColumnIndex(mottoText, 0);
-        GridPane.setRowIndex(mottoText, 1);
+        GridPane.setRowIndex(mottoText, 2);
         GridPane.setColumnIndex(playerNameField, 1);
         GridPane.setColumnIndex(mottoField, 1);
-        GridPane.setRowIndex(playerNameField, 0);
-        GridPane.setRowIndex(mottoField, 1);
+        GridPane.setRowIndex(playerNameField, 1);
+        GridPane.setRowIndex(mottoField, 2);
         GridPane.setColumnIndex(loginButton, 2);
-        GridPane.setRowIndex(loginButton, 2);
+        GridPane.setRowIndex(loginButton, 3);
         GridPane.setColumnIndex(lb0, 1);
-        GridPane.setRowIndex(lb0, 4);
+        GridPane.setRowIndex(lb0, 5);
         GridPane.setColumnIndex(lb1,1);
-        GridPane.setRowIndex(lb1, 2);
+        GridPane.setRowIndex(lb1, 3);
         GridPane.setColumnIndex(rmi, 0);
-        GridPane.setRowIndex(rmi, 3);
+        GridPane.setRowIndex(rmi, 4);
         GridPane.setColumnIndex(sock, 1);
-        GridPane.setRowIndex(sock, 3);
+        GridPane.setRowIndex(sock, 4);
         GridPane.setHgrow(rmi, Priority.ALWAYS);
         GridPane.setHgrow(sock, Priority.ALWAYS);
         GridPane.setHgrow(loginButton, Priority.ALWAYS);
@@ -112,18 +124,28 @@ public class LoginApplication extends Application {
                         StackPane waitingRoom = new StackPane();
                         Label text = new Label("Waiting for other players...");
                         Button disconnect= new Button("Disconnect");
+                        Button rules=new Button("Show rules");
                         Label welcome = new Label();
                         welcome.setText("WELCOME TO ADRENALINE");
-                        waitingRoom.setAlignment(disconnect, Pos.CENTER);
+                        waitingRoom.setAlignment(rules, Pos.CENTER_RIGHT);
+                        waitingRoom.setAlignment(disconnect, Pos.CENTER_LEFT);
                         waitingRoom.setAlignment(welcome, Pos.TOP_CENTER);
                         waitingRoom.setAlignment(text, Pos.BOTTOM_CENTER);
 
-                        waitingRoom.getChildren().addAll(welcome, text, disconnect);
+
+                        waitingRoom.getChildren().addAll(welcome, text, disconnect, rules);
                         Scene secondScene = new Scene(waitingRoom, 300, 300);
 
                         Stage newWindow = new Stage();
                         newWindow.setTitle("Waiting room");
                         newWindow.setScene(secondScene);
+
+                        rules.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+                                Rules.showRules();
+                            }
+                        });
 
                         disconnect.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
@@ -150,14 +172,6 @@ public class LoginApplication extends Application {
                         if(players==4) {
                             primaryStage.close();
                             MapChoice.display();
-                            //players=players+1;
-                            //primaryStage.close();
-                            //GridPane initialView = new GridPane();
-                            //initialView.getStylesheets().addAll(this.getClass().getResource("/gui/initialView.css").toExternalForm());
-                            //Scene mainScene = new Scene(initialView, 500, 500);
-                            //Stage mainWindow = new Stage();
-                            //mainWindow.setScene(mainScene);
-                            //mainWindow.show();
                         } else {
                             StackPane tooPlayers= new StackPane();
                             Label text= new Label("Sorry, too many players in game");
@@ -196,7 +210,8 @@ public class LoginApplication extends Application {
                 lb0.setText(msg);
             }
         });
-        Scene scene=new Scene(grid, 800, 500);
+        primaryStage.setResizable(false);
+        Scene scene=new Scene(grid, 400, 700);
         scene.getStylesheets().addAll(this.getClass().getResource("/gui/login.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
