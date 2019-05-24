@@ -3,7 +3,6 @@ package it.polimi.ingsw.turntests;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.MoveAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
@@ -68,7 +67,7 @@ public class ShootingRoutineTest {
         turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
-        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.AVAILABLE_WEAPONS_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),new Card(weapon)));
 
@@ -150,7 +149,7 @@ public class ShootingRoutineTest {
         turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
-        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.AVAILABLE_WEAPONS_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),new Card(weapon)));
 
@@ -257,7 +256,7 @@ public class ShootingRoutineTest {
         turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
-        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.AVAILABLE_WEAPONS_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),new Card(weapon)));
 

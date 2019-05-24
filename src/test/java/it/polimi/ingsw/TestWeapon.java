@@ -198,7 +198,7 @@ public class TestWeapon {
             ammo.add(Color.RED);
             ammo.add(Color.BLUE);
             ammo.add(Color.BLUE);
-            first.getBoard().addAmmos(ammo);
+            first.getBoard().addAmmo(ammo);
 
             first.setPosition(board.getSquare(1,1));
             second.setPosition(board.getSquare(2,3));
@@ -245,7 +245,7 @@ public class TestWeapon {
             ammo.add(Color.RED);
             ammo.add(Color.BLUE);
             ammo.add(Color.BLUE);
-            first.getBoard().addAmmos(ammo);
+            first.getBoard().addAmmo(ammo);
 
 
             first.setPosition(board.getSquare(1,0));

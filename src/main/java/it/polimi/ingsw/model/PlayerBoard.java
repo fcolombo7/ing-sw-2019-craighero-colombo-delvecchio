@@ -105,7 +105,7 @@ public class PlayerBoard {
      * This method adds ammo to the player board
      * @param ammos representing the ammo to add
      */
-    public void addAmmos(List<Color> ammos){
+    public void addAmmo(List<Color> ammos){
         for(Color c: ammos)
             if (Collections.frequency(this.ammo, c) < 3)
                 this.ammo.add(c);

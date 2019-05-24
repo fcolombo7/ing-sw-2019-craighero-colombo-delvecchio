@@ -8,6 +8,7 @@ import java.util.List;
 public class TurnRoutineFactory {
     private Turn turn;
     private MatrixHelper moveBeforeShoot;
+    private MatrixHelper whereToGrab;
     public TurnRoutineFactory(Turn turn){
         this.turn=turn;
         moveBeforeShoot=null;
@@ -16,22 +17,21 @@ public class TurnRoutineFactory {
     public TurnRoutine getTurnRoutine(TurnRoutineType type){
         TurnRoutine routine=null;
         switch (type){
-            case RELOAD:{
+            case RELOAD:
                 if(canReload()) routine= new ReloadingRoutine(turn);
                 break;
-            }
-            case POWERUP:{
+            case POWERUP:
                 if(canPowerup()) routine= new PowerupRoutine(turn,turn.getStatus(),false);
                 break;
-            }
-            case RUN:{
+            case RUN:
                 if(canRun()) routine=new RunningRoutine(turn, maxRunDistance());
                 break;
-            }
-            case SHOOT:{
+            case SHOOT:
                 if(canShoot()) routine=new ShootingRoutine(!turn.getGame().isFrenzy(),maxMoveDistanceBeforeShot()!=0?moveBeforeShoot:null,turn);
                 break;
-            }
+            case GRAB:
+                if(canGrab()) routine= new GrabbingRoutine(turn,whereToGrab);
+                break;
             default: break;
         }
         return routine;
@@ -64,13 +64,17 @@ public class TurnRoutineFactory {
             int []position=turn.getGame().getCurrentPlayer().getPosition().getBoardIndexes();
             MatrixHelper distMat=turn.getGame().getGameBoard().getDistanceMatrix(position[0],position[1],maxDistance);
             boolean[][] mat=distMat.toBooleanMatrix();
+
             int xLen=distMat.getRowLength();
             int yLen=distMat.getColLength();
+            boolean[][] grabMat=new boolean[xLen][yLen];
+
             for(int i=0;i<xLen;i++){
-                for(int j=0;j<yLen;j++){
-                    if(mat[i][j]&&turn.getGame().getGameBoard().hasSquare(i,j)&&turn.getGame().getGameBoard().getSquare(i,j).canGrab()) return true;
-                }
+                for(int j=0;j<yLen;j++)
+                    grabMat[i][j]= mat[i][j] && turn.getGame().getGameBoard().hasSquare(i, j) && turn.getGame().getGameBoard().getSquare(i, j).canGrab();
             }
+            whereToGrab=new MatrixHelper(grabMat);
+            return !whereToGrab.bitWiseAnd(turn.getGame().getGameBoard().getGameboardMatrix()).equals(MatrixHelper.allFalseMatrix(xLen,yLen));
         }
         return false;
     }

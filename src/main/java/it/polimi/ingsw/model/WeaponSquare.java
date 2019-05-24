@@ -83,6 +83,20 @@ public class WeaponSquare extends Square {
     }
 
     /**
+     * This method remove from the square the weapon parameters
+     * @param weapon representing the weapon you want to remove from the square
+     */
+    public void removeWeapon(Weapon weapon){
+        for(Weapon w:weapons){
+            if(w.getId().equals(weapon.getId())){
+                weapons.remove(w);
+                return;
+            }
+        }
+        throw new SquareContentException("The WeaponSquare doesn't contain the selected weapon.");
+    }
+
+    /**
      * This method return a String representation of the instantiated WeaponSquare
      * @return String representing the instantiated WeaponSquare
      * */

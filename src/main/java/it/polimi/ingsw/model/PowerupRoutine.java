@@ -24,7 +24,7 @@ public class PowerupRoutine implements TurnRoutine {
     private Powerup selPowerup;
     private Effect effect;
 
-    protected PowerupRoutine(Turn turn, TurnStatus timing, boolean inner){
+    PowerupRoutine(Turn turn, TurnStatus timing, boolean inner){
         this.turn=turn;
         this.timing=timing;
         this.inner=inner;
@@ -68,7 +68,6 @@ public class PowerupRoutine implements TurnRoutine {
             return;
         }
         effect=turn.getCurEffect();
-        turn.setEffectRoutine(this);
         turn.getGame().notify(new UsingCardMessage(selPowerup));
         effect.perform(answer.getSelected(),turn);
     }
@@ -83,10 +82,8 @@ public class PowerupRoutine implements TurnRoutine {
                     this.selPowerup =powerup;
                     turn.setCurEffect(powerup.getEffect());
 
-                    //TODO: OK?
                     if(powerup.getEffect().getTarget().getType()== TargetType.ME){
                         effect=turn.getCurEffect();
-                        turn.setEffectRoutine(this);
                         turn.getGame().notify(new UsingCardMessage(selPowerup));
                         List<List<String>>selected=new ArrayList<>();
                         selected.add(new ArrayList<>());

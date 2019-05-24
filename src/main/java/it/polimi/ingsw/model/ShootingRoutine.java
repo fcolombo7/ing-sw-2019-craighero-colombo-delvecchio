@@ -24,7 +24,7 @@ public class ShootingRoutine implements TurnRoutine {
     private Effect selEffect;
     private Weapon selWeapon;
 
-    protected ShootingRoutine(boolean checkLoaded, MatrixHelper moveBeforeShot, Turn turn) {
+    ShootingRoutine(boolean checkLoaded, MatrixHelper moveBeforeShot, Turn turn) {
         this.checkLoaded = checkLoaded;
         this.turn = turn;
         curAvailableEffects = null;
@@ -101,9 +101,7 @@ public class ShootingRoutine implements TurnRoutine {
                 turn.setCurEffect(effect);
                 payEffectCost();
 
-                //TODO: OK?
                 if(selEffect.getTarget().getType()== TargetType.ME){
-                    turn.setEffectRoutine(this);
                     turn.getGame().notify(new UsingCardMessage(selWeapon));
 
                     List<List<String>>selected=new ArrayList<>();
@@ -188,7 +186,7 @@ public class ShootingRoutine implements TurnRoutine {
             if(!weapon.getUsableEffects(checkLoaded,turn).isEmpty())
                 availableWeapons.add(new Card(weapon));
         }
-        TurnRoutineMessage message=new AvailableWeaponsMessage(turn.getGame().getCurrentPlayer().getNickname(),availableWeapons);
+        TurnRoutineMessage message=new UsableWeaponsMessage(turn.getGame().getCurrentPlayer().getNickname(),availableWeapons);
         turn.getGame().notify(message);
     }
 
@@ -230,7 +228,9 @@ public class ShootingRoutine implements TurnRoutine {
                 updateTurnStatus();
                 handleCounterAttack();
                 break;
-            default: logError(routineType);
+            default:
+                logError(routineType);
+                throw new IllegalStateException(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
         }
 
     }
@@ -247,24 +247,8 @@ public class ShootingRoutine implements TurnRoutine {
     }
 
     private void logError(TurnRoutineType routineType) {
-        Logger.log("ShootingRoutine can not start inner routine "+routineType.name());
-        turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"ShootingRoutine can not start inner routine "+routineType.name())));
-    }
-
-    @Override
-    public boolean isInnerRoutine() {
-        return false;
-    }
-
-    @Override
-    public void onEffectPerformed() {
-        curAvailableEffects=null;
-        selWeapon.setNavigationNode(selEffect); //update the current node in the weapon navigation tree
-        if(turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus())){
-            turn.getGame().notify(new CanUsePowerupMessage(turn.getGame().getCurrentPlayer().getNickname()));
-            return;
-        }
-        handleCounterAttack();
+        Logger.log(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
+        turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]")));
     }
 
     private void handleCounterAttack() {
@@ -283,5 +267,21 @@ public class ShootingRoutine implements TurnRoutine {
                 sendStopAdvise();
         }else
             closeShotRoutine();
+    }
+
+    @Override
+    public boolean isInnerRoutine() {
+        return false;
+    }
+
+    @Override
+    public void onEffectPerformed() {
+        curAvailableEffects=null;
+        selWeapon.setNavigationNode(selEffect); //update the current node in the weapon navigation tree
+        if(turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus())){
+            turn.getGame().notify(new CanUsePowerupMessage(turn.getGame().getCurrentPlayer().getNickname()));
+            return;
+        }
+        handleCounterAttack();
     }
 }

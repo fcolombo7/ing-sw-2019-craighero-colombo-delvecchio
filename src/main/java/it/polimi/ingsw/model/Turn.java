@@ -20,7 +20,6 @@ public class Turn {
 
     private Deque<TurnRoutine> inExecutionRoutines;
     private Map<String, MatrixHelper> movementMap;
-    private TurnRoutine effectRoutine;
     private List<String> actions;
     private int routineNumber;
 
@@ -38,7 +37,6 @@ public class Turn {
         actions=null;
         shiftableMatrix=null;
         curEffect=null;
-        effectRoutine=null;
         movementMap = new HashMap<>();
         availableActions(false);
     }
@@ -183,13 +181,5 @@ public class Turn {
 
     public void setCurEffect(Effect curEffect) {
         this.curEffect = curEffect;
-    }
-
-    public void setEffectRoutine(TurnRoutine routine) {
-        effectRoutine=routine;
-    }
-
-    public TurnRoutine getEffectRoutine() {
-        return effectRoutine;
     }
 }

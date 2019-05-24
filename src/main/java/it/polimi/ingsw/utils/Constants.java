@@ -48,15 +48,20 @@ public class Constants {
     public static final String USING_CARD_MESSAGE = "USING CARD";
     public static final String MOVE_MESSAGE = "MOVE";
     public static final String PAY_EFFECT_MESSAGE = "PAY EFFECT";
+    public static final String GRABBED_TILE_MESSAGE = "GRABBED AMMO TILE";
+    public static final String GRABBED_WEAPON_MESSAGE = "GRABBED WEAPON";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
-    public static final String AVAILABLE_WEAPONS_MESSAGE ="AVAILABLE WEAPONS";
+    public static final String USABLE_WEAPONS_MESSAGE ="AVAILABLE WEAPONS";
     public static final String AVAILABLE_EFFECT_MESSAGE = "AVAILABLE EFFECTS";
     public static final String AVAILABLE_POWERUPS_MESSAGE = "AVAILABLE POWERUPS";
     public static final String SELECTABLE_PLAYERS_MESSAGE = "SELECTABLE PLAYER";
     public static final String CAN_STOP_ROUTINE = "CAN STOP ROUTINE";
     public static final String CAN_USE_POWERUP = "CAN USE POWERUP";
+    public static final String GRABBED_POWERUP ="GRABBED POWERUP";
+    public static final String GRABBABLE_WEAPONS_MESSAGE = "GRABBABLE WEAPONS";
+    public static final String DISCARD_WEAPON_MESSAGE = "DISCARD WEAPON";
 
     /*MODEL ANSWERS*/
     public static final String BOARD_SETTING_ANSWER="BOARD PREFERENCE";
@@ -74,6 +79,7 @@ public class Constants {
     public static final String SELECTED_PLAYERS_ANSWER = "SELECTED PLAYERS";
     public static final String STOP_ROUTINE_ANSWER = "STOP ROUTINE ANSWER";
     public static final String USE_POWERUP_ANSWER = "USE POWERUP ANSWER";
+    public static final String DISCARDED_WEAPON_ANSWER = "DISCARDED WEAPON";
 
     /*ROOM MESSAGE*/
     public static final String PLAYER_EXIT ="PLAYER EXIT";

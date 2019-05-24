@@ -18,14 +18,14 @@ public class RunningRoutine implements TurnRoutine {
     private MatrixHelper runMatrix;
     private boolean inner;
 
-    protected RunningRoutine(Turn turn, int distance){
+    RunningRoutine(Turn turn, int distance){
         this.turn=turn;
         inner=false;
         int[] playerPos=turn.getGame().getCurrentPlayer().getPosition().getBoardIndexes();
         runMatrix = turn.getGame().getGameBoard().getDistanceMatrix(playerPos[0],playerPos[1],distance);
     }
 
-    protected RunningRoutine(Turn turn, MatrixHelper runMatrix, boolean isInner){
+    RunningRoutine(Turn turn, MatrixHelper runMatrix, boolean isInner){
         this.turn=turn;
         inner=isInner;
         this.runMatrix=new MatrixHelper(runMatrix.toBooleanMatrix());

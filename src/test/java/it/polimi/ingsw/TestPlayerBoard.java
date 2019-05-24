@@ -114,8 +114,8 @@ public class TestPlayerBoard {
         ammo.add(Color.RED);
         ammo.add(Color.YELLOW);
 
-        pb.addAmmos(ammo);
-        pb.addAmmos(ammo);
+        pb.addAmmo(ammo);
+        pb.addAmmo(ammo);
 
         ammoRes.add(Color.RED);
         ammoRes.add(Color.YELLOW);

@@ -19,13 +19,13 @@ public class ReloadingRoutine implements TurnRoutine {
     private boolean inner;
     private Weapon weapon;
 
-    protected ReloadingRoutine(Turn turn){
+    ReloadingRoutine(Turn turn){
         this.turn=turn;
         inner=false;
         weapon=null;
     }
 
-    protected ReloadingRoutine(Turn turn, Weapon weapon){
+    ReloadingRoutine(Turn turn, Weapon weapon){
         this.turn=turn;
         inner=true;
         this.weapon=weapon;
