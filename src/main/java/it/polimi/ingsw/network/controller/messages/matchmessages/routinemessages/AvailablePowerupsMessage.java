@@ -1,17 +1,18 @@
-package it.polimi.ingsw.network.controller.messages.matchmessages;
+package it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages;
 
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
 import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AvailablePowerupsMessage extends MatchMessage {
+public class AvailablePowerupsMessage extends TurnRoutineMessage {
     private static final long serialVersionUID = -3015921235366893071L;
     private List<Card> powerups;
 
     public AvailablePowerupsMessage(String recipient, List<Card> powerups) {
-        super(recipient);
+        super(recipient,Constants.AVAILABLE_POWERUPS_MESSAGE);
         this.powerups=new ArrayList<>(powerups);
     }
 
@@ -19,8 +20,4 @@ public class AvailablePowerupsMessage extends MatchMessage {
         return new ArrayList<>(powerups);
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.AVAILABLE_POWERUPS_MESSAGE;
-    }
 }

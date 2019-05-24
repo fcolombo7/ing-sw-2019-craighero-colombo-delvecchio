@@ -11,7 +11,7 @@ public class RespawnMessage extends MatchMessage {
     private Card discardedPowerup;
 
     public RespawnMessage(SimplePlayer player, Card discardedPowerup) {
-        super(null);
+        super(null,Constants.RESPAWN_COMPLETED_MESSAGE);
         this.player=player;
         this.discardedPowerup=discardedPowerup;
     }
@@ -22,10 +22,5 @@ public class RespawnMessage extends MatchMessage {
 
     public Card getDiscardedPowerup() {
         return discardedPowerup;
-    }
-
-    @Override
-    public String getRequest() {
-        return Constants.RESPAWN_COMPLETED_MESSAGE;
     }
 }

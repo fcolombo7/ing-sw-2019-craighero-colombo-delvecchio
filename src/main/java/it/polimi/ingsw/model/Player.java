@@ -320,14 +320,16 @@ public class Player {
             if(this.getBoard().getAmmo().contains(color))
                 this.getBoard().removeAmmo(color);
             else {
-                for(Powerup p: this.getPowerups())
-                    if(p.getColor()==color) {
+                for(Powerup p: this.getPowerups()) {
+                    if (p.getColor() == color) {
                         discardedPowerups.add(new Card(p));
                         this.popPowerup(p);
                         break;
                     }
+                }
             }
         }
+        weapon.load();
         return discardedPowerups;
     }
 }

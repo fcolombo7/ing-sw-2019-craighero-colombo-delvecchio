@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MoveAnswer;
+import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 import org.w3c.dom.Node;
@@ -453,7 +454,7 @@ public class Effect {
         List<Player> players=new ArrayList<>(turn.getGame().getPlayers());
         players.remove(turn.getGame().getCurrentPlayer());
         if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())){
-            boolean[][] mat=getMovementMatrix(turn.getGame().getCurrentPlayer(),players,turn.getShotPlayers(),turn.getGame().getGameBoard()).toBooleanMatrix();
+            boolean[][] mat=getMovementMatrix(turn.getGame().getCurrentPlayer(),players,turn.getSelectedPlayers(),turn.getGame().getGameBoard()).toBooleanMatrix();
             for(int i=0;i<mat.length;i++){
                 for(int j=0;j<mat[0].length;j++) if(mat[i][j]) return true;
             }
@@ -485,6 +486,7 @@ public class Effect {
      * @param lastPos representing the indexes of the Gameboard of the last position
      * @param players representing all the players (current player excluded)
      * @param board representing the current Gameboard
+     * @param first
      * @return MatrixHelper object representing the Matrix of the effect for the situation described by the parameters passed
      */
     private MatrixHelper calcMovementMatrix(int[] curPos, int[] lastPos, List<Player> players, GameBoard board, boolean first) {
@@ -498,6 +500,7 @@ public class Effect {
             }
         }
         MatrixHelper matrix=board.getGameboardMatrix();
+        if(shiftableValue.equalsIgnoreCase("")) return matrix; //you can move everywhere because it is a powerup effect
         //SET UP MATRIX
         matrix=requirementsMap.get("MAX_DISTANCE").checkRequirement("0",curPos,lastPos,board,matrix);
         matrix=requirementsMap.get("SHIFTABLE").checkRequirement(shiftableValue,curPos,lastPos,board,matrix);
@@ -539,11 +542,11 @@ public class Effect {
         turn.initShiftableMatrix();
         if(target.getType().name().equalsIgnoreCase(TargetType.ME.name())) return new ArrayList<>();
         int[] lastPos=null;
-        if(turn.getShotPlayers().peek()!=null && turn.getShotPlayers().peek().getPosition() != null)
-            lastPos=turn.getShotPlayers().peek().getPosition().getBoardIndexes();
+        if(turn.getSelectedPlayers().peek()!=null && turn.getSelectedPlayers().peek().getPosition() != null)
+            lastPos=turn.getSelectedPlayers().peek().getPosition().getBoardIndexes();
         int[] indexes=turn.getGame().getCurrentPlayer().getPosition()==null?null:turn.getGame().getCurrentPlayer().getPosition().getBoardIndexes();
         MatrixHelper effectMatrix=calcEffectMatrix(indexes,lastPos,turn.getGame().getGameBoard(),turn);
-        List<Player> availablePlayer=getAvailablePlayer(players,turn.getShotPlayers(),effectMatrix);
+        List<Player> availablePlayer=getAvailablePlayer(players,turn.getSelectedPlayers(),effectMatrix);
         return composeTargetPlayers(turn.getGame().getCurrentPlayer(),availablePlayer);
     }
 
@@ -698,9 +701,12 @@ public class Effect {
         return list;
     }
 
-    public void perform(List<Player> selected, Turn turn){
+    public void perform(List<List<String>> selectedNickname, Turn turn){
         try{
-            checkSelected(selected,turn);
+            if(!checkSelected(selectedNickname,turn)) throw new IllegalStateException("Game Error performing the effect "+this.getName());
+            turn.resetLatsDamagedPlayers();
+            List<List<Player>> selected = composeSelected(selectedNickname, turn);
+            List<Player> selectedPlayer=selectedToList(selected);
             for(int i=0;i<actions.size();i++){
                 Action currAct=actions.get(i);
                 if(currAct.getActionType()==ActionType.MOVE){
@@ -708,38 +714,44 @@ public class Effect {
                     if(target.getType()==TargetType.ME) {
                         List<Player> players=new ArrayList<>(turn.getGame().getPlayers());
                         players.remove(turn.getGame().getCurrentPlayer());
-                        turn.getGame().sendMoveRequestMessage(turn.getGame().getCurrentPlayer().getNickname(),getMovementMatrix(turn.getGame().getCurrentPlayer(),players,turn.getShotPlayers(),turn.getGame().getGameBoard()));
+                        MatrixHelper matrix=getMovementMatrix(turn.getGame().getCurrentPlayer(),players,turn.getSelectedPlayers(),turn.getGame().getGameBoard());
+                        turn.insertPlayerMatrix(turn.getGame().getCurrentPlayer(),matrix);
+                        turn.getGame().notify(new MoveRequestMessage(turn.getGame().getCurrentPlayer().getNickname(),
+                                turn.getGame().getCurrentPlayer().getNickname(),
+                                matrix));
                         return;
                     }
                     else{
                         turn.clearMovementMap();
-                        for(Player p:selected){
+                        for(Player p:selectedPlayer){
                             int[] pos=p.getPosition().getBoardIndexes();
                             MatrixHelper matrix=turn.getGame().getGameBoard().getDistanceMatrix(pos[0],pos[1],currAct.getValue());
                             matrix=matrix.bitWiseAnd(turn.getShiftableMatrix());
                             turn.insertPlayerMatrix(p,matrix);
-                            turn.getGame().sendMoveRequestMessage(p.getNickname(),matrix);
+                            turn.addSelectedPlayer(p);
+                            turn.getGame().notify(new MoveRequestMessage(turn.getGame().getCurrentPlayer().getNickname(), p.getNickname(), matrix));
                         }
                         return;
                     }
                 }else if(currAct.getActionType()==ActionType.DAMAGE){
-                    for(Player p:selected){
+                    for(Player p:selectedPlayer){
                         p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),currAct.getValue());
-                        turn.addShotPlayer(p);
+                        turn.addSelectedPlayer(p);
+                        turn.newLatsDamagedPlayers(p);
                     }
-                    turn.getGame().sendDamageMessage(selected, currAct.getValue());
+                    turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),selectedPlayer,currAct.getValue()));
                 }
                 else if(currAct.getActionType()==ActionType.MARK){
-                    for(Player p:selected){
+                    for(Player p:selectedPlayer){
                         p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),currAct.getValue());
                     }
-                    turn.getGame().sendMarkMessage(selected, currAct.getValue());
+                    turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selectedPlayer, currAct.getValue()));
                 }
             }
             handleExtra(turn);
         }
         catch(IllegalArgumentException e){
-            turn.getGame().sendInvalidAction(e.getMessage());
+            turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),e.getMessage())));
         }
     }
 
@@ -753,65 +765,97 @@ public class Effect {
         }
         if(selectedPlayer==null){
             Logger.log("Invalid target received");
-            turn.getGame().sendInvalidAction("INVALID TARGET RECEIVED");
+            turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"INVALID TARGET RECEIVED")));
             return;
         }
         MatrixHelper playerMatrix=turn.getPlayerMatrix(selectedPlayer);
         if(playerMatrix==null){
             Logger.log("Invalid target received");
-            turn.getGame().sendInvalidAction("INVALID TARGET RECEIVED");
+            turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"INVALID TARGET RECEIVED")));
             return;
         }
         if(playerMatrix.toBooleanMatrix()[answer.getNewPosition()[0]][answer.getNewPosition()[1]]){
             selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(answer.getNewPosition()[0],answer.getNewPosition()[1]));
-            turn.getGame().sendMoveMessage(selectedPlayer.getNickname(),answer.getNewPosition());
+            turn.getGame().notify(new MoveMessage(selectedPlayer));
             Logger.log("Moving the selected player");
             handleExtra(turn);
         }else{
             Logger.log("Invalid newPosition received");
-            turn.getGame().sendInvalidAction("UNREACHABLE POSITION RECEIVED");
+            turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"UNREACHABLE POSITION RECEIVED")));
         }
     }
 
-    private void checkSelected(List<Player> selected, Turn turn) {
-        //TODO: non è completo!
-        String exceptionMsg="INVALID SELECTED PLAYERS";
-        if(selected==null) throw new IllegalArgumentException(exceptionMsg);
-        if(target.getType()==TargetType.ME){
-            if(selected.size()!=1||selected.get(0)!=turn.getGame().getCurrentPlayer())
-                throw new IllegalArgumentException(exceptionMsg);
-            else
-                return;
+    private List<Player> selectedToList(List<List<Player>> selected) {
+        List<Player> returned=new ArrayList<>();
+        for(List<Player> list:selected){
+            returned.addAll(list);
         }
-        for(Player player:selected){
-            boolean condition=false;
-            for(List<Player> list:getShootablePlayers(turn)){
-                for(Player p:list){
-                    if(player==p)
-                        condition=true;
+        return returned;
+    }
+
+    public boolean checkSelected(List<List<String>> selectedNickname, Turn turn) {
+        List<List<Player>> selected=composeSelected(selectedNickname,turn);
+        if(selected.isEmpty()) return false;
+        if(target.getType()==TargetType.ME)
+            return selected.size()==1&&selected.get(0).size()==1&&selected.get(0).get(0)==turn.getGame().getCurrentPlayer();
+        return checkSize(selected)&&checkInner(selected);
+    }
+
+    private boolean checkInner(List<List<Player>> selected) {
+        for (List<Player> list:selected){
+            if(list.size()<target.getMinPlayerIn()) return false;
+            if(target.getMaxPlayerIn()!=-1&&list.size()>target.getMaxPlayerIn()) return false;
+        }
+        return true;
+    }
+
+    private boolean checkSize(List<List<Player>> selected) {
+        if(selected.size()>=this.target.getMinNumber()){
+            return this.target.getMaxNumber() == -1 || selected.size() <= this.target.getMaxNumber();
+        }
+        return false;
+    }
+
+    private List<List<Player>> composeSelected(List<List<String>> selectedNickname, Turn turn) {
+        List<List<Player>> selectedPlayers=new ArrayList<>();
+        List<Player> players=turn.getGame().getPlayers();
+        for(List<String> list: selectedNickname){
+            List<Player> temp=new ArrayList<>();
+            for(String nickname:list){
+                boolean found=false;
+                for(Player player:players){
+                    if(nickname.equals(player.getNickname())) {
+                        temp.add(player);
+                        found=true;
+                        break;
+                    }
                 }
+                if(!found) return new ArrayList<>();
             }
-            if(!condition) throw new IllegalArgumentException(exceptionMsg);
+            selectedPlayers.add(temp);
         }
+        return selectedPlayers;
     }
 
     private void handleExtra(Turn turn) {
         for(String[] extra: extra){
             extraMap.get(extra[0]).exec(turn,extra[1]);
         }
+        if(turn.getInExecutionRoutine()!=null)
+            turn.getInExecutionRoutine().onEffectPerformed();
     }
 
     private static void goThereExtra(Turn turn,String value){
-        Player last=turn.getShotPlayers().peek();
+        Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square lastPosition=last.getPosition();
         turn.getGame().getCurrentPlayer().setPosition(lastPosition);
-        turn.getGame().sendMoveMessage(turn.getGame().getCurrentPlayer().getNickname(),lastPosition.getBoardIndexes());
+        turn.getGame().notify(new MoveMessage(turn.getGame().getCurrentPlayer()));
         Logger.log("Moving the current player due to Extra");
     }
 
     private static void againDirectionExtra(Turn turn, String value) {
-        Player last=turn.getShotPlayers().peek();
+        Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Direction direction=turn.getGame().getCurrentPlayer().isInDirection(last);
         int[] lastPosition=last.getPosition().getBoardIndexes();
@@ -865,7 +909,7 @@ public class Effect {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
-                turn.getGame().sendMarkMessage(selected, Integer.parseInt(value));
+                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
                 return;
             }
         }
@@ -876,8 +920,8 @@ public class Effect {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addDamage(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
-                turn.addShotPlayer(p);
-                turn.getGame().sendDamageMessage(selected, Integer.parseInt(value));
+                turn.addSelectedPlayer(p);
+                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),selected,Integer.parseInt(value)));
                 return;
             }
         }
@@ -890,7 +934,7 @@ public class Effect {
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
             }
         }
-        turn.getGame().sendMarkMessage(selected, Integer.parseInt(value));
+        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
     }
 
     private static void repeatDamageInSquare(Turn turn, String value, Square position) {
@@ -898,14 +942,14 @@ public class Effect {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addDamage(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
-                turn.addShotPlayer(p);
+                turn.newLatsDamagedPlayers(p);
             }
         }
-        turn.getGame().sendDamageMessage(selected, Integer.parseInt(value));
+        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),selected,Integer.parseInt(value)));
     }
 
     private static void markSquareExtra(Turn turn, String value) {
-        Player last=turn.getShotPlayers().peek();
+        Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square position=last.getPosition();
         List<Player> selected= new ArrayList<>();
@@ -915,12 +959,12 @@ public class Effect {
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),Integer.parseInt(value));
             }
         }
-        turn.getGame().sendMarkMessage(selected,Integer.parseInt(value));
+        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
         Logger.log("Mark all the player in the last square due to Extra");
     }
 
     private static void damageSquareExtra(Turn turn, String value) {
-        Player last=turn.getShotPlayers().peek();
+        Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square position=last.getPosition();
         List<Player> selected= new ArrayList<>();
@@ -928,19 +972,19 @@ public class Effect {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 selected.add(p);
                 p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),Integer.parseInt(value));
+                turn.newLatsDamagedPlayers(p);
             }
         }
-        turn.getGame().sendMarkMessage(selected,Integer.parseInt(value));
+        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
         Logger.log("Damage all the player in the last square due to Extra");
     }
 
     private static void shiftInSquareExtra(Turn turn, String value) {
         Square position=turn.getGame().getCurrentPlayer().getPosition();
-        Player player=turn.getShotPlayers().peek();
+        Player player=turn.getSelectedPlayers().peek();
         if(player==null) throw new IllegalStateException("last shot player is null");
         player.setPosition(position);
-
-        turn.getGame().sendMoveMessage(turn.getGame().getCurrentPlayer().getNickname(),position.getBoardIndexes());
+        turn.getGame().notify(new MoveMessage(turn.getGame().getCurrentPlayer()));
         Logger.log("Moving the last shot player due to Extra");
     }
 

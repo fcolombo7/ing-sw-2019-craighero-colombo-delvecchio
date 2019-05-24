@@ -7,7 +7,9 @@ public enum TurnStatus {
     COUNTER_ATTACK,
     END,
     GRABBING,
+    RELOADING,
     RUNNING,
     SHOOTING,
+    USING_POWERUP,
     WAITING_PLAYER
 }

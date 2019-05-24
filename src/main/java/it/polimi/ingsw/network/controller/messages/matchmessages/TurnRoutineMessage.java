@@ -6,14 +6,14 @@ public abstract class TurnRoutineMessage extends MatchMessage {
 
     private static final long serialVersionUID = -168639418682449484L;
 
-    public TurnRoutineMessage(String recipient) {
-        super(recipient);
+    private String routineRequest;
+
+    public TurnRoutineMessage(String recipient, String routineRequest) {
+        super(recipient,Constants.TURN_ROUTINE_MESSAGE);
+        this.routineRequest=routineRequest;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.TURN_ROUTINE_MESSAGE;
+    public String getRoutineRequest(){
+        return routineRequest;
     }
-
-    public abstract String getRoutineRequest();
 }

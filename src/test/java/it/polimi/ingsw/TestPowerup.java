@@ -58,9 +58,7 @@ public class TestPowerup {
             game.addPlayer(fourth);
 
             game.setGameBoard(1);
-            GameBoard board=game.getGameBoard();
-
-            first.setPosition(null);
+            first.setPosition(game.getGameBoard().getSquare(1,1));
             second.setPosition(null);
             third.setPosition(null);
             fourth.setPosition(null);

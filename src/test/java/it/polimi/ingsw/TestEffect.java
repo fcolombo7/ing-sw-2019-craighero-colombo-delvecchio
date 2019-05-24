@@ -1,6 +1,10 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.PlayerStatus;
+import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
+import it.polimi.ingsw.turntests.DebugView;
+import it.polimi.ingsw.utils.Logger;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -133,6 +137,7 @@ public class TestEffect {
             Player third=new Player("third","third_motto",false);
             Player fourth=new Player("fourth","fourth_motto",false);
 
+
             game.addPlayer(first);
             game.addPlayer(second);
             game.addPlayer(third);
@@ -140,6 +145,10 @@ public class TestEffect {
 
             game.setGameBoard(1);
             GameBoard board=game.getGameBoard();
+            first.setPosition(game.getGameBoard().getSquare(1,1));
+            second.setPosition(game.getGameBoard().getSquare(1,1));
+            third.setPosition(game.getGameBoard().getSquare(1,1));
+            fourth.setPosition(game.getGameBoard().getSquare(1,1));
             Turn turn= new Turn(game);
             first.setPosition(board.getSquare(1,0));
             second.setPosition(board.getSquare(1,2));
@@ -151,28 +160,28 @@ public class TestEffect {
             ArrayList<Boolean> values= new ArrayList<>();
 
             //FIRST: TRUE
-            turn.addShotPlayer(second);
-            turn.addShotPlayer(third);
+            turn.addSelectedPlayer(second);
+            turn.addSelectedPlayer(third);
             values.add(base.canUse(turn));
 
             //SECOND: FALSE
-            turn.clearShotPlayers();
-            turn.addShotPlayer(fourth);
-            turn.addShotPlayer(third);
+            turn.clearSelectedPlayers();
+            turn.addSelectedPlayer(fourth);
+            turn.addSelectedPlayer(third);
             values.add(base.canUse(turn));
 
             //THIRD: FALSE
-            turn.clearShotPlayers();
+            turn.clearSelectedPlayers();
             values.add(base.canUse(turn));
 
             //FOURTH: TRUE
-            turn.clearShotPlayers();
+            turn.clearSelectedPlayers();
             values.add(base.canUse(turn));
 
             //EXTRA: TRUE
-            turn.clearShotPlayers();
-            turn.addShotPlayer(second);
-            turn.addShotPlayer(third);
+            turn.clearSelectedPlayers();
+            turn.addSelectedPlayer(second);
+            turn.addSelectedPlayer(third);
             values.add(base.canUse(turn));
 
             assertThat(new Boolean[]{true,true,true,true,true},is(values.toArray()));
@@ -534,5 +543,56 @@ public class TestEffect {
             e.printStackTrace();
             fail("Unexpected IOException has been thrown");
         }
+    }
+
+
+    @Test
+    public void PerformEffectTest(){
+        Game game = new Game();
+        Player p1=new Player("nickname1", "", true);
+        Player p2=new Player("nickname2", "", false);
+        Player p3=new Player("nickname3", "", false);
+        Player p4=new Player("nickname4", "", false);
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
+
+        ArrayDeque<MatchMessage> collector=new ArrayDeque<>();
+        DebugView view=new DebugView(p1,collector);
+
+        game.register(view);
+
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
+        p4.setStatus(PlayerStatus.WAITING);
+        game.setGameBoard(1);
+        p1.setPosition(game.getGameBoard().getSquare(1,0));
+        p2.setPosition(game.getGameBoard().getSquare(1,1));
+        p4.setPosition(game.getGameBoard().getSquare(1,1));
+        p4.setPosition(game.getGameBoard().getSquare(0,1));
+
+        Weapon weapon=new Weapon(new Card("id","VULCANIZZATORE","src/main/Resources/weapons/vulcanizzatore.xml"));
+        p1.addWeapon(weapon);
+
+        Turn turn=new Turn(game);
+
+        List<List<String>> selected= new ArrayList<>();
+        List<String> temp=new ArrayList<>();
+        temp.add(p2.getNickname());
+        temp.add(p3.getNickname());
+        selected.add(temp);
+
+        assertTrue(weapon.getEffect(2).checkSelected(selected,turn));
+
+        weapon.getEffect(2).perform(selected,turn);
+        assertEquals(1, p2.getBoard().getHealthBar().size());
+        assertEquals(1, p3.getBoard().getHealthBar().size());
+        assertEquals(1, p2.getBoard().getMarks().size());
+        assertEquals(1, p3.getBoard().getMarks().size());
+
+        Logger.log("TEST FINISHED");
     }
 }

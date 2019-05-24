@@ -8,7 +8,7 @@ public class InvalidAnswerMessage extends MatchMessage {
     private String msg;
 
     public  InvalidAnswerMessage(String recipient, String msg) {
-        super(recipient);
+        super(recipient, Constants.INVALID_ANSWER);
         this.msg=msg;
     }
 
@@ -16,8 +16,4 @@ public class InvalidAnswerMessage extends MatchMessage {
         return msg;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.INVALID_ANSWER;
-    }
 }

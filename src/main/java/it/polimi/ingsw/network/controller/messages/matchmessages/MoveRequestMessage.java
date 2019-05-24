@@ -9,7 +9,7 @@ public class MoveRequestMessage extends MatchMessage {
     private MatrixHelper matrix;
 
     public MoveRequestMessage(String recipient, String target, MatrixHelper matrix) {
-        super(recipient);
+        super(recipient,Constants.EFFECT_MOVE_REQUEST_MESSAGE);
         this.matrix=matrix;
         this.target=target;
     }
@@ -22,8 +22,4 @@ public class MoveRequestMessage extends MatchMessage {
         return target;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.EFFECT_MOVE_REQUEST_MESSAGE;
-    }
 }

@@ -1,18 +1,19 @@
-package it.polimi.ingsw.network.controller.messages.matchmessages;
+package it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages;
 
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
 import it.polimi.ingsw.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadableWeaponsMessage extends MatchMessage {
+public class ReloadableWeaponsMessage extends TurnRoutineMessage {
     private static final long serialVersionUID = -5997612003605591407L;
 
     private List<Card> weapons;
 
-    public LoadableWeaponsMessage(String recipient, List<Card> weapons) {
-        super(recipient);
+    public ReloadableWeaponsMessage(String recipient, List<Card> weapons) {
+        super(recipient,Constants.LOADABLE_WEAPONS_MESSAGE);
         this.weapons=new ArrayList<>(weapons);
     }
 
@@ -20,8 +21,4 @@ public class LoadableWeaponsMessage extends MatchMessage {
         return new ArrayList<>(weapons);
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.LOADABLE_WEAPONS_MESSAGE;
-    }
 }

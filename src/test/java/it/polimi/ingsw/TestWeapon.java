@@ -5,12 +5,8 @@ import it.polimi.ingsw.model.exceptions.WeaponLoadException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Color;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -209,13 +205,13 @@ public class TestWeapon {
             third.setPosition(board.getSquare(2,2));
             fourth.setPosition(board.getSquare(2,2));
 
-            List<Effect> effects=weapon.getUsableEffect(true, new Turn(game));
+            List<Effect> effects=weapon.getUsableEffects(true, new Turn(game));
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             third.setPosition(board.getSquare(1,2));
             fourth.setPosition(board.getSquare(1,2));
-            effects=weapon.getUsableEffect(true,new Turn(game));
+            effects=weapon.getUsableEffects(true,new Turn(game));
             assertThat(effects.get(0).getRefId(),is(2));
 
         } catch (Exception e) {
@@ -257,17 +253,17 @@ public class TestWeapon {
             third.setPosition(board.getSquare(1,1));
             fourth.setPosition(board.getSquare(2,2));
 
-            List<Effect> effects=weapon.getUsableEffect(true,new Turn(game));
+            List<Effect> effects=weapon.getUsableEffects(true,new Turn(game));
             assertThat(effects.get(0).getRefId(),is(1));
 
             effects.clear();
             weapon.setNavigationNode(weapon.getEffect(1));
-            effects=weapon.getUsableEffect(true,new Turn(game));
+            effects=weapon.getUsableEffects(true,new Turn(game));
             assertThat(effects.get(0).getRefId(),is(2));
 
             effects.clear();
             third.setPosition(board.getSquare(2,2));
-            effects=weapon.getUsableEffect(true,new Turn(game));
+            effects=weapon.getUsableEffects(true,new Turn(game));
             assertTrue(effects.isEmpty());
 
         } catch (Exception e) {

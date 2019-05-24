@@ -3,9 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.LoadableWeaponSelectedAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.PowerupSelectedAnswer;
-import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
+import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
@@ -14,13 +12,17 @@ import java.util.*;
 public class Turn {
     private Game game;
     private TurnStatus status;
-    private Deque<Player> shotPlayers;
-    private int routineNumber;
-    private TurnRoutine curRoutine;
-    private List<String> actions;
-    private MatrixHelper shiftableMatrix;
-    private Map<String, MatrixHelper> movementMap;
+
+    private Deque<Player> selectedPlayers;
+    private List<Player> lastDamagedPlayers;
     private Effect curEffect;
+    private MatrixHelper shiftableMatrix;
+
+    private Deque<TurnRoutine> inExecutionRoutines;
+    private Map<String, MatrixHelper> movementMap;
+    private TurnRoutine effectRoutine;
+    private List<String> actions;
+    private int routineNumber;
 
     public Turn(Game game){
         this.game=game;
@@ -30,143 +32,58 @@ public class Turn {
         }
         else routineNumber=2;
         status=TurnStatus.WAITING_PLAYER;
-        shotPlayers =new ArrayDeque<>();
-        curRoutine=null;
+        selectedPlayers =new ArrayDeque<>();
+        lastDamagedPlayers=new ArrayList<>();
+        inExecutionRoutines=new ArrayDeque<>();
         actions=null;
         shiftableMatrix=null;
         curEffect=null;
+        effectRoutine=null;
         movementMap = new HashMap<>();
         availableActions(false);
     }
 
     public void selectAction(ActionSelectedAnswer answer){
-        for(String action:actions){
-            if(answer.getSelection().equalsIgnoreCase(action)){
-                if(action.equalsIgnoreCase("SHOT")) {
-                    createRoutine("SHOT");
-                    return;
-                }else if(action.equalsIgnoreCase("RUN")) {
-                    createRoutine("RUN");
-                    return;
-                }
-                else if(action.equalsIgnoreCase("GRAB")) {
-                    createRoutine("GRAB");
-                    return;
-                }
-                else if(action.equalsIgnoreCase("RELOAD")) {
-                    sendWeapons();
-                    return;
-                }else if(action.equalsIgnoreCase("POWERUP")) {
-                    sendPowerups();
-                    return;
-                }
-            }
+        try{
+            createRoutine(answer.getSelection());
+        }catch(IllegalArgumentException ex){
+            Logger.log("Invalid action received");
+            game.notify((new InvalidAnswerMessage(game.getCurrentPlayer().getNickname(),"Invalid action received")));
         }
-        Logger.log("Invalid action received");
-        game.sendInvalidAction("Invalid action received");
     }
 
     private void availableActions(boolean end) {
         curEffect=null;
-        if(!end) {
-            actions = new ArrayList<>();
-            for (TurnRoutineType type : TurnRoutineType.values()) {
-                if (canPerformRoutine(type.name()))
+        actions = new ArrayList<>();
+        for (TurnRoutineType type : TurnRoutineType.values()) {
+            if(end){
+                if(type==TurnRoutineType.RELOAD&&canPerformRoutine(type))
                     actions.add(type.name());
-            }
-            if (game.getCurrentPlayer().hasTimingPowerup(status)) actions.add("POWERUP");
+            }else if (canPerformRoutine(type))
+                actions.add(type.name());
         }
-        if(canReload())actions.add("RELOAD");
         if(actions.isEmpty()){
             status=TurnStatus.END;
             game.endTurn();
         }else
-            game.sendAvailableActions(actions);
-    }
-
-    private void sendPowerups(){
-        List<Card> usablePowerups=new ArrayList<>();
-        List<Player> other=game.getPlayers();
-        other.remove(game.getCurrentPlayer());
-        for (Powerup p:game.getCurrentPlayer().getPowerups()) {
-            if(p.getTiming()==status&&p.getEffect().canUse(this))
-                usablePowerups.add(new Card(p));
-        }
-        game.sendUsablePowerups(usablePowerups);
-    }
-
-    private void onPowerupReceived(PowerupSelectedAnswer answer){
-        Card selPowerup=answer.getPowerup();
-        List<Player> other=game.getPlayers();
-        other.remove(game.getCurrentPlayer());
-        for (Powerup powerup:game.getCurrentPlayer().getPowerups()){
-            if(selPowerup.getId().equalsIgnoreCase(powerup.getId())){
-                if(powerup.getTiming()==status&&powerup.getEffect().canUse(this)){
-                    curEffect=powerup.getEffect();
-                    game.sendSelectedPowerup(powerup);
-                    curEffect.perform(null,this);
-                    availableActions(false);
-                }else {
-                    Logger.log("Invalid powerup received");
-                    game.sendInvalidAction("Cannot use the selected powerup");
-                }
-            }
-        }
-        Logger.log("Invalid powerup received");
-        game.sendInvalidAction("Current player doesn't have the selected powerup");
-
-    }
-
-    private void sendWeapons(){
-        List<Card> loadableWeapons=new ArrayList<>();
-        for (Weapon w:game.getCurrentPlayer().getWeapons()){
-            if(game.getCurrentPlayer().canReloadedWeapon(w))
-                loadableWeapons.add(new Card(w));
-        }
-        game.sendLoadableWeapons(loadableWeapons);
-    }
-
-    private void onLoadableWeaponReceived(LoadableWeaponSelectedAnswer answer){
-        Card weapon=answer.getWeapon();
-        for(Weapon w:game.getCurrentPlayer().getWeapons()){
-            if(weapon.getId().equalsIgnoreCase(w.getId())){
-                if(game.getCurrentPlayer().canReloadedWeapon(w)){
-                    List<Card> discardedPowerups= game.getCurrentPlayer().reloadWeapon(w);
-                    game.sendReloadMessage(discardedPowerups);
-                    availableActions(true);
-                    return;
-                }else{
-                    Logger.log("Invalid weapon received");
-                    game.sendInvalidAction("Cannot reload the selected weeapon");
-                }
-            }
-        }
-        Logger.log("Invalid weapon received");
-        game.sendInvalidAction("Current player doesn't have the selected weapon");
-    }
-
-    private boolean canReload() {
-        for(Weapon w:game.getCurrentPlayer().getWeapons()){
-            if(game.getCurrentPlayer().canReloadedWeapon(w))
-                return true;
-        }
-        return false;
+            game.notify(new TurnActionsMessage(game.getCurrentPlayer().getNickname(),actions));
     }
 
     private void createRoutine(String type){
-        if(!canPerformRoutine(type)) throw new IllegalArgumentException();
-        TurnRoutineFactory factory=new TurnRoutineFactory(this);
         TurnRoutineType rType=getRoutineType(type);
-        curRoutine=factory.getTurnRoutine(rType);
-        curRoutine.updateTurnStatus();
-        routineNumber--;
+        if(!canPerformRoutine(rType)) throw new IllegalArgumentException();
+        TurnRoutineFactory factory=new TurnRoutineFactory(this);
+        TurnRoutine routine=factory.getTurnRoutine(rType);
+        //decrementing the turnRoutine number
+        if (rType==(TurnRoutineType.SHOOT)||rType==TurnRoutineType.RUN||rType==TurnRoutineType.GRAB)
+            routineNumber--;
+        routine.start();
     }
 
-    private boolean canPerformRoutine(String type){
-        TurnRoutineType rType=getRoutineType(type);
-        if(rType!=null){
+    private boolean canPerformRoutine(TurnRoutineType type){
+        if(type!=null){
             TurnRoutineFactory factory=new TurnRoutineFactory(this);
-            return factory.getTurnRoutine(rType)!=null;
+            return factory.getTurnRoutine(type)!=null;
         }
         return false;
     }
@@ -179,6 +96,23 @@ public class Turn {
         return null;
     }
 
+    public void endRoutine() {
+        status=TurnStatus.WAITING_PLAYER;
+        TurnRoutine routine=inExecutionRoutines.pop();
+        if(routine.isInnerRoutine()&&inExecutionRoutines.peek()!=null)
+            inExecutionRoutines.peek().onInnerRoutineCompleted(routine.getType());
+        if(inExecutionRoutines.peek()==null)
+            availableActions(routine.getType()!=TurnRoutineType.RELOAD);
+    }
+
+    void pushRoutineInStack(TurnRoutine routine){
+        inExecutionRoutines.push(routine);
+    }
+
+    public TurnRoutine getInExecutionRoutine(){
+        return inExecutionRoutines.peek();
+    }
+
     public int getRoutineNumber() {
         return routineNumber;
     }
@@ -187,16 +121,28 @@ public class Turn {
         return game;
     }
 
-    public Deque<Player> getShotPlayers() {
-        return new ArrayDeque<>(shotPlayers);
+    public Deque<Player> getSelectedPlayers() {
+        return new ArrayDeque<>(selectedPlayers);
     }
 
-    public void addShotPlayer(Player player) {
-        shotPlayers.add(player);
+    public List<Player> getLastDamagedPlayers() {
+        return new ArrayList<>(lastDamagedPlayers);
     }
 
-    public void clearShotPlayers(){
-        shotPlayers.clear();
+    public void resetLatsDamagedPlayers(){
+        lastDamagedPlayers.clear();
+    }
+
+    public void newLatsDamagedPlayers(Player player){
+        lastDamagedPlayers.add(player);
+    }
+
+    public void addSelectedPlayer(Player player) {
+        selectedPlayers.push(player);
+    }
+
+    public void clearSelectedPlayers(){
+        selectedPlayers.clear();
     }
 
     public TurnStatus getStatus() {
@@ -205,16 +151,6 @@ public class Turn {
 
     public void setStatus(TurnStatus status) {
         this.status = status;
-    }
-
-    public void sendRoutineMessage(TurnRoutineMessage message) {
-        game.routineMessage(message);
-    }
-
-    public void endRoutine() {
-        //inviare le nuove azioni eseguibili
-        curRoutine=null;
-        availableActions(false);
     }
 
     public void setShiftableMatrix(MatrixHelper matrix) {
@@ -247,5 +183,13 @@ public class Turn {
 
     public void setCurEffect(Effect curEffect) {
         this.curEffect = curEffect;
+    }
+
+    public void setEffectRoutine(TurnRoutine routine) {
+        effectRoutine=routine;
+    }
+
+    public TurnRoutine getEffectRoutine() {
+        return effectRoutine;
     }
 }

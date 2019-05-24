@@ -6,12 +6,11 @@ import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 
-//observable--controller, observer--model STRING NEED TO BE CHANGED
 public abstract class View extends Observable<MatchAnswer> implements Observer<MatchMessage> {
 
     private Player player;
 
-    View(Player player) {
+    protected View(Player player) {
         this.player = player;
     }
 

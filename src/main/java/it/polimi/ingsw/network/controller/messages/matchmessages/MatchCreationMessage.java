@@ -13,7 +13,7 @@ public class MatchCreationMessage extends MatchMessage {
     private List<SimplePlayer> players;
 
     public MatchCreationMessage(String recipient, int turnNumber, List<Player> players){
-        super(recipient);
+        super(recipient,Constants.CREATION_MESSAGE);
         this.turnNumber=turnNumber;
         this.players=new ArrayList<>();
         for (Player p:players) this.players.add(new SimplePlayer(p));
@@ -27,8 +27,4 @@ public class MatchCreationMessage extends MatchMessage {
         return players;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.CREATION_MESSAGE;
-    }
 }

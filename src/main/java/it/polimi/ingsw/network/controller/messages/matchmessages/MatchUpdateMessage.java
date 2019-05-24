@@ -15,7 +15,7 @@ public class MatchUpdateMessage extends MatchMessage {
     private SimpleBoard gameBoard;
 
     public MatchUpdateMessage(List<Player> players, GameBoard gameBoard) {
-        super(null);
+        super(null,Constants.UPDATE_MESSAGE);
         this.players=new ArrayList<>();
         for (Player p:players) this.players.add(new SimplePlayer(p));
         this.gameBoard=new SimpleBoard(gameBoard);
@@ -29,8 +29,4 @@ public class MatchUpdateMessage extends MatchMessage {
         return gameBoard;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.UPDATE_MESSAGE;
-    }
 }

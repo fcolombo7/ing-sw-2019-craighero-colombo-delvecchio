@@ -9,16 +9,11 @@ public class BoardUpdateMessage extends MatchMessage {
     private SimpleBoard gameBoard;
 
     public BoardUpdateMessage(GameBoard gameBoard) {
-        super(null);
+        super(null, Constants.BOARD_UPDATE_MESSAGE);
         this.gameBoard=new SimpleBoard(gameBoard);
     }
 
     public SimpleBoard getGameBoard() {
         return gameBoard;
-    }
-
-    @Override
-    public String getRequest() {
-        return Constants.BOARD_UPDATE_MESSAGE;
     }
 }

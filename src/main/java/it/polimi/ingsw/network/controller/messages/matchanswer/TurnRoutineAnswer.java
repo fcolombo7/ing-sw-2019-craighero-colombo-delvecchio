@@ -6,14 +6,14 @@ public abstract class TurnRoutineAnswer extends MatchAnswer{
 
     private static final long serialVersionUID = -3621703218706286215L;
 
-    public TurnRoutineAnswer(String sender) {
-        super(sender);
+    private String routineAnswer;
+
+    public TurnRoutineAnswer(String sender, String routineAnswer) {
+        super(sender,Constants.TURN_ROUTINE_ANSWER);
+        this.routineAnswer=routineAnswer;
     }
 
-    @Override
-    public String getAnswer() {
-        return Constants.TURN_ROUTINE_ANSWER;
+    public String getRoutineAnswer(){
+        return routineAnswer;
     }
-
-    public abstract String getRoutineAnswer();
 }

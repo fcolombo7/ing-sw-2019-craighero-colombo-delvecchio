@@ -8,7 +8,7 @@ public class MoveAnswer extends MatchAnswer{
     private int[] newPosition;
     private String target;
     public MoveAnswer(String sender,String target, int[] newPosition) {
-        super(sender);
+        super(sender,Constants.EFFECT_MOVE_ANSWER);
         this.target=target;
         if(newPosition.length!=2)throw new IllegalArgumentException("Invalid position indexes.");
         this.newPosition=new int[]{newPosition[0],newPosition[1]};
@@ -22,8 +22,4 @@ public class MoveAnswer extends MatchAnswer{
         return new int[]{newPosition[0],newPosition[1]};
     }
 
-    @Override
-    public String getAnswer() {
-        return Constants.EFFECT_MOVE_ANSWER;
-    }
 }

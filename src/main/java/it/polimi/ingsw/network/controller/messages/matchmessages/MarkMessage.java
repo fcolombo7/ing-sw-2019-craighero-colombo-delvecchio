@@ -13,7 +13,7 @@ public class MarkMessage extends MatchMessage {
     private int value;
     private String player;
     public MarkMessage(String player, List<Player> selected, int value) {
-        super(null);
+        super(null, Constants.EFFECT_MARK_MESSAGE);
         this.player=player;
         this.selected=new ArrayList<>(selected.size());
         for(Player p:selected){
@@ -34,8 +34,4 @@ public class MarkMessage extends MatchMessage {
         return selected;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.EFFECT_MARK_MESSAGE;
-    }
 }

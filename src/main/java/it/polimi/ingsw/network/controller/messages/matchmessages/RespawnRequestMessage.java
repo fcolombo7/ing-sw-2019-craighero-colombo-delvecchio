@@ -13,7 +13,7 @@ public class RespawnRequestMessage extends MatchMessage {
     private List<Card> drawnPowerups;
 
     public RespawnRequestMessage(String recipient, List<Card> drawedPowerups) {
-        super(recipient);
+        super(recipient,Constants.RESPAWN_REQUEST_MESSAGE);
         this.drawnPowerups=new ArrayList<>(drawedPowerups);
     }
 
@@ -21,8 +21,4 @@ public class RespawnRequestMessage extends MatchMessage {
         return new ArrayList<>(drawnPowerups);
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.RESPAWN_REQUEST_MESSAGE;
-    }
 }

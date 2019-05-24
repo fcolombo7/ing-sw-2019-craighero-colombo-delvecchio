@@ -7,12 +7,46 @@ import java.util.List;
 
 public class TurnRoutineFactory {
     private Turn turn;
-    public TurnRoutineFactory(Turn turn){this.turn=turn;}
+    private MatrixHelper moveBeforeShoot;
+    public TurnRoutineFactory(Turn turn){
+        this.turn=turn;
+        moveBeforeShoot=null;
+    }
 
     public TurnRoutine getTurnRoutine(TurnRoutineType type){
         TurnRoutine routine=null;
-
+        switch (type){
+            case RELOAD:{
+                if(canReload()) routine= new ReloadingRoutine(turn);
+                break;
+            }
+            case POWERUP:{
+                if(canPowerup()) routine= new PowerupRoutine(turn,turn.getStatus(),false);
+                break;
+            }
+            case RUN:{
+                if(canRun()) routine=new RunningRoutine(turn, maxRunDistance());
+                break;
+            }
+            case SHOOT:{
+                if(canShoot()) routine=new ShootingRoutine(!turn.getGame().isFrenzy(),maxMoveDistanceBeforeShot()!=0?moveBeforeShoot:null,turn);
+                break;
+            }
+            default: break;
+        }
         return routine;
+    }
+
+    private boolean canPowerup(){
+        return turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus());
+    }
+
+    private boolean canReload() {
+        for(Weapon w:turn.getGame().getCurrentPlayer().getWeapons()){
+            if(turn.getGame().getCurrentPlayer().canReloadedWeapon(w))
+                return true;
+        }
+        return false;
     }
 
     private boolean canRun(){
@@ -43,7 +77,9 @@ public class TurnRoutineFactory {
 
     private boolean canShoot(){
         if(turn.getRoutineNumber()>0){
-            int maxDistance=maxShotDistance();
+            int row=turn.getGame().getGameBoard().getGameboardMatrix().getRowLength();
+            int col=turn.getGame().getGameBoard().getGameboardMatrix().getColLength();
+            int maxDistance= maxMoveDistanceBeforeShot();
             Player currPlayer=turn.getGame().getCurrentPlayer();
             int[]pos=currPlayer.getPosition().getBoardIndexes();
             List<Player> players = turn.getGame().getPlayers();
@@ -53,18 +89,19 @@ public class TurnRoutineFactory {
             boolean [][]mat=distanceMatrix.toBooleanMatrix();
 
             Square correctPosition=currPlayer.getPosition();
+            boolean[][] temp=new boolean[row][col];
             for(int i=0;i<distanceMatrix.getRowLength();i++){
                 for(int j=0;j<distanceMatrix.getColLength();j++){
                     if(mat[i][j]){
                         currPlayer.setPosition(turn.getGame().getGameBoard().getSquare(i,j));
-                        if(canWeaponShoot(!turn.getGame().isFrenzy())) {
-                            currPlayer.setPosition(correctPosition);
-                            return true;
-                        }
-                    }
+                        temp[i][j]=hasAvailableWeapon(!turn.getGame().isFrenzy());
+                    }else
+                        temp[i][j]=false;
                 }
             }
+            moveBeforeShoot=new MatrixHelper(temp);
             currPlayer.setPosition(correctPosition);
+            return !moveBeforeShoot.bitWiseAnd(turn.getGame().getGameBoard().getGameboardMatrix()).equals(MatrixHelper.allFalseMatrix(row,col));
         }
         return false;
     }
@@ -84,7 +121,16 @@ public class TurnRoutineFactory {
         }
     }
 
-    private int maxShotDistance() {
+    private int maxRunDistance(){
+        if(turn.getGame().isFrenzy()){
+            if(turn.getGame().getCurrentPlayer().isFirst()||turn.getGame().getPlayers().indexOf(turn.getGame().getLastPlayerBeforeFrenzy())>turn.getGame().getPlayers().indexOf(turn.getGame().getCurrentPlayer()))
+                return -1;
+            else
+                return 4;
+        }else return 3;
+    }
+
+    private int maxMoveDistanceBeforeShot() {
         if(turn.getGame().isFrenzy()){
             if(turn.getGame().getCurrentPlayer().isFirst()||turn.getGame().getPlayers().indexOf(turn.getGame().getLastPlayerBeforeFrenzy())>turn.getGame().getPlayers().indexOf(turn.getGame().getCurrentPlayer()))
                 return 2;
@@ -102,10 +148,10 @@ public class TurnRoutineFactory {
         }
     }
 
-    private boolean canWeaponShoot(boolean checkLoaded) {
+    private boolean hasAvailableWeapon(boolean checkLoaded) {
         for (Weapon w: turn.getGame().getCurrentPlayer().getWeapons()) {
             w.initNavigation();
-            List<Effect> usableEffects=w.getUsableEffect(checkLoaded,turn);
+            List<Effect> usableEffects=w.getUsableEffects(checkLoaded,turn);
             if(!usableEffects.isEmpty()) return true;
         }
         return false;

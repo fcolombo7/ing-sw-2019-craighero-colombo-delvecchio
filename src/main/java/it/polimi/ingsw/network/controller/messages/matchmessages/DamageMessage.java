@@ -13,7 +13,7 @@ public class DamageMessage extends MatchMessage {
     private int value;
     private String player;
     public DamageMessage(String  player, List<Player> selected, int value) {
-        super(null);
+        super(null, Constants.EFFECT_DAMAGE_MESSAGE);
         this.player=player;
         this.selected=new ArrayList<>(selected.size());
         for(Player p:selected){
@@ -34,8 +34,4 @@ public class DamageMessage extends MatchMessage {
         return selected;
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.EFFECT_DAMAGE_MESSAGE;
-    }
 }

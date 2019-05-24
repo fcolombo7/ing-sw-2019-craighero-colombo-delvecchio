@@ -55,6 +55,8 @@ public class Weapon extends Card{
      */
     private transient List<Effect> effects;
 
+    private transient boolean canStopRoutine;
+
     /**
      * This constructor instantiates a weapon calling the constructor of Card (Weapon extends Card)
      * @param id representing the id of the weapon
@@ -66,6 +68,7 @@ public class Weapon extends Card{
         loaded=false;
         this.effects=null;
         this.ammo=null;
+        canStopRoutine=false;
     }
 
     /**
@@ -374,7 +377,7 @@ public class Weapon extends Card{
      * @param checkLoaded
      * @return List<Effect> representing all the effect the player could perform using this weapon in the current turn
      */
-    public List<Effect> getUsableEffect(boolean checkLoaded, Turn turn){
+    public List<Effect> getUsableEffects(boolean checkLoaded, Turn turn){
         //Effects that use PrevConstraints if precede by another which use also PrevConstraints may be set as usable also when it can't
         if(!initialized) throw new CardNotInitializedException("Can't get the usable effects: the card is not initialized.");
         List<Color> startingAmmo=turn.getGame().getCurrentPlayer().getBoard().getAmmo();
@@ -388,15 +391,18 @@ public class Weapon extends Card{
         else if(!checkLoaded&&!loaded&&haveAmmo(startingAmmo,ammo))
             startingAmmo=updateAmmo(startingAmmo,ammo);
         ArrayList<TreeNode<Integer>> nodes;
+        canStopRoutine=false;
         if(currentNode==null) nodes=new ArrayList<>(effectOrder);
         else{
             nodes= new ArrayList<>(currentNode.getChildren());
             for(int i=0;i<nodes.size();i++){
                 if(nodes.get(i).getValue()==-1) {
+                    canStopRoutine=true;
                     nodes.remove(i);
                     break;
                 }
             }
+
         }
         return iterateEffects(nodes,startingAmmo,turn);
     }
@@ -425,7 +431,6 @@ public class Weapon extends Card{
                     }
                     if(end||!iterateEffects(children, updateAmmo(ammo,eCost),turn).isEmpty())
                         availableEffects.add(getEffect(node.getValue()));
-
                 }
             }
         }
@@ -473,6 +478,10 @@ public class Weapon extends Card{
             for(int i=0;i<len;i++) ret.remove(c);
         }
         return ret;
+    }
+
+    public boolean canStopCurrentRoutine(){
+        return canStopRoutine;
     }
 
     /**

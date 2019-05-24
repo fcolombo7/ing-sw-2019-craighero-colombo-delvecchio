@@ -7,14 +7,18 @@ public abstract class MatchAnswer implements Serializable {
     private static final long serialVersionUID = -6093987366223203426L;
 
     private String sender;
+    private String answer;
 
-    public MatchAnswer(String sender){
+    public MatchAnswer(String sender, String answer){
         this.sender=sender;
+        this.answer=answer;
     }
 
     public String getSender() {
         return sender;
     }
 
-    public abstract String getAnswer();
+    public String getAnswer(){
+        return answer;
+    }
 }

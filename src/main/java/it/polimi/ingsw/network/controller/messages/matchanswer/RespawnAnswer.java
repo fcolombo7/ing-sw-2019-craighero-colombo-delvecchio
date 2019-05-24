@@ -8,7 +8,7 @@ public class RespawnAnswer extends MatchAnswer {
 
     private Card powerup;
     public RespawnAnswer(String sender,Card powerup){
-        super(sender);
+        super(sender,Constants.RESPAWN_ANSWER);
         this.powerup=powerup;
     }
 
@@ -16,8 +16,4 @@ public class RespawnAnswer extends MatchAnswer {
         return powerup;
     }
 
-    @Override
-    public String getAnswer() {
-        return Constants.RESPAWN_ANSWER;
-    }
 }

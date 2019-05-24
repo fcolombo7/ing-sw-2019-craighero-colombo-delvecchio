@@ -10,7 +10,7 @@ public class TurnActionsMessage extends MatchMessage{
     private List<String> actions;
 
     public TurnActionsMessage(String recipient, List<String> actions) {
-        super(recipient);
+        super(recipient,Constants.TURN_AVAILABLE_ACTIONS);
         this.actions =new ArrayList<>(actions);
     }
 
@@ -18,8 +18,4 @@ public class TurnActionsMessage extends MatchMessage{
         return new ArrayList<>(actions);
     }
 
-    @Override
-    public String getRequest() {
-        return Constants.TURN_AVAILABLE_ACTIONS;
-    }
 }

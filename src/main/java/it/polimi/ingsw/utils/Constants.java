@@ -39,28 +39,41 @@ public class Constants {
     public static final String INVALID_ANSWER = "INVALID ANSWER RECEIVED";
     public static final String TURN_ROUTINE_MESSAGE ="ROUTINE MESSAGE";
     public static final String TURN_AVAILABLE_ACTIONS = "AVAILABLE ACTIONS";
-    public static final String AVAILABLE_POWERUPS_MESSAGE = "AVAILABLE POWERUPS";
     public static final String LOADABLE_WEAPONS_MESSAGE = "LOADABLE WEAPONS";
     public static final String EFFECT_MOVE_REQUEST_MESSAGE = "MOVE REQUEST";
     public static final String EFFECT_MARK_MESSAGE = "MARK MESSAGE";
-    public static final String EFFECT_DAMAGE_MESSAGE = "MARK MESSAGE";
-    public static final String SELECTED_POWERUP ="SELECTED POWERUP";
+    public static final String EFFECT_DAMAGE_MESSAGE = "DAMAGE MESSAGE";
+    public static final String RUN_COMPLETED = "RUN ROUTINE RESULT";
+    public static final String RELOAD_COMPLETED = "RELOAD RESULT";
+    public static final String USING_CARD_MESSAGE = "USING CARD";
+    public static final String MOVE_MESSAGE = "MOVE";
+    public static final String PAY_EFFECT_MESSAGE = "PAY EFFECT";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
-    public static final String RUN_ROUTINE_COMPLETED = "RUN ROUTINE RESULT";
+    public static final String AVAILABLE_WEAPONS_MESSAGE ="AVAILABLE WEAPONS";
+    public static final String AVAILABLE_EFFECT_MESSAGE = "AVAILABLE EFFECTS";
+    public static final String AVAILABLE_POWERUPS_MESSAGE = "AVAILABLE POWERUPS";
+    public static final String SELECTABLE_PLAYERS_MESSAGE = "SELECTABLE PLAYER";
+    public static final String CAN_STOP_ROUTINE = "CAN STOP ROUTINE";
+    public static final String CAN_USE_POWERUP = "CAN USE POWERUP";
 
     /*MODEL ANSWERS*/
     public static final String BOARD_SETTING_ANSWER="BOARD PREFERENCE";
     public static final String RESPAWN_ANSWER ="RESPAWN ACTION";
     public static final String TURN_ROUTINE_ANSWER ="ROUTINE ANSWER";
     public static final String ACTION_SELECTED = "ACTION SELECTED";
-    public static final String POWERUP_SELECTED = "POWERUP SELECTED";
-    public static final String LOADABLE_WEAPON_SELECTED = "LOADABLE WEAPON SELECTED";
     public static final String EFFECT_MOVE_ANSWER = "MOVE ANSWER";
 
     /*ROUTINE ANSWERS*/
     public static final String RUN_ROUTINE_ANSWER ="RUN ROUTINE ANSWER";
+    public static final String WEAPON_ANSWER = "SELECTED WEAPON";
+    public static final String POWERUP_ANSWER = "POWERUP SELECTED";
+    public static final String LOADABLE_WEAPON_SELECTED = "LOADABLE WEAPON SELECTED";
+    public static final String EFFECT_ANSWER = "SELECTED EFFECT";
+    public static final String SELECTED_PLAYERS_ANSWER = "SELECTED PLAYERS";
+    public static final String STOP_ROUTINE_ANSWER = "STOP ROUTINE ANSWER";
+    public static final String USE_POWERUP_ANSWER = "USE POWERUP ANSWER";
 
     /*ROOM MESSAGE*/
     public static final String PLAYER_EXIT ="PLAYER EXIT";

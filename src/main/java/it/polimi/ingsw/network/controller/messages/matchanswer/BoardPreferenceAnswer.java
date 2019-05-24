@@ -6,7 +6,7 @@ public class BoardPreferenceAnswer extends MatchAnswer {
     int boardReference;
 
     public BoardPreferenceAnswer(String sender, int boardReference){
-        super(sender);
+        super(sender,Constants.BOARD_SETTING_ANSWER);
         this.boardReference=boardReference;
     }
 
@@ -14,8 +14,4 @@ public class BoardPreferenceAnswer extends MatchAnswer {
         return boardReference;
     }
 
-    @Override
-    public String getAnswer() {
-        return Constants.BOARD_SETTING_ANSWER;
-    }
 }

@@ -7,7 +7,7 @@ public class ActionSelectedAnswer extends MatchAnswer{
 
     private String selection;
     public ActionSelectedAnswer(String sender, String selection) {
-        super(sender);
+        super(sender,Constants.ACTION_SELECTED);
         this.selection=selection;
     }
 
@@ -15,8 +15,4 @@ public class ActionSelectedAnswer extends MatchAnswer{
         return selection;
     }
 
-    @Override
-    public String getAnswer() {
-        return Constants.ACTION_SELECTED;
-    }
 }
