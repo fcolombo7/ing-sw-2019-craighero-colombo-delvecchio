@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GUIexample;
+package it.polimi.ingsw.GUI;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;

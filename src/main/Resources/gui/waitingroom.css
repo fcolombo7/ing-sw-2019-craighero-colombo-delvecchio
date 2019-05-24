@@ -21,3 +21,11 @@
     -fx-border-color: red;
 
 }
+
+.refr{
+    -fx-font-size: 15;
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: green;
+}
