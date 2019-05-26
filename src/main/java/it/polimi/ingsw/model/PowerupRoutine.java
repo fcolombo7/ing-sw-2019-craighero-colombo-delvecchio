@@ -1,21 +1,22 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.SelectedPlayersAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.SelectedPowerupAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.TurnRoutineAnswer;
-import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
-import it.polimi.ingsw.network.controller.messages.matchmessages.UsingCardMessage;
+import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.AvailablePowerupsMessage;
-import it.polimi.ingsw.network.controller.messages.matchmessages.InvalidAnswerMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.SelectablePlayersMessage;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.polimi.ingsw.model.enums.Color.ANY;
 
 public class PowerupRoutine implements TurnRoutine {
     private Turn turn;
@@ -35,10 +36,24 @@ public class PowerupRoutine implements TurnRoutine {
         List<Player> other=turn.getGame().getPlayers();
         other.remove(turn.getGame().getCurrentPlayer());
         for (Powerup p:turn.getGame().getCurrentPlayer().getPowerups()) {
-            if(p.getTiming()==timing&&p.getEffect().canUse(turn))
+            if(p.getTiming()==timing&&p.getEffect().canUse(turn)&&canPay(p))
                 usablePowerups.add(new Card(p));
         }
         turn.getGame().notify(new AvailablePowerupsMessage(turn.getGame().getCurrentPlayer().getNickname(),usablePowerups));
+    }
+
+    private boolean canPay(Powerup p) {
+        List<Color> ammo= new ArrayList<>(turn.getGame().getCurrentPlayer().getBoard().getAmmo());
+        int count=0;
+        for (Color color:p.getEffect().getCost()){
+            if(color==ANY)
+                count++;
+            else if(ammo.contains(color))
+                ammo.remove(color);
+            else
+                return false;
+        }
+        return (count<=ammo.size());
     }
 
     @Override
@@ -81,9 +96,9 @@ public class PowerupRoutine implements TurnRoutine {
                 if(powerup.getTiming()==timing&&powerup.getEffect().canUse(turn)){
                     this.selPowerup =powerup;
                     turn.setCurEffect(powerup.getEffect());
-
+                    effect=powerup.getEffect();
+                    payEffectCost();
                     if(powerup.getEffect().getTarget().getType()== TargetType.ME){
-                        effect=turn.getCurEffect();
                         turn.getGame().notify(new UsingCardMessage(selPowerup));
                         List<List<String>>selected=new ArrayList<>();
                         selected.add(new ArrayList<>());
@@ -105,6 +120,40 @@ public class PowerupRoutine implements TurnRoutine {
         Logger.log("Invalid powerup received");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Current player doesn't have the selected powerup")));
 
+    }
+
+    private void payEffectCost() {
+        if(!effect.getCost().isEmpty()){
+            List<Card> discardedPowerups=new ArrayList<>();
+            List<Color> usedAmmo=new ArrayList<>();
+            int count=0;
+            for(Color color:effect.getCost()){
+                if(color==Color.ANY) count++;
+                else{
+                    if(turn.getGame().getCurrentPlayer().getBoard().getAmmo().contains(color)) {
+                        turn.getGame().getCurrentPlayer().getBoard().removeAmmo(color);
+                        usedAmmo.add(color);
+                    }
+                    else {
+                        for(Powerup p: turn.getGame().getCurrentPlayer().getPowerups()) {
+                            if (p.getColor() == color) {
+                                discardedPowerups.add(new Card(p));
+                                turn.getGame().getCurrentPlayer().popPowerup(p);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            while(count>0){
+                Color color=turn.getGame().getCurrentPlayer().getBoard().getAmmo().get(0);
+                usedAmmo.add(color);
+                turn.getGame().getCurrentPlayer().getBoard().removeAmmo(color);
+                count--;
+            }
+            MatchMessage message=new PayEffectMessage(turn.getGame().getCurrentPlayer(),usedAmmo, discardedPowerups);
+            turn.getGame().notify(message);
+        }
     }
 
     @Override
@@ -133,7 +182,10 @@ public class PowerupRoutine implements TurnRoutine {
         if(effect==null){
             Logger.log("NO EFFECT PERFORMED");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"NO EFFECT PERFORMED")));
-        }else
+        }else {
+            turn.getGame().getCurrentPlayer().popPowerup(selPowerup);
+            turn.getGame().notify(new DiscardedPowerupMessage(turn.getGame().getCurrentPlayer(),selPowerup));
             turn.endRoutine();
+        }
     }
 }

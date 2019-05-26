@@ -77,7 +77,7 @@ public class Player {
         this.weapons=new ArrayList<>(3);
         this.powerups=new ArrayList<>(3);
         this.position=null;
-        this.board=new PlayerBoard();
+        this.board=new PlayerBoard(this);
     }
 
     /**

@@ -58,7 +58,7 @@ public class TestEffect {
             String msg="Effect {\n" +
                     "ref_id: 1\n" +
                     "name: nome\n" +
-                    "cost: none\n" +
+                    "cost: RED, BLUE, YELLOW\n" +
                     "Target: {type: PLAYER, minNumber: 1, maxNumber: 1, minPlayerIn: 0, maxPlayerIn: 0, prevConstraints: {none}\n" +
                     "requirements: {VISIBLE: TRUE}\n" +
                     "actions: {DAMAGE: 2, MARK: 1}\n" +
@@ -74,6 +74,50 @@ public class TestEffect {
         } catch (IOException e) {
             e.printStackTrace();
             fail("Unexpected IOException has been thrown");
+        }
+    }
+
+    @Test
+    public void CorrectCostEffect(){
+        try{
+            Weapon weapon= new Weapon("id","distruttore", "src/main/Resources/weapons/distruttore.xml");
+            weapon.init();
+            Effect effect=weapon.getEffect(2);
+            String msg="Effect {\n" +
+                    "ref_id: 2\n" +
+                    "name: SECONDO AGGANCIO\n" +
+                    "cost: RED\n" +
+                    "Target: {type: PLAYER, minNumber: 1, maxNumber: 1, minPlayerIn: 1, maxPlayerIn: 1, prevConstraints: {0}}\n" +
+                    "requirements: {VISIBLE: TRUE}\n" +
+                    "actions: {MARK: 1}\n" +
+                    "extra: none\n" +
+                    "}";
+            assertEquals(msg,effect.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Unexpected Exception has been thrown");
+        }
+    }
+
+    @Test
+    public void CorrectEmptyCostEffect(){
+        try{
+            Weapon weapon= new Weapon("id","distruttore", "src/main/Resources/weapons/distruttore.xml");
+            weapon.init();
+            Effect effect=weapon.getEffect(1);
+            String msg="Effect {\n" +
+                    "ref_id: 1\n" +
+                    "name: BASE\n" +
+                    "cost: none\n" +
+                    "Target: {type: PLAYER, minNumber: 1, maxNumber: 1, minPlayerIn: 1, maxPlayerIn: 1, prevConstraints: {none}\n" +
+                    "requirements: {VISIBLE: TRUE}\n" +
+                    "actions: {DAMAGE: 2, MARK: 1}\n" +
+                    "extra: none\n" +
+                    "}";
+            assertEquals(msg,effect.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Unexpected Exception has been thrown");
         }
     }
 
@@ -564,11 +608,11 @@ public class TestEffect {
 
         game.register(view);
 
+        game.setGameBoard(1);
         p1.setStatus(PlayerStatus.PLAYING);
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         p4.setStatus(PlayerStatus.WAITING);
-        game.setGameBoard(1);
         p1.setPosition(game.getGameBoard().getSquare(1,0));
         p2.setPosition(game.getGameBoard().getSquare(1,1));
         p4.setPosition(game.getGameBoard().getSquare(1,1));

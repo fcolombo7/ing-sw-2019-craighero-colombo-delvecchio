@@ -68,7 +68,8 @@ public class ShootingRoutine implements TurnRoutine {
 
     private void onUsePowerupAnswer(UsePowerupAnswer answer) {
         if(answer.wishUseIt()) {
-            TurnRoutine routine=new PowerupRoutine(turn,turn.getStatus(),true);
+            TurnRoutineFactory factory= new TurnRoutineFactory(turn);
+            TurnRoutine routine=factory.getTurnRoutine(TurnRoutineType.POWERUP);
             routine.start();
         }
         else
@@ -278,10 +279,13 @@ public class ShootingRoutine implements TurnRoutine {
     public void onEffectPerformed() {
         curAvailableEffects=null;
         selWeapon.setNavigationNode(selEffect); //update the current node in the weapon navigation tree
-        if(turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus())){
+
+        TurnRoutineFactory factory= new TurnRoutineFactory(turn);
+        if(factory.getTurnRoutine(TurnRoutineType.POWERUP)!=null) {
             turn.getGame().notify(new CanUsePowerupMessage(turn.getGame().getCurrentPlayer().getNickname()));
             return;
         }
+
         handleCounterAttack();
     }
 }

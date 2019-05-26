@@ -101,18 +101,12 @@ public class Effect {
      * @param item representing the XML node to read
      */
     private void setCost(Node item) {
-        NodeList ammoNodeList=item.getChildNodes();
-        Node ammoNode=null;
-        int count=0;
-        while(ammoNode==null&&count<ammoNodeList.getLength()){
-            if(ammoNodeList.item(count).getNodeType()!=Node.TEXT_NODE) ammoNode=ammoNodeList.item(count);
-            count++;
-        }
+        Node ammoNode=item.getFirstChild();
         if(ammoNode==null){
             cost=new ArrayList<>();
             return;
         }
-        String ammoStr=ammoNode.getFirstChild().getNodeValue();
+        String ammoStr=ammoNode.getNodeValue();
         cost=new ArrayList<>(ammoStr.length());
         for(int i=0;i<ammoStr.length();i++){
             char car=ammoStr.charAt(i);
@@ -120,6 +114,7 @@ public class Effect {
                 case 'R': cost.add(Color.RED); break;
                 case 'B': cost.add(Color.BLUE); break;
                 case 'Y': cost.add(Color.YELLOW); break;
+                case '1': cost.add(Color.ANY); break;
                 default: throw new IllegalArgumentException("Effect '"+name+"' contains an invalid ammo (color) in cost element.");
             }
         }
@@ -738,14 +733,16 @@ public class Effect {
                         p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),currAct.getValue());
                         turn.addSelectedPlayer(p);
                         turn.newLatsDamagedPlayers(p);
+                        int count = p.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
+                        checkPlayerStatus(p);
+                        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),p,currAct.getValue(),count));
                     }
-                    turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),selectedPlayer,currAct.getValue()));
                 }
                 else if(currAct.getActionType()==ActionType.MARK){
                     for(Player p:selectedPlayer){
                         p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),currAct.getValue());
+                        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), p, currAct.getValue()));
                     }
-                    turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selectedPlayer, currAct.getValue()));
                 }
             }
             handleExtra(turn);
@@ -905,61 +902,54 @@ public class Effect {
     }
 
     private static void repeatMarkToPlayer(Turn turn, String value, Square position) {
-        List<Player> selected = new ArrayList<>();
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
-                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
+                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), p, Integer.parseInt(value)));
                 return;
             }
         }
     }
 
     private static void repeatDamageToPlayer(Turn turn, String value, Square position) {
-        List<Player> selected = new ArrayList<>();
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addDamage(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
                 turn.addSelectedPlayer(p);
-                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),selected,Integer.parseInt(value)));
+                int count = p.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
+                checkPlayerStatus(p);
+                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),p,Integer.parseInt(value),count));
                 return;
             }
         }
     }
 
     private static void repeatMarkInSquare(Turn turn, String value, Square position) {
-        List<Player> selected = new ArrayList<>();
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
+                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), p, Integer.parseInt(value)));
             }
         }
-        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
     }
 
     private static void repeatDamageInSquare(Turn turn, String value, Square position) {
-        List<Player> selected = new ArrayList<>();
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addDamage(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
                 turn.newLatsDamagedPlayers(p);
+                int count = p.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
+                checkPlayerStatus(p);
+                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),p,Integer.parseInt(value),count));
             }
         }
-        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),selected,Integer.parseInt(value)));
     }
 
     private static void markSquareExtra(Turn turn, String value) {
         Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square position=last.getPosition();
-        List<Player> selected= new ArrayList<>();
-        for(Player p:turn.getGame().getPlayers()){
-            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
-                selected.add(p);
-                p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),Integer.parseInt(value));
-            }
-        }
-        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
+        repeatMarkInSquare(turn,value,position);
         Logger.log("Mark all the player in the last square due to Extra");
     }
 
@@ -967,15 +957,7 @@ public class Effect {
         Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square position=last.getPosition();
-        List<Player> selected= new ArrayList<>();
-        for(Player p:turn.getGame().getPlayers()){
-            if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
-                selected.add(p);
-                p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),Integer.parseInt(value));
-                turn.newLatsDamagedPlayers(p);
-            }
-        }
-        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(), selected, Integer.parseInt(value)));
+        repeatDamageInSquare(turn,value,position);
         Logger.log("Damage all the player in the last square due to Extra");
     }
 
@@ -986,6 +968,12 @@ public class Effect {
         player.setPosition(position);
         turn.getGame().notify(new MoveMessage(turn.getGame().getCurrentPlayer()));
         Logger.log("Moving the last shot player due to Extra");
+    }
+
+    private static void checkPlayerStatus(Player p) {
+        if (p.getStatus()==PlayerStatus.DEAD){
+            p.setPosition(null);
+        }
     }
 
     /**
@@ -1040,9 +1028,9 @@ public class Effect {
         msg.append("}");
         return msg.toString();
     }
-
     @FunctionalInterface
     private interface Requirement {
+
         MatrixHelper checkRequirement(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix);
     }
 

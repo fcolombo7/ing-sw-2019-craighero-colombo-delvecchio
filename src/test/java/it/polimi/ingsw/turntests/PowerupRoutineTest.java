@@ -36,10 +36,6 @@ public class PowerupRoutineTest {
 
         game.register(view);
 
-        p1.setStatus(PlayerStatus.PLAYING);
-        p2.setStatus(PlayerStatus.WAITING);
-        p3.setStatus(PlayerStatus.WAITING);
-        p4.setStatus(PlayerStatus.WAITING);
         game.setGameBoard(1);
         p1.setPosition(game.getGameBoard().getSquare(1,1));
         p2.setPosition(game.getGameBoard().getSquare(1,1));
@@ -50,6 +46,9 @@ public class PowerupRoutineTest {
         Logger.log(p1.toString());
         Logger.log("AMMO: "+p1.getBoard().getAmmo().toString());
 
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
 
         Powerup powerup= new Powerup(new Card("id","nome","src/main/Resources/powerups/teletrasportor.xml"));
@@ -73,10 +72,12 @@ public class PowerupRoutineTest {
         assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
 
         turn.getCurEffect().handleMoveResponse(turn,new MoveAnswer(p1.getNickname(),p2.getNickname(), new int[]{1,2}));
-        assertThat(collector.peek().getRequest(), is(Constants.INVALID_ANSWER));
+        assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
 
         turn.getCurEffect().handleMoveResponse(turn,new MoveAnswer(p1.getNickname(),p1.getNickname(), new int[]{1,2}));
-        assertThat(collector.peek().getRequest(), is(Constants.MOVE_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.DISCARDED_POWERUP_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.MOVE_MESSAGE));
 
         Logger.log("Test Finished");
     }

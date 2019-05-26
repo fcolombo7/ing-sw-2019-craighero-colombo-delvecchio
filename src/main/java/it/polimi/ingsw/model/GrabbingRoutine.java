@@ -62,6 +62,7 @@ public class GrabbingRoutine implements TurnRoutine {
                 ((WeaponSquare)turn.getGame().getCurrentPlayer().getPosition()).addWeapon(w);
                 turn.getGame().notify(new GrabbedWeaponMessage(turn.getGame().getCurrentPlayer(),grabbedWeapon));
                 turn.getGame().notify(new BoardUpdateMessage(turn.getGame().getGameBoard()));
+                turn.endRoutine();
                 return;
             }
         }

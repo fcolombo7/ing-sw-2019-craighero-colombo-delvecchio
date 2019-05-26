@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.PlayerStatus;
 
 import java.util.*;
 import java.util.stream.*;
@@ -38,9 +39,15 @@ public class PlayerBoard {
     private List<Player> marks;
 
     /**
+     * This attribute contains the owner of the player board
+     */
+    private Player owner;
+
+    /**
      * This constructor initializes the player board
      */
-    public PlayerBoard(){
+    public PlayerBoard(Player owner){
+        this.owner=owner;
         this.ammo =new ArrayList<>();
         ammo.add(RED);
         ammo.add(YELLOW);
@@ -150,6 +157,10 @@ public class PlayerBoard {
         int i;
         for(i=0; i<count && damages.size()<12; i++)
             damages.add(player);
+        if(damages.size()==11)
+            owner.setStatus(PlayerStatus.ALMOST_DEAD);
+        if(damages.size()==12)
+            owner.setStatus(PlayerStatus.DEAD);
     }
 
     /**
@@ -184,6 +195,21 @@ public class PlayerBoard {
         sortedMap.putAll(counterDamage);
 
         return new ArrayList<>(sortedMap.keySet());
+    }
+
+    /**
+     * This method convert all the mark received from player in damages and returns the number of marks converted
+     * @param player representing the player which has shot
+     * @return integere representing the number of marks converted
+     */
+    public int convertMarks(Player player) {
+        int count=getPlayerMark(player);
+        int temp=count;
+        while(temp>0) {
+            removeMark(player);
+            temp--;
+        }addDamage(player,count);
+        return count;
     }
 
     /**
@@ -233,13 +259,15 @@ public class PlayerBoard {
     }
 
     /**
-     * This method removes all the marks landed by the passed player
-     * @param player representing the player whose marks have to be removed
+     * This method removes a mark landed by the passed player
+     * @param player representing the player whose mark has to be removed
      */
     public void removeMark(Player player){
         for (Player p: marks) {
-            if(p.equals(player))
+            if(p.equals(player)) {
                 marks.remove(p);
+                return;
+            }
         }
     }
 
@@ -248,7 +276,7 @@ public class PlayerBoard {
      * @param player representing the player whose marks have to be counted
      * @return int representing the amount of marks landed by the passed player
      */
-    public int getPlayerMark(Player player){
+    private int getPlayerMark(Player player){
         return Collections.frequency(marks, player);
     }
 
@@ -259,8 +287,40 @@ public class PlayerBoard {
         this.damages.clear();
     }
 
+    /**
+     * This method return the available values used to increase the players score when the player (this player) is dead
+     * @return List of integers representing the available values used to increase the players score
+     */
+    public List<Integer> getBoardScoreValues(){
+        List<Integer> values=new ArrayList<>(6);
+        if(!isSwitched()) {
+            values.add(8);
+            values.add(6);
+            values.add(4);
+            values.add(2);
+            values.add(1);
+            values.add(1);
+
+            int count = deathCounter;
+            while (count > 0) {
+                values.remove(0);
+                values.add(1);
+                count--;
+            }
+        }
+        else {
+            values.add(2);
+            values.add(1);
+            values.add(1);
+            values.add(1);
+        }
+
+        return values;
+    }
+
 
     public PlayerBoard(PlayerBoard pBoard) {
+        owner=pBoard.owner;
         ammo =new ArrayList<>(pBoard.ammo);
         damages=new ArrayList<>(pBoard.damages);
         marks=new ArrayList<>(pBoard.marks);

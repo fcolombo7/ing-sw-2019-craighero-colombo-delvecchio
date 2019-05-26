@@ -35,7 +35,7 @@ public class Constants {
     public static final String BOARD_UPDATE_MESSAGE ="BOARD CREATED";
     public static final String UPDATE_MESSAGE="MATCH UPDATE";
     public static final String RESPAWN_REQUEST_MESSAGE ="RESPAWN REQUEST";
-    public static final String RESPAWN_COMPLETED_MESSAGE ="RESPAWN REQUEST";
+    public static final String RESPAWN_COMPLETED_MESSAGE ="RESPAWN COMPLETE";
     public static final String INVALID_ANSWER = "INVALID ANSWER RECEIVED";
     public static final String TURN_ROUTINE_MESSAGE ="ROUTINE MESSAGE";
     public static final String TURN_AVAILABLE_ACTIONS = "AVAILABLE ACTIONS";
@@ -50,6 +50,9 @@ public class Constants {
     public static final String PAY_EFFECT_MESSAGE = "PAY EFFECT";
     public static final String GRABBED_TILE_MESSAGE = "GRABBED AMMO TILE";
     public static final String GRABBED_WEAPON_MESSAGE = "GRABBED WEAPON";
+    public static final String DISCARDED_POWERUP_MESSAGE = "DISCARDED POWERUP";
+    public static final String TURN_CREATION_MESSAGE = "NEW TURN STARTED";
+    public static final String TURN_END_MESSAGE = "TURN END MESSAGE";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
@@ -69,6 +72,8 @@ public class Constants {
     public static final String TURN_ROUTINE_ANSWER ="ROUTINE ANSWER";
     public static final String ACTION_SELECTED = "ACTION SELECTED";
     public static final String EFFECT_MOVE_ANSWER = "MOVE ANSWER";
+    public static final String TURN_END_ANSWER = "TURN END ANSWER";
+
 
     /*ROUTINE ANSWERS*/
     public static final String RUN_ROUTINE_ANSWER ="RUN ROUTINE ANSWER";

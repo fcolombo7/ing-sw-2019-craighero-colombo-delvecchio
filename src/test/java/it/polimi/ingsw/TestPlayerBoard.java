@@ -17,7 +17,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void firstGetDamageTest(){
-        PlayerBoard pb = new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         Player p1 = new Player("a", "aaa", true);
         Player p2 = new Player("b", "bbb", false);
         Player p4 = new Player("d", "ddd", false);
@@ -38,7 +38,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void secondGetDamageTest(){
-        PlayerBoard pb = new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         Player p1 = new Player("a", "aaa", true);
         Player p2 = new Player("b", "bbb", false);
         Player p3 = new Player("c", "ccc", false);
@@ -64,7 +64,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void thirdGetDamageTest(){
-        PlayerBoard pb = new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         Player p1 = new Player("a", "aaa", true);
         Player p2 = new Player("b", "bbb", false);
         Player p3 = new Player("c", "ccc", false);
@@ -88,7 +88,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void addingMoreThan12DamagesTest(){
-        PlayerBoard pb = new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         Player p1 = new Player("a", "aaa", true);
         Player p2 = new Player("b", "bbb", false);
         pb.addDamage(p2, 25);
@@ -106,7 +106,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void addingFourEqualColorAmmoTest(){
-        PlayerBoard pb = new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         List<Color> ammo = new ArrayList<>();
         List<Color> ammoRes = new ArrayList<>();
 
@@ -133,7 +133,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void removeMissingMarkTest(){
-        PlayerBoard pb =new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         Player p1 = new Player("a", "aaa", true);
         Player p2 = new Player("b", "bbb", false);
 
@@ -157,7 +157,7 @@ public class TestPlayerBoard {
      */
     @Test
     public void removeMissingAmmoTest(){
-        PlayerBoard pb =new PlayerBoard();
+        PlayerBoard pb = new PlayerBoard(new Player("nick","motto",true));
         List<Color> ammoRmv = new ArrayList<>();
         List<Color> ammoRes = new ArrayList<>();
 

@@ -46,6 +46,7 @@ public class Game extends Observable<MatchMessage> {
     private int skullNumber;
 
     private boolean frenzyMode = false;
+    private boolean gameEnded = false;
 
     private Player lastPlayerBeforeFrenzy =null;
 
@@ -114,15 +115,7 @@ public class Game extends Observable<MatchMessage> {
     }
 
     private void setSkullNumber(Node node){
-        NodeList nodeList = node.getChildNodes();
-        for(int i=0; i<nodeList.getLength();i++){
-            Node sNode = nodeList.item(i);
-            if(sNode.getNodeType()!=Node.TEXT_NODE){
-                skullNumber=Integer.parseInt(sNode.getFirstChild().getNodeValue());
-                return;
-            }
-        }
-
+        skullNumber=Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
     private void buildAmmoDeck(List<AmmoTile> deck, Node ammo){
@@ -230,6 +223,8 @@ public class Game extends Observable<MatchMessage> {
         return gameBoard;
     }
 
+    public int getSkullNumber(){return skullNumber;}
+
     public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
@@ -244,7 +239,7 @@ public class Game extends Observable<MatchMessage> {
             case 4:
                 this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullNumber,mapNumber);
                 break;
-            default: throw new IllegalArgumentException("Wrong map number chosen: game board not initialized");
+            default: throw new IllegalArgumentException("An invalid map number has been chosen: game board not initialized");
         }
         fillGameboard();
         BoardUpdateMessage createdMessage=new BoardUpdateMessage(new GameBoard(gameBoard));
@@ -253,7 +248,7 @@ public class Game extends Observable<MatchMessage> {
         for (Player p:players) {
             if(p.isFirst()) {
                 currentPlayer=p;
-                return;
+                break;
             }
         }
     }
@@ -323,6 +318,10 @@ public class Game extends Observable<MatchMessage> {
         return lastPlayerBeforeFrenzy;
     }
 
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -366,7 +365,13 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    public Turn getCurrentTurn(){
+        return currentTurn;
+    }
+
     public void createTurn() {
+        if(gameEnded)
+            throw new IllegalStateException("Game is ended");
         if (currentPlayer == null)
             throw new IllegalStateException("Cannot create turn without having instantiated the Gameboard.");
         if (currentPlayer.getStatus() == PlayerStatus.FIRST_SPAWN)
@@ -375,11 +380,79 @@ public class Game extends Observable<MatchMessage> {
             throw new IllegalStateException("Cannot create turn.[Illegal player status: " + currentPlayer.getStatus().name() + "]");
         if (currentTurn!=null&&currentTurn.getStatus()!= TurnStatus.END)
             throw new IllegalStateException("Cannot create turn. [Another one is still being played]");
-        //TODO create turn
+        notify(new TurnCreationMessage(currentPlayer.getNickname()));
+        currentTurn= new Turn(this);
     }
 
     public void endTurn() {
+        if(currentTurn==null)  throw new IllegalStateException("No turn is playing now.");
+        if(currentTurn.getStatus()!= TurnStatus.END) throw new IllegalStateException("TurnStatus is not END");
+        fillGameboard();
+        //SISTEMO I MORTI
+        int deathNumber=0;
+        for(Player p:players){
+            if(p.getStatus()==PlayerStatus.ALMOST_DEAD||p.getStatus()==PlayerStatus.DEAD) {
+                cashDamages(p);
+                deathNumber++;
+                if(isFrenzy()&&!p.getBoard().isSwitched())
+                    p.getBoard().switchBoard();
+            }
+        }
+        //double kill
+        if(deathNumber>=2){
+            currentPlayer.updateScore(1);
+        }
+        boolean frenzyInTurn=false;
 
+        if(!isFrenzy()&&gameBoard.getKillshotTrack().size()>=skullNumber){
+            enableFrenzy();
+            frenzyInTurn=true;
+        }
+        if(!frenzyInTurn&&lastPlayerBeforeFrenzy==currentPlayer){
+            gameEnded=true;
+        }else
+            notify(new MatchUpdateMessage(players,gameBoard,frenzyMode));
+    }
+
+    //TODO
+    private void endGame() {
+    }
+
+    public void forceEndGame(){
+        gameEnded=true;
+    }
+
+    private void cashDamages(Player player) {
+        List<Integer> values=player.getBoard().getBoardScoreValues();
+        List<Player> selectedPlayers=player.getBoard().getDamage();
+        List<Player> healthBar=player.getBoard().getHealthBar();
+        for(Player p:selectedPlayers){
+            p.updateScore(values.get(0));
+            values.remove(0);
+        }
+        //first blood?
+        if(!player.getBoard().isSwitched())
+            healthBar.get(0).updateScore(1);
+
+        player.getBoard().incDeathCounter();
+        gameBoard.updateTrack(healthBar.get(10),healthBar.size()>=12);
+        //overkill
+        if(healthBar.size()>=12){
+            healthBar.get(11).getBoard().addMarks(player,1);
+        }
+        if(player.getStatus()==PlayerStatus.ALMOST_DEAD) {
+            player.setStatus(PlayerStatus.DEAD);
+            player.setPosition(null);
+        }
+        player.getBoard().clearDamage();
+    }
+
+    private void enableFrenzy() {
+        setFrenzy(currentPlayer);
+        for(Player p:players){
+            if(p.getBoard().getHealthBar().isEmpty())
+                p.getBoard().switchBoard();
+        }
     }
 
     public void respawnPlayerRequest(Player player, boolean firstSpawn) {
@@ -410,6 +483,7 @@ public class Game extends Observable<MatchMessage> {
                     if(powerup.getColor().name().equalsIgnoreCase(square.getRoomColor().name()))
                         player.setPosition(square);
                 }
+
                 MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup);
                 notify(message);
                 return;
@@ -418,5 +492,6 @@ public class Game extends Observable<MatchMessage> {
         Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: missing powerup]");
         MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
         notify(message);
+        throw new IllegalArgumentException("MISSING POWERUP");
     }
 }

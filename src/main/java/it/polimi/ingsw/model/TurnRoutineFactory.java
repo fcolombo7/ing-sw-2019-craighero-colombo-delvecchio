@@ -1,9 +1,13 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.utils.MatrixHelper;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static it.polimi.ingsw.model.enums.Color.ANY;
 
 public class TurnRoutineFactory {
     private Turn turn;
@@ -38,7 +42,25 @@ public class TurnRoutineFactory {
     }
 
     private boolean canPowerup(){
-        return turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus());
+        if(!turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus())) return false;
+        for(Powerup p:turn.getGame().getCurrentPlayer().getPowerups()){
+            if(p.getTiming()==turn.getStatus()&&(p.getEffect().getCost().isEmpty()||haveAmmo(p.getEffect()))) return true;
+        }
+        return false;
+    }
+
+    private boolean haveAmmo(Effect effect) {
+        List<Color> ammo= new ArrayList<>(turn.getGame().getCurrentPlayer().getBoard().getAmmo());
+        int count=0;
+        for (Color color:effect.getCost()){
+            if(color==ANY)
+                count++;
+            else if(ammo.contains(color))
+                ammo.remove(color);
+            else
+                return false;
+        }
+        return (count<=ammo.size());
     }
 
     private boolean canReload() {

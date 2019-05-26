@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
@@ -25,6 +26,7 @@ public class Turn {
 
     public Turn(Game game){
         this.game=game;
+        game.getCurrentPlayer().setStatus(PlayerStatus.PLAYING);
         if(game.isFrenzy()){
             if(game.getCurrentPlayer().isFirst()||game.getPlayers().indexOf(game.getLastPlayerBeforeFrenzy())>game.getPlayers().indexOf(game.getCurrentPlayer()))
                 routineNumber=1;
@@ -43,7 +45,12 @@ public class Turn {
 
     public void selectAction(ActionSelectedAnswer answer){
         try{
-            createRoutine(answer.getSelection());
+            if(answer.getSelection().equals("END")) {
+                status=TurnStatus.END;
+                game.notify(new TurnEndMessage(game.getCurrentPlayer().getNickname()));
+            }
+            else
+                createRoutine(answer.getSelection());
         }catch(IllegalArgumentException ex){
             Logger.log("Invalid action received");
             game.notify((new InvalidAnswerMessage(game.getCurrentPlayer().getNickname(),"Invalid action received")));
@@ -62,9 +69,11 @@ public class Turn {
         }
         if(actions.isEmpty()){
             status=TurnStatus.END;
-            game.endTurn();
-        }else
-            game.notify(new TurnActionsMessage(game.getCurrentPlayer().getNickname(),actions));
+            game.notify(new TurnEndMessage(game.getCurrentPlayer().getNickname()));
+        }else {
+            actions.add("END");
+            game.notify(new TurnActionsMessage(game.getCurrentPlayer().getNickname(), actions));
+        }
     }
 
     private void createRoutine(String type){
@@ -94,7 +103,7 @@ public class Turn {
         return null;
     }
 
-    public void endRoutine() {
+    void endRoutine() {
         status=TurnStatus.WAITING_PLAYER;
         TurnRoutine routine=inExecutionRoutines.pop();
         if(routine.isInnerRoutine()&&inExecutionRoutines.peek()!=null)
@@ -111,7 +120,7 @@ public class Turn {
         return inExecutionRoutines.peek();
     }
 
-    public int getRoutineNumber() {
+    int getRoutineNumber() {
         return routineNumber;
     }
 
@@ -151,27 +160,27 @@ public class Turn {
         this.status = status;
     }
 
-    public void setShiftableMatrix(MatrixHelper matrix) {
+    void setShiftableMatrix(MatrixHelper matrix) {
         this.shiftableMatrix=new MatrixHelper(matrix.toBooleanMatrix());
     }
 
-    public MatrixHelper getShiftableMatrix() {
+    MatrixHelper getShiftableMatrix() {
         return new MatrixHelper(shiftableMatrix.toBooleanMatrix());
     }
 
-    public void initShiftableMatrix(){
+    void initShiftableMatrix(){
         shiftableMatrix=new MatrixHelper(game.getGameBoard().getGameboardMatrix().toBooleanMatrix());
     }
 
-    public void clearMovementMap(){
+    void clearMovementMap(){
         movementMap.clear();
     }
 
-    public void insertPlayerMatrix(Player p, MatrixHelper mat){
+    void insertPlayerMatrix(Player p, MatrixHelper mat){
         movementMap.put(p.getNickname(),mat);
     }
 
-    public MatrixHelper getPlayerMatrix(Player p){
+    MatrixHelper getPlayerMatrix(Player p){
         return movementMap.get(p.getNickname());
     }
 

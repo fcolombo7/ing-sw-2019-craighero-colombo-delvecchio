@@ -35,10 +35,6 @@ public class ReloadingRoutineTest {
 
         game.register(view);
 
-        p1.setStatus(PlayerStatus.PLAYING);
-        p2.setStatus(PlayerStatus.WAITING);
-        p3.setStatus(PlayerStatus.WAITING);
-        p4.setStatus(PlayerStatus.WAITING);
         game.setGameBoard(1);
         p1.setPosition(game.getGameBoard().getSquare(1,1));
         p2.setPosition(game.getGameBoard().getSquare(1,1));
@@ -49,6 +45,9 @@ public class ReloadingRoutineTest {
         Logger.log(p1.toString());
         Logger.log("AMMO: "+p1.getBoard().getAmmo().toString());
 
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
         Weapon weapon=game.drawWeapon();
         weapon.unload();
@@ -97,10 +96,6 @@ public class ReloadingRoutineTest {
 
         game.register(view);
 
-        p1.setStatus(PlayerStatus.PLAYING);
-        p2.setStatus(PlayerStatus.WAITING);
-        p3.setStatus(PlayerStatus.WAITING);
-        p4.setStatus(PlayerStatus.WAITING);
         game.setGameBoard(1);
         p1.setPosition(game.getGameBoard().getSquare(1,1));
         p2.setPosition(game.getGameBoard().getSquare(1,1));
@@ -111,6 +106,9 @@ public class ReloadingRoutineTest {
         Logger.log(p1.toString());
         Logger.log("AMMO: "+p1.getBoard().getAmmo().toString());
 
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
         Weapon weapon=game.drawWeapon();
         weapon.unload();
