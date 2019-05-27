@@ -1,7 +1,3 @@
-.root{
-    -fx-background-color: yellow;
-}
-
 .label{
     -fx-font-weight: bolder;
     -fx-font-size: 5;

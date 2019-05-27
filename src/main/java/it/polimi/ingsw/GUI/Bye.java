@@ -13,7 +13,7 @@ public class Bye {
         lab.setStyle("-fx-background-color: yellow");
         lab.setLayoutX(100);
         g.getChildren().add(lab);
-        Scene sce=new Scene(g, 300, 100);
+        Scene sce=new Scene(g, 300, 500);
         st.setScene(sce);
         sce.getStylesheets().addAll(Bye.class.getResource("/gui/bye.css").toExternalForm());
         st.show();

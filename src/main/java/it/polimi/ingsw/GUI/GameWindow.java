@@ -708,16 +708,16 @@ public class GameWindow {
         map.setLayoutY(0);
         plB.setLayoutY(480);
         plB.setLayoutX(0);
-        shoot.setLayoutX(620);
+        shoot.setLayoutX(820);
         shoot.setLayoutY(50);
         grab.setLayoutY(100);
         grab.setLayoutX(620);
         move.setLayoutX(620);
-        move.setLayoutY(150);
-        loadWeapon.setLayoutX(620);
-        loadWeapon.setLayoutY(200);
-        showPlB.setLayoutX(620);
-        showPlB.setLayoutY(300);
+        move.setLayoutY(50);
+        loadWeapon.setLayoutX(820);
+        loadWeapon.setLayoutY(100);
+        showPlB.setLayoutX(720);
+        showPlB.setLayoutY(150);
 
 
         if(mapp1) {
@@ -839,7 +839,7 @@ public class GameWindow {
         deck.setLayoutY(121);
 
 
-        Scene scene=new Scene(gp, 800, 650);
+        Scene scene=new Scene(gp, 1000, 650);
         scene.getStylesheets().addAll(GameWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
         s.setScene(scene);
         s.setResizable(false);

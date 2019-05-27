@@ -23,9 +23,16 @@
 }
 
 .refr{
-    -fx-font-size: 15;
+    -fx-font-size: 10;
     -fx-background-color: green;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-border-color: green;
+}
+
+.ply{
+    -fx-font-size: 15;
+    -fx-border-color: white;
+    -fx-font-weight: normal;
+    -fx-text-fill: black;
 }

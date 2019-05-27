@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 
 public class MapChoice {
 
@@ -38,6 +40,8 @@ public class MapChoice {
         Image img2= new Image("/gui/map2.png");
         Image img3= new Image("/gui/map3.png");
         Image img4= new Image("/gui/map4.png");
+
+        ArrayList<Image> votes= new ArrayList<Image>();
 
         AnchorPane grid= new AnchorPane();
         grid.getChildren().addAll(first, second, third, fourth, vote, image);
@@ -100,7 +104,9 @@ public class MapChoice {
             @Override
             public void handle(ActionEvent actionEvent) {
                 stage.close();
-                GameWindow.open(image.getImage());
+                votes.add(image.getImage());
+                Image bestmap=votes.get(0);
+                GameWindow.open(bestmap);
             }
         });
 

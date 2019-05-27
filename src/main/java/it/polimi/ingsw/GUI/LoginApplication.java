@@ -11,12 +11,31 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class LoginApplication extends Application {
 
-    int players=3;
+    public Scanner sn=new Scanner(System.in);
+    int players=sn.nextInt();
+
+    ArrayList<String> pl= new ArrayList<String>(){
+
+        public String printList(int c){
+            int i=0;
+            String playerss= new String();
+            while(i<c+1){
+                playerss=("\n" + pl.get(i));
+            }
+            return playerss;
+        }
+    };
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        pl.add("Alberto");
+        pl.add("Luca");
+        String play1= pl.get(1);
         primaryStage.setTitle("Login");
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(700);
@@ -80,47 +99,6 @@ public class LoginApplication extends Application {
         title.setLayoutY(0);
 
 
-        //GridPane.setColumnIndex(title,1);
-        //GridPane.setRowIndex(title, 0);
-      //  GridPane.setColumnIndex(nameText,0);
-        //GridPane.setRowIndex(nameText, 1);
-        //GridPane.setColumnIndex(mottoText, 0);
-        //GridPane.setRowIndex(mottoText, 2);
-        //GridPane.setColumnIndex(playerNameField, 1);
-        //GridPane.setColumnIndex(mottoField, 1);
-        //GridPane.setRowIndex(playerNameField, 1);
-        //GridPane.setRowIndex(mottoField, 2);
-        //GridPane.setColumnIndex(loginButton, 2);
-        //GridPane.setRowIndex(loginButton, 3);
-        //GridPane.setColumnIndex(lb0, 1);
-        //GridPane.setRowIndex(lb0, 5);
-        //GridPane.setColumnIndex(lb1,1);
-        //GridPane.setRowIndex(lb1, 3);
-        //GridPane.setColumnIndex(rmi, 0);
-        //GridPane.setRowIndex(rmi, 4);
-        //GridPane.setColumnIndex(sock, 1);
-        //GridPane.setRowIndex(sock, 4);
-        //GridPane.setHgrow(rmi, Priority.ALWAYS);
-        //GridPane.setHgrow(sock, Priority.ALWAYS);
-        //GridPane.setHgrow(loginButton, Priority.ALWAYS);
-        //GridPane.setHgrow(nameText, Priority.ALWAYS);
-        //GridPane.setHgrow(playerNameField, Priority.ALWAYS);
-        //GridPane.setHgrow(mottoText, Priority.ALWAYS);
-        //GridPane.setHgrow(mottoField, Priority.ALWAYS);
-        //GridPane.setHgrow(lb0, Priority.ALWAYS);
-        //GridPane.setHgrow(lb1, Priority.ALWAYS);
-        //GridPane.setVgrow(rmi, Priority.ALWAYS);
-        //GridPane.setVgrow(sock, Priority.ALWAYS);
-        //GridPane.setVgrow(loginButton, Priority.ALWAYS);
-        //GridPane.setVgrow(nameText, Priority.ALWAYS);
-        //GridPane.setVgrow(playerNameField, Priority.ALWAYS);
-        //GridPane.setVgrow(mottoText, Priority.ALWAYS);
-        //GridPane.setVgrow(mottoField, Priority.ALWAYS);
-        //GridPane.setVgrow(lb0, Priority.ALWAYS);
-        //GridPane.setVgrow(lb1, Priority.ALWAYS);
-
-
-
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -133,7 +111,9 @@ public class LoginApplication extends Application {
                     lb1.setText(msg);
                 }
                 else{
-                    if(!playerNameField.getText().equalsIgnoreCase("gino")&&players<4){
+                    if(!pl.contains(playerNameField.getText())&&players<4){
+                        String namePl=playerNameField.getText();
+                        pl.add(namePl);
                         players=players+1;
                         String msg="";
                         lb1.setText(msg);
@@ -143,13 +123,18 @@ public class LoginApplication extends Application {
                         Button rules=new Button("Show rules");
                         Label welcome = new Label();
                         welcome.setText("WELCOME TO ADRENALINE");
-                        Label plOnline= new Label("Logged Players:");
-                        plOnline.setPrefHeight(100);
+                        int g=pl.size();
+                        Label tit= new Label("Logged Players:");
+                        Label plOnline= new Label(pl.toString());
+                        tit.setPrefWidth(150);
+                        tit.setPrefHeight(20);
+                        plOnline.setPrefHeight(50);
                         plOnline.setPrefWidth(150);
                         Button refresh=new Button("Refresh");
-                        refresh.setPrefWidth(100);
+                        refresh.setPrefWidth(80);
                         refresh.setPrefHeight(25);
 
+                        plOnline.getStyleClass().add("ply");
                         refresh.getStyleClass().add("refr");
 
 
@@ -161,14 +146,16 @@ public class LoginApplication extends Application {
                         disconnect.setLayoutY(120);
                         rules.setLayoutX(210);
                         rules.setLayoutY(120);
+                        tit.setLayoutX(20);
+                        tit.setLayoutY(350);
                         plOnline.setLayoutX(20);
-                        plOnline.setLayoutY(300);
-                        refresh.setLayoutX(170);
-                        refresh.setLayoutY(400);
+                        plOnline.setLayoutY(390);
+                        refresh.setLayoutX(200);
+                        refresh.setLayoutY(355);
 
 
 
-                        waitingRoom.getChildren().addAll(welcome, text, disconnect, rules, plOnline, refresh);
+                        waitingRoom.getChildren().addAll(welcome, text, disconnect, rules, plOnline, refresh, tit);
                         Scene secondScene = new Scene(waitingRoom, 300, 500);
 
                         Stage newWindow = new Stage();
@@ -185,11 +172,21 @@ public class LoginApplication extends Application {
                         disconnect.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent actionEvent) {
+                                pl.remove(namePl);
                                 newWindow.close();
                                 primaryStage.show();
                                 players=players-1;
                             }
                         });
+
+                        refresh.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+                                plOnline.setText(pl.toString());
+                            }
+                        });
+
+
 
                         newWindow.initStyle(StageStyle.UNDECORATED);
                         newWindow.initModality((Modality.WINDOW_MODAL));
@@ -200,7 +197,7 @@ public class LoginApplication extends Application {
                         newWindow.setResizable(false);
                         waitingRoom.getStylesheets().addAll(this.getClass().getResource("/gui/waitingroom.css").toExternalForm());
                         newWindow.show();
-                    } else if(players<4){
+                    } else if(pl.contains(playerNameField.getText())){
                         String msg="Name already used";
                         lb1.setText(msg);
                     } else {
@@ -255,6 +252,9 @@ public class LoginApplication extends Application {
 
 
     public static void main(String[] args) {
+        System.out.println("Insert number of players:");
         launch(args);
+
+
     }
 }
