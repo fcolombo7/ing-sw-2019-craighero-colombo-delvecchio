@@ -5,8 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -123,40 +124,44 @@ public class LoginApplication extends Application {
                         Button rules=new Button("Show rules");
                         Label welcome = new Label();
                         welcome.setText("WELCOME TO ADRENALINE");
-                        int g=pl.size();
                         Label tit= new Label("Logged Players:");
                         Label plOnline= new Label(pl.toString());
                         tit.setPrefWidth(150);
                         tit.setPrefHeight(20);
                         plOnline.setPrefHeight(50);
-                        plOnline.setPrefWidth(150);
+                        plOnline.setPrefWidth(400);
                         Button refresh=new Button("Refresh");
                         refresh.setPrefWidth(80);
                         refresh.setPrefHeight(25);
+                        welcome.getStyleClass().add("welcome");
+                        Image hourglass= new Image("/gui/hourglass.jpg");
+                        ImageView hg= new ImageView(hourglass);
 
                         plOnline.getStyleClass().add("ply");
                         refresh.getStyleClass().add("refr");
 
 
-                        welcome.setLayoutX(20);
+                        welcome.setLayoutX(115);
                         welcome.setLayoutY(10);
-                        text.setLayoutX(25);
-                        text.setLayoutY(260);
-                        disconnect.setLayoutX(20);
+                        text.setLayoutX(175);
+                        text.setLayoutY(280);
+                        disconnect.setLayoutX(40);
                         disconnect.setLayoutY(120);
-                        rules.setLayoutX(210);
+                        rules.setLayoutX(430);
                         rules.setLayoutY(120);
                         tit.setLayoutX(20);
-                        tit.setLayoutY(350);
+                        tit.setLayoutY(360);
                         plOnline.setLayoutX(20);
                         plOnline.setLayoutY(390);
-                        refresh.setLayoutX(200);
-                        refresh.setLayoutY(355);
+                        refresh.setLayoutX(20);
+                        refresh.setLayoutY(450);
+                        hg.setLayoutX(242);
+                        hg.setLayoutY(60);
 
 
 
-                        waitingRoom.getChildren().addAll(welcome, text, disconnect, rules, plOnline, refresh, tit);
-                        Scene secondScene = new Scene(waitingRoom, 300, 500);
+                        waitingRoom.getChildren().addAll(welcome, text, disconnect, rules, plOnline, refresh, tit, hg);
+                        Scene secondScene = new Scene(waitingRoom, 600, 500);
 
                         Stage newWindow = new Stage();
                         newWindow.setTitle("Waiting room");
@@ -192,8 +197,8 @@ public class LoginApplication extends Application {
                         newWindow.initModality((Modality.WINDOW_MODAL));
                         newWindow.initOwner(primaryStage);
                         primaryStage.hide();
-                        newWindow.setX(primaryStage.getX() + 100);
-                        newWindow.setY(primaryStage.getY() + 50);
+                        newWindow.setX(primaryStage.getX());
+                        newWindow.setY(primaryStage.getY());
                         newWindow.setResizable(false);
                         waitingRoom.getStylesheets().addAll(this.getClass().getResource("/gui/waitingroom.css").toExternalForm());
                         newWindow.show();
@@ -205,10 +210,14 @@ public class LoginApplication extends Application {
                             primaryStage.close();
                             MapChoice.display();
                         } else {
-                            StackPane tooPlayers= new StackPane();
+                            AnchorPane tooPlayers= new AnchorPane();
                             Label text= new Label("Sorry, too many players in game");
                             tooPlayers.getChildren().add(text);
-                            Scene tooScene= new Scene(tooPlayers, 300, 300);
+                            text.setLayoutX(20);
+                            text.setLayoutY(110);
+                            text.getStyleClass().add("toopl");
+                            tooPlayers.getStylesheets().addAll(this.getClass().getResource("/gui/waitingroom.css").toExternalForm());
+                            Scene tooScene= new Scene(tooPlayers, 500, 300);
                             Stage tooWindow= new Stage();
                             tooWindow.setScene(tooScene);
                             tooWindow.initModality(Modality.WINDOW_MODAL);

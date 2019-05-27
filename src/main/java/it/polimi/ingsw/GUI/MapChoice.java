@@ -106,7 +106,8 @@ public class MapChoice {
                 stage.close();
                 votes.add(image.getImage());
                 Image bestmap=votes.get(0);
-                GameWindow.open(bestmap);
+                String urlmap= bestmap.getUrl();
+                GameWindow.open(bestmap, urlmap);
             }
         });
 

@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 public class Bye {
     public static void byebye(){
         Stage st=new Stage();
-        Label lab=new Label("GOODBYE LOSER");
+        Label lab=new Label("TO DO");
         AnchorPane g=new AnchorPane();
         lab.setStyle("-fx-background-color: yellow");
         lab.setLayoutX(100);

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -13,13 +14,18 @@ import javafx.stage.WindowEvent;
 public class GameWindow {
 
 
-    public static void open(Image image){
+    public static void open(Image image, String urlmap){
         Stage s= new Stage();
         s.setTitle("ADRENALINE");
+
         boolean mapp1=false;
         boolean mapp2=false;
-        boolean mapp3=true;
+        boolean mapp3=false;
         boolean mapp4=false;
+        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map1.png")) mapp1=true;
+        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map2.png")) mapp2=true;
+        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map3.png")) mapp3=true;
+        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map4.png")) mapp4=true;
         ImageView map=new ImageView(image);
         map.setFitWidth(600);
         map.setFitHeight(454);
@@ -27,17 +33,78 @@ public class GameWindow {
         ImageView plB= new ImageView(playerBoard);
         plB.setFitWidth(600);
         plB.setPreserveRatio(true);
+        Image pla1= new Image("/gui/pl1.png");
+        ImageView pl1= new ImageView(pla1);
+        pl1.setFitWidth(304);
+        pl1.setPreserveRatio(true);
+        Image pla2= new Image("/gui/pl2.png");
+        ImageView pl2= new ImageView(pla2);
+        pl2.setFitWidth(304);
+        pl2.setPreserveRatio(true);
+        Image pla3= new Image("/gui/pl3.png");
+        ImageView pl3= new ImageView(pla3);
+        pl3.setFitWidth(304);
+        pl3.setPreserveRatio(true);
+        Image pla4= new Image("/gui/pl4.png");
+        ImageView pl4= new ImageView(pla4);
+        pl4.setFitWidth(304);
+        pl4.setPreserveRatio(true);
+
+        Image yammo= new Image("/gui/yammo.png");
+        ImageView yam= new ImageView(yammo);
+        yam.setFitWidth(40);
+        yam.setPreserveRatio(true);
+        Image bammo= new Image("/gui/bammo.png");
+        ImageView bam= new ImageView(bammo);
+        bam.setFitWidth(40);
+        bam.setPreserveRatio(true);
+        Image rammo= new Image("/gui/rammo.png");
+        ImageView ram= new ImageView(rammo);
+        ram.setFitWidth(40);
+        ram.setPreserveRatio(true);
+
+        Label ny=new Label("x 2");
+        Label nb=new Label("x 3");
+        Label nr= new Label("x 0");
+
         Button shoot= new Button("Shoot");
         Button grab= new Button("Grab");
         Button move= new Button("Move");
         Button loadWeapon= new Button("Load Weapon");
-        Button showPlB= new Button("Show PlayerBoards");
-        showPlB.setPrefWidth(150);
-        showPlB.setStyle("-fx-background-color: green");
         shoot.setPrefWidth(150);
         grab.setPrefWidth(150);
         move.setPrefWidth(150);
         loadWeapon.setPrefWidth(150);
+
+        Image weap1= new Image("/gui/spadafotonica.png");
+        ImageView wp1= new ImageView(weap1);
+        wp1.setFitWidth(80);
+        wp1.setPreserveRatio(true);
+        Image weap2= new Image("/gui/cyberguanto.png");
+        ImageView wp2= new ImageView(weap2);
+        wp2.setFitWidth(80);
+        wp2.setPreserveRatio(true);
+        Image weap3= new Image("/gui/martelloionico.png");
+        ImageView wp3= new ImageView(weap3);
+        wp3.setFitWidth(80);
+        wp3.setPreserveRatio(true);
+        Image powerup1= new Image("/gui/granatavenom.png");
+        ImageView pu1= new ImageView(powerup1);
+        pu1.setFitWidth(80);
+        pu1.setPreserveRatio(true);
+        Image powerup2= new Image("/gui/teletrasporto.png");
+        ImageView pu2= new ImageView(powerup2);
+        pu2.setFitWidth(80);
+        pu2.setPreserveRatio(true);
+        Image powerup3= new Image("/gui/raggiocinetico.png");
+        ImageView pu3= new ImageView(powerup3);
+        pu3.setFitWidth(80);
+        pu3.setPreserveRatio(true);
+        Image powerup4= new Image("/gui/mirino.png");
+        ImageView pu4= new ImageView(powerup4);
+        pu4.setFitWidth(80);
+        pu4.setPreserveRatio(true);
+
 
         Button a1=new Button();
         a1.setPrefWidth(57);
@@ -672,20 +739,11 @@ public class GameWindow {
 
 
 
-
-        showPlB.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                PlBs.showPlBs();
-            }
-        });
-
-
         AnchorPane gp= new AnchorPane();
         if(mapp1||mapp4) {
-            gp.getChildren().addAll(map, plB, shoot, grab, move, loadWeapon, showPlB, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);
+            gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);
         }
-        if(mapp2) {gp.getChildren().addAll(map, plB, shoot, grab, move, loadWeapon, showPlB, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);}
+        if(mapp2) {gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);}
 
         if(mapp3){
                 Button b12 = new Button();
@@ -698,7 +756,7 @@ public class GameWindow {
                         Rules.showRules();
                     }
                 });
-                gp.getChildren().addAll(map, plB, shoot, grab, move, loadWeapon, showPlB, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);
+                gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);
                 b12.setLayoutX(405);
                 b12.setLayoutY(300);
         }
@@ -708,16 +766,48 @@ public class GameWindow {
         map.setLayoutY(0);
         plB.setLayoutY(480);
         plB.setLayoutX(0);
-        shoot.setLayoutX(820);
-        shoot.setLayoutY(50);
-        grab.setLayoutY(100);
-        grab.setLayoutX(620);
-        move.setLayoutX(620);
-        move.setLayoutY(50);
-        loadWeapon.setLayoutX(820);
-        loadWeapon.setLayoutY(100);
-        showPlB.setLayoutX(720);
-        showPlB.setLayoutY(150);
+        pl1.setLayoutX(630);
+        pl1.setLayoutY(20);
+        pl2.setLayoutX(630);
+        pl2.setLayoutY(100);
+        pl3.setLayoutX(630);
+        pl3.setLayoutY(180);
+        pl4.setLayoutX(630);
+        pl4.setLayoutY(260);
+        shoot.setLayoutX(1020);
+        shoot.setLayoutY(150);
+        grab.setLayoutX(1020);
+        grab.setLayoutY(90);
+        move.setLayoutX(1020);
+        move.setLayoutY(30);
+        loadWeapon.setLayoutX(1020);
+        loadWeapon.setLayoutY(210);
+        wp1.setLayoutX(630);
+        wp1.setLayoutY(500);
+        wp2.setLayoutX(720);
+        wp2.setLayoutY(500);
+        wp3.setLayoutX(810);
+        wp3.setLayoutY(500);
+        yam.setLayoutX(920);
+        yam.setLayoutY(500);
+        bam.setLayoutX(920);
+        bam.setLayoutY(550);
+        ram.setLayoutX(920);
+        ram.setLayoutY(600);
+        ny.setLayoutX(980);
+        ny.setLayoutY(505);
+        nb.setLayoutX(980);
+        nb.setLayoutY(555);
+        nr.setLayoutX(980);
+        nr.setLayoutY(605);
+        pu1.setLayoutX(630);
+        pu1.setLayoutY(360);
+        pu2.setLayoutX(720);
+        pu2.setLayoutY(360);
+        pu3.setLayoutX(810);
+        pu3.setLayoutY(360);
+        pu4.setLayoutX(900);
+        pu4.setLayoutY(360);
 
 
         if(mapp1) {
@@ -839,7 +929,7 @@ public class GameWindow {
         deck.setLayoutY(121);
 
 
-        Scene scene=new Scene(gp, 1000, 650);
+        Scene scene=new Scene(gp, 1200, 650);
         scene.getStylesheets().addAll(GameWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
         s.setScene(scene);
         s.setResizable(false);
