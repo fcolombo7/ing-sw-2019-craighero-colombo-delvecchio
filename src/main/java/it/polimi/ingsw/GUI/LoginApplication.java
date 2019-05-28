@@ -13,12 +13,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class LoginApplication extends Application {
 
-    public Scanner sn=new Scanner(System.in);
-    int players=sn.nextInt();
+    //public Scanner sn=new Scanner(System.in);
+    //int players=sn.nextInt();
+    int players=0;
 
     ArrayList<String> pl= new ArrayList<String>(){
 
@@ -34,9 +34,9 @@ public class LoginApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        pl.add("Alberto");
-        pl.add("Luca");
-        String play1= pl.get(1);
+        //pl.add("Alberto");
+        //pl.add("Luca");
+        //String play1= pl.get(1);
         primaryStage.setTitle("Login");
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(700);
@@ -194,9 +194,9 @@ public class LoginApplication extends Application {
 
 
                         newWindow.initStyle(StageStyle.UNDECORATED);
-                        newWindow.initModality((Modality.WINDOW_MODAL));
-                        newWindow.initOwner(primaryStage);
-                        primaryStage.hide();
+                        //newWindow.initModality((Modality.WINDOW_MODAL));
+                        //newWindow.initOwner(primaryStage);
+                        //primaryStage.hide();
                         newWindow.setX(primaryStage.getX());
                         newWindow.setY(primaryStage.getY());
                         newWindow.setResizable(false);
@@ -207,7 +207,10 @@ public class LoginApplication extends Application {
                         lb1.setText(msg);
                     } else {
                         if(players==4) {
-                            primaryStage.close();
+                            String namePl=playerNameField.getText();
+                            pl.add(namePl);
+                            players=players+1;
+                            //primaryStage.close();
                             MapChoice.display();
                         } else {
                             AnchorPane tooPlayers= new AnchorPane();
@@ -261,7 +264,7 @@ public class LoginApplication extends Application {
 
 
     public static void main(String[] args) {
-        System.out.println("Insert number of players:");
+        //System.out.println("Insert number of players:");
         launch(args);
 
 
