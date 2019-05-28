@@ -1,6 +1,5 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.utils.Constants;
 
@@ -9,9 +8,9 @@ public class MoveMessage extends MatchMessage {
 
     private SimplePlayer player;
 
-    public MoveMessage(Player player) {
-        super(null,Constants.MOVE_MESSAGE);
-        this.player=new SimplePlayer(player);
+    public MoveMessage(SimplePlayer player) {
+        super(null,Constants.EFFECT_MOVE_MESSAGE);
+        this.player=player;
     }
 
     public SimplePlayer getPlayer() {

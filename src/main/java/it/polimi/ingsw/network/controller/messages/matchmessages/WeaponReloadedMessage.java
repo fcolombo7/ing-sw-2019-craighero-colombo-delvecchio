@@ -14,12 +14,18 @@ public class WeaponReloadedMessage extends MatchMessage {
     private SimplePlayer player;
     private List<Card> discardedPowerups;
     private List<Color> totalCost;
+    private Card weapon;
 
-    public WeaponReloadedMessage(SimplePlayer player, List<Card> discardedPowerup, List<Color> totalCost) {
+    public WeaponReloadedMessage(SimplePlayer player, Card weapon, List<Card> discardedPowerup, List<Color> totalCost) {
         super(null,Constants.RELOAD_COMPLETED);
         this.player=player;
+        this.weapon=new Card(weapon);
         this.totalCost=new ArrayList<>(totalCost);
         this.discardedPowerups=new ArrayList<>(discardedPowerup);
+    }
+
+    public Card getWeapon() {
+        return weapon;
     }
 
     public List<Color> getTotalCost() {

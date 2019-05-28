@@ -5,21 +5,21 @@ import it.polimi.ingsw.utils.MatrixHelper;
 
 public class MoveRequestMessage extends MatchMessage {
     private static final long serialVersionUID = 4919549472641984211L;
-    private String target;
+    private String targetPlayer;
     private MatrixHelper matrix;
 
-    public MoveRequestMessage(String recipient, String target, MatrixHelper matrix) {
+    public MoveRequestMessage(String recipient, String targetPlayer, MatrixHelper matrix) {
         super(recipient,Constants.EFFECT_MOVE_REQUEST_MESSAGE);
         this.matrix=matrix;
-        this.target=target;
+        this.targetPlayer = targetPlayer;
     }
 
     public MatrixHelper getMatrix() {
         return matrix;
     }
 
-    public String getTarget() {
-        return target;
+    public String getTargetPlayer() {
+        return targetPlayer;
     }
 
 }

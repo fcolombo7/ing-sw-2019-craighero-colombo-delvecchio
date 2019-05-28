@@ -75,7 +75,7 @@ public class ReloadingRoutine implements TurnRoutine {
     private void reloadWeapon(Weapon weapon){
         if(turn.getGame().getCurrentPlayer().canReloadedWeapon(weapon)){
             List<Card> discardedPowerups= turn.getGame().getCurrentPlayer().reloadWeapon(weapon);
-            turn.getGame().notify(new WeaponReloadedMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),discardedPowerups,weapon.getAmmo()));
+            turn.getGame().notify(new WeaponReloadedMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),weapon,discardedPowerups,weapon.getAmmo()));
             turn.endRoutine();
         }else{
             Logger.log("Invalid weapon received");

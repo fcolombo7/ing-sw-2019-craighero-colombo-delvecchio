@@ -15,9 +15,9 @@ public class PayEffectMessage extends MatchMessage {
     private List<Color> usedAmmo;
     private List<Card> discardedPowerups;
 
-    public PayEffectMessage(Player player, List<Color> usedAmmo, List<Card> discardedPowerups) {
+    public PayEffectMessage(SimplePlayer player, List<Color> usedAmmo, List<Card> discardedPowerups) {
         super(null, Constants.PAY_EFFECT_MESSAGE);
-        this.player=new SimplePlayer(player);
+        this.player=player;
         this.usedAmmo=new ArrayList<>(usedAmmo);
         this.discardedPowerups=new ArrayList<>(discardedPowerups);
     }

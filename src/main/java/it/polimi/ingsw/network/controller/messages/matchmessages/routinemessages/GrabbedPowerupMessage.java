@@ -11,10 +11,10 @@ public class GrabbedPowerupMessage extends TurnRoutineMessage {
     private Card powerup;
     private SimplePlayer player;
 
-    public GrabbedPowerupMessage(String recipient, Player player, Card powerup) {
+    public GrabbedPowerupMessage(String recipient, SimplePlayer player, Card powerup) {
         super(recipient, Constants.GRABBED_POWERUP);
         this.powerup=powerup;
-        this.player=new SimplePlayer(player);
+        this.player=player;
     }
 
     public SimplePlayer getPlayer() {

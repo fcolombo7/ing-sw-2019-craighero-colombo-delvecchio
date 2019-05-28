@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.TurnRoutineAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.DiscardedWeaponAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.WeaponAnswer;
@@ -21,7 +22,7 @@ public class GrabbingRoutine implements TurnRoutine {
     private Turn turn;
     private MatrixHelper grabMatrix;
     private Weapon grabbedWeapon;
-    List<Weapon> inSquareWeapons;
+    private List<Weapon> inSquareWeapons;
 
     GrabbingRoutine(Turn turn, MatrixHelper grabMatrix){
         this.turn=turn;
@@ -60,7 +61,7 @@ public class GrabbingRoutine implements TurnRoutine {
                 payWeaponCost();
                 if(!w.isLoaded()) w.load();
                 ((WeaponSquare)turn.getGame().getCurrentPlayer().getPosition()).addWeapon(w);
-                turn.getGame().notify(new GrabbedWeaponMessage(turn.getGame().getCurrentPlayer(),grabbedWeapon));
+                turn.getGame().notify(new GrabbedWeaponMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),grabbedWeapon));
                 turn.getGame().notify(new BoardUpdateMessage(turn.getGame().getGameBoard()));
                 turn.endRoutine();
                 return;
@@ -78,7 +79,7 @@ public class GrabbingRoutine implements TurnRoutine {
                     ((WeaponSquare)turn.getGame().getCurrentPlayer().getPosition()).removeWeapon(grabbedWeapon);
                     turn.getGame().getCurrentPlayer().addWeapon(grabbedWeapon);
                     payWeaponCost();
-                    turn.getGame().notify(new GrabbedWeaponMessage(turn.getGame().getCurrentPlayer(),grabbedWeapon));
+                    turn.getGame().notify(new GrabbedWeaponMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),grabbedWeapon));
                     turn.getGame().notify(new BoardUpdateMessage(turn.getGame().getGameBoard()));
                     turn.endRoutine();
                     return;
@@ -127,10 +128,10 @@ public class GrabbingRoutine implements TurnRoutine {
             else{
                 Powerup powerup=turn.getGame().drawPowerup();
                 turn.getGame().getCurrentPlayer().addPowerup(powerup);
-                turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(),turn.getGame().getCurrentPlayer(),powerup));
+                turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(),new SimplePlayer(turn.getGame().getCurrentPlayer()),powerup));
             }
             turn.getGame().getCurrentPlayer().getBoard().addAmmo(ammo);
-            turn.getGame().notify(new GrabbedAmmoTileMessage(turn.getGame().getCurrentPlayer(),grabbedTile));
+            turn.getGame().notify(new GrabbedAmmoTileMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),grabbedTile));
             turn.getGame().notify(new BoardUpdateMessage(turn.getGame().getGameBoard()));
         }
     }

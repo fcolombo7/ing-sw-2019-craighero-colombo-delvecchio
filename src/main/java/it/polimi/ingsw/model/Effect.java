@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MoveAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.utils.Logger;
@@ -735,13 +736,13 @@ public class Effect {
                         turn.newLatsDamagedPlayers(p);
                         int count = p.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
                         checkPlayerStatus(p);
-                        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),p,currAct.getValue(),count));
+                        turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),new SimplePlayer(p),currAct.getValue(),count));
                     }
                 }
                 else if(currAct.getActionType()==ActionType.MARK){
                     for(Player p:selectedPlayer){
                         p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),currAct.getValue());
-                        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), p, currAct.getValue()));
+                        turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(p), currAct.getValue()));
                     }
                 }
             }
@@ -773,7 +774,7 @@ public class Effect {
         }
         if(playerMatrix.toBooleanMatrix()[answer.getNewPosition()[0]][answer.getNewPosition()[1]]){
             selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(answer.getNewPosition()[0],answer.getNewPosition()[1]));
-            turn.getGame().notify(new MoveMessage(selectedPlayer));
+            turn.getGame().notify(new MoveMessage(new SimplePlayer(selectedPlayer)));
             Logger.log("Moving the selected player");
             handleExtra(turn);
         }else{
@@ -847,7 +848,7 @@ public class Effect {
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square lastPosition=last.getPosition();
         turn.getGame().getCurrentPlayer().setPosition(lastPosition);
-        turn.getGame().notify(new MoveMessage(turn.getGame().getCurrentPlayer()));
+        turn.getGame().notify(new MoveMessage(new SimplePlayer(turn.getGame().getCurrentPlayer())));
         Logger.log("Moving the current player due to Extra");
     }
 
@@ -905,7 +906,7 @@ public class Effect {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
-                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), p, Integer.parseInt(value)));
+                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(p), Integer.parseInt(value)));
                 return;
             }
         }
@@ -918,7 +919,7 @@ public class Effect {
                 turn.addSelectedPlayer(p);
                 int count = p.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
                 checkPlayerStatus(p);
-                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),p,Integer.parseInt(value),count));
+                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),new SimplePlayer(p),Integer.parseInt(value),count));
                 return;
             }
         }
@@ -928,7 +929,7 @@ public class Effect {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
                 p.getBoard().addMarks(turn.getGame().getCurrentPlayer(), Integer.parseInt(value));
-                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), p, Integer.parseInt(value)));
+                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(p), Integer.parseInt(value)));
             }
         }
     }
@@ -940,7 +941,7 @@ public class Effect {
                 turn.newLatsDamagedPlayers(p);
                 int count = p.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
                 checkPlayerStatus(p);
-                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),p,Integer.parseInt(value),count));
+                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),new SimplePlayer(p),Integer.parseInt(value),count));
             }
         }
     }
@@ -966,7 +967,7 @@ public class Effect {
         Player player=turn.getSelectedPlayers().peek();
         if(player==null) throw new IllegalStateException("last shot player is null");
         player.setPosition(position);
-        turn.getGame().notify(new MoveMessage(turn.getGame().getCurrentPlayer()));
+        turn.getGame().notify(new MoveMessage(new SimplePlayer(turn.getGame().getCurrentPlayer())));
         Logger.log("Moving the last shot player due to Extra");
     }
 

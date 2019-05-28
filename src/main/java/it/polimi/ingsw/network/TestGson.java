@@ -2,6 +2,7 @@ package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.BoardUpdateMessage;
@@ -10,7 +11,10 @@ import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 public class TestGson {
     public static void main(String[] args){
         Gson gson = new Gson();
-        MatchAnswer msg=new BoardPreferenceAnswer("nickname",0);
+        LoginMessage lgn=new LoginMessage("text","asd");
+        System.out.println(gson.toJson(lgn));
+
+        MatchAnswer msg=new BoardPreferenceAnswer("nickname",1);
         System.out.println(gson.toJson(msg));
         Game game=new Game();
         game.addPlayer(new Player("Ciao","",true));

@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.SelectedPlayersAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.SelectedPowerupAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.TurnRoutineAnswer;
@@ -83,7 +84,7 @@ public class PowerupRoutine implements TurnRoutine {
             return;
         }
         effect=turn.getCurEffect();
-        turn.getGame().notify(new UsingCardMessage(selPowerup));
+        turn.getGame().notify(new UsedCardMessage(selPowerup));
         effect.perform(answer.getSelected(),turn);
     }
 
@@ -99,7 +100,7 @@ public class PowerupRoutine implements TurnRoutine {
                     effect=powerup.getEffect();
                     payEffectCost();
                     if(powerup.getEffect().getTarget().getType()== TargetType.ME){
-                        turn.getGame().notify(new UsingCardMessage(selPowerup));
+                        turn.getGame().notify(new UsedCardMessage(selPowerup));
                         List<List<String>>selected=new ArrayList<>();
                         selected.add(new ArrayList<>());
                         selected.get(0).add(turn.getGame().getCurrentPlayer().getNickname());
@@ -151,7 +152,7 @@ public class PowerupRoutine implements TurnRoutine {
                 turn.getGame().getCurrentPlayer().getBoard().removeAmmo(color);
                 count--;
             }
-            MatchMessage message=new PayEffectMessage(turn.getGame().getCurrentPlayer(),usedAmmo, discardedPowerups);
+            MatchMessage message=new PayEffectMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),usedAmmo, discardedPowerups);
             turn.getGame().notify(message);
         }
     }
@@ -184,7 +185,7 @@ public class PowerupRoutine implements TurnRoutine {
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"NO EFFECT PERFORMED")));
         }else {
             turn.getGame().getCurrentPlayer().popPowerup(selPowerup);
-            turn.getGame().notify(new DiscardedPowerupMessage(turn.getGame().getCurrentPlayer(),selPowerup));
+            turn.getGame().notify(new DiscardedPowerupMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),selPowerup));
             turn.endRoutine();
         }
     }

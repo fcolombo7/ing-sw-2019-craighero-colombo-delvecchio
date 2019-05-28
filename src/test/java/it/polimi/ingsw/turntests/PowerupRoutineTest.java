@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MoveAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.LoadableWeaponSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.SelectedPowerupAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
@@ -69,7 +68,7 @@ public class PowerupRoutineTest {
         turn.getInExecutionRoutine().handleAnswer(new SelectedPowerupAnswer(p1.getNickname(), powerup));
 
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MOVE_REQUEST_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
 
         turn.getCurEffect().handleMoveResponse(turn,new MoveAnswer(p1.getNickname(),p2.getNickname(), new int[]{1,2}));
         assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
@@ -77,7 +76,7 @@ public class PowerupRoutineTest {
         turn.getCurEffect().handleMoveResponse(turn,new MoveAnswer(p1.getNickname(),p1.getNickname(), new int[]{1,2}));
         assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.DISCARDED_POWERUP_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.MOVE_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MOVE_MESSAGE));
 
         Logger.log("Test Finished");
     }

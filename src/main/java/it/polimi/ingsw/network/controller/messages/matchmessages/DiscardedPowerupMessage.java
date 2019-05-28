@@ -11,9 +11,9 @@ public class DiscardedPowerupMessage extends MatchMessage {
     private SimplePlayer player;
     private Card powerup;
 
-    public DiscardedPowerupMessage(Player player, Powerup powerup) {
+    public DiscardedPowerupMessage(SimplePlayer player, Card powerup) {
         super(null, Constants.DISCARDED_POWERUP_MESSAGE);
-        this.player=new SimplePlayer(player);
+        this.player=player;
         this.powerup=new Card(powerup);
     }
 

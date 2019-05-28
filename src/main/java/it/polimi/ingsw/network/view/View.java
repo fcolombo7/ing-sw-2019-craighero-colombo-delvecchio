@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 
-public abstract class View extends Observable<MatchAnswer> implements Observer<MatchMessage> {
+public abstract class View implements Observer<MatchMessage> {
 
     private Player player;
 

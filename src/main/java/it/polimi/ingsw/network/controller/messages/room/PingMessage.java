@@ -6,10 +6,6 @@ public class PingMessage extends RoomMessage{
 
     private static final long serialVersionUID = 1945269029590156557L;
 
-    public PingMessage(){super();}
+    public PingMessage(){super(Constants.PING_CHECK);}
 
-    @Override
-    public String getType() {
-        return Constants.PING_CHECK;
-    }
 }

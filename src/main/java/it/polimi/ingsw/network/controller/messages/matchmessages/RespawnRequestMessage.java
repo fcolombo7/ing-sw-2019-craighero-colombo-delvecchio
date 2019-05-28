@@ -10,15 +10,17 @@ public class RespawnRequestMessage extends MatchMessage {
 
     private static final long serialVersionUID = 5048593416397821851L;
 
-    private List<Card> drawnPowerups;
+    private List<Card> powerups;
 
-    public RespawnRequestMessage(String recipient, List<Card> drawedPowerups) {
+    public RespawnRequestMessage(String recipient, List<Card> powerups) {
         super(recipient,Constants.RESPAWN_REQUEST_MESSAGE);
-        this.drawnPowerups=new ArrayList<>(drawedPowerups);
+        this.powerups=new ArrayList<>(powerups.size());
+        for (Card card:powerups)
+            powerups.add(new Card(card));
     }
 
-    public List<Card> getDrawedPowerups() {
-        return new ArrayList<>(drawnPowerups);
+    public List<Card> getPowerups() {
+        return new ArrayList<>(powerups);
     }
 
 }

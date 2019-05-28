@@ -9,15 +9,11 @@ public class JoinMessage extends RoomMessage{
     private String player;
 
     public JoinMessage(String player){
+        super(Constants.PLAYER_JOIN);
         this.player=player;
     }
 
     public String getPlayer() {
         return player;
-    }
-
-    @Override
-    public String getType() {
-        return Constants.PLAYER_JOIN;
     }
 }

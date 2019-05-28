@@ -10,10 +10,10 @@ public class GrabbedAmmoTileMessage extends MatchMessage {
     private SimplePlayer player;
     private AmmoTile grabbedTile;
 
-    public GrabbedAmmoTileMessage(Player player, AmmoTile grabbedTile) {
+    public GrabbedAmmoTileMessage(SimplePlayer player, AmmoTile grabbedTile) {
         super(null, Constants.GRABBED_TILE_MESSAGE);
         this.grabbedTile=grabbedTile;
-        this.player=new SimplePlayer(player);
+        this.player=(player);
     }
 
     public SimplePlayer getPlayer() {

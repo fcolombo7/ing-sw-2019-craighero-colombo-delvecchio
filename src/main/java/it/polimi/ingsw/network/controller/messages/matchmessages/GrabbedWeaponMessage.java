@@ -11,10 +11,11 @@ public class GrabbedWeaponMessage extends MatchMessage {
 
     private Card weapon;
     private SimplePlayer player;
-    public GrabbedWeaponMessage(Player player, Card weapon) {
+
+    public GrabbedWeaponMessage(SimplePlayer player, Card weapon) {
         super(null, Constants.GRABBED_WEAPON_MESSAGE);
         this.weapon=new Card(weapon);
-        this.player=new SimplePlayer(player);
+        this.player=player;
     }
 
     public SimplePlayer getPlayer() {

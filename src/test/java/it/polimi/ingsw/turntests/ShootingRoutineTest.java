@@ -101,7 +101,7 @@ public class ShootingRoutineTest {
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.CAN_STOP_ROUTINE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(),true));
 
@@ -181,7 +181,7 @@ public class ShootingRoutineTest {
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.CAN_STOP_ROUTINE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
         turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(), false));
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
@@ -206,7 +206,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.PAY_EFFECT_MESSAGE));
 
         Logger.log("Test Finished");
@@ -293,7 +293,7 @@ public class ShootingRoutineTest {
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.CAN_USE_POWERUP));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new UsePowerupAnswer(p1.getNickname(),true));
 
@@ -316,7 +316,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.DISCARDED_POWERUP_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.PAY_EFFECT_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(),true));
@@ -419,7 +419,7 @@ public class ShootingRoutineTest {
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.CAN_STOP_ROUTINE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.USING_CARD_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(),true));
 

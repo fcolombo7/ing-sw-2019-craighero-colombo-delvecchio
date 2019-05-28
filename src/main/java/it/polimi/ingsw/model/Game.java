@@ -225,34 +225,6 @@ public class Game extends Observable<MatchMessage> {
 
     public int getSkullNumber(){return skullNumber;}
 
-    public void setGameBoard(int mapNumber) {
-        switch(mapNumber){
-            case 1:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD1_FILEPATH), skullNumber,mapNumber);
-                break;
-            case 2:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD2_FILEPATH), skullNumber,mapNumber);
-                break;
-            case 3:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD3_FILEPATH), skullNumber,mapNumber);
-                break;
-            case 4:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullNumber,mapNumber);
-                break;
-            default: throw new IllegalArgumentException("An invalid map number has been chosen: game board not initialized");
-        }
-        fillGameboard();
-        BoardUpdateMessage createdMessage=new BoardUpdateMessage(new GameBoard(gameBoard));
-        Logger.log("Sending board created message...");
-        notify(createdMessage);
-        for (Player p:players) {
-            if(p.isFirst()) {
-                currentPlayer=p;
-                break;
-            }
-        }
-    }
-
     public Weapon drawWeapon(){
         if(weaponIndex>weaponDeck.size()-1)
             throw new IndexOutOfBoundsException("All the weapons are already on the boards");
@@ -263,7 +235,6 @@ public class Game extends Observable<MatchMessage> {
         return (weaponIndex<=weaponDeck.size()-1);
     }
 
-    //TODO NEED TEST
     public Powerup drawPowerup(){
         if(powerupIndex>powerupDeck.size()-1) {
             shuffleDeck(powerupDeck);
@@ -326,7 +297,7 @@ public class Game extends Observable<MatchMessage> {
         return currentPlayer;
     }
 
-    void fillGameboard(){
+    private void fillGameboard(){
         int[] boardDimension=gameBoard.getBoardDimension();
         for(int i=0;i<boardDimension[0];i++){
             for(int j=0;j<boardDimension[1];j++){
@@ -362,6 +333,34 @@ public class Game extends Observable<MatchMessage> {
             //first turn number is 1 (not 0)!
             MatchMessage msg= new MatchCreationMessage(players.get(i).getNickname(),i+1,players);
             notify(msg);
+        }
+    }
+
+    public void setGameBoard(int mapNumber) {
+        switch(mapNumber){
+            case 1:
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD1_FILEPATH), skullNumber,mapNumber);
+                break;
+            case 2:
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD2_FILEPATH), skullNumber,mapNumber);
+                break;
+            case 3:
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD3_FILEPATH), skullNumber,mapNumber);
+                break;
+            case 4:
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullNumber,mapNumber);
+                break;
+            default: throw new IllegalArgumentException("An invalid map number has been chosen: game board not initialized");
+        }
+        fillGameboard();
+        BoardUpdateMessage boardUpdateMessage=new BoardUpdateMessage(new GameBoard(gameBoard));
+        Logger.log("Sending board created message...");
+        notify(boardUpdateMessage);
+        for (Player p:players) {
+            if(p.isFirst()) {
+                currentPlayer=p;
+                break;
+            }
         }
     }
 
@@ -457,13 +456,12 @@ public class Game extends Observable<MatchMessage> {
 
     public void respawnPlayerRequest(Player player, boolean firstSpawn) {
         if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN) throw new IllegalStateException("Cannot respawn the player '"+player.getNickname()+"'. ["+player.getStatus().name()+"]");
-        ArrayList<Card> drawnPowerups= new ArrayList<>(2);
+        ArrayList<Card> drawnPowerups;
         if(firstSpawn) {
-            drawnPowerups.add(new Card(drawPowerup()));
-        }
-        drawnPowerups.add(new Card(drawPowerup()));
-        for(Card card:drawnPowerups)
-            player.addPowerup(new Powerup(card));
+            player.addPowerup(new Powerup(drawPowerup()));
+        }else
+            player.addPowerup(new Powerup(drawPowerup()));
+        drawnPowerups=new ArrayList<>(player.getPowerups());
         MatchMessage message=new RespawnRequestMessage(player.getNickname(),drawnPowerups);
         notify(message);
     }

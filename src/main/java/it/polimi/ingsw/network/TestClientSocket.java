@@ -4,11 +4,16 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.matchmessages.BoardUpdateMessage;
+import it.polimi.ingsw.network.controller.messages.room.ExitMessage;
+import it.polimi.ingsw.network.controller.messages.room.FirstInMessage;
+import it.polimi.ingsw.network.controller.messages.room.JoinMessage;
+import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +28,7 @@ public class TestClientSocket {
     Socket socket;
     boolean aBoolean=false;
     private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private HashMap<String,handler> map;
 
     public TestClientSocket(String ip, int port) throws IOException {
         this.ip = ip;
@@ -32,6 +38,29 @@ public class TestClientSocket {
         socketIn = new Scanner(socket.getInputStream());
         socketOut = new PrintWriter(socket.getOutputStream());
         stdin = new Scanner(System.in);
+        map=new HashMap<>();
+        map.put(Constants.PLAYER_JOIN,()->{
+            Gson gson= new Gson();
+            String socketLine=socketIn.nextLine();
+            JoinMessage msg=gson.fromJson(socketLine,JoinMessage.class);
+            System.out.println("User "+msg.getPlayer()+" as joined the room...");
+        });
+
+        map.put(Constants.PLAYER_EXIT,()->{
+            Gson gson= new Gson();
+            String socketLine=socketIn.nextLine();
+            ExitMessage msg=gson.fromJson(socketLine,ExitMessage.class);
+            System.out.println("User "+msg.getPlayer()+" as left the room...");
+        });
+
+        map.put(Constants.FIRST_PLAYER,()->{
+            System.out.println("You are the first player in the room...");
+        });
+
+        map.put(Constants.CREATION_MESSAGE,()->{
+            System.out.println("MATCH HAS BEEN CREATED");
+            System.out.print("BOARD: ");
+        });
     }
 
     public void startClient() {
@@ -42,12 +71,7 @@ public class TestClientSocket {
                 while (true) {
                     String socketLine = socketIn.nextLine();
                     System.out.println("[SERVER] "+socketLine);
-                    try{
-                        BoardUpdateMessage msg=gson.fromJson(socketLine, BoardUpdateMessage.class);
-                        SimpleBoard board=msg.getGameBoard();
-                    }catch (Exception e){
-                        Logger.log("Tried but failed to get a BoardPreferenceAnswer from the received Json String.");
-                    }
+                    map.get(socketLine).exec();
                 }
 
             }catch(NoSuchElementException e) {
@@ -68,10 +92,12 @@ public class TestClientSocket {
             try {
                 while (true) {
                     String msg = stdin.nextLine();
-                    if(msg.equalsIgnoreCase("SendAnswerRequest"))aBoolean=true;
                     System.out.println(msg);
                     socketOut.println(msg);
                     socketOut.flush();
+                    if(msg.equalsIgnoreCase("BOARD PREFERENCE"))
+                    {socketOut.println("{\"boardReference\":1,\"sender\":\"FIL\",\"answer\":\"BOARD PREFERENCE\"}");
+                    socketOut.flush();}
                 }
             }catch(NoSuchElementException e) {
                 System.out.println("Connection closed");
@@ -91,6 +117,38 @@ public class TestClientSocket {
         System.out.println("[LOG] executor started");
     }
 
+    private void checkMessage(String socketLine) {
+        Gson gson=new Gson();
+        try{
+            JoinMessage msg=gson.fromJson(socketLine,JoinMessage.class);
+            if(msg.getType().equalsIgnoreCase(Constants.PLAYER_JOIN)){
+                System.out.println("User "+msg.getPlayer()+" as joined the room...");
+                return;
+            }
+        }catch(Exception e){
+            System.out.println("[NOT JOIN MESSAGE]");
+        }
+        try{
+            ExitMessage msg=gson.fromJson(socketLine,ExitMessage.class);
+            if(msg.getType().equalsIgnoreCase(Constants.PLAYER_EXIT)){
+                System.out.println("User "+msg.getPlayer()+" as left the room...");
+                return;
+            }
+        }catch(Exception e){
+            System.out.println("[NOT EXIT MESSAGE]");
+        }
+        try{
+            FirstInMessage msg=gson.fromJson(socketLine,FirstInMessage.class);
+            if(msg.getType().equalsIgnoreCase(Constants.PLAYER_EXIT)){
+                System.out.println("You are the first in room!");
+                return;
+            }
+        }catch(Exception e){
+            System.out.println("[NOT FIRST IN MESSAGE]");
+        }
+
+    }
+
     private void login() {
         Gson gson= new Gson();
         String msg= Constants.MSG_CLIENT_LOGIN;
@@ -107,6 +165,7 @@ public class TestClientSocket {
         loginMessage=new LoginMessage(nick,motto);
         socketOut.println(gson.toJson(loginMessage));
         socketOut.flush();
+        System.out.println(socketIn.nextLine());
     }
 
 
@@ -117,6 +176,11 @@ public class TestClientSocket {
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    @FunctionalInterface
+    private interface handler{
+        void exec();
     }
 
 }

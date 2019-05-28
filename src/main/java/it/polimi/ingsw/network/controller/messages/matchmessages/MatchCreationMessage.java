@@ -9,18 +9,25 @@ import java.util.List;
 
 public class MatchCreationMessage extends MatchMessage {
     private static final long serialVersionUID = -2582710102474990566L;
-    private int turnNumber;
+    private int playerTurnNumber;
     private List<SimplePlayer> players;
 
-    public MatchCreationMessage(String recipient, int turnNumber, List<Player> players){
+    public MatchCreationMessage(String recipient, int playerTurnNumber, List<Player> players){
         super(recipient,Constants.CREATION_MESSAGE);
-        this.turnNumber=turnNumber;
+        this.playerTurnNumber = playerTurnNumber;
         this.players=new ArrayList<>();
         for (Player p:players) this.players.add(new SimplePlayer(p));
     }
 
-    public int getTurnNumber() {
-        return turnNumber;
+    public MatchCreationMessage(String recipient, List<SimplePlayer> players, int playerTurnNumber){
+        super(recipient,Constants.CREATION_MESSAGE);
+        this.playerTurnNumber=playerTurnNumber;
+        this.players=new ArrayList<>(players);
+    }
+
+
+    public int getPlayerTurnNumber() {
+        return playerTurnNumber;
     }
 
     public List<SimplePlayer> getPlayers() {

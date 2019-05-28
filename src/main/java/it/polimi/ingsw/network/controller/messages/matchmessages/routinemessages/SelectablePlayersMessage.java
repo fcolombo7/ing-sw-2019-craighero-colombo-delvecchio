@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.controller.messages.matchmessages.routinemessage
 
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Target;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
 import it.polimi.ingsw.utils.Constants;
@@ -26,6 +27,16 @@ public class SelectablePlayersMessage extends TurnRoutineMessage {
             this.selectable.add(nickList);
         }
         this.target=new SimpleTarget(target);
+    }
+
+    public SelectablePlayersMessage(String receiver, SimpleTarget target, List<List<String>> selectable) {
+        super(receiver,Constants.SELECTABLE_PLAYERS_MESSAGE);
+        this.selectable=new ArrayList<>();
+        for(List<String> list: selectable) {
+            List<String> nickList = new ArrayList<>(list);
+            this.selectable.add(nickList);
+        }
+        this.target=target;
     }
 
     public SimpleTarget getTarget() {

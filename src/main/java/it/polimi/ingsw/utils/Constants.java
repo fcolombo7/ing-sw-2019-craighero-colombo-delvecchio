@@ -25,10 +25,10 @@ public class Constants {
     public static final String MSG_SERVER_CLOSE = "CLOSING CONNECTION";
 
     /* ROOM PARAMETERS */
-    public static final int ROOM_MIN_PLAYERS=1;
-    public static final int ROOM_MAX_PLAYERS=2;
-    public static final long WAITING_ROOM_TIMER=10; //seconds
-    public static final long WAITING_ROOM_PONG =5;
+    public static final int ROOM_MIN_PLAYERS=2;
+    public static final int ROOM_MAX_PLAYERS=3;
+    public static final long WAITING_ROOM_TIMER = 30; //seconds
+    public static final long WAITING_ROOM_PONG = 5;
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";
@@ -45,8 +45,8 @@ public class Constants {
     public static final String EFFECT_DAMAGE_MESSAGE = "DAMAGE MESSAGE";
     public static final String RUN_COMPLETED = "RUN ROUTINE RESULT";
     public static final String RELOAD_COMPLETED = "RELOAD RESULT";
-    public static final String USING_CARD_MESSAGE = "USING CARD";
-    public static final String MOVE_MESSAGE = "MOVE";
+    public static final String USED_CARD_MESSAGE = "USING CARD";
+    public static final String EFFECT_MOVE_MESSAGE = "MOVE MESSAGE";
     public static final String PAY_EFFECT_MESSAGE = "PAY EFFECT";
     public static final String GRABBED_TILE_MESSAGE = "GRABBED AMMO TILE";
     public static final String GRABBED_WEAPON_MESSAGE = "GRABBED WEAPON";

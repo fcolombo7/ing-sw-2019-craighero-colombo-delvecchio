@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.model.GameBoard;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
+import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.utils.Constants;
 
 public class BoardUpdateMessage extends MatchMessage {
@@ -11,6 +12,11 @@ public class BoardUpdateMessage extends MatchMessage {
     public BoardUpdateMessage(GameBoard gameBoard) {
         super(null, Constants.BOARD_UPDATE_MESSAGE);
         this.gameBoard=new SimpleBoard(gameBoard);
+    }
+
+    public BoardUpdateMessage(SimpleBoard gameBoard){
+        super(null, Constants.BOARD_UPDATE_MESSAGE);
+        this.gameBoard=gameBoard;
     }
 
     public SimpleBoard getGameBoard() {

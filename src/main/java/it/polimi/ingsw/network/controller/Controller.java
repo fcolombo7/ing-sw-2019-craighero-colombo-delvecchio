@@ -5,8 +5,6 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.controller.messages.matchanswer.MatchAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
 import it.polimi.ingsw.utils.Constants;
-import it.polimi.ingsw.utils.Logger;
-import it.polimi.ingsw.utils.Observer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,17 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Controller implements Observer<MatchAnswer> {
+public class Controller{
     private Game game;
-    private Map<String, AnswerManager> answerMap;
-
     private List<Integer> boardPreference;
 
     public Controller(Game game) {
         this.game = game;
-
-        answerMap=new HashMap<>();
-        loadAnswer();
     }
 
     public void start() {
@@ -32,25 +25,17 @@ public class Controller implements Observer<MatchAnswer> {
         game.startMessage();
     }
 
-    @Override
-    public void update(MatchAnswer message) {
-        Logger.log("Received '"+message.getAnswer()+"' from "+message.getSender());
-        answerMap.get(message.getAnswer()).exec(message);
-    }
+    //non ricevono MatchAnswer ma direttamente i valori--->dispatcher in SocketClientConnection!
 
-    private void loadAnswer() {
-        answerMap.put(Constants.BOARD_SETTING_ANSWER,this::roomPreferenceManager);
-    }
-
-    private void roomPreferenceManager(MatchAnswer message) {
-        BoardPreferenceAnswer answer=(BoardPreferenceAnswer)message;
+    //TODO: GESTIONE IN CASO DI STESSO PLAYER RICEVUTO
+    public void roomPreferenceManager(String sender, int boardNumber) {
         String folderName= Constants.BOARD_FOLDER;
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles==null) throw new MatchConfigurationException("No boards in "+folderName);
         for(File file:listOfFiles){
-            if(file.getName().equalsIgnoreCase("board"+answer.getRoomReference()+".xml")) {
-                boardPreference.add(answer.getRoomReference());
+            if(file.getName().equalsIgnoreCase("board"+boardNumber+".xml")) {
+                boardPreference.add(boardNumber);
                 break;
             }
         }
@@ -59,7 +44,6 @@ public class Controller implements Observer<MatchAnswer> {
             game.setGameBoard(selBoard);
         }
     }
-
     private int mostCommonBoard() {
         Map<Integer, Integer> map = new HashMap<>();
         for (Integer value : boardPreference) {
@@ -75,10 +59,5 @@ public class Controller implements Observer<MatchAnswer> {
         }
 
         return max==null?boardPreference.get(0):max.getValue();
-    }
-
-    @FunctionalInterface
-    private interface AnswerManager {
-        void exec(MatchAnswer message);
     }
 }

@@ -9,10 +9,10 @@ public class MarkMessage extends MatchMessage {
     private SimplePlayer selected;
     private int value;
     private String player;
-    public MarkMessage(String player, Player selected, int value) {
+    public MarkMessage(String player, SimplePlayer selected, int value) {
         super(null, Constants.EFFECT_MARK_MESSAGE);
         this.player=player;
-        this.selected=new SimplePlayer(selected);
+        this.selected=selected;
         this.value=value;
     }
 

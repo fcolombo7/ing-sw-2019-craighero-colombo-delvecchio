@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.TurnRoutineAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
@@ -91,7 +92,7 @@ public class ShootingRoutine implements TurnRoutine {
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"[SHOOT ROUTINE]Invalid nicknames received")));
             return;
         }
-        turn.getGame().notify(new UsingCardMessage(selWeapon));
+        turn.getGame().notify(new UsedCardMessage(selWeapon));
         selEffect.perform(answer.getSelected(),turn);
     }
 
@@ -103,7 +104,7 @@ public class ShootingRoutine implements TurnRoutine {
                 payEffectCost();
 
                 if(selEffect.getTarget().getType()== TargetType.ME){
-                    turn.getGame().notify(new UsingCardMessage(selWeapon));
+                    turn.getGame().notify(new UsedCardMessage(selWeapon));
 
                     List<List<String>>selected=new ArrayList<>();
                     List<String> list=new ArrayList<>();
@@ -140,7 +141,7 @@ public class ShootingRoutine implements TurnRoutine {
                     }
                 }
             }
-            MatchMessage message=new PayEffectMessage(turn.getGame().getCurrentPlayer(),usedAmmo, discardedPowerups);
+            MatchMessage message=new PayEffectMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),usedAmmo, discardedPowerups);
             turn.getGame().notify(message);
         }
     }

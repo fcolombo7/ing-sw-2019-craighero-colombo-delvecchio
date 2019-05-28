@@ -36,10 +36,13 @@ public class Room {
 
     private Map<String, Timer> clientCheck=null;
 
+    public Controller controller;
+
     public Room(ClientConnection client) {
         players = new ArrayList<>();
         players.add(client);
-        client.sendRoomMessage(new FirstInMessage());
+        controller=null;
+        client.firstInRoomAdvise();
     }
 
     public int getRoomNumber() {
@@ -59,7 +62,8 @@ public class Room {
     public synchronized void joinRequest(ClientConnection client) throws JoinRoomException{
         if (!(playing||full)) {
             for (ClientConnection cc:players) {
-                cc.sendRoomMessage(new JoinMessage(client.getNickname()));
+                cc.joinRoomAdvise(client.getNickname());
+                client.joinRoomAdvise(cc.getNickname());
             }
             players.add(client);
             Logger.log(client.getNickname() + " has joined the room " + roomNumber);
@@ -67,6 +71,7 @@ public class Room {
             if (players.size() == MAX_PLAYERS) {
                 full = true;
                 startCountDown(ROOM_WAITING_PONG);
+                startMatch();
             } else if (players.size() == MIN_PLAYERS) {
                 startCountDown(ROOM_WAITING_TIME);
             }
@@ -79,7 +84,7 @@ public class Room {
         if(!players.contains(client)) throw new IllegalArgumentException("Client "+client.getNickname()+" is not in room "+roomNumber);
         players.remove(client);
         for (ClientConnection cc:players) {
-            cc.sendRoomMessage(new ExitMessage(client.getNickname()));
+            cc.exitRoomAdvise(client.getNickname());
         }
 
         Logger.log(client.getNickname() + " has left the room " + roomNumber);
@@ -111,7 +116,7 @@ public class Room {
         resetCheck();
         clientCheck=new HashMap<>();
         for(ClientConnection cc:players){
-            cc.sendRoomMessage(new PingMessage());
+            cc.pingAdvise();
             Timer ccTimer=new Timer();
             ccTimer.schedule(new TimerTask() {
                 @Override
@@ -147,9 +152,14 @@ public class Room {
         }
     }
 
+    public Controller getController() {
+        if(!playing)throw  new IllegalStateException("The match is not started.");
+        return controller;
+    }
+
     private void startMatch() {
         Game model= new Game();
-        Controller controller= new Controller(model);
+        controller= new Controller(model);
         boolean first=true;
         for (ClientConnection client:players) {
             boolean val=false;
@@ -161,7 +171,6 @@ public class Room {
             model.addPlayer(p);
             View pView=new RemoteView(p,client);
             model.register(pView);
-            pView.register(controller);
         }
         playing=true;
         controller.start();

@@ -41,6 +41,8 @@ public class RMIServer implements RMIServerHandler, Serializable {
         }
     }
 
+    /*RMI REMOTE METHODS IMPLEMENTATION*/
+
     @Override
     public synchronized String login(LoginMessage msg, RMIClientHandler client) {
         Logger.log("[Received a login request form RMI]");
@@ -66,9 +68,19 @@ public class RMIServer implements RMIServerHandler, Serializable {
     }
 
     @Override
+    public void boardPreference(String session, int value) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().roomPreferenceManager(nick,value);
+    }
+
+    /*
+    @Override
     public void sendMatchAnswer(String session, MatchAnswer message) throws RemoteException {
         String nick=rmiClients.get(session);
         if(nick!=null)
             ((RMIClientConnection)server.getClientConnection(nick)).getMatchAnswer(message);
     }
+
+     */
 }

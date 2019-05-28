@@ -23,6 +23,13 @@ public class MatchUpdateMessage extends MatchMessage {
         this.frenzy=frenzy;
     }
 
+    public MatchUpdateMessage(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
+        super(null,Constants.UPDATE_MESSAGE);
+        this.players=new ArrayList<>(players);
+        this.gameBoard=gameBoard;
+        this.frenzy=frenzy;
+    }
+
     public boolean isFrenzy() {
         return frenzy;
     }

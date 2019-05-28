@@ -10,10 +10,10 @@ public class DamageMessage extends MatchMessage {
     private int damageValue;
     private int convertedMarks;
     private String player;
-    public DamageMessage(String  player, Player selected, int damageValue, int convertedMarks) {
+    public DamageMessage(String  player, SimplePlayer selected, int damageValue, int convertedMarks) {
         super(null, Constants.EFFECT_DAMAGE_MESSAGE);
         this.player=player;
-        this.selected=new SimplePlayer(selected);
+        this.selected=selected;
         this.damageValue=damageValue;
         this.convertedMarks=convertedMarks;
     }

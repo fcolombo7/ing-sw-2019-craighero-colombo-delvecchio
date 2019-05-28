@@ -12,6 +12,6 @@ public interface RMIServerHandler extends Remote {
 
     boolean deregister(String session) throws RemoteException;
 
-    void sendMatchAnswer(String session, MatchAnswer message) throws RemoteException;
+    void boardPreference(String session, int value) throws RemoteException;
 
 }
