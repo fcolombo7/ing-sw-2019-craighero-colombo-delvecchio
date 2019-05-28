@@ -22,10 +22,10 @@ public class GameWindow {
         boolean mapp2=false;
         boolean mapp3=false;
         boolean mapp4=false;
-        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map1.png")) mapp1=true;
-        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map2.png")) mapp2=true;
-        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map3.png")) mapp3=true;
-        if(urlmap.equalsIgnoreCase("file:/C:/Users/Michele/IdeaProjects/ing-sw-2019-craighero-colombo-delvecchio/target/classes/gui/map4.png")) mapp4=true;
+        if(urlmap.contains("/gui/map1.png")) mapp1=true;
+        if(urlmap.contains("/gui/map2.png")) mapp2=true;
+        if(urlmap.contains("/gui/map3.png")) mapp3=true;
+        if(urlmap.contains("/gui/map4.png")) mapp4=true;
         ImageView map=new ImageView(image);
         map.setFitWidth(600);
         map.setFitHeight(454);
