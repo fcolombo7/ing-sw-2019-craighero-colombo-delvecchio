@@ -99,10 +99,13 @@ public class Constants {
     public static final String	RED_W				= "\u001B[31m";
     public static final String	GREEN_W				= "\u001B[32m";
     public static final String	YELLOW_W			= "\u001B[33m";
-    public static final String	BLUE_W				= "\u001B[34m";
+    public static final String	BLUE_W				= "\u001b[34;1m";
     public static final String	MAGENTA_W			= "\u001B[35m";
     public static final String	CYAN_W				= "\u001B[36m";
     public static final String	WHITE_W				= "\u001B[37m";
+    public static final String BOLD = "\u001b[1m";
+    public static final String UNDERLINE = "\u001b[4m";
+    public static final String REVERSE = "\u001b[7m";
 
     /*public static final String	BACKGROUND_BLACK	= "\u001B[40m";
     public static final String	BACKGROUND_RED		= "\u001B[41m";
@@ -110,8 +113,8 @@ public class Constants {
     public static final String	BACKGROUND_YELLOW	= "\u001B[43m";
     public static final String	BACKGROUND_BLUE		= "\u001B[44m";
     public static final String	BACKGROUND_MAGENTA	= "\u001B[45m";
-    public static final String	BACKGROUND_CYAN		= "\u001B[46m";
-    public static final String	BACKGROUND_WHITE	= "\u001B[47m";*/
+    public static final String	BACKGROUND_CYAN		= "\u001B[46m";*/
+    public static final String	BACKGROUND_WHITE	= "\u001B[47m";
 
     private static final String UH_BLOCK = "\u2580";
     private static final String DH_BLOCK = "\u2584";
@@ -131,7 +134,14 @@ public class Constants {
     private static final String DL_CORNER = "\u2599";
     public static final String GUN = "\uD83D\uDD2B";
     public static final String SPAWN = "\u271D";
-    public static final String AMMO = "\u2B24";
+    public static final String AMMO = "\u2022";
+    public static final String DAMAGE = "\u2B24";
+    public static final String HAND = "\u270B";
+    public static final String DROPLET = "\uD83D\uDCA7";
+    public static final String SKULL = "\uD83D\uDC80";
+    public static final String OVERKILL = "\u25CE";
+    public static final String MARK = "\u2B22";
+    public static final String SQUARE = "\u25A0";
 
     public static final String UCLASSIC_SIDE = UL_CORNER + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UR_CORNER;
     public static final String UDOOR_SIDE = UL_CORNER + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UL_QUAD + "  " + UR_QUAD + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UR_CORNER;
