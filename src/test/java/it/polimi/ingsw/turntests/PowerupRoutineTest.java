@@ -38,7 +38,7 @@ public class PowerupRoutineTest {
         game.setGameBoard(1);
         p1.setPosition(game.getGameBoard().getSquare(1,1));
         p2.setPosition(game.getGameBoard().getSquare(1,1));
-        p4.setPosition(game.getGameBoard().getSquare(1,1));
+        p3.setPosition(game.getGameBoard().getSquare(1,1));
         p4.setPosition(game.getGameBoard().getSquare(1,1));
 
         Logger.log("FIRST PLAYER");
@@ -60,7 +60,7 @@ public class PowerupRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"POWERUP"));
+        turn.selectAction("POWERUP");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.AVAILABLE_POWERUPS_MESSAGE));
@@ -70,10 +70,10 @@ public class PowerupRoutineTest {
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MOVE_REQUEST_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
 
-        turn.getCurEffect().handleMoveResponse(turn,new MoveAnswer(p1.getNickname(),p2.getNickname(), new int[]{1,2}));
+        turn.getCurEffect().handleMoveResponse(turn,p2.getNickname(), new int[]{1,2});
         assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
 
-        turn.getCurEffect().handleMoveResponse(turn,new MoveAnswer(p1.getNickname(),p1.getNickname(), new int[]{1,2}));
+        turn.getCurEffect().handleMoveResponse(turn,p1.getNickname(), new int[]{1,2});
         assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.DISCARDED_POWERUP_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MOVE_MESSAGE));

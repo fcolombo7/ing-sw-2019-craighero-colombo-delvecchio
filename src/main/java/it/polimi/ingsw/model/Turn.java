@@ -43,14 +43,14 @@ public class Turn {
         availableActions(false);
     }
 
-    public void selectAction(ActionSelectedAnswer answer){
+    public void selectAction(String answer){
         try{
-            if(answer.getSelection().equals("END")) {
+            if(answer.equals("END")) {
                 status=TurnStatus.END;
                 game.notify(new TurnEndMessage(game.getCurrentPlayer().getNickname()));
             }
             else
-                createRoutine(answer.getSelection());
+                createRoutine(answer);
         }catch(IllegalArgumentException ex){
             Logger.log("Invalid action received");
             game.notify((new InvalidAnswerMessage(game.getCurrentPlayer().getNickname(),"Invalid action received")));

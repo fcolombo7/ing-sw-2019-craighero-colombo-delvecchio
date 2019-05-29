@@ -459,23 +459,22 @@ public class Game extends Observable<MatchMessage> {
         ArrayList<Card> drawnPowerups;
         if(firstSpawn) {
             player.addPowerup(new Powerup(drawPowerup()));
-        }else
-            player.addPowerup(new Powerup(drawPowerup()));
+        }
+        player.addPowerup(new Powerup(drawPowerup()));
         drawnPowerups=new ArrayList<>(player.getPowerups());
         MatchMessage message=new RespawnRequestMessage(player.getNickname(),drawnPowerups);
         notify(message);
     }
 
-    public void respawnPlayer(Player player, RespawnAnswer answer){
+    public void respawnPlayer(Player player, Card discardedPowerup){
         if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN){
             Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: status]");
             MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
             notify(message);
             return;
         }
-        Card recPowerup=answer.getPowerup();
         for (Powerup powerup:player.getPowerups()) {
-            if(powerup.getId().equals(recPowerup.getId())){
+            if(powerup.getId().equals(discardedPowerup.getId())){
                 player.popPowerup(powerup);
                 for (WeaponSquare square:gameBoard.getSpawnPoints()){
                     if(powerup.getColor().name().equalsIgnoreCase(square.getRoomColor().name()))

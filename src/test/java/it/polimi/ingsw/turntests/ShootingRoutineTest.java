@@ -69,7 +69,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
+        turn.selectAction("SHOOT");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
@@ -149,7 +149,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
+        turn.selectAction("SHOOT");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
@@ -261,7 +261,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
+        turn.selectAction("SHOOT");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
@@ -380,7 +380,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"SHOOT"));
+        turn.selectAction("SHOOT");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.RUN_ROUTINE_MESSAGE));

@@ -66,7 +66,7 @@ public class ReloadingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"RELOAD"));
+        turn.selectAction("RELOAD");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.LOADABLE_WEAPONS_MESSAGE));
@@ -127,7 +127,7 @@ public class ReloadingRoutineTest {
 
         assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
 
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"RELOAD"));
+        turn.selectAction("RELOAD");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.LOADABLE_WEAPONS_MESSAGE));

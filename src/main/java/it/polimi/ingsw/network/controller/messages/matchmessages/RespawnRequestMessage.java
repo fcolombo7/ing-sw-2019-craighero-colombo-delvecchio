@@ -16,7 +16,7 @@ public class RespawnRequestMessage extends MatchMessage {
         super(recipient,Constants.RESPAWN_REQUEST_MESSAGE);
         this.powerups=new ArrayList<>(powerups.size());
         for (Card card:powerups)
-            powerups.add(new Card(card));
+            this.powerups.add(new Card(card));
     }
 
     public List<Card> getPowerups() {

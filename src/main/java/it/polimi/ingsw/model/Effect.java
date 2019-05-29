@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.MoveAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
@@ -753,10 +752,10 @@ public class Effect {
         }
     }
 
-    public void handleMoveResponse(Turn turn, MoveAnswer answer){
+    public void handleMoveResponse(Turn turn, String target, int[] newPosition){
         Player selectedPlayer=null;
         for(Player p:turn.getGame().getPlayers()){
-            if(p.getNickname().equalsIgnoreCase(answer.getTarget())) {
+            if(p.getNickname().equalsIgnoreCase(target)) {
                 selectedPlayer = p;
                 break;
             }
@@ -772,8 +771,8 @@ public class Effect {
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"INVALID TARGET RECEIVED")));
             return;
         }
-        if(playerMatrix.toBooleanMatrix()[answer.getNewPosition()[0]][answer.getNewPosition()[1]]){
-            selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(answer.getNewPosition()[0],answer.getNewPosition()[1]));
+        if(playerMatrix.toBooleanMatrix()[newPosition[0]][newPosition[1]]){
+            selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(newPosition[0],newPosition[1]));
             turn.getGame().notify(new MoveMessage(new SimplePlayer(selectedPlayer)));
             Logger.log("Moving the selected player");
             handleExtra(turn);

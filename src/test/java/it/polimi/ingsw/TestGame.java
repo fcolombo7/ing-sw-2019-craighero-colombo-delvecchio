@@ -211,7 +211,7 @@ public class TestGame {
         game.respawnPlayerRequest(p1,true);
         assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_REQUEST_MESSAGE));
 
-        game.respawnPlayer(p1,new RespawnAnswer(p1.getNickname(),p1.getPowerups().get(0)));
+        game.respawnPlayer(p1,p1.getPowerups().get(0));
 
         assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_COMPLETED_MESSAGE));
 
@@ -235,19 +235,19 @@ public class TestGame {
         assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_REQUEST_MESSAGE));
         p1.setStatus(PlayerStatus.WAITING);
 
-        game.respawnPlayer(p1,new RespawnAnswer(p1.getNickname(),p1.getPowerups().get(0)));
+        game.respawnPlayer(p1,p1.getPowerups().get(0));
 
         assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
         p1.setStatus(PlayerStatus.FIRST_SPAWN);
 
         try {
-            game.respawnPlayer(p1, new RespawnAnswer(p1.getNickname(), game.drawPowerup()));
+            game.respawnPlayer(p1, game.drawPowerup());
             assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
         }catch(Exception e){
             assertThat(e.getMessage(),is("MISSING POWERUP"));
         }
 
-        game.respawnPlayer(p1,new RespawnAnswer(p1.getNickname(),p1.getPowerups().get(0)));
+        game.respawnPlayer(p1,p1.getPowerups().get(0));
         assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_COMPLETED_MESSAGE));
 
         assertTrue(p1.getPowerups().size()<2);
@@ -283,7 +283,7 @@ public class TestGame {
         p2.getBoard().addDamage(p1,6);
         p2.getBoard().addDamage(p3,5);
         p2.setStatus(PlayerStatus.ALMOST_DEAD);
-        turn.selectAction(new ActionSelectedAnswer(p1.getNickname(),"END"));
+        turn.selectAction("END");
         game.endTurn();
 
         assertEquals(9,p1.getScore());
