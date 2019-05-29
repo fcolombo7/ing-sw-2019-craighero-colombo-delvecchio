@@ -57,16 +57,24 @@ public abstract class ClientConnection{
 
     /*ROOM METHOD*/
     public abstract void joinRoomAdvise(String nickname);
+
     public abstract void exitRoomAdvise(String nickname);
+
     public abstract void firstInRoomAdvise();
+
     public abstract void pingAdvise();
 
     /*MATCH METHOD*/
     public abstract void matchCreation(List<SimplePlayer> players, int playerTurnNumber);
+
     public abstract void invalidMessageReceived(String msg);
+
     public abstract void boardUpdate(SimpleBoard gameBoard);
+
     public abstract void matchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
+
     public abstract void respwanRequest(List<Card> powerups);
+
     public abstract void respwanCompleted(SimplePlayer player, Card discardedPowerup);
 
     public abstract void grabbedTile(SimplePlayer player, AmmoTile grabbedTile);

@@ -3,7 +3,6 @@ package it.polimi.ingsw.turntests;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PlayerStatus;
-import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
@@ -78,7 +77,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         AvailableEffectsMessage msg= (AvailableEffectsMessage)collector.pop();
-        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECT_MESSAGE));
+        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
 
         Logger.log("RECEIVED EFFECTS\n"+msg.getEffects().toString());
 
@@ -158,7 +157,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         AvailableEffectsMessage msg= (AvailableEffectsMessage)collector.pop();
-        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECT_MESSAGE));
+        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
 
         Logger.log("RECEIVED EFFECTS\n"+msg.getEffects().toString());
 
@@ -186,7 +185,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         AvailableEffectsMessage msg2= (AvailableEffectsMessage)collector.pop();
-        assertThat(msg2.getRoutineRequest(), is(Constants.AVAILABLE_EFFECT_MESSAGE));
+        assertThat(msg2.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
 
         Logger.log("RECEIVED EFFECTS\n"+msg2.getEffects().toString());
 
@@ -270,7 +269,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         AvailableEffectsMessage msg= (AvailableEffectsMessage)collector.pop();
-        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECT_MESSAGE));
+        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
 
         Logger.log("RECEIVED EFFECTS\n"+msg.getEffects().toString());
 
@@ -395,7 +394,7 @@ public class ShootingRoutineTest {
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
         AvailableEffectsMessage msg= (AvailableEffectsMessage)collector.pop();
-        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECT_MESSAGE));
+        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.RELOAD_COMPLETED));
 
         Logger.log("RECEIVED EFFECTS\n"+msg.getEffects().toString());

@@ -11,14 +11,14 @@ public class AvailableEffectsMessage extends TurnRoutineMessage {
     private static final long serialVersionUID = 1294002369241162357L;
     private List<String> effects;
     public AvailableEffectsMessage(String recipient, List<Effect> effects) {
-        super(recipient,Constants.AVAILABLE_EFFECT_MESSAGE);
+        super(recipient,Constants.AVAILABLE_EFFECTS_MESSAGE);
         this.effects=new ArrayList<>();
         for(Effect effect:effects)
             this.effects.add(effect.getName());
     }
 
     public AvailableEffectsMessage(List<String> effects,String recipient) {
-        super(recipient,Constants.AVAILABLE_EFFECT_MESSAGE);
+        super(recipient,Constants.AVAILABLE_EFFECTS_MESSAGE);
         this.effects=new ArrayList<>(effects);
     }
 

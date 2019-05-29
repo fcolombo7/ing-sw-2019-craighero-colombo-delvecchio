@@ -32,14 +32,14 @@ public class Constants {
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";
-    public static final String BOARD_UPDATE_MESSAGE ="BOARD CREATED";
+    public static final String BOARD_UPDATE_MESSAGE ="BOARD UPDATE";
     public static final String UPDATE_MESSAGE="MATCH UPDATE";
     public static final String RESPAWN_REQUEST_MESSAGE ="RESPAWN REQUEST";
     public static final String RESPAWN_COMPLETED_MESSAGE ="RESPAWN COMPLETE";
     public static final String INVALID_ANSWER = "INVALID ANSWER RECEIVED";
     public static final String TURN_ROUTINE_MESSAGE ="ROUTINE MESSAGE";
     public static final String TURN_AVAILABLE_ACTIONS = "AVAILABLE ACTIONS";
-    public static final String LOADABLE_WEAPONS_MESSAGE = "LOADABLE WEAPONS";
+    public static final String RELOADABLE_WEAPONS_MESSAGE = "LOADABLE WEAPONS";
     public static final String EFFECT_MOVE_REQUEST_MESSAGE = "MOVE REQUEST";
     public static final String EFFECT_MARK_MESSAGE = "MARK MESSAGE";
     public static final String EFFECT_DAMAGE_MESSAGE = "DAMAGE MESSAGE";
@@ -57,7 +57,7 @@ public class Constants {
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
     public static final String USABLE_WEAPONS_MESSAGE ="AVAILABLE WEAPONS";
-    public static final String AVAILABLE_EFFECT_MESSAGE = "AVAILABLE EFFECTS";
+    public static final String AVAILABLE_EFFECTS_MESSAGE = "AVAILABLE EFFECTS";
     public static final String AVAILABLE_POWERUPS_MESSAGE = "AVAILABLE POWERUPS";
     public static final String SELECTABLE_PLAYERS_MESSAGE = "SELECTABLE PLAYER";
     public static final String CAN_STOP_ROUTINE = "CAN STOP ROUTINE";

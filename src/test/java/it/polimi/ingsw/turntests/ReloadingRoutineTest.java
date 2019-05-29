@@ -2,7 +2,6 @@ package it.polimi.ingsw.turntests;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PlayerStatus;
-import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.LoadableWeaponSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.WeaponAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
@@ -69,7 +68,7 @@ public class ReloadingRoutineTest {
         turn.selectAction("RELOAD");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
-        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.LOADABLE_WEAPONS_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.RELOADABLE_WEAPONS_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new LoadableWeaponSelectedAnswer(p1.getNickname(),new Card(weapon)));
 
@@ -130,7 +129,7 @@ public class ReloadingRoutineTest {
         turn.selectAction("RELOAD");
 
         assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
-        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.LOADABLE_WEAPONS_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.RELOADABLE_WEAPONS_MESSAGE));
 
         turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),new Card(weapon)));
         assertThat(collector.peek().getRequest(), is(Constants.INVALID_ANSWER));

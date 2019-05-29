@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network;
+package it.polimi.ingsw.network.tests;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.*;

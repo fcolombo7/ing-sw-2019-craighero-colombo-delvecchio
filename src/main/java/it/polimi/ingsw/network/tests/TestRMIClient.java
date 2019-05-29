@@ -1,18 +1,14 @@
-package it.polimi.ingsw.network;
+package it.polimi.ingsw.network.tests;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.network.RMIClientHandler;
+import it.polimi.ingsw.network.RMIServerHandler;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
-import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
-import it.polimi.ingsw.network.controller.messages.room.ExitMessage;
-import it.polimi.ingsw.network.controller.messages.room.JoinMessage;
-import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
-import it.polimi.ingsw.network.server.RMIClientHandler;
-import it.polimi.ingsw.network.server.RMIServerHandler;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.MatrixHelper;
 
@@ -49,17 +45,17 @@ public class TestRMIClient implements RMIClientHandler {
         String remoteObjectName = Constants.RMI_SERVER_NAME;
         RMIServerHandler serverRMI = (RMIServerHandler) registry.lookup(remoteObjectName);
 
-        String session = serverRMI.login(new LoginMessage(nickname,motto),stub);
+        String session = serverRMI.login(nickname,motto,stub);
         System.out.println(session);
     }
 
     @Override
-    public void onJoin(String nickname) throws RemoteException {
+    public void joinPlayer(String nickname) throws RemoteException {
         System.out.println("User "+ nickname+" has join the room...");
     }
 
     @Override
-    public void onExit(String nickname) throws RemoteException {
+    public void exitPlayer(String nickname) throws RemoteException {
         System.out.println("User "+ nickname+" has left the room...");
     }
 
@@ -154,7 +150,7 @@ public class TestRMIClient implements RMIClientHandler {
     }
 
     @Override
-    public void markAction(String player, SimplePlayer player1, int value) throws RemoteException {
+    public void markAction(String player, SimplePlayer target, int value) throws RemoteException {
 
     }
 

@@ -49,7 +49,7 @@ public class RemoteView extends View{
         senderMap.put(Constants.TURN_CREATION_MESSAGE,this::turnCreation);
         senderMap.put(Constants.TURN_END_MESSAGE,this::turnEnd);
         senderMap.put(Constants.TURN_AVAILABLE_ACTIONS,this::turnActions);
-        senderMap.put(Constants.LOADABLE_WEAPONS_MESSAGE,this::reloadableWeapons);
+        senderMap.put(Constants.RELOADABLE_WEAPONS_MESSAGE,this::reloadableWeapons);
         senderMap.put(Constants.RELOAD_COMPLETED,this::reloadedWeapon);
         senderMap.put(Constants.GRABBED_WEAPON_MESSAGE,this::grabbedWeapon);
         senderMap.put(Constants.DISCARD_WEAPON_MESSAGE,this::discardWeapon);
@@ -62,7 +62,7 @@ public class RemoteView extends View{
         senderMap.put(Constants.AVAILABLE_POWERUPS_MESSAGE,this::availablePowerups);
         senderMap.put(Constants.USED_CARD_MESSAGE,this::usedCard);
         senderMap.put(Constants.PAY_EFFECT_MESSAGE,this::payEffect);
-        senderMap.put(Constants.AVAILABLE_EFFECT_MESSAGE,this::availableEffects);
+        senderMap.put(Constants.AVAILABLE_EFFECTS_MESSAGE,this::availableEffects);
         senderMap.put(Constants.USABLE_WEAPONS_MESSAGE,this::usableWeapons);
         senderMap.put(Constants.CAN_STOP_ROUTINE,this::canStopRoutine);
         senderMap.put(Constants.CAN_USE_POWERUP,this::canUsePowerup);

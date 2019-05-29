@@ -13,7 +13,7 @@ public class ReloadableWeaponsMessage extends TurnRoutineMessage {
     private List<Card> weapons;
 
     public ReloadableWeaponsMessage(String recipient, List<Card> weapons) {
-        super(recipient,Constants.LOADABLE_WEAPONS_MESSAGE);
+        super(recipient,Constants.RELOADABLE_WEAPONS_MESSAGE);
         this.weapons=new ArrayList<>(weapons);
     }
 

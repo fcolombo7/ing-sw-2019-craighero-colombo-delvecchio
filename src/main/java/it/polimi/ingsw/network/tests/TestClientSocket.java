@@ -1,15 +1,11 @@
-package it.polimi.ingsw.network;
+package it.polimi.ingsw.network.tests;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
-import it.polimi.ingsw.network.controller.messages.SimpleBoard;
-import it.polimi.ingsw.network.controller.messages.matchmessages.BoardUpdateMessage;
 import it.polimi.ingsw.network.controller.messages.room.ExitMessage;
 import it.polimi.ingsw.network.controller.messages.room.FirstInMessage;
 import it.polimi.ingsw.network.controller.messages.room.JoinMessage;
-import it.polimi.ingsw.network.controller.messages.room.RoomMessage;
 import it.polimi.ingsw.utils.Constants;
-import it.polimi.ingsw.utils.Logger;
 
 import java.io.*;
 import java.net.Socket;

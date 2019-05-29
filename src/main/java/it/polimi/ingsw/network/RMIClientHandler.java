@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -15,8 +15,8 @@ import java.util.List;
 public interface RMIClientHandler extends Remote {
 
     /*ROOM REMOTE METHOD*/
-    void onJoin(String nickname) throws RemoteException;
-    void onExit(String nickname) throws RemoteException;
+    void joinPlayer(String nickname) throws RemoteException;
+    void exitPlayer(String nickname) throws RemoteException;
     void firstInRoom() throws RemoteException;
 
     /*MATCH REMOTE METHOD*/
@@ -37,7 +37,7 @@ public interface RMIClientHandler extends Remote {
     void turnEnd() throws RemoteException;
     void moveAction(SimplePlayer player) throws RemoteException;
     void moveRequest(MatrixHelper matrix, String targetPlayer) throws RemoteException;
-    void markAction(String player, SimplePlayer player1, int value)  throws RemoteException;
+    void markAction(String player, SimplePlayer target, int value)  throws RemoteException;
     void damageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks)  throws RemoteException;
     void discardedPowerup(SimplePlayer player, Card powerup) throws RemoteException;
     void turnCreation(String currentPlayer)  throws RemoteException;

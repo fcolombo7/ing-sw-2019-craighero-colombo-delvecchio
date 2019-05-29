@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.network.RMIClientHandler;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
@@ -35,7 +36,7 @@ public class RMIClientConnection extends ClientConnection{
     @Override
     public void joinRoomAdvise(String nickname) {
         try {
-            clientStub.onJoin(nickname);
+            clientStub.joinPlayer(nickname);
         } catch (RemoteException e) {
             Logger.logErr("RemoteException has been thrown when call joinRoomAdvise().");
             Logger.logErr(e.getMessage());
@@ -45,7 +46,7 @@ public class RMIClientConnection extends ClientConnection{
     @Override
     public void exitRoomAdvise(String nickname) {
         try {
-            clientStub.onExit(nickname);
+            clientStub.exitPlayer(nickname);
         } catch (RemoteException e) {
             Logger.logErr("RemoteException has been thrown when call exitRoomAdvise().");
             Logger.logErr(e.getMessage());
