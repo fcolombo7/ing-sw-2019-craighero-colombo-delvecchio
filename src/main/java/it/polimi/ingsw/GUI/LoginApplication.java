@@ -18,7 +18,7 @@ public class LoginApplication extends Application {
 
     //public Scanner sn=new Scanner(System.in);
     //int players=sn.nextInt();
-    int players=0;
+    int players=4;
 
     ArrayList<String> pl= new ArrayList<String>(){
 

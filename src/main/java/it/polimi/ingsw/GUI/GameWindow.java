@@ -8,13 +8,16 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.IOException;
 
 public class GameWindow {
 
 
-    public static void open(Image image, String urlmap){
+    public static void open(Image image, String urlmap) throws IOException {
         Stage s= new Stage();
         s.setTitle("ADRENALINE");
 
@@ -33,6 +36,9 @@ public class GameWindow {
         ImageView plB= new ImageView(playerBoard);
         plB.setFitWidth(600);
         plB.setPreserveRatio(true);
+
+
+
         Image pla1= new Image("/gui/pl1.png");
         ImageView pl1= new ImageView(pla1);
         pl1.setFitWidth(304);
@@ -67,10 +73,23 @@ public class GameWindow {
         Label nb=new Label("x 3");
         Label nr= new Label("x 0");
 
+        Button inf1= new Button("Info");
+        Button inf2= new Button("Info");
+        Button inf3= new Button("Info");
+        Button inf4= new Button("Info");
+        inf1.getStyleClass().add("info");
+        inf2.getStyleClass().add("info");
+        inf3.getStyleClass().add("info");
+        inf4.getStyleClass().add("info");
+
         Button shoot= new Button("Shoot");
         Button grab= new Button("Grab");
         Button move= new Button("Move");
         Button loadWeapon= new Button("Load Weapon");
+        shoot.getStyleClass().add("actionbuttons");
+        grab.getStyleClass().add("actionbuttons");
+        move.getStyleClass().add("actionbuttons");
+        loadWeapon.getStyleClass().add("actionbuttons");
         shoot.setPrefWidth(150);
         grab.setPrefWidth(150);
         move.setPrefWidth(150);
@@ -80,30 +99,165 @@ public class GameWindow {
         ImageView wp1= new ImageView(weap1);
         wp1.setFitWidth(80);
         wp1.setPreserveRatio(true);
+        Button myw1= new Button();
+        myw1.setPrefWidth(80);
+        myw1.setPrefHeight(135);
+        myw1.setStyle("-fx-background-color: transparent");
+        myw1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myw1.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
         Image weap2= new Image("/gui/cyberguanto.png");
         ImageView wp2= new ImageView(weap2);
         wp2.setFitWidth(80);
         wp2.setPreserveRatio(true);
+        Button myw2= new Button();
+        myw2.setPrefWidth(80);
+        myw2.setPrefHeight(135);
+        myw2.setStyle("-fx-background-color: transparent");
+        myw2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myw2.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
         Image weap3= new Image("/gui/martelloionico.png");
         ImageView wp3= new ImageView(weap3);
         wp3.setFitWidth(80);
         wp3.setPreserveRatio(true);
+        Button myw3= new Button();
+        myw3.setPrefWidth(80);
+        myw3.setPrefHeight(135);
+        myw3.setStyle("-fx-background-color: transparent");
+        myw3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myw3.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
         Image powerup1= new Image("/gui/granatavenom.png");
         ImageView pu1= new ImageView(powerup1);
         pu1.setFitWidth(80);
         pu1.setPreserveRatio(true);
+        Button myp1= new Button();
+        myp1.setPrefWidth(80);
+        myp1.setPrefHeight(135);
+        myp1.setStyle("-fx-background-color: transparent");
+        myp1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myp1.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
         Image powerup2= new Image("/gui/teletrasporto.png");
         ImageView pu2= new ImageView(powerup2);
         pu2.setFitWidth(80);
         pu2.setPreserveRatio(true);
+        Button myp2= new Button();
+        myp2.setPrefWidth(80);
+        myp2.setPrefHeight(135);
+        myp2.setStyle("-fx-background-color: transparent");
+        myp2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myp2.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
         Image powerup3= new Image("/gui/raggiocinetico.png");
         ImageView pu3= new ImageView(powerup3);
         pu3.setFitWidth(80);
         pu3.setPreserveRatio(true);
+        Button myp3= new Button();
+        myp3.setPrefWidth(80);
+        myp3.setPrefHeight(135);
+        myp3.setStyle("-fx-background-color: transparent");
+        myp3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myp3.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
         Image powerup4= new Image("/gui/mirino.png");
         ImageView pu4= new ImageView(powerup4);
         pu4.setFitWidth(80);
         pu4.setPreserveRatio(true);
+        Button myp4= new Button();
+        myp4.setPrefWidth(80);
+        myp4.setPrefHeight(135);
+        myp4.setStyle("-fx-background-color: transparent");
+        myp4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myp4.setStyle("-fx-background-color: grey");
+
+            }
+        });
+
+
+        Image wea1=new Image("/gui/cannonevortex.png");
+        ImageView wa1=new ImageView(wea1);
+        wa1.setFitWidth(57);
+        wa1.setFitHeight(84);
+
+        Image wea2=new Image("/gui/lanciafiamme.png");
+        ImageView wa2=new ImageView(wea2);
+        wa2.setFitWidth(57);
+        wa2.setFitHeight(84);
+
+        Image wea3=new Image("/gui/lanciagranate.png");
+        ImageView wa3=new ImageView(wea3);
+        wa3.setFitWidth(57);
+        wa3.setFitHeight(84);
+
+        Image wea4=new Image("/gui/mitragliatrice.png");
+        ImageView wa4=new ImageView(wea4);
+        wa4.setFitWidth(57);
+        wa4.setFitHeight(84);
+        wa4.setRotate(270);
+
+        Image wea5=new Image("/gui/fucilealplasma.png");
+        ImageView wa5=new ImageView(wea5);
+        wa5.setFitWidth(57);
+        wa5.setFitHeight(84);
+        wa5.setRotate(270);
+
+        Image wea6=new Image("/gui/fucilediprecisione.png");
+        ImageView wa6=new ImageView(wea6);
+        wa6.setFitWidth(57);
+        wa6.setFitHeight(84);
+        wa6.setRotate(270);
+
+        Image wea7=new Image("/gui/raggiotraente.png");
+        ImageView wa7=new ImageView(wea7);
+        wa7.setFitWidth(57);
+        wa7.setFitHeight(84);
+        wa7.setRotate(90);
+
+        Image wea8=new Image("/gui/torpedine.png");
+        ImageView wa8=new ImageView(wea8);
+        wa8.setFitWidth(57);
+        wa8.setFitHeight(84);
+        wa8.setRotate(90);
+
+        Image wea9=new Image("/gui/raggiosolare.png");
+        ImageView wa9=new ImageView(wea9);
+        wa9.setFitWidth(57);
+        wa9.setFitHeight(84);
+        wa9.setRotate(90);
 
 
         Button a1=new Button();
@@ -113,7 +267,18 @@ public class GameWindow {
         a1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea1);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -124,7 +289,18 @@ public class GameWindow {
         a2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea2);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -135,7 +311,18 @@ public class GameWindow {
         a3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea3);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -146,7 +333,18 @@ public class GameWindow {
         a4.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea4);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -157,7 +355,18 @@ public class GameWindow {
         a5.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea5);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -168,7 +377,18 @@ public class GameWindow {
         a6.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea6);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -179,7 +399,18 @@ public class GameWindow {
         a7.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea7);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -190,7 +421,18 @@ public class GameWindow {
         a8.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea8);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -201,7 +443,18 @@ public class GameWindow {
         a9.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Bye.byebye();
+                AnchorPane weapshow= new AnchorPane();
+                ImageView bigweap= new ImageView(wea1);
+                bigweap.setFitWidth(200);
+                bigweap.setFitHeight(338);
+                weapshow.getChildren().add(bigweap);
+                Scene wshowscene= new Scene(weapshow, 200, 338);
+                Stage wshowstage= new Stage();
+                wshowstage.setResizable(false);
+                wshowstage.setScene(wshowscene);
+                wshowstage.initModality(Modality.WINDOW_MODAL);
+                wshowstage.initOwner(s);
+                wshowstage.show();
             }
         });
 
@@ -723,6 +976,16 @@ public class GameWindow {
 
 
 
+        Image deckweap=new Image("/gui/weaponcover.png");
+        ImageView dw=new ImageView(deckweap);
+        dw.setFitWidth(58);
+        dw.setFitHeight(97);
+
+        Image deckpow=new Image("/gui/powerupcover.png");
+        ImageView dp=new ImageView(deckpow);
+        dp.setFitWidth(44);
+        dp.setFitHeight(63);
+
 
 
 
@@ -740,25 +1003,230 @@ public class GameWindow {
 
 
         AnchorPane gp= new AnchorPane();
-        if(mapp1||mapp4) {
-            gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);
+        if(mapp1) {
+            Button ammsq1= new Button();
+            ammsq1.setPrefWidth(21);
+            ammsq1.setPrefHeight(21);
+            ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq1.setLayoutX(123);
+            ammsq1.setLayoutY(115);
+            Button ammsq2= new Button();
+            ammsq2.setPrefWidth(21);
+            ammsq2.setPrefHeight(21);
+            ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq2.setLayoutX(216);
+            ammsq2.setLayoutY(160);
+            Button ammsq3= new Button();
+            ammsq3.setPrefWidth(21);
+            ammsq3.setPrefHeight(21);
+            ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq3.setLayoutX(461);
+            ammsq3.setLayoutY(160);
+            Button ammsq4= new Button();
+            ammsq4.setPrefWidth(21);
+            ammsq4.setPrefHeight(21);
+            ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq4.setLayoutX(207);
+            ammsq4.setLayoutY(237);
+            Button ammsq5= new Button();
+            ammsq5.setPrefWidth(21);
+            ammsq5.setPrefHeight(21);
+            ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq5.setLayoutX(324);
+            ammsq5.setLayoutY(268);
+            Button ammsq6= new Button();
+            ammsq6.setPrefWidth(21);
+            ammsq6.setPrefHeight(21);
+            ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq6.setLayoutX(414);
+            ammsq6.setLayoutY(268);
+            Button ammsq7= new Button();
+            ammsq7.setPrefWidth(21);
+            ammsq7.setPrefHeight(21);
+            ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq7.setLayoutX(209);
+            ammsq7.setLayoutY(354);
+            Button ammsq8= new Button();
+            ammsq8.setPrefWidth(21);
+            ammsq8.setPrefHeight(21);
+            ammsq8.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq8.setLayoutX(329);
+            ammsq8.setLayoutY(354);
+
+
+            gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8);
         }
-        if(mapp2) {gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);}
+
+        if(mapp4){
+            Button ammsq1= new Button();
+            ammsq1.setPrefWidth(21);
+            ammsq1.setPrefHeight(21);
+            ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq1.setLayoutX(126);
+            ammsq1.setLayoutY(164);
+            Button ammsq2= new Button();
+            ammsq2.setPrefWidth(21);
+            ammsq2.setPrefHeight(21);
+            ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq2.setLayoutX(215);
+            ammsq2.setLayoutY(112);
+            Button ammsq3= new Button();
+            ammsq3.setPrefWidth(21);
+            ammsq3.setPrefHeight(21);
+            ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq3.setLayoutX(207);
+            ammsq3.setLayoutY(240);
+            Button ammsq4= new Button();
+            ammsq4.setPrefWidth(21);
+            ammsq4.setPrefHeight(21);
+            ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq4.setLayoutX(324);
+            ammsq4.setLayoutY(250);
+            Button ammsq5= new Button();
+            ammsq5.setPrefWidth(21);
+            ammsq5.setPrefHeight(21);
+            ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq5.setLayoutX(461);
+            ammsq5.setLayoutY(249);
+            Button ammsq6= new Button();
+            ammsq6.setPrefWidth(21);
+            ammsq6.setPrefHeight(21);
+            ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq6.setLayoutX(126);
+            ammsq6.setLayoutY(354);
+            Button ammsq7= new Button();
+            ammsq7.setPrefWidth(21);
+            ammsq7.setPrefHeight(21);
+            ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq7.setLayoutX(209);
+            ammsq7.setLayoutY(354);
+            Button ammsq8= new Button();
+            ammsq8.setPrefWidth(21);
+            ammsq8.setPrefHeight(21);
+            ammsq8.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq8.setLayoutX(313);
+            ammsq8.setLayoutY(354);
+
+            gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8);
+        }
+
+        if(mapp2) {
+            Button ammsq1= new Button();
+            ammsq1.setPrefWidth(21);
+            ammsq1.setPrefHeight(21);
+            ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq1.setLayoutX(123);
+            ammsq1.setLayoutY(115);
+            Button ammsq2= new Button();
+            ammsq2.setPrefWidth(21);
+            ammsq2.setPrefHeight(21);
+            ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq2.setLayoutX(216);
+            ammsq2.setLayoutY(160);
+            Button ammsq3= new Button();
+            ammsq3.setPrefWidth(21);
+            ammsq3.setPrefHeight(21);
+            ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq3.setLayoutX(207);
+            ammsq3.setLayoutY(237);
+            Button ammsq4= new Button();
+            ammsq4.setPrefWidth(21);
+            ammsq4.setPrefHeight(21);
+            ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq4.setLayoutX(324);
+            ammsq4.setLayoutY(250);
+            Button ammsq5= new Button();
+            ammsq5.setPrefWidth(21);
+            ammsq5.setPrefHeight(21);
+            ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq5.setLayoutX(461);
+            ammsq5.setLayoutY(249);
+            Button ammsq6= new Button();
+            ammsq6.setPrefWidth(21);
+            ammsq6.setPrefHeight(21);
+            ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq6.setLayoutX(209);
+            ammsq6.setLayoutY(354);
+            Button ammsq7= new Button();
+            ammsq7.setPrefWidth(21);
+            ammsq7.setPrefHeight(21);
+            ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq7.setLayoutX(313);
+            ammsq7.setLayoutY(354);
+
+            gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7);
+        }
 
         if(mapp3){
-                Button b12 = new Button();
-                b12.setPrefWidth(84);
-                b12.setPrefHeight(91);
-                b12.setStyle("-fx-background-color: transparent");
-                b12.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
+            Button b12 = new Button();
+            b12.setPrefWidth(84);
+            b12.setPrefHeight(91);
+            b12.setStyle("-fx-background-color: transparent");
+            b12.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
                         Rules.showRules();
                     }
-                });
-                gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck);
-                b12.setLayoutX(405);
-                b12.setLayoutY(300);
+            });
+
+            Button ammsq1= new Button();
+            ammsq1.setPrefWidth(21);
+            ammsq1.setPrefHeight(21);
+            ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq1.setLayoutX(126);
+            ammsq1.setLayoutY(164);
+            Button ammsq2= new Button();
+            ammsq2.setPrefWidth(21);
+            ammsq2.setPrefHeight(21);
+            ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq2.setLayoutX(215);
+            ammsq2.setLayoutY(112);
+            Button ammsq3= new Button();
+            ammsq3.setPrefWidth(21);
+            ammsq3.setPrefHeight(21);
+            ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq3.setLayoutX(461);
+            ammsq3.setLayoutY(160);
+            Button ammsq4= new Button();
+            ammsq4.setPrefWidth(21);
+            ammsq4.setPrefHeight(21);
+            ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq4.setLayoutX(208);
+            ammsq4.setLayoutY(240);
+            Button ammsq5= new Button();
+            ammsq5.setPrefWidth(21);
+            ammsq5.setPrefHeight(21);
+            ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq5.setLayoutX(324);
+            ammsq5.setLayoutY(268);
+            Button ammsq6= new Button();
+            ammsq6.setPrefWidth(21);
+            ammsq6.setPrefHeight(21);
+            ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq6.setLayoutX(414);
+            ammsq6.setLayoutY(268);
+            Button ammsq7= new Button();
+            ammsq7.setPrefWidth(21);
+            ammsq7.setPrefHeight(21);
+            ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq7.setLayoutX(126);
+            ammsq7.setLayoutY(354);
+            Button ammsq8= new Button();
+            ammsq8.setPrefWidth(21);
+            ammsq8.setPrefHeight(21);
+            ammsq8.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq8.setLayoutX(209);
+            ammsq8.setLayoutY(354);
+            Button ammsq9= new Button();
+            ammsq9.setPrefWidth(21);
+            ammsq9.setPrefHeight(21);
+            ammsq9.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
+            ammsq9.setLayoutX(329);
+            ammsq9.setLayoutY(354);
+
+            gp.getChildren().addAll(map, plB, pl1, pl2, pl3, pl4, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8, ammsq9);
+            b12.setLayoutX(405);
+            b12.setLayoutY(300);
         }
 
 
@@ -784,10 +1252,16 @@ public class GameWindow {
         loadWeapon.setLayoutY(210);
         wp1.setLayoutX(630);
         wp1.setLayoutY(500);
+        myw1.setLayoutX(630);
+        myw1.setLayoutY(500);
         wp2.setLayoutX(720);
         wp2.setLayoutY(500);
+        myw2.setLayoutX(720);
+        myw2.setLayoutY(500);
         wp3.setLayoutX(810);
         wp3.setLayoutY(500);
+        myw3.setLayoutX(810);
+        myw3.setLayoutY(500);
         yam.setLayoutX(920);
         yam.setLayoutY(500);
         bam.setLayoutX(920);
@@ -802,12 +1276,28 @@ public class GameWindow {
         nr.setLayoutY(605);
         pu1.setLayoutX(630);
         pu1.setLayoutY(360);
+        myp1.setLayoutX(630);
+        myp1.setLayoutY(360);
         pu2.setLayoutX(720);
         pu2.setLayoutY(360);
+        myp2.setLayoutX(720);
+        myp2.setLayoutY(360);
         pu3.setLayoutX(810);
         pu3.setLayoutY(360);
+        myp3.setLayoutX(810);
+        myp3.setLayoutY(360);
         pu4.setLayoutX(900);
         pu4.setLayoutY(360);
+        myp4.setLayoutX(900);
+        myp4.setLayoutY(360);
+        inf1.setLayoutX(940);
+        inf1.setLayoutY(45);
+        inf2.setLayoutX(940);
+        inf2.setLayoutY(125);
+        inf3.setLayoutX(940);
+        inf3.setLayoutY(205);
+        inf4.setLayoutX(940);
+        inf4.setLayoutY(285);
 
 
         if(mapp1) {
@@ -906,6 +1396,26 @@ public class GameWindow {
         }
 
 
+        wa1.setLayoutX(317);
+        wa1.setLayoutY(2);
+        wa2.setLayoutX(383);
+        wa2.setLayoutY(2);
+        wa3.setLayoutX(449);
+        wa3.setLayoutY(2);
+        wa4.setLayoutX(15.5);
+        wa4.setLayoutY(152.5);
+        wa5.setLayoutX(15.5);
+        wa5.setLayoutY(218.5);
+        wa6.setLayoutX(15.5);
+        wa6.setLayoutY(284.5);
+        wa7.setLayoutX(529.5);
+        wa7.setLayoutY(243.5);
+        wa8.setLayoutX(529.5);
+        wa8.setLayoutY(309.5);
+        wa9.setLayoutX(529.5);
+        wa9.setLayoutY(375.5);
+
+
         a1.setLayoutX(317);
         a1.setLayoutY(2);
         a2.setLayoutX(383);
@@ -927,6 +1437,11 @@ public class GameWindow {
 
         deck.setLayoutX(522);
         deck.setLayoutY(121);
+
+        dw.setLayoutX(522);
+        dw.setLayoutY(121);
+        dp.setLayoutX(537);
+        dp.setLayoutY(24);
 
 
         Scene scene=new Scene(gp, 1200, 650);

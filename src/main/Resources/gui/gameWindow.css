@@ -5,7 +5,7 @@
     -fx-background-repeat: no-repeat;
 }
 
-.button{
+.actionbuttons{
     -fx-background-color: blue;
     -fx-font-size: 12;
     -fx-text-fill: white;
@@ -18,4 +18,11 @@
     -fx-text-fill: white;
     -fx-font-size: 20;
     -fx-font-weight: bold;
+}
+
+.info{
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 10;
 }

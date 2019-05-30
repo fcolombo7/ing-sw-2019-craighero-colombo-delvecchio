@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -103,11 +104,16 @@ public class MapChoice {
         vote.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                vote.setStyle("-fx-background-color: grey");
                 stage.close();
                 votes.add(image.getImage());
                 Image bestmap=votes.get(0);
                 String urlmap= bestmap.getUrl();
-                GameWindow.open(bestmap, urlmap);
+                try{
+                    GameWindow.open(bestmap, urlmap);
+                } catch(IOException e){
+                    throw new RuntimeException(e);
+                }
             }
         });
 
