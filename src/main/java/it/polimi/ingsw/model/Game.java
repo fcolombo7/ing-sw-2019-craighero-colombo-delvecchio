@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
@@ -31,6 +32,7 @@ public class Game extends Observable<MatchMessage> {
     private Player currentPlayer;
     private Turn currentTurn;
     private int ammoIndex = 0;
+    private GameStatus status;
 
     /**
      * This attribute contains the all the ammo tiles
@@ -280,6 +282,10 @@ public class Game extends Observable<MatchMessage> {
         return frenzyMode;
     }
 
+    public GameStatus getStatus() {
+        return status;
+    }
+
     public void setFrenzy(Player lastPlayer){
         frenzyMode=true;
         this.lastPlayerBeforeFrenzy =lastPlayer;
@@ -293,7 +299,7 @@ public class Game extends Observable<MatchMessage> {
         this.currentPlayer = currentPlayer;
     }
 
-    Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -329,6 +335,7 @@ public class Game extends Observable<MatchMessage> {
     }
 
     public void startMessage() {
+        status=GameStatus.CREATED;
         for(int i=0;i<players.size();i++) {
             //first turn number is 1 (not 0)!
             MatchMessage msg= new MatchCreationMessage(players.get(i).getNickname(),i+1,players);
@@ -362,6 +369,7 @@ public class Game extends Observable<MatchMessage> {
                 break;
             }
         }
+        status=GameStatus.READY;
     }
 
     public Turn getCurrentTurn(){
@@ -379,6 +387,7 @@ public class Game extends Observable<MatchMessage> {
             throw new IllegalStateException("Cannot create turn.[Illegal player status: " + currentPlayer.getStatus().name() + "]");
         if (currentTurn!=null&&currentTurn.getStatus()!= TurnStatus.END)
             throw new IllegalStateException("Cannot create turn. [Another one is still being played]");
+        status=GameStatus.PLAYING_TURN;
         notify(new TurnCreationMessage(currentPlayer.getNickname()));
         currentTurn= new Turn(this);
     }
@@ -386,6 +395,7 @@ public class Game extends Observable<MatchMessage> {
     public void endTurn() {
         if(currentTurn==null)  throw new IllegalStateException("No turn is playing now.");
         if(currentTurn.getStatus()!= TurnStatus.END) throw new IllegalStateException("TurnStatus is not END");
+        status=GameStatus.CLOSING_TURN;
         fillGameboard();
         //SISTEMO I MORTI
         int deathNumber=0;

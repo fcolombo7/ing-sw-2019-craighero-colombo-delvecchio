@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SocketServerConnection extends ServerConnection {
-    private final String LOG_JSON ="[JSON ANSWER]";
+    private static final String LOG_JSON ="[JSON ANSWER] ";
     private String ip;
     private int port;
     private Socket socket;
@@ -135,7 +135,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -150,7 +150,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -165,7 +165,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -180,7 +180,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -195,7 +195,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -210,7 +210,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -225,7 +225,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -240,7 +240,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -255,7 +255,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -270,7 +270,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -285,7 +285,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -300,7 +300,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -315,7 +315,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -330,7 +330,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -345,7 +345,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -360,7 +360,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -375,7 +375,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -390,7 +390,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -405,7 +405,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -420,7 +420,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -435,7 +435,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -450,7 +450,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -465,7 +465,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -480,7 +480,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -495,7 +495,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -510,7 +510,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -525,7 +525,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -540,7 +540,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -555,7 +555,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -570,7 +570,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -585,7 +585,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -601,7 +601,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -616,7 +616,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -631,7 +631,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            invalidGsonReceived();
+            handleInvalidReceived();
         }
     }
 
@@ -653,6 +653,6 @@ public class SocketServerConnection extends ServerConnection {
     }
 
     //TODO
-    private void invalidGsonReceived() {
+    private void handleInvalidReceived() {
     }
 }

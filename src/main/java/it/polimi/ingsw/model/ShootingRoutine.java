@@ -78,7 +78,7 @@ public class ShootingRoutine implements TurnRoutine {
     }
 
     private void onStopAnswer(StopRoutineAnswer answer) {
-        if(!answer.isStop()){
+        if(!answer.wishStop()){
             sendAvailableEffects();
         }
         else{

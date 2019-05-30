@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
-import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.*;
+import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.*;
 import it.polimi.ingsw.network.controller.messages.room.*;
@@ -24,6 +26,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class SocketClientConnection extends ClientConnection implements Runnable {
+
+    private static final String ILLEGAL_STATE="ILLEGAL GAME STATUS";
+    
+    private static final String JSON_ANSWER="[JSON ANSWER] ";
+
     private Socket socket;
 
     private Server server;
@@ -33,6 +40,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private PrintStream out;
 
     private Map<String, MessageManager> messageHandler;
+
+    @FunctionalInterface
+    private interface MessageManager {
+        void exec();
+    }
 
     public SocketClientConnection(Socket socket, Server server) throws IOException {
         super();
@@ -58,6 +70,18 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             messageHandler.put(Constants.MSG_CLIENT_LOGIN, this::loginRequest);
             messageHandler.put(Constants.MSG_CLIENT_CLOSE, this::closeRequest);
             messageHandler.put(Constants.BOARD_SETTING_ANSWER,this::onBoardPreferenceAnswer);
+            messageHandler.put(Constants.RESPAWN_ANSWER,this::onRespawnAnswer);
+            messageHandler.put(Constants.ACTION_SELECTED,this::onActionSelectedAnswer);
+            messageHandler.put(Constants.EFFECT_MOVE_ANSWER,this::onEffectMoveAnswer);
+            messageHandler.put(Constants.TURN_END_ANSWER,this::onTurnEndAnswer);
+            messageHandler.put(Constants.RUN_ROUTINE_ANSWER,this::onRunRoutineAnswer);
+            messageHandler.put(Constants.WEAPON_ANSWER,this::onWeaponAnswer);
+            messageHandler.put(Constants.LOADABLE_WEAPON_SELECTED,this::onLoadableWeaponAnswer);
+            messageHandler.put(Constants.EFFECT_ANSWER,this::onEffectAnswer);
+            messageHandler.put(Constants.SELECTED_PLAYERS_ANSWER,this::onSelectedePlayersAnswer);
+            messageHandler.put(Constants.STOP_ROUTINE_ANSWER,this::onStopRoutineAnswer);
+            messageHandler.put(Constants.USE_POWERUP_ANSWER,this::onUsePowerupAnswer);
+            messageHandler.put(Constants.DISCARDED_WEAPON_ANSWER,this::onDiscardWeaponAnswer);
         }
     }
 
@@ -111,28 +135,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
 
-
     /*------ ROOM MESSAGES ------ */
-    @Override
-    public void joinRoomAdvise(String nickname) {
-        sendRoomMessage(new JoinMessage(nickname));
-    }
-
-    @Override
-    public void exitRoomAdvise(String nickname) {
-        sendRoomMessage(new ExitMessage(nickname));
-    }
-
-    @Override
-    public void firstInRoomAdvise() {
-        out.println(Constants.FIRST_PLAYER);
-    }
-
-    //TODO
-    @Override
-    public void pingAdvise() {
-
-    }
 
     private void sendRoomMessage(RoomMessage message) {
         Gson gson= new Gson();
@@ -146,9 +149,30 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }
     }
 
+    @Override
+    public void joinRoomAdvise(String nickname) {
+        sendRoomMessage(new JoinMessage(nickname));
+    }
+
+    @Override
+    public void exitRoomAdvise(String nickname) {
+        sendRoomMessage(new ExitMessage(nickname));
+    }
+    @Override
+    public void firstInRoomAdvise() {
+        out.println(Constants.FIRST_PLAYER);
+    }
+
+    //TODO
+    @Override
+    public void pingAdvise() {
+
+    }
+
 
 
     /*------ MATCH MESSAGES ------ */
+
     private void sendMatchMessage(MatchMessage message) {
         Gson gson= new Gson();
         Logger.log("[Socket] "+message.getRequest()+" sending to "+getNickname());
@@ -159,7 +183,6 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             Logger.logErr(e.getMessage());
         }
     }
-
 
     @Override
     public void matchCreation(List<SimplePlayer> players, int playerTurnNumber) {
@@ -318,25 +341,253 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     /*------ ANSWER HANDLER ------*/
+
     private void onBoardPreferenceAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.log("[JSON ANSWER] "+line);
+        Logger.log(JSON_ANSWER+line);
         try{
-            BoardPreferenceAnswer message=gson.fromJson(line, BoardPreferenceAnswer.class);
-            if(!message.getAnswer().equalsIgnoreCase(Constants.BOARD_SETTING_ANSWER)) throw new IllegalArgumentException("NOT BOARD PREFERENCE");
+            BoardPreferenceAnswer answer=gson.fromJson(line, BoardPreferenceAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.BOARD_SETTING_ANSWER)) throw new IllegalArgumentException("NOT BOARD PREFERENCE");
 
-            //TODO:check if can receive this message
-            getRoom().getController().roomPreferenceManager(message.getSender(),message.getRoomReference());
+            //check if can receive this answer
+            if(!checkStatus(GameStatus.CREATED)) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().roomPreferenceManager(answer.getSender(),answer.getRoomReference());
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
+            handleInvalidReceived();
         }
     }
 
+    private void onDiscardWeaponAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            DiscardedWeaponAnswer answer=gson.fromJson(line, DiscardedWeaponAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.DISCARDED_WEAPON_ANSWER)) throw new IllegalArgumentException("NOT DISCARDED WEAPON ANSWER");
 
-    @FunctionalInterface
-    private interface MessageManager {
-        void exec();
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().discardWeapon(answer.getWeapon());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
     }
+
+    private void onUsePowerupAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            UsePowerupAnswer answer=gson.fromJson(line, UsePowerupAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)) throw new IllegalArgumentException("NOT USE POWERUP ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().usePowerup(answer.wishUseIt());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onStopRoutineAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            StopRoutineAnswer answer=gson.fromJson(line, StopRoutineAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.STOP_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT STOP ROUTINE ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().stopRoutine(answer.wishStop());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onSelectedePlayersAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            SelectedPlayersAnswer answer=gson.fromJson(line, SelectedPlayersAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.SELECTED_PLAYERS_ANSWER)) throw new IllegalArgumentException("NOT SELECTED PLAYERS ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().selectPlayers(answer.getSelected());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onEffectAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            EffectAnswer answer=gson.fromJson(line, EffectAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT SELECTED EFFECT ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().selectEffect(answer.getEffectName());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onLoadableWeaponAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            LoadableWeaponSelectedAnswer answer=gson.fromJson(line, LoadableWeaponSelectedAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().loadableWeapon(answer.getWeapon());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onWeaponAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            WeaponAnswer answer=gson.fromJson(line, WeaponAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.WEAPON_ANSWER)) throw new IllegalArgumentException("NOT WEAPON ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().selectWeapon(answer.getWeapon());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onRunRoutineAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            RunAnswer answer=gson.fromJson(line, RunAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.RUN_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT RUN ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().runAction(answer.getNewPosition());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onTurnEndAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            TurnEndAnswer answer=gson.fromJson(line, TurnEndAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.TURN_END_ANSWER)) throw new IllegalArgumentException("NOT TURN END ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().closeTurn(answer.getSender());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onEffectMoveAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            MoveAnswer answer=gson.fromJson(line, MoveAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_MOVE_ANSWER)) throw new IllegalArgumentException("NOT EFFECT MOVE ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().movePlayer(answer.getTarget(),answer.getNewPosition());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onActionSelectedAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            ActionSelectedAnswer answer=gson.fromJson(line, ActionSelectedAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.ACTION_SELECTED)) throw new IllegalArgumentException("NOT ACTION SELECTED ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().selectAction(answer.getSelection());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onRespawnAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            RespawnAnswer answer=gson.fromJson(line, RespawnAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.RESPAWN_ANSWER)) throw new IllegalArgumentException("NOT RESPAWN ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.READY)||checkStatus(GameStatus.CLOSING_TURN))) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().respawnPlayer(answer.getSender(),answer.getPowerup());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+    
+    /*------- METHODS USED TO CHECK IF CAN RECEIVE A MESSAGE-------*/
+    private boolean checkTurn(){
+        return getRoom().getController().isPlaying(getNickname());
+    }
+
+    private boolean checkStatus(GameStatus status){
+        return (status==getRoom().getController().getGameStatus());
+    }
+    
+    
+    //TODO
+    private void handleInvalidReceived() {
+    }
+
 }

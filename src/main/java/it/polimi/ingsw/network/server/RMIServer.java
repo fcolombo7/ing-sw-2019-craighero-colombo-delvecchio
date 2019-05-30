@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.network.RMIClientHandler;
 import it.polimi.ingsw.network.RMIServerHandler;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
@@ -14,6 +15,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class RMIServer implements RMIServerHandler, Serializable {
@@ -68,6 +70,7 @@ public class RMIServer implements RMIServerHandler, Serializable {
         return true;
     }
 
+    /*-------- MATCH ANSWER METHODS CALLED ON CLIENT --------*/
     @Override
     public void boardPreference(String session, int value) throws RemoteException {
         String nick=rmiClients.get(session);
@@ -75,13 +78,96 @@ public class RMIServer implements RMIServerHandler, Serializable {
             server.getClientConnection(nick).getRoom().getController().roomPreferenceManager(nick,value);
     }
 
-    /*
     @Override
-    public void sendMatchAnswer(String session, MatchAnswer message) throws RemoteException {
+    public void respawnPlayer(String session, String sender, Card powerup) throws RemoteException {
         String nick=rmiClients.get(session);
         if(nick!=null)
-            ((RMIClientConnection)server.getClientConnection(nick)).getMatchAnswer(message);
+            server.getClientConnection(nick).getRoom().getController().respawnPlayer(sender,powerup);
     }
 
-     */
+    @Override
+    public void closeTurn(String session, String sender) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().closeTurn(sender);
+    }
+
+    @Override
+    public void selectAction(String session, String action) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().selectAction(action);
+    }
+
+    @Override
+    public void movePlayer(String session, String target, int[] newPosition) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().movePlayer(target,newPosition);
+    }
+
+    @Override
+    public void discardWeapon(String session, Card weapon) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().discardWeapon(weapon);
+    }
+
+    @Override
+    public void selectEffect(String session, String effectName) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().selectEffect(effectName);
+    }
+
+    @Override
+    public void loadableWeapon(String session, Card weapon) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().loadableWeapon(weapon);
+    }
+
+    @Override
+    public void runAction(String session, int[] newPosition) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().runAction(newPosition);
+    }
+
+    @Override
+    public void selectPlayers(String session, List<List<String>> selected) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().selectPlayers(selected);
+    }
+
+    @Override
+    public void selectPowerup(String session, Card powerup) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().selectPowerup(powerup);
+    }
+
+    @Override
+    public void stopRoutine(String session, boolean stop) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().stopRoutine(stop);
+    }
+
+    @Override
+    public void usePowerup(String session, boolean use) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().usePowerup(use);
+    }
+
+    @Override
+    public void selectWeapon(String session, Card weapon) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().selectWeapon(weapon);
+    }
+
+
 }

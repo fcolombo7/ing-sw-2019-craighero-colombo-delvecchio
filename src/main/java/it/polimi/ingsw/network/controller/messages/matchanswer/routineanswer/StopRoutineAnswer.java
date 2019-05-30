@@ -12,7 +12,7 @@ public class StopRoutineAnswer extends TurnRoutineAnswer {
         this.stop=stop;
     }
 
-    public boolean isStop() {
+    public boolean wishStop() {
         return stop;
     }
 

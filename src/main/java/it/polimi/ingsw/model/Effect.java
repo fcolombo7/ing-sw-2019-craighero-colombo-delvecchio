@@ -752,7 +752,7 @@ public class Effect {
         }
     }
 
-    public void handleMoveResponse(Turn turn, String target, int[] newPosition){
+    public void handleMoveAnswer(Turn turn, String target, int[] newPosition){
         Player selectedPlayer=null;
         for(Player p:turn.getGame().getPlayers()){
             if(p.getNickname().equalsIgnoreCase(target)) {
