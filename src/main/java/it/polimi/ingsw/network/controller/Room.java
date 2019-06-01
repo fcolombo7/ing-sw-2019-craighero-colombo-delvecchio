@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.controller;
 
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.server.ClientConnection;
 import it.polimi.ingsw.network.view.RemoteView;
 import it.polimi.ingsw.network.view.View;
@@ -43,7 +44,7 @@ public class Room {
         waitingTimers =new HashMap<>();
         keepingAliveTimers=new HashMap<>();
         client.firstInRoomAdvise();
-        setUpKeepAlive();
+        setUpKeepAlive(client);
     }
 
     public int getRoomNumber() {
@@ -67,7 +68,7 @@ public class Room {
                 client.joinRoomAdvise(cc.getNickname());
             }
             players.add(client);
-            setUpKeepAlive();
+            setUpKeepAlive(client);
             Logger.log(client.getNickname() + " has joined the room " + roomNumber);
 
             if (players.size() == MAX_PLAYERS) {
@@ -123,20 +124,17 @@ public class Room {
         return controller;
     }
 
-    private void setUpKeepAlive() {
-        resetKeepAlive();
-        for (ClientConnection cc:players) {
-            Timer t = new Timer();
-            t.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    keepClientAlive(cc);
-                }
-            }, Constants.KEEP_ALIVE_WAITING_TIME*1000, Constants.KEEP_ALIVE_FREQUENCY * 1000);
-            keepingAliveTimers.put(cc.getNickname(), t);
-        }
+    private void setUpKeepAlive(ClientConnection client) {
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                keepClientAlive(client);
+            }
+        }, Constants.KEEP_ALIVE_WAITING_TIME*1000, Constants.KEEP_ALIVE_FREQUENCY * 1000);
+        keepingAliveTimers.put(client.getNickname(), t);
     }
-
+    
     private void resetKeepAlive() {
         for(Timer t:waitingTimers.values()) {
             if(t!=null){
