@@ -62,7 +62,7 @@ public abstract class ClientConnection{
 
     public abstract void firstInRoomAdvise();
 
-    public abstract void pingAdvise();
+    public abstract void keepAlive();
 
     /*MATCH METHOD*/
     public abstract void matchCreation(List<SimplePlayer> players, int playerTurnNumber);

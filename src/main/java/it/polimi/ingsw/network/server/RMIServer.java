@@ -79,17 +79,17 @@ public class RMIServer implements RMIServerHandler, Serializable {
     }
 
     @Override
-    public void respawnPlayer(String session, String sender, Card powerup) throws RemoteException {
+    public void respawnPlayer(String session, Card powerup) throws RemoteException {
         String nick=rmiClients.get(session);
         if(nick!=null)
-            server.getClientConnection(nick).getRoom().getController().respawnPlayer(sender,powerup);
+            server.getClientConnection(nick).getRoom().getController().respawnPlayer(nick,powerup);
     }
 
     @Override
-    public void closeTurn(String session, String sender) throws RemoteException {
+    public void closeTurn(String session) throws RemoteException {
         String nick=rmiClients.get(session);
         if(nick!=null)
-            server.getClientConnection(nick).getRoom().getController().closeTurn(sender);
+            server.getClientConnection(nick).getRoom().getController().closeTurn(nick);
     }
 
     @Override

@@ -10,16 +10,24 @@ import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.AdrenalineUI;
-import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.List;
 
 public class TestClient {
     private static class DebugUI implements AdrenalineUI{
+        private ServerConnection connection;
+        private boolean rmi;
+        DebugUI(boolean rmi){
+            this.rmi=rmi;
+        }
+
+        public void setUpConnection() throws IOException, NotBoundException {
+            if(rmi)this.connection = new RMIServerConnection(this);
+            else this.connection=new SocketServerConnection("localhost",this);
+        }
 
         @Override
         public void onJoinRoomAdvise(String nickname) {
@@ -198,17 +206,19 @@ public class TestClient {
     }
 
     public static void main(String[] args){
-        try {
-            ServerConnection rmiConnection= new RMIServerConnection(new DebugUI());
-            rmiConnection.login("nickname","motto");
-        } catch (RemoteException | NotBoundException e) {
+        /*try {
+            DebugUI ui1=new DebugUI(true);
+            ui1.setUpConnection();
+            ui1.connection.login("CiaoRMI","MOTTO");
+        } catch (IOException | NotBoundException e) {
             e.printStackTrace();
-        }
+        }*/
 
         try {
-            ServerConnection socketConnection= new SocketServerConnection("localhost",new DebugUI(){});
-            socketConnection.login("fil","motto");
-        } catch (IOException e) {
+            DebugUI ui2=new DebugUI(false);
+            ui2.setUpConnection();
+            ui2.connection.login("CiaoSocket","MOTTO");
+        } catch (IOException | NotBoundException e) {
             e.printStackTrace();
         }
     }

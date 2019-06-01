@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class Controller{
     private Game game;
+    private List<Player> suspended;
+    private List<Player> disconnected;
     private List<Integer> boardPreference;
 
     public Controller(Game game) {
@@ -33,6 +35,9 @@ public class Controller{
 
     public void start() {
         boardPreference=new ArrayList<>(game.getPlayers().size());
+        suspended=new ArrayList<>(game.getPlayers().size());
+        disconnected=new ArrayList<>(game.getPlayers().size());
+
         game.startMessage();
     }
 
@@ -148,6 +153,16 @@ public class Controller{
         for(Player player:game.getPlayers()){
             if(player.getStatus()==PlayerStatus.DEAD){
                 game.respawnPlayerRequest(player,false);
+            }
+        }
+    }
+
+    public void addDisconnected(String nickname){
+        for(Player p:game.getPlayers()){
+            if(p.getNickname().equals(nickname)){
+                disconnected.add(p);
+                suspended.remove(p);
+                return;
             }
         }
     }

@@ -2,10 +2,7 @@ package it.polimi.ingsw.network.controller;
 
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.network.controller.messages.room.ExitMessage;
-import it.polimi.ingsw.network.controller.messages.room.FirstInMessage;
-import it.polimi.ingsw.network.controller.messages.room.JoinMessage;
-import it.polimi.ingsw.network.controller.messages.room.PingMessage;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.server.ClientConnection;
 import it.polimi.ingsw.network.view.RemoteView;
 import it.polimi.ingsw.network.view.View;
@@ -15,10 +12,6 @@ import it.polimi.ingsw.utils.Logger;
 import java.util.*;
 
 public class Room {
-
-    private static final long ROOM_WAITING_TIME = Constants.WAITING_ROOM_TIMER;
-
-    private static final long ROOM_WAITING_PONG = Constants.WAITING_ROOM_PONG;
 
     private static final int MIN_PLAYERS = Constants.ROOM_MIN_PLAYERS;
 
@@ -34,15 +27,24 @@ public class Room {
 
     private Timer timer=null;
 
-    private Map<String, Timer> clientCheck=null;
+    private Map<String, Timer> waitingTimers =null;
 
-    public Controller controller;
+    private Map<String, Timer> keepingAliveTimers =null;
+
+    private Map<String, View> views;
+
+    private Controller controller;
+    private Game model;
 
     public Room(ClientConnection client) {
         players = new ArrayList<>();
         players.add(client);
         controller=null;
+        views=new HashMap<>();
+        waitingTimers =new HashMap<>();
+        keepingAliveTimers=new HashMap<>();
         client.firstInRoomAdvise();
+        setUpKeepAlive();
     }
 
     public int getRoomNumber() {
@@ -66,14 +68,15 @@ public class Room {
                 client.joinRoomAdvise(cc.getNickname());
             }
             players.add(client);
+            setUpKeepAlive();
             Logger.log(client.getNickname() + " has joined the room " + roomNumber);
 
             if (players.size() == MAX_PLAYERS) {
                 full = true;
-                startCountDown(ROOM_WAITING_PONG);
+                startCountDown(Constants.KEEP_ALIVE_WAITING_TIME);
                 startMatch();
             } else if (players.size() == MIN_PLAYERS) {
-                startCountDown(ROOM_WAITING_TIME);
+                startCountDown(Constants.WAITING_ROOM_TIMER);
             }
         } else {
             throw new JoinRoomException("full");
@@ -81,15 +84,16 @@ public class Room {
     }
 
     public synchronized boolean remove(ClientConnection client){
-        if(!players.contains(client)) throw new IllegalArgumentException("Client "+client.getNickname()+" is not in room "+roomNumber);
+        if(!players.contains(client)) throw new IllegalStateException("Removing player which not exits");
         players.remove(client);
-        for (ClientConnection cc:players) {
+        for (ClientConnection cc : players) {
             cc.exitRoomAdvise(client.getNickname());
         }
 
         Logger.log(client.getNickname() + " has left the room " + roomNumber);
-        if(players.size()< Constants.ROOM_MIN_PLAYERS)
+        if (players.size() < Constants.ROOM_MIN_PLAYERS)
             resetCountDown();
+
         return players.isEmpty();
     }
 
@@ -112,53 +116,83 @@ public class Room {
         }
     }
 
-    private void checkConnection(){
-        resetCheck();
-        clientCheck=new HashMap<>();
-        for(ClientConnection cc:players){
-            cc.pingAdvise();
-            Timer ccTimer=new Timer();
-            ccTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    cc.closeConnection();
-                }
-            },0);
-
-            clientCheck.put(cc.getNickname(),ccTimer);
-        }
-    }
-
-    private void resetCheck() {
-        for (String key:clientCheck.keySet()) {
-            Timer t=clientCheck.get(key);
-            if(t!=null){
-                t.cancel();
-                t.purge();
-                clientCheck.remove(key);
-            }
-        }
-        clientCheck=null;
-    }
-
-    public synchronized void onPongReceived(ClientConnection client){
-        if(clientCheck!=null){
-            Timer t=clientCheck.get(client.getNickname());
-            if(t!=null){
-                t.cancel();
-                t.purge();
-                clientCheck.remove(client.getNickname());
-            }
-        }
-    }
-
     public Controller getController() {
         if(!playing)throw  new IllegalStateException("The match is not started.");
         return controller;
     }
 
+    private void setUpKeepAlive() {
+        resetKeepAlive();
+        for (ClientConnection cc:players) {
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    keepClientAlive(cc);
+                }
+            }, 0, Constants.KEEP_ALIVE_FREQUENCY * 1000);
+            keepingAliveTimers.put(cc.getNickname(), t);
+        }
+    }
+
+    private void resetKeepAlive() {
+        for(Timer t:waitingTimers.values()) {
+            if(t!=null){
+                t.cancel();
+                t.purge();
+            }
+        }
+        for(Timer t:keepingAliveTimers.values()){
+            if(t!=null){
+                t.cancel();
+                t.purge();
+            }
+        }
+        waitingTimers.clear();
+        keepingAliveTimers.clear();
+    }
+
+    private void keepClientAlive(ClientConnection client){
+        client.keepAlive();
+        Timer t=new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handleDisconnection(client);
+            }
+        },Constants.KEEP_ALIVE_WAITING_TIME*1000);
+
+        waitingTimers.put(client.getNickname(),t);
+    }
+
+    public synchronized void isAlive(ClientConnection client){
+        if(waitingTimers !=null){
+            Timer t= waitingTimers.get(client.getNickname());
+            if(t!=null){
+                t.cancel();
+                t.purge();
+                waitingTimers.remove(client.getNickname());
+            }
+        }
+    }
+
+    private void handleDisconnection(ClientConnection client) {
+        Timer t= keepingAliveTimers.get(client.getNickname());
+        if(t!=null){
+            t.cancel();
+            t.purge();
+            keepingAliveTimers.remove(client.getNickname());
+        }
+        if(playing) {
+            controller.addDisconnected(client.getNickname());
+            model.deregister(views.get(client.getNickname()));
+            views.remove(client.getNickname());
+        }
+        client.closeConnection();
+    }
+
     private void startMatch() {
-        Game model= new Game();
+        model= new Game();
         controller= new Controller(model);
         boolean first=true;
         for (ClientConnection client:players) {
@@ -171,7 +205,9 @@ public class Room {
             model.addPlayer(p);
             View pView=new RemoteView(p,client);
             model.register(pView);
+            views.put(p.getNickname(),pView);
         }
+
         playing=true;
         controller.start();
     }

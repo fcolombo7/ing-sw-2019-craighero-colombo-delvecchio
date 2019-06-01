@@ -13,8 +13,8 @@ public interface RMIServerHandler extends Remote {
     boolean deregister(String session) throws RemoteException;
 
     void boardPreference(String session, int value) throws RemoteException;
-    void respawnPlayer(String session, String sender, Card powerup) throws RemoteException;
-    void closeTurn(String session, String sender) throws RemoteException;
+    void respawnPlayer(String session, Card powerup) throws RemoteException;
+    void closeTurn(String session) throws RemoteException;
     void selectAction(String session, String action) throws RemoteException;
     void movePlayer(String session, String target,int[] newPosition) throws RemoteException;
     void discardWeapon(String session, Card weapon) throws RemoteException;

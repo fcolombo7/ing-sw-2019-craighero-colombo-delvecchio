@@ -59,7 +59,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     public void run() {
         while(true){
             String s=in.nextLine();
-            Logger.log(s);
+            //Logger.log(s);
             messageHandler.get(s).exec();
         }
     }
@@ -69,6 +69,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             messageHandler = new HashMap<>();
             messageHandler.put(Constants.MSG_CLIENT_LOGIN, this::loginRequest);
             messageHandler.put(Constants.MSG_CLIENT_CLOSE, this::closeRequest);
+            messageHandler.put(Constants.PONG_ANSWER,this::pongAnswer);
             messageHandler.put(Constants.BOARD_SETTING_ANSWER,this::onBoardPreferenceAnswer);
             messageHandler.put(Constants.RESPAWN_ANSWER,this::onRespawnAnswer);
             messageHandler.put(Constants.ACTION_SELECTED,this::onActionSelectedAnswer);
@@ -117,9 +118,26 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }
     }
 
+
+    private void pongAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        try{
+            PongAnswer answer=gson.fromJson(line, PongAnswer.class);
+            if(!answer.getType().equalsIgnoreCase(Constants.PONG_ANSWER)) throw new IllegalArgumentException("NOT PONG ANSWER");
+            Logger.log("["+getNickname()+" IS ALIVE]");
+            getRoom().isAlive(this);
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+
+    }
+
     private void closeRequest() {
         closeConnection();
-        server.deregisterConnection(this);
+        //server.deregisterConnection(this);
     }
 
     @Override
@@ -132,6 +150,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             Logger.logErr(e.getMessage());
         }
         setOnline(false);
+        server.deregisterConnection(this);
     }
 
 
@@ -141,11 +160,13 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Gson gson= new Gson();
         Logger.log("[Socket] "+message.getType()+" sending to "+getNickname());
         try {
-            Logger.log(gson.toJson(message));
+            //Logger.log(gson.toJson(message));
             out.println(message.getType());
             out.println(gson.toJson(message));
+            out.flush();
         }catch(Exception e){
             Logger.logErr(e.getMessage());
+            closeConnection();
         }
     }
 
@@ -160,16 +181,13 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
     @Override
     public void firstInRoomAdvise() {
-        out.println(Constants.FIRST_PLAYER);
+        sendRoomMessage(new FirstInMessage());
     }
 
-    //TODO
     @Override
-    public void pingAdvise() {
-
+    public void keepAlive() {
+        sendRoomMessage(new PingMessage());
     }
-
-
 
     /*------ MATCH MESSAGES ------ */
 
@@ -179,8 +197,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         try {
             out.println(message.getRequest());
             out.println(gson.toJson(message));
+            out.flush();
         }catch(Exception e){
             Logger.logErr(e.getMessage());
+            closeConnection();
         }
     }
 
@@ -354,7 +374,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!checkStatus(GameStatus.CREATED)) throw new IllegalStateException(ILLEGAL_STATE);
             getRoom().getController().roomPreferenceManager(answer.getSender(),answer.getRoomReference());
         }catch (Exception e){
-            Logger.log(e.getMessage());
+            Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived();
         }

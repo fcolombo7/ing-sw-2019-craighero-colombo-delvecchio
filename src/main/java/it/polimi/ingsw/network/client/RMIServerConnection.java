@@ -20,13 +20,15 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RMIServerConnection extends ServerConnection implements RMIClientHandler {
-    private static final long serialVersionUID = -8477832774353743391L;
-
     private String session;
 
     private RMIServerHandler stub;
+    private ExecutorService pool;
+
 
     public RMIServerConnection(AdrenalineUI ui) throws RemoteException, NotBoundException {
         super(ui);
@@ -41,12 +43,10 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         Logger.log(builder.toString());
 
         stub = (RMIServerHandler) registry.lookup(Constants.RMI_SERVER_NAME);
+        pool=Executors.newFixedThreadPool(5);
     }
 
-    public String getSession() {
-        return session;
-    }
-
+    /*------ SERVER CONNECTION METHODS ------*/
     @Override
     public String login(String nickname, String motto) {
         try {
@@ -56,6 +56,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
             String msg=stub.login(nickname,motto,client);
             if(msg!=null) {
                 session = msg;
+                setNickname(nickname);
                 return Constants.MSG_SERVER_POSITIVE_ANSWER;
             }
             else
@@ -65,6 +66,195 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
             return Constants.MSG_SERVER_NEGATIVE_ANSWER;
         }
     }
+
+    @Override
+    public void logout() {
+        pool.submit(()->{
+            try {
+                if(stub.deregister(session))
+                    Logger.log("Successfully closed RMI connection.");
+                else
+                    Logger.logErr("Error occures during the RMI connection closing");
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call logout().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void boardPreference(int value) {
+        pool.submit(()->{
+            try {
+                stub.boardPreference(session,value);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call boardPreference().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void respawnPlayer(Card powerup) {
+        pool.submit(()->{
+            try {
+                stub.respawnPlayer(session,powerup);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call respawnPlayer().");
+                Logger.logErr(e.getMessage());
+        }});
+    }
+
+    @Override
+    public void closeTurn() {
+        pool.submit(()->{
+        try {
+            stub.closeTurn(session);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown when call closeTurn().");
+            Logger.logErr(e.getMessage());
+        }});
+    }
+
+    @Override
+    public void selectAction(String action) {
+        pool.submit(()->{
+            try {
+            stub.selectAction(session,action);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown when call selectAction().");
+            Logger.logErr(e.getMessage());
+        }});
+    }
+
+    @Override
+    public void movePlayer(String target, int[] newPosition) {
+        pool.submit(()->{
+            try {
+            stub.movePlayer(session,target,newPosition);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown when call movePlayer().");
+            Logger.logErr(e.getMessage());
+        }});
+    }
+
+    @Override
+    public void discardWeapon(Card weapon) {
+        pool.submit(()->{
+            try {
+                stub.discardWeapon(session,weapon);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call discardWeapon().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void selectEffect(String effectName) {
+        pool.submit(()->{
+            try {
+                stub.selectEffect(session,effectName);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call selectEffect().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void loadableWeapon(Card weapon) {
+        pool.submit(()->{
+            try {
+                stub.loadableWeapon(session,weapon);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call loadableWeapon().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void runAction(int[] newPosition) {
+        pool.submit(()->{
+            try {
+                stub.runAction(session,newPosition);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call runAction().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void selectPlayers(List<List<String>> selected) {
+        pool.submit(()->{
+            try {
+                stub.selectPlayers(session,selected);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call selectPlayers().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void selectPowerup(Card powerup) {
+        pool.submit(()->{
+            try {
+                stub.selectPowerup(session,powerup);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call selectPowerup().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void stopRoutine(boolean stop) {
+        pool.submit(()->{
+            try {
+                stub.stopRoutine(session,stop);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call stopRoutine().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void usePowerup(boolean use) {
+        pool.submit(()->{
+            try {
+                stub.usePowerup(session,use);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call usePowerup().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
+    @Override
+    public void selectWeapon(Card weapon) {
+        pool.submit(()->{
+            try {
+                stub.selectWeapon(session,weapon);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call selectWeapon().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+
+    }
+
 
     /*------ RMIClientHandler REMOTE METHODS [called on server] ------*/
 
@@ -82,6 +272,11 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void firstInRoom() {
         getUi().onFirstInRoomAdvise();
+    }
+
+    @Override
+    public void keepAlive() {
+        Logger.log("[KEEPING ALIVE (RMI)]");
     }
 
     /*------ MATCH METHODS ------*/

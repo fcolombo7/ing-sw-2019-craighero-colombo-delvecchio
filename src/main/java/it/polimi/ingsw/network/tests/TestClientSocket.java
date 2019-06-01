@@ -1,182 +1,217 @@
 package it.polimi.ingsw.network.tests;
 
-import com.google.gson.Gson;
-import it.polimi.ingsw.network.controller.messages.LoginMessage;
-import it.polimi.ingsw.network.controller.messages.room.ExitMessage;
-import it.polimi.ingsw.network.controller.messages.room.FirstInMessage;
-import it.polimi.ingsw.network.controller.messages.room.JoinMessage;
-import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.model.AmmoTile;
+import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.network.client.RMIServerConnection;
+import it.polimi.ingsw.network.client.ServerConnection;
+import it.polimi.ingsw.network.client.SocketServerConnection;
+import it.polimi.ingsw.network.controller.messages.SimpleBoard;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
+import it.polimi.ingsw.network.controller.messages.SimpleTarget;
+import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.utils.MatrixHelper;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.util.List;
 
 public class TestClientSocket {
-    private String ip;
-    private int port;
-    Scanner socketIn;
-    PrintWriter socketOut;
-    Scanner stdin;
-    Socket socket;
-    boolean aBoolean=false;
-    private ExecutorService executor = Executors.newFixedThreadPool(2);
-    private HashMap<String,handler> map;
+    private static class DebugUI implements AdrenalineUI{
+        private ServerConnection connection;
+        private boolean rmi;
+        DebugUI(boolean rmi){
+            this.rmi=rmi;
+        }
 
-    public TestClientSocket(String ip, int port) throws IOException {
-        this.ip = ip;
-        this.port = port;
-        socket = new Socket(ip, port);
-        System.out.println("Connection established");
-        socketIn = new Scanner(socket.getInputStream());
-        socketOut = new PrintWriter(socket.getOutputStream());
-        stdin = new Scanner(System.in);
-        map=new HashMap<>();
-        map.put(Constants.PLAYER_JOIN,()->{
-            Gson gson= new Gson();
-            String socketLine=socketIn.nextLine();
-            JoinMessage msg=gson.fromJson(socketLine,JoinMessage.class);
-            System.out.println("User "+msg.getPlayer()+" as joined the room...");
-        });
+        public void setUpConnection() throws IOException, NotBoundException {
+            if(rmi)this.connection = new RMIServerConnection(this);
+            else this.connection=new SocketServerConnection("localhost",this);
+        }
 
-        map.put(Constants.PLAYER_EXIT,()->{
-            Gson gson= new Gson();
-            String socketLine=socketIn.nextLine();
-            ExitMessage msg=gson.fromJson(socketLine,ExitMessage.class);
-            System.out.println("User "+msg.getPlayer()+" as left the room...");
-        });
+        @Override
+        public void onJoinRoomAdvise(String nickname) {
+            System.out.println("User "+ nickname+" has join the room...");
+        }
 
-        map.put(Constants.FIRST_PLAYER,()->{
+        @Override
+        public void onExitRoomAdvise(String nickname) {
+            System.out.println("User "+ nickname+" has left the room...");
+        }
+
+        @Override
+        public void onFirstInRoomAdvise() {
             System.out.println("You are the first player in the room...");
-        });
-
-        map.put(Constants.CREATION_MESSAGE,()->{
-            System.out.println("MATCH HAS BEEN CREATED");
-            System.out.print("BOARD: ");
-        });
-    }
-
-    public void startClient() {
-        login();
-        Runnable receiver= () -> {
-            try {
-                Gson gson=new Gson();
-                while (true) {
-                    String socketLine = socketIn.nextLine();
-                    System.out.println("[SERVER] "+socketLine);
-                    map.get(socketLine).exec();
-                }
-
-            }catch(NoSuchElementException e) {
-                System.out.println("Connection closed");
-            } finally {
-                stdin.close();
-                socketIn.close();
-                socketOut.close();
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Runnable sender= () -> {
-            try {
-                while (true) {
-                    String msg = stdin.nextLine();
-                    System.out.println(msg);
-                    socketOut.println(msg);
-                    socketOut.flush();
-                    if(msg.equalsIgnoreCase("BOARD PREFERENCE"))
-                    {socketOut.println("{\"boardReference\":1,\"sender\":\"FIL\",\"answer\":\"BOARD PREFERENCE\"}");
-                    socketOut.flush();}
-                }
-            }catch(NoSuchElementException e) {
-                System.out.println("Connection closed");
-            } finally {
-                stdin.close();
-                socketIn.close();
-                socketOut.close();
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        executor.submit(receiver);
-        executor.submit(sender);
-        System.out.println("[LOG] executor started");
-    }
-
-    private void checkMessage(String socketLine) {
-        Gson gson=new Gson();
-        try{
-            JoinMessage msg=gson.fromJson(socketLine,JoinMessage.class);
-            if(msg.getType().equalsIgnoreCase(Constants.PLAYER_JOIN)){
-                System.out.println("User "+msg.getPlayer()+" as joined the room...");
-                return;
-            }
-        }catch(Exception e){
-            System.out.println("[NOT JOIN MESSAGE]");
-        }
-        try{
-            ExitMessage msg=gson.fromJson(socketLine,ExitMessage.class);
-            if(msg.getType().equalsIgnoreCase(Constants.PLAYER_EXIT)){
-                System.out.println("User "+msg.getPlayer()+" as left the room...");
-                return;
-            }
-        }catch(Exception e){
-            System.out.println("[NOT EXIT MESSAGE]");
-        }
-        try{
-            FirstInMessage msg=gson.fromJson(socketLine,FirstInMessage.class);
-            if(msg.getType().equalsIgnoreCase(Constants.PLAYER_EXIT)){
-                System.out.println("You are the first in room!");
-                return;
-            }
-        }catch(Exception e){
-            System.out.println("[NOT FIRST IN MESSAGE]");
         }
 
+        @Override
+        public void onPingAdvise() {
+
+        }
+
+        @Override
+        public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
+            System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+        }
+
+        @Override
+        public void onInvalidMessageReceived(String msg) {
+
+        }
+
+        @Override
+        public void onBoardUpdate(SimpleBoard gameBoard) {
+
+        }
+
+        @Override
+        public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+
+        }
+
+        @Override
+        public void onRespwanRequest(List<Card> powerups) {
+
+        }
+
+        @Override
+        public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+
+        }
+
+        @Override
+        public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+
+        }
+
+        @Override
+        public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+
+        }
+
+        @Override
+        public void onGrabbableWeapons(List<Card> weapons) {
+
+        }
+
+        @Override
+        public void onDiscardWeapon(List<Card> weapons) {
+
+        }
+
+        @Override
+        public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
+
+        }
+
+        @Override
+        public void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
+
+        }
+
+        @Override
+        public void onReloadableWeapons(List<Card> weapons) {
+
+        }
+
+        @Override
+        public void onTurnActions(List<String> actions) {
+
+        }
+
+        @Override
+        public void onTurnEnd() {
+
+        }
+
+        @Override
+        public void onMoveAction(SimplePlayer player) {
+
+        }
+
+        @Override
+        public void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
+
+        }
+
+        @Override
+        public void onMarkAction(String player, SimplePlayer selected, int value) {
+
+        }
+
+        @Override
+        public void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
+
+        }
+
+        @Override
+        public void onDiscardedPowerup(SimplePlayer player, Card powerup) {
+
+        }
+
+        @Override
+        public void onTurnCreation(String currentPlayer) {
+
+        }
+
+        @Override
+        public void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
+
+        }
+
+        @Override
+        public void onCanUsePowerup() {
+
+        }
+
+        @Override
+        public void onCanStopRoutine() {
+
+        }
+
+        @Override
+        public void onUsableWeapons(List<Card> usableWeapons) {
+
+        }
+
+        @Override
+        public void onAvailableEffects(List<String> effects) {
+
+        }
+
+        @Override
+        public void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
+
+        }
+
+        @Override
+        public void onUsedCard(Card card) {
+
+        }
+
+        @Override
+        public void onAvailablePowerups(List<Card> powerups) {
+
+        }
+
+        @Override
+        public void onRunCompleted(SimplePlayer player, int[] newPosition) {
+
+        }
+
+        @Override
+        public void onRunRoutine(MatrixHelper matrix) {
+
+        }
     }
 
-    private void login() {
-        Gson gson= new Gson();
-        String msg= Constants.MSG_CLIENT_LOGIN;
-        socketOut.println(msg);
-        socketOut.flush();
-
-        String nick, motto;
-        LoginMessage loginMessage;
-        System.out.print("nickname: ");
-        nick=stdin.nextLine();
-        System.out.print("motto: ");
-        motto=stdin.nextLine();
-
-        loginMessage=new LoginMessage(nick,motto);
-        socketOut.println(gson.toJson(loginMessage));
-        socketOut.flush();
-        System.out.println(socketIn.nextLine());
-    }
-
-
-    public static void main(String[] args) {
+    public static void main(String[] args){
         try {
-            TestClientSocket client = new TestClientSocket("127.0.0.1", 12345);
-            client.startClient();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
+            DebugUI ui2=new DebugUI(false);
+            ui2.setUpConnection();
+            ui2.connection.login("FilSocket","MOTTO");
+        } catch (IOException | NotBoundException e) {
+            e.printStackTrace();
         }
     }
-
-    @FunctionalInterface
-    private interface handler{
-        void exec();
-    }
-
 }
