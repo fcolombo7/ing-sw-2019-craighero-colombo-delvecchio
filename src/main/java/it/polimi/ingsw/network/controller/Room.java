@@ -134,7 +134,7 @@ public class Room {
         }, Constants.KEEP_ALIVE_WAITING_TIME*1000, Constants.KEEP_ALIVE_FREQUENCY * 1000);
         keepingAliveTimers.put(client.getNickname(), t);
     }
-    
+
     private void resetKeepAlive() {
         for(Timer t:waitingTimers.values()) {
             if(t!=null){
