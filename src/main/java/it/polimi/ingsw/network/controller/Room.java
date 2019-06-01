@@ -2,7 +2,6 @@ package it.polimi.ingsw.network.controller;
 
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.server.ClientConnection;
 import it.polimi.ingsw.network.view.RemoteView;
 import it.polimi.ingsw.network.view.View;
@@ -85,6 +84,9 @@ public class Room {
 
     public synchronized boolean remove(ClientConnection client){
         if(!players.contains(client)) throw new IllegalStateException("Removing player which not exits");
+        //REMOVING TIMERS
+        resetClientTimers(client);
+
         players.remove(client);
         for (ClientConnection cc : players) {
             cc.exitRoomAdvise(client.getNickname());
@@ -130,7 +132,7 @@ public class Room {
                 public void run() {
                     keepClientAlive(cc);
                 }
-            }, 0, Constants.KEEP_ALIVE_FREQUENCY * 1000);
+            }, Constants.KEEP_ALIVE_WAITING_TIME*1000, Constants.KEEP_ALIVE_FREQUENCY * 1000);
             keepingAliveTimers.put(cc.getNickname(), t);
         }
     }
@@ -153,16 +155,16 @@ public class Room {
     }
 
     private void keepClientAlive(ClientConnection client){
-        client.keepAlive();
         Timer t=new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
+                Logger.logErr("TIMER SCADUTO PER "+client.getNickname());
                 handleDisconnection(client);
             }
         },Constants.KEEP_ALIVE_WAITING_TIME*1000);
-
         waitingTimers.put(client.getNickname(),t);
+        client.keepAlive();
     }
 
     public synchronized void isAlive(ClientConnection client){
@@ -177,18 +179,28 @@ public class Room {
     }
 
     private void handleDisconnection(ClientConnection client) {
-        Timer t= keepingAliveTimers.get(client.getNickname());
-        if(t!=null){
-            t.cancel();
-            t.purge();
-            keepingAliveTimers.remove(client.getNickname());
-        }
+        resetClientTimers(client);
         if(playing) {
             controller.addDisconnected(client.getNickname());
             model.deregister(views.get(client.getNickname()));
             views.remove(client.getNickname());
         }
         client.closeConnection();
+    }
+
+    private void resetClientTimers(ClientConnection client){
+        Timer t= keepingAliveTimers.get(client.getNickname());
+        if(t!=null){
+            t.cancel();
+            t.purge();
+            keepingAliveTimers.remove(client.getNickname());
+        }
+        Timer t2= waitingTimers.get(client.getNickname());
+        if(t2!=null){
+            t2.cancel();
+            t2.purge();
+            waitingTimers.remove(client.getNickname());
+        }
     }
 
     private void startMatch() {

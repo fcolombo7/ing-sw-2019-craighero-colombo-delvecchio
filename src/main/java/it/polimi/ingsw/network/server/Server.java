@@ -45,7 +45,7 @@ public class Server{
     }
 
     public synchronized void deregisterConnection(ClientConnection client){
-        Logger.log("Logout request received from "+client.getNickname());
+        Logger.log("Deregistering "+client.getNickname()+" from server");
         players.remove(client.getNickname());
         Room room=client.getRoom();
         if(room.remove(client)){

@@ -158,7 +158,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     private void sendRoomMessage(RoomMessage message) {
         Gson gson= new Gson();
-        Logger.log("[Socket] "+message.getType()+" sending to "+getNickname());
+        //Logger.log("[Socket] "+message.getType()+" sending to "+getNickname());
         try {
             //Logger.log(gson.toJson(message));
             out.println(message.getType());

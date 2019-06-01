@@ -15,6 +15,7 @@ import it.polimi.ingsw.utils.MatrixHelper;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.util.List;
+import java.util.Scanner;
 
 public class TestClientSocket {
     private static class DebugUI implements AdrenalineUI{
@@ -206,10 +207,14 @@ public class TestClientSocket {
     }
 
     public static void main(String[] args){
+        String nick;
+        Scanner stdin=new Scanner(System.in);
+        System.out.print("nick: ");
+        nick=stdin.nextLine();
         try {
             DebugUI ui2=new DebugUI(false);
             ui2.setUpConnection();
-            ui2.connection.login("FilSocket","MOTTO");
+            ui2.connection.login(nick,"MOTTO");
         } catch (IOException | NotBoundException e) {
             e.printStackTrace();
         }

@@ -15,6 +15,7 @@ import it.polimi.ingsw.utils.MatrixHelper;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.util.List;
+import java.util.Scanner;
 
 public class TestRMIClient {
     private static class DebugUI implements AdrenalineUI{
@@ -52,6 +53,8 @@ public class TestRMIClient {
         @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
             System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            Scanner stdin = new Scanner(System.in);
+            stdin.nextLine();
         }
 
         @Override
@@ -206,10 +209,14 @@ public class TestRMIClient {
     }
 
     public static void main(String[] args){
+        String nick;
+        Scanner stdin=new Scanner(System.in);
+        System.out.print("nick: ");
+        nick=stdin.nextLine();
         try {
             DebugUI ui1=new DebugUI(true);
             ui1.setUpConnection();
-            ui1.connection.login("FilRmi","MOTTO");
+            ui1.connection.login(nick,"MOTTO");
         } catch (IOException | NotBoundException e) {
             e.printStackTrace();
         }

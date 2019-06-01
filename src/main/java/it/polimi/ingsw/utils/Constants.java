@@ -28,8 +28,8 @@ public class Constants {
     public static final int ROOM_MIN_PLAYERS=2;
     public static final int ROOM_MAX_PLAYERS=3;
     public static final long WAITING_ROOM_TIMER = 30; //SEC
-    public static final long KEEP_ALIVE_FREQUENCY=9;//SEC
-    public static final long KEEP_ALIVE_WAITING_TIME=5;//SEC
+    public static final long KEEP_ALIVE_FREQUENCY=8;//SEC
+    public static final long KEEP_ALIVE_WAITING_TIME=4;//SEC
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";
