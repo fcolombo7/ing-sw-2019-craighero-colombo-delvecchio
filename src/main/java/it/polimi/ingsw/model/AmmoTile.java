@@ -32,7 +32,6 @@ public class AmmoTile implements Serializable {
      * @param a2 representing the second ammo
      * @param a3 representing the third ammo
      * @param powerup representing the possibility of a tile of having a powerup
-     * @throws AmmoTileNotValidException when parameters does not respect Adrenalina's rules
      */
     public AmmoTile(Color a1, Color a2, Color a3, boolean powerup) {
         if(a1==null||a2==null)

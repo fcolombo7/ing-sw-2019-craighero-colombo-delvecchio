@@ -17,6 +17,7 @@ public class AmmoSquare extends Square{
      * This constructor instantiates an AmmoSquare
      * @param roomColor RoomColor representing the color of the room
      * @param doors  boolean[] representing the doors connected to the AmmoSquare
+     * @param indexes int[] representing the row and column number of the square in the Gameboard matrix
      */
     public AmmoSquare(RoomColor roomColor, boolean[] doors, int[] indexes){
         super(roomColor, doors, indexes);

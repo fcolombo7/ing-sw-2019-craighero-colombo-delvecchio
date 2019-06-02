@@ -15,14 +15,17 @@ import java.util.*;
  * */
 public class Effect {
     /**
-     * TODO
+     * This attribute is used to execute the requirements check: this HashMap allow to access to the correct check-method using a String as reference
      */
     private static HashMap<String,Requirement> requirementsMap=initRequirements();
 
+    /**
+     * This attribute is used to execute all the extrea action of the effect: this HashMap allow to access to the correct extra-method using a String as reference
+     */
     private static HashMap<String, Extra> extraMap= initExtra();
 
     /**
-     * This This attribute contains the effect reference id
+     * This attribute contains the effect reference id
      */
     private int refId;
 
@@ -207,20 +210,6 @@ public class Effect {
      * This method initialized the HashMap used to check the Effect Requirements
      */
     private static HashMap<String,Requirement> initRequirements(){
-        /*
-        TODO
-        SONO TUTTI DA VERIFICARE
-        - VISIBLE       x
-        - MIN_DISTANCE  x
-        - MAX_DISTANCE  x
-        - PREV_VISIBLE  x
-        - PREV_POSITION x
-        - ON_DIRECTION  x
-        - SHIFTABLE     x
-        - NOT_IN_ROOM   x
-        - IF_FIRST_CHECK_VISIBILITY_AFTER_SHIFT
-        - IF_FIRST_CHECK_IN_SQUARE_AFTER_SHIFT
-         */
         HashMap<String,Requirement> requirementsMap=new HashMap<>();
 
         /*
@@ -348,14 +337,11 @@ public class Effect {
         return requirementsMap;
     }
 
+    /**
+     * This method initialized the extraMap
+     * @return an HashMap used to execute all the extrea action of the effect
+     */
     private static HashMap<String, Extra> initExtra(){
-        /*
-        GO_THERE
-        AGAIN_DIRECTION
-        DAMAGE_ALL_SQUARE
-        MARK_ALL_SQUARE
-        SHIFT_IN_SQUARE
-         */
         HashMap<String, Extra> map=new HashMap<>();
         map.put("GO_THERE",Effect::goThereExtra);
         map.put("AGAIN_DIRECTION",Effect::againDirectionExtra);
@@ -440,9 +426,8 @@ public class Effect {
     }
 
     /**
-     * TODO: NEED TO BE TESTED
      * This method return true if using this Effect the current player could shoot a player
-     * @param turn
+     * @param turn representing the current turn of the game
      * @return boolean representing if if using this Effect the current player could shoot a player
      */
     public boolean canUse(Turn turn){
@@ -459,7 +444,7 @@ public class Effect {
         return !shootablePlayers.isEmpty();
     }
 
-    /** TODO: NEED TO BE TESTED
+    /**
      * This method is used to obtain a matrix representing where the current player can move to
      * @param currentPlayer representing the player whose playing the Turn
      * @param players representing all the players (current player excluded)
@@ -481,7 +466,7 @@ public class Effect {
      * @param lastPos representing the indexes of the Gameboard of the last position
      * @param players representing all the players (current player excluded)
      * @param board representing the current Gameboard
-     * @param first
+     * @param first is true if the effect is executed as first effect of the turn
      * @return MatrixHelper object representing the Matrix of the effect for the situation described by the parameters passed
      */
     private MatrixHelper calcMovementMatrix(int[] curPos, int[] lastPos, List<Player> players, GameBoard board, boolean first) {
@@ -529,6 +514,7 @@ public class Effect {
 
     /**
      * This method is used to obtain all the players which can be shot group by the effect target type
+     * @param turn representing the current turn of the game
      * @return List<List<Player>> representing all the players which can be shot group by the effect target type
      */
     public List<List<Player>> getShootablePlayers(Turn turn) {
@@ -550,7 +536,7 @@ public class Effect {
      * @param curPos representing the indexes of the Gameboard of the current position
      * @param lastPos representing the indexes of the Gameboard of the last position
      * @param board representing the current Gameboard
-     * @param turn
+     * @param turn representing the current turn of the game
      * @return MatrixHelper object representing the Matrix of the effect for the situation described by the parameters passed
      */
     private MatrixHelper calcEffectMatrix(int[] curPos, int[] lastPos, GameBoard board, Turn turn) {
@@ -696,6 +682,11 @@ public class Effect {
         return list;
     }
 
+    /**
+     * This method is used to perform the effect updating all the involved players
+     * @param selectedNickname representing all the players chose by the current player, target of the effect
+     * @param turn representing the current turn of the game
+     */
     public void perform(List<List<String>> selectedNickname, Turn turn){
         try{
             if(!checkSelected(selectedNickname,turn)) throw new IllegalStateException("Game Error performing the effect "+this.getName());
@@ -752,6 +743,12 @@ public class Effect {
         }
     }
 
+    /**
+     * This method is used to handle the move response from the current player
+     * @param turn representing the current turn of the game
+     * @param target representing the selected player, target of the effect
+     * @param newPosition representing the new position of the target, chose by the current player
+     */
     public void handleMoveAnswer(Turn turn, String target, int[] newPosition){
         Player selectedPlayer=null;
         for(Player p:turn.getGame().getPlayers()){
@@ -782,6 +779,11 @@ public class Effect {
         }
     }
 
+    /**
+     * This method is used to convert the selected players (group by target) into a single list of players
+     * @param selected representing the selected players (group by target)
+     * @return a single List<Player> which contains all the selected players choise by the current player
+     */
     private List<Player> selectedToList(List<List<Player>> selected) {
         List<Player> returned=new ArrayList<>();
         for(List<Player> list:selected){
@@ -790,6 +792,12 @@ public class Effect {
         return returned;
     }
 
+    /**
+     * This method is used to check if the selected players received from the user are valid (can be shot during this turn from the current player)
+     * @param selectedNickname representing the nicknames of the selected players (group by target)
+     * @param turn representing the current turn of the game
+     * @return true if the selectedNicknames are correct, in other case return false
+     */
     public boolean checkSelected(List<List<String>> selectedNickname, Turn turn) {
         List<List<Player>> selected=composeSelected(selectedNickname,turn);
         if(selected.isEmpty()) return false;
@@ -798,6 +806,11 @@ public class Effect {
         return checkSize(selected)&&checkInner(selected);
     }
 
+    /**
+     * This method check for each inner list if the number of player in single target is compatible with the definition of the effect target
+     * @param selected representing the nicknames of the selected players (group by target)
+     * @return true if the selectedNicknames are correct, in other case return false
+     */
     private boolean checkInner(List<List<Player>> selected) {
         for (List<Player> list:selected){
             if(list.size()<target.getMinPlayerIn()) return false;
@@ -806,6 +819,11 @@ public class Effect {
         return true;
     }
 
+    /**
+     * This method check if the number of selected target is compatible with the definition of the effect target
+     * @param selected representing the nicknames of the selected players (group by target)
+     * @return true if the selectedNicknames are correct, in other case return false
+     */
     private boolean checkSize(List<List<Player>> selected) {
         if(selected.size()>=this.target.getMinNumber()){
             return this.target.getMaxNumber() == -1 || selected.size() <= this.target.getMaxNumber();

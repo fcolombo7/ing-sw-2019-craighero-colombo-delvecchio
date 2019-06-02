@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.enums;
 
+/**
+ * This enumeration is used to represent all the logical states of the players
+ */
 public enum PlayerStatus {
     ALMOST_DEAD,
     DEAD,
-    DISCONNECTED,
     FIRST_SPAWN,
     PLAYING,
-    SUSPENDED,
     WAITING
 }
