@@ -32,6 +32,7 @@ public class Cli implements AdrenalineUI{
     private StringBuilder myPlayerBoard = new StringBuilder();
     private Map<String, String> enemiesColor = new HashMap<>();
     private Map<String, int[]> enemiesPosition = new HashMap<>();
+    private Map<String, int[]> squareOffset = new HashMap<>(); //[row, offset]
     private List<List<List<StringBuilder>>> mapList = new ArrayList<>();
     private ServerConnection serverConnection;
 
@@ -80,8 +81,18 @@ public class Cli implements AdrenalineUI{
     }
 
     public void updateMap(){
+        map.setLength(0);
+        lettersHead();
         for(List<List<StringBuilder>> row: mapList)
             appendRow(row, mapList.indexOf(row));
+    }
+
+    private void lettersHead(){
+        map.append(" ");
+        for(int i=0; i<board.getBoard()[0].length; i++)
+            map.append(String.format("|%7s%-6s", (char) (i +65), " "));
+        map.append("|");
+        map.append("\n");
     }
 
     public void chooseBoard(){
@@ -121,6 +132,10 @@ public class Cli implements AdrenalineUI{
         this.enemiesColor = enemiesColor;
     }
 
+    public void setSquareOffset(Map<String, int[]> squareOffset) {
+        this.squareOffset = squareOffset;
+    }
+
     public SimplePlayer getMe() {
         return me;
     }
@@ -143,13 +158,21 @@ public class Cli implements AdrenalineUI{
     }
 
     public void setPlayerPosition(SimplePlayer player, int[] coordinates){
+
+        String playerColor = enemiesColor.get(player.getNickname());
+        int [] offsets = squareOffset.get(playerColor);
+        StringBuilder spaceFiller = new StringBuilder();
+        for (int i = 0; i < (playerColor + PLAYER).length()/2 ; i++){spaceFiller.append(" "); }
+
         if(!enemiesPosition.containsKey(player.getNickname()))
             enemiesPosition.put(player.getNickname(), coordinates);
-        else enemiesPosition.replace(player.getNickname(), coordinates);
-
-        /*
-        spostare player, posizionare a seconda del colore, stringbuilder.put(pos x, tot " ") poi stringbuilder.replace(pos x, tot " " + triangolo player)
-         */
+        else {
+            int[] oldPos = enemiesPosition.get(player.getNickname());
+            mapList.get(oldPos[0]).get(oldPos[1]).get(offsets[0]).replace(offsets[1], offsets[1]+spaceFiller.length(), " ");
+            enemiesPosition.replace(player.getNickname(), coordinates);
+        }
+        mapList.get(coordinates[0]).get(coordinates[1]).get(offsets[0]).insert(offsets[1], " ").replace(offsets[1], offsets[1]+spaceFiller.length(), playerColor + PLAYER + RESET + parseColor(board.getBoard()[coordinates[0]][coordinates[1]].getRoomColor()));
+        updateMap();
     }
 
     public void printMarks(SimplePlayer player){
@@ -211,11 +234,7 @@ public class Cli implements AdrenalineUI{
     private void buildMap(){
         List<List<StringBuilder>> squareRow = new ArrayList<>();
 
-        map.append(" ");
-        for(int i=0; i<board.getBoard()[0].length; i++)
-            map.append(String.format("|%7s%-6s", (char) (i +65), " "));
-        map.append("|");
-        map.append("\n");
+        lettersHead();
 
         for(int i=0; i<board.getBoard().length; i++){
             for(int j=0; j<board.getBoard()[0].length; j++){
@@ -223,8 +242,8 @@ public class Cli implements AdrenalineUI{
                     squareRow.add(buildSquare(i, j));
                 else squareRow.add(blankSquare);
             }
+            mapList.add(new ArrayList<>(squareRow));
             appendRow(squareRow, i);
-            mapList.add(squareRow);
             squareRow.clear();
         }
     }

@@ -24,6 +24,47 @@ import static it.polimi.ingsw.utils.Constants.*;
 public class TestCli {
 
     @Test
+    public void testSetPlayerPosition() throws IOException, SAXException, ParserConfigurationException {
+        Node node = parsingXMLFile("src/main/Resources/boards/board" + "1" + ".xml");
+        GameBoard gameb = new GameBoard(node, 5, 1);
+        AmmoTile ammo1 = new AmmoTile(Color.RED, Color.RED, Color.YELLOW, false);
+        AmmoTile ammo2 = new AmmoTile(Color.BLUE, Color.RED, null, true);
+        for(int i=0;i<gameb.getMap().length;i++){
+            for(int j=0;j<gameb.getMap()[0].length;j++){
+                if(gameb.hasSquare(i,j) && !gameb.isSpawnPoint(i,j)){
+                    AmmoSquare ammoSquare=(AmmoSquare)gameb.getSquare(i,j);
+                    if(j%2==0)
+                        ammoSquare.setAmmoTile(ammo1);
+                    else ammoSquare.setAmmoTile(ammo2);
+                }
+            }
+        }
+        SimpleBoard board = new SimpleBoard(gameb);
+        Cli cli = new Cli(board);
+        SimplePlayer bbb = new SimplePlayer(new Player("b", "bbb", false));
+        SimplePlayer ccc = new SimplePlayer(new Player("c", "ccc", false));
+        SimplePlayer ddd = new SimplePlayer(new Player("d", "ddd", false));
+        SimplePlayer eee = new SimplePlayer(new Player("e", "eee", false));
+        Map<String, String> enemies = new HashMap<>();
+        enemies.put(bbb.getNickname(), RED_W);
+        enemies.put(ccc.getNickname(), WHITE_W);
+        enemies.put(ddd.getNickname(), GREEN_W);
+        enemies.put(eee.getNickname(), BLUE_W);
+        cli.setEnemiesColor(enemies);
+        Map<String, int[]> offsets = new HashMap<>();
+        offsets.put(RED_W, new int[]{3, 10});
+        offsets.put(WHITE_W, new int[]{3, 18});
+        offsets.put(GREEN_W, new int[]{7, 10});
+        offsets.put(BLUE_W, new int[]{7, 18});
+        cli.setSquareOffset(offsets);
+        cli.setPlayerPosition(bbb, new int[]{0, 0});
+        cli.setPlayerPosition(ccc, new int[]{2, 1});
+        cli.setPlayerPosition(ddd, new int[]{2, 1});
+        cli.setPlayerPosition(eee, new int[]{2, 1});
+        cli.printMap();
+    }
+
+    @Test
     public void testBuildMap() throws IOException, SAXException, ParserConfigurationException {
         //for(int i=1; i<5; i++) {
             Node node = parsingXMLFile("src/main/Resources/boards/board" + "1" + ".xml");
