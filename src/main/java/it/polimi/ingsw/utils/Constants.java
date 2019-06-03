@@ -143,6 +143,10 @@ public class Constants {
     public static final String OVERKILL = "\u25CE";
     public static final String MARK = "\u2B22";
     public static final String SQUARE = "\u25A0";
+    public static final String PLAYER = "\uD83D\uDEB6";
+    public static final String CLAP = "\uD83D\uDC4F";
+    public static final String ARROW = "\u21D2";
+    public static final String FIRST = "\u2460";
 
     public static final String UCLASSIC_SIDE = UL_CORNER + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UR_CORNER;
     public static final String UDOOR_SIDE = UL_CORNER + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UL_QUAD + "  " + UR_QUAD + UH_BLOCK + UH_BLOCK + UH_BLOCK + UH_BLOCK + UR_CORNER;
@@ -157,7 +161,7 @@ public class Constants {
     public static final String CLASSIC_COLUMN_PIECE = LH_BLOCK + "        " + RH_BLOCK;*/
     public static final String COL_FORMAT = "%s%s%13s";
     public static final String WEAPON_FORMAT = "%s%s%2s%s%10s";
-    public static final String AMMO_FORMAT = "%s%s%2s%11s";
+    public static final String AMMO_FORMAT = "%s%s%2s%10s";
 
     private Constants(){}
 }

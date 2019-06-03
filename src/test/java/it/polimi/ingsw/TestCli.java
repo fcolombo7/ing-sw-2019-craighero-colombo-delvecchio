@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,20 +23,32 @@ import static it.polimi.ingsw.utils.Constants.*;
 
 public class TestCli {
 
-    /*@Test
+    @Test
     public void testBuildMap() throws IOException, SAXException, ParserConfigurationException {
-        for(int i=1; i<5; i++) {
-            Node node = parsingXMLFile("src/main/Resources/boards/board" + i + ".xml");
+        //for(int i=1; i<5; i++) {
+            Node node = parsingXMLFile("src/main/Resources/boards/board" + "1" + ".xml");
             GameBoard gameb = new GameBoard(node, 5, 1);
+            AmmoTile ammo1 = new AmmoTile(Color.RED, Color.RED, Color.YELLOW, false);
+            AmmoTile ammo2 = new AmmoTile(Color.BLUE, Color.RED, null, true);
+            for(int i=0;i<gameb.getMap().length;i++){
+                for(int j=0;j<gameb.getMap()[0].length;j++){
+                    if(gameb.hasSquare(i,j) && !gameb.isSpawnPoint(i,j)){
+                        AmmoSquare ammoSquare=(AmmoSquare)gameb.getSquare(i,j);
+                        if(j%2==0)
+                            ammoSquare.setAmmoTile(ammo1);
+                        else ammoSquare.setAmmoTile(ammo2);
+                    }
+                }
+            }
             SimpleBoard board = new SimpleBoard(gameb);
             Cli cli = new Cli(board);
             cli.printMap();
-        }
-    }*/
+        //}
+    }
 
     @Test
     public void testBuildPlayerBoard(){
-        Cli cli = new Cli();
+        Cli cli = new Cli(2);
         Player a = new Player("a", "aaa", true);
         Player b = new Player("b", "bbb", false);
         Player c = new Player("c", "ccc", false);
@@ -52,13 +65,13 @@ public class TestCli {
         enemies.put(c.getNickname(), WHITE_W);
         enemies.put(d.getNickname(), GREEN_W);
         enemies.put(e.getNickname(), BLUE_W);
-        cli.setEnemies(enemies);
+        cli.setEnemiesColor(enemies);
         Logger.print(cli.buildPlayerBoard(player).toString());
     }
 
     @Test
     public void testPrintMarks(){
-        Cli cli = new Cli();
+        Cli cli = new Cli(2);
         Player a = new Player("a", "aaa", true);
         Player b = new Player("b", "bbb", false);
         Player c = new Player("c", "ccc", false);
@@ -75,13 +88,13 @@ public class TestCli {
         enemies.put(c.getNickname(), WHITE_W);
         enemies.put(d.getNickname(), GREEN_W);
         enemies.put(e.getNickname(), BLUE_W);
-        cli.setEnemies(enemies);
+        cli.setEnemiesColor(enemies);
         cli.printMarks(player);
     }
 
     @Test
     public void testPrintAmmo(){
-        Cli cli = new Cli();
+        Cli cli = new Cli(2);
         Player a = new Player("a", "aaa", true);
         List<Color> ammo= new ArrayList<>();
         ammo.add(Color.RED);

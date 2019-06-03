@@ -1,39 +1,87 @@
 package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.model.AmmoTile;
+import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.RoomColor;
+import it.polimi.ingsw.network.client.RMIServerConnection;
+import it.polimi.ingsw.network.client.ServerConnection;
+import it.polimi.ingsw.network.client.SocketServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleSquare;
+import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.utils.Logger;
+import it.polimi.ingsw.utils.MatrixHelper;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.*;
 
 import static it.polimi.ingsw.model.enums.Direction.*;
 import static it.polimi.ingsw.utils.Constants.*;
 
 
-public class Cli {
+public class Cli implements AdrenalineUI{
 
     private SimpleBoard board;
     private StringBuilder map = new StringBuilder();
-    private final List<String> blankSquare = Collections.singletonList(" ");
+    private final List<StringBuilder> blankSquare = Collections.singletonList(new StringBuilder(" "));
     private SimplePlayer me;
     private StringBuilder myPlayerBoard = new StringBuilder();
-    private Map<String, String> enemies = new HashMap<>();
+    private Map<String, String> enemiesColor = new HashMap<>();
+    private Map<String, int[]> enemiesPosition = new HashMap<>();
+    private List<List<List<StringBuilder>>> mapList = new ArrayList<>();
+    private ServerConnection serverConnection;
 
-    public Cli(SimpleBoard board, SimplePlayer me){
-        this.board = board;
-        this.me = me;
-        buildMap();
-        myPlayerBoard = buildPlayerBoard(me);
+    public Cli(int a){
     }
 
-    public Cli(){}
+    public Cli(SimpleBoard board){
+        this.board = board;
+        buildMap();
+    }
+
+    public Cli() throws IOException, NotBoundException {
+        Scanner in = new Scanner(System.in);
+        Logger.print("\n" +
+                "      ___           ___           ___           ___           ___           ___           ___                   ___           ___     \n" +
+                "     /\\  \\         /\\  \\         /\\  \\         /\\  \\         /\\__\\         /\\  \\         /\\__\\      ___        /\\__\\         /\\  \\    \n" +
+                "    /::\\  \\       /::\\  \\       /::\\  \\       /::\\  \\       /::|  |       /::\\  \\       /:/  /     /\\  \\      /::|  |       /::\\  \\   \n" +
+                "   /:/\\:\\  \\     /:/\\:\\  \\     /:/\\:\\  \\     /:/\\:\\  \\     /:|:|  |      /:/\\:\\  \\     /:/  /      \\:\\  \\    /:|:|  |      /:/\\:\\  \\  \n" +
+                "  /::\\~\\:\\  \\   /:/  \\:\\__\\   /::\\~\\:\\  \\   /::\\~\\:\\  \\   /:/|:|  |__   /::\\~\\:\\  \\   /:/  /       /::\\__\\  /:/|:|  |__   /::\\~\\:\\  \\ \n" +
+                " /:/\\:\\ \\:\\__\\ /:/__/ \\:|__| /:/\\:\\ \\:\\__\\ /:/\\:\\ \\:\\__\\ /:/ |:| /\\__\\ /:/\\:\\ \\:\\__\\ /:/__/     __/:/\\/__/ /:/ |:| /\\__\\ /:/\\:\\ \\:\\__\\\n" +
+                " \\/__\\:\\/:/  / \\:\\  \\ /:/  / \\/_|::\\/:/  / \\:\\~\\:\\ \\/__/ \\/__|:|/:/  / \\/__\\:\\/:/  / \\:\\  \\    /\\/:/  /    \\/__|:|/:/  / \\/__\\:\\/:/  /\n" +
+                "      \\::/  /   \\:\\  /:/  /     |:|::/  /   \\:\\ \\:\\__\\       |:/:/  /       \\::/  /   \\:\\  \\   \\::/__/         |:/:/  /       \\::/  / \n" +
+                "      /:/  /     \\:\\/:/  /      |:|\\/__/     \\:\\ \\/__/       |::/  /        /:/  /     \\:\\  \\   \\:\\__\\         |::/  /        /:/  /  \n" +
+                "     /:/  /       \\::/__/       |:|  |        \\:\\__\\         /:/  /        /:/  /       \\:\\__\\   \\/__/         /:/  /        /:/  /   \n" +
+                "     \\/__/         ~~            \\|__|         \\/__/         \\/__/         \\/__/         \\/__/                 \\/__/         \\/__/    \n");
+        Logger.print("\n" + REVERSE + BOLD + "Benevnuto in ADRENALINA!" + RESET + "\n");
+        Logger.print(BOLD + "NOME: " + RESET);
+        String name = in.nextLine();
+        Logger.print(BOLD + "MOTTO: " + RESET);
+        String motto = in.nextLine();
+        Logger.print(BOLD + "Ora seleziona il tipo di connessione con cui vorresti giocare:\n" +
+                            "1. RMI\n" +
+                            "2. SOCKET" + RESET);
+        int connection = in.nextInt();
+        if(connection == 1)
+            serverConnection = new RMIServerConnection(this);
+        else serverConnection = new SocketServerConnection("localhost", this);
+        serverConnection.login(name, motto);
+
+        clearScreen();
+        Logger.print("Sei in attesa di altri giocatori... \n");
+    }
 
     public void printMap(){
         System.out.println(map.toString());
+    }
+
+    public void updateMap(){
+        for(List<List<StringBuilder>> row: mapList)
+            appendRow(row, mapList.indexOf(row));
     }
 
     public void chooseBoard(){
@@ -65,13 +113,12 @@ public class Cli {
                     break;
                 default:
                     Logger.log("Invalid choice, retry");
-                    Logger.flush();
             }
         }while (!flag);
     }
 
-    public void setEnemies(Map<String, String> enemies) {
-        this.enemies = enemies;
+    public void setEnemiesColor(Map<String, String> enemiesColor) {
+        this.enemiesColor = enemiesColor;
     }
 
     public SimplePlayer getMe() {
@@ -82,10 +129,33 @@ public class Cli {
         this.me = me;
     }
 
+    private int[] parseCoordinates(String chess){
+        int[] coordinates = new int[2];
+        if(chess.length() != 2)
+            throw new IllegalArgumentException("Wrong coordinates format");
+        if(chess.charAt(0) < 65 || chess.charAt(0) > 122 || (chess.charAt(0) > 90 && chess.charAt(0) < 97))
+            throw new IllegalArgumentException("First coordinate must be a letter");
+        if((chess.charAt(0) - 97) < 0)
+            coordinates[0] = (int) chess.charAt(0) - 65;
+        else coordinates[0] = (int) chess.charAt(0) - 97;
+        coordinates[1] = Character.getNumericValue(chess.charAt(1));
+        return coordinates;
+    }
+
+    public void setPlayerPosition(SimplePlayer player, int[] coordinates){
+        if(!enemiesPosition.containsKey(player.getNickname()))
+            enemiesPosition.put(player.getNickname(), coordinates);
+        else enemiesPosition.replace(player.getNickname(), coordinates);
+
+        /*
+        spostare player, posizionare a seconda del colore, stringbuilder.put(pos x, tot " ") poi stringbuilder.replace(pos x, tot " " + triangolo player)
+         */
+    }
+
     public void printMarks(SimplePlayer player){
         StringBuilder marks = new StringBuilder("Marks: ");
         for(String mark : player.getMarks()){
-            marks.append(enemies.get(mark) + MARK + RESET);
+            marks.append(enemiesColor.get(mark) + MARK + RESET);
         }
         Logger.print(marks.toString());
     }
@@ -111,7 +181,7 @@ public class Cli {
             }
         }
 
-        Logger.print("Ammo: " + RED_W + SQUARE + " x " + redAmmo + RESET + " " + BLUE_W + SQUARE + " x " + blueAmmo + RESET + " " + YELLOW_W + SQUARE + " x " + yellowAmmo + "\n");
+        Logger.print("Ammo: " + RED_W + SQUARE + " x " + redAmmo + RESET + " " + BLUE_W + SQUARE + " x " + blueAmmo + RESET + " " + YELLOW_W + SQUARE + " x " + yellowAmmo + RESET + "\n");
     }
 
     public StringBuilder buildPlayerBoard(SimplePlayer player){
@@ -128,18 +198,18 @@ public class Cli {
     private String parseDamages(SimplePlayer player){
         StringBuilder damages = new StringBuilder();
         for(String droplet : player.getDamages()){
-            damages.append(enemies.get(droplet) + DAMAGE + RESET);
+            damages.append(enemiesColor.get(droplet) + DAMAGE + RESET);
         }
         damages.insert(20, " ");
         damages.insert(51, " ");
         damages.insert(102, " ");
-        damages.insert(109, " ");
+        damages.insert(113, " ");
         damages.append("\n");
         return damages.toString();
     }
 
     private void buildMap(){
-        List<List<String>> squareRow = new ArrayList<>();
+        List<List<StringBuilder>> squareRow = new ArrayList<>();
 
         map.append(" ");
         for(int i=0; i<board.getBoard()[0].length; i++)
@@ -154,28 +224,29 @@ public class Cli {
                 else squareRow.add(blankSquare);
             }
             appendRow(squareRow, i);
+            mapList.add(squareRow);
             squareRow.clear();
         }
     }
 
-    private List<String> buildSquare(int x, int y){
+    private List<StringBuilder> buildSquare(int x, int y){
         SimpleSquare building = board.getBoard()[x][y];
         String color = parseColor(building.getRoomColor());
-        StringBuilder squareLine = new StringBuilder();
-        List<String> squareToString = new ArrayList<>();
+        StringBuilder squareUpperLine = new StringBuilder();
+        StringBuilder squareDownLine = new StringBuilder();
+        List<StringBuilder> squareToString = new ArrayList<>();
 
-        squareLine.append(color);
-        squareLine.append(makeRow(building.hasDoor(NORTH), board.sameRoom(building.getBoardIndexes(), NORTH), true));
-        squareLine.append(RESET);
-        squareToString.add(squareLine.toString());
-        squareLine.setLength(0);
+        squareUpperLine.append(color);
+        squareUpperLine.append(makeRow(building.hasDoor(NORTH), board.sameRoom(building.getBoardIndexes(), NORTH), true));
+        squareUpperLine.append(RESET);
+        squareToString.add(squareUpperLine);
 
         squareToString.addAll(makeColumns(building));
 
-        squareLine.append(color);
-        squareLine.append(makeRow(building.hasDoor(SOUTH), board.sameRoom(building.getBoardIndexes(), SOUTH), false));
-        squareLine.append(RESET);
-        squareToString.add(squareLine.toString());
+        squareDownLine.append(color);
+        squareDownLine.append(makeRow(building.hasDoor(SOUTH), board.sameRoom(building.getBoardIndexes(), SOUTH), false));
+        squareDownLine.append(RESET);
+        squareToString.add(squareDownLine);
 
         return squareToString;
     }
@@ -195,7 +266,7 @@ public class Cli {
         }
     }
 
-    private List<String> makeColumns(SimpleSquare building) {
+    private List<StringBuilder> makeColumns(SimpleSquare building) {
         if (building.hasDoor(WEST)) {
             if (building.hasDoor(EAST)) return (buildDD(building));
             else if (board.sameRoom(building.getBoardIndexes(), EAST)) return (buildDR(building));
@@ -216,7 +287,7 @@ public class Cli {
         }
     }
 
-    private void appendRow(List<List<String>> row, int nrow){
+    private void appendRow(List<List<StringBuilder>> row, int nrow){
         int span;
         int count = 0;
         while(row.get(count) == blankSquare)
@@ -224,15 +295,15 @@ public class Cli {
         span = row.get(count).size();
 
         for(int i=0; i<span; i++) {
-            for (List<String> square : row) {
+            for (List<StringBuilder> square : row) {
                 if(row.indexOf(square) == 0){
                     if(i == span/2)
                         map.append(WHITE_W + nrow + " " + RESET);
                     else map.append("  ");
                 }
-                if (square == blankSquare)
+                if (square.toString().equals(blankSquare.toString()))
                     map.append(String.format("%14s", ""));
-                else map.append(square.get(i));
+                else map.append(square.get(i).toString());
             }
             map.append("\n");
         }
@@ -263,161 +334,342 @@ public class Cli {
         StringBuilder ammoTile = new StringBuilder();
         AmmoTile a = ammoSquare.getAmmoTile();
         if(a.hasPowerup())
-            ammoTile.append(BACKGROUND_WHITE + BLACK_W + "P" + RESET + parseColor(a.getAmmo(0)) + AMMO + RESET + parseColor(a.getAmmo(1)) + AMMO + RESET);
-        else ammoTile.append(parseColor(a.getAmmo(0)) + AMMO + RESET + parseColor(a.getAmmo(1)) + AMMO + RESET + parseColor(a.getAmmo(2)) + AMMO + RESET);
+            ammoTile.append(BACKGROUND_WHITE + BLACK_W + "P" + RESET + parseColor(a.getAmmo(0)) + AMMO + RESET + parseColor(a.getAmmo(1)) + AMMO + RESET + parseColor(ammoSquare.getRoomColor()));
+        else ammoTile.append(parseColor(a.getAmmo(0)) + AMMO + RESET + parseColor(a.getAmmo(1)) + AMMO + RESET + parseColor(a.getAmmo(2)) + AMMO + RESET + parseColor(ammoSquare.getRoomColor()));
         return ammoTile.toString();
     }
 
-    private List<String> buildDD(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildDD(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , UL_QUAD , UR_QUAD));
-        col.add(String.format(COL_FORMAT, color , " " , " "));
-        col.add(String.format(COL_FORMAT, color , " " , " "));
-        col.add(String.format(COL_FORMAT, color , DL_QUAD , DR_QUAD));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , UL_QUAD , UR_QUAD)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , " " , " ")));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , " " , " ")));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , DL_QUAD , DR_QUAD)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
         return col;
     }
 
-    private List<String> buildDR(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildDR(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RT_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , UL_QUAD , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , " " , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , " " , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , DL_QUAD , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RT_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , UL_QUAD , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , " " , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , " " , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , DL_QUAD , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
         return col;
     }
 
-    private List<String> buildDW(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildDW(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , UL_QUAD , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , " " , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , " " , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , DL_QUAD , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , UL_QUAD , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , " " , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , " " , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , DL_QUAD , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
         return col;
     }
 
-    private List<String> buildRD(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildRD(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RH_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LT_BLOCK , getAmmo(b) , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , UR_QUAD));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , " "));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , " "));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , DR_QUAD));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RH_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LT_BLOCK , getAmmo(b) , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , UR_QUAD)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , " ")));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , " ")));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , DR_QUAD)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
         return col;
     }
 
-    private List<String> buildRR(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildRR(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RT_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LT_BLOCK , getAmmo(b) , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RT_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LT_BLOCK , getAmmo(b) , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RT_BLOCK)));
         return col;
     }
 
-    private List<String> buildRW(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildRW(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RH_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LT_BLOCK , getAmmo(b) , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LT_BLOCK , GUN , SPAWN , RH_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LT_BLOCK , getAmmo(b) , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LT_BLOCK , RH_BLOCK)));
         return col;
     }
 
-    private List<String> buildWR(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildWR(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RT_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RT_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RT_BLOCK)));
         return col;
     }
 
-    private List<String> buildWD(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildWD(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , UR_QUAD));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , " "));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , " "));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , DR_QUAD));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , UR_QUAD)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , " ")));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , " ")));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , DR_QUAD)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
         return col;
     }
 
-    private List<String> buildWW(SimpleSquare b){
-        List<String> col = new ArrayList<>();
+    private List<StringBuilder> buildWW(SimpleSquare b){
+        List<StringBuilder> col = new ArrayList<>();
         String color = parseColor(b.getRoomColor());
         if(b.isSpawnPoint())
-            col.add(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK));
-        else col.add(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
-        col.add(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK));
+            col.add(new StringBuilder(String.format(WEAPON_FORMAT, color , LH_BLOCK , GUN , SPAWN , RH_BLOCK)));
+        else col.add(new StringBuilder(String.format(AMMO_FORMAT, color , LH_BLOCK , getAmmo(b) , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
+        col.add(new StringBuilder(String.format(COL_FORMAT, color , LH_BLOCK , RH_BLOCK)));
         return col;
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    @Override
+    public void onJoinRoomAdvise(String nickname) {
+        Logger.print(BOLD + nickname + RESET + " si è unito alla partita\n");
+    }
+
+    @Override
+    public void onExitRoomAdvise(String nickname) {
+        Logger.print(BOLD + nickname + RESET + " si è disconnesso\n");
+    }
+
+    @Override
+    public void onFirstInRoomAdvise() {
+        Logger.print(CLAP + " Complimenti! Sei il primo giocatore che avrà il privilegio di giocare il turno! " + CLAP + "\n");
+        Logger.print("Questo simobolo sarà accanto alla tua plancia per ridordartelo durante il gioco " + ARROW + " " + FIRST + "\n");
+    }
+
+    @Override
+    public void onPingAdvise() {
+
+    }
+
+    @Override
+    public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
+
+    }
+
+    @Override
+    public void onInvalidMessageReceived(String msg) {
+
+    }
+
+    @Override
+    public void onBoardUpdate(SimpleBoard gameBoard) {
+
+    }
+
+    @Override
+    public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+
+    }
+
+    @Override
+    public void onRespwanRequest(List<Card> powerups) {
+
+    }
+
+    @Override
+    public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+
+    }
+
+    @Override
+    public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+
+    }
+
+    @Override
+    public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+
+    }
+
+    @Override
+    public void onGrabbableWeapons(List<Card> weapons) {
+
+    }
+
+    @Override
+    public void onDiscardWeapon(List<Card> weapons) {
+
+    }
+
+    @Override
+    public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
+
+    }
+
+    @Override
+    public void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
+
+    }
+
+    @Override
+    public void onReloadableWeapons(List<Card> weapons) {
+
+    }
+
+    @Override
+    public void onTurnActions(List<String> actions) {
+
+    }
+
+    @Override
+    public void onTurnEnd() {
+
+    }
+
+    @Override
+    public void onMoveAction(SimplePlayer player) {
+
+    }
+
+    @Override
+    public void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
+
+    }
+
+    @Override
+    public void onMarkAction(String player, SimplePlayer selected, int value) {
+
+    }
+
+    @Override
+    public void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
+
+    }
+
+    @Override
+    public void onDiscardedPowerup(SimplePlayer player, Card powerup) {
+
+    }
+
+    @Override
+    public void onTurnCreation(String currentPlayer) {
+
+    }
+
+    @Override
+    public void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
+
+    }
+
+    @Override
+    public void onCanUsePowerup() {
+
+    }
+
+    @Override
+    public void onCanStopRoutine() {
+
+    }
+
+    @Override
+    public void onUsableWeapons(List<Card> usableWeapons) {
+
+    }
+
+    @Override
+    public void onAvailableEffects(List<String> effects) {
+
+    }
+
+    @Override
+    public void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
+
+    }
+
+    @Override
+    public void onUsedCard(Card card) {
+
+    }
+
+    @Override
+    public void onAvailablePowerups(List<Card> powerups) {
+
+    }
+
+    @Override
+    public void onRunCompleted(SimplePlayer player, int[] newPosition) {
+
+    }
+
+    @Override
+    public void onRunRoutine(MatrixHelper matrix) {
+
     }
 }
