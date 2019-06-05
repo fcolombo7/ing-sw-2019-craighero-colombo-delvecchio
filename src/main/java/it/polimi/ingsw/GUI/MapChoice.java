@@ -101,7 +101,7 @@ public class MapChoice {
                 MainWindow.urlmap= bestmap.getUrl();
 
                 //try{
-                //    ProvaWindow.open(bestmap, urlmap);
+                //    GameWindow.open(bestmap, urlmap);
                 //} catch(IOException e){
                 //    throw new RuntimeException(e);
                 //}

@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.io.IOException;
@@ -26,8 +27,8 @@ public class TestClientSocket {
         }
 
         public void setUpConnection() throws IOException, NotBoundException {
-            if(rmi)this.connection = new RMIServerConnection(this);
-            else this.connection=new SocketServerConnection("192.168.43.54",this);
+            if(rmi)this.connection = new RMIServerConnection("localhost",this);
+            else this.connection=new SocketServerConnection(Constants.RMI_HOSTNAME,this);
         }
 
         @Override

@@ -15,7 +15,7 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
-public class ProvaWindow {
+public class GameWindow {
 
     private static Button user1;
     private static Button user2;
@@ -1693,7 +1693,7 @@ public class ProvaWindow {
 
 
         Scene scene=new Scene(gp, 1200, 650);
-        scene.getStylesheets().addAll(ProvaWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+        scene.getStylesheets().addAll(GameWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
         s.setScene(scene);
         s.setResizable(false);
         s.setMaximized(true);

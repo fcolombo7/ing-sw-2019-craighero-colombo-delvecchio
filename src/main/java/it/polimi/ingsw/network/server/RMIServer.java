@@ -1,18 +1,13 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.network.RMIClientHandler;
-import it.polimi.ingsw.network.RMIServerHandler;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.AccessException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 
 public class RMIServer {
@@ -25,7 +20,7 @@ public class RMIServer {
         this.server=server;
         this.hostname=hostname;
     }
-    
+
     public void start(int portNumber) throws ServerException {
         try{
             //System.setProperty("java.rmi.server.hostname",hostname);

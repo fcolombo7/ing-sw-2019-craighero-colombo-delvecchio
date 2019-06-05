@@ -10,7 +10,7 @@ public class Constants {
     public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
 
     /* NETWORKING PARAMETERS */
-    public static final String RMI_HOSTNAME = "192.168.43.54";
+    public static final String RMI_HOSTNAME = "192.168.43.134";
     public static final int SOCKET_PORT=12345;
     public static final int RMI_PORT=12346;
     public static final String RMI_SERVER_NAME="ADRENALINE_SERVER";
