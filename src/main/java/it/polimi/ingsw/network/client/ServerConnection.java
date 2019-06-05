@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.ui.AdrenalineUI;

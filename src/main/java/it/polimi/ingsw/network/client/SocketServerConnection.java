@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw.network.client;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.Card;

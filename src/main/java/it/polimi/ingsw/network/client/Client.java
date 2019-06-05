@@ -1,12 +1,13 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.ui.Cli;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.rmi.NotBoundException;
 
 public class Client {
-    public static void main(String[] args) throws IOException, NotBoundException {
+    public static void main(String[] args) throws IOException, NotBoundException, URISyntaxException {
         if(args.length!=2){
             System.out.println("Proper Usage: CLI | GUI hostname");
             return;
@@ -20,6 +21,5 @@ public class Client {
                 System.out.println("GUI");
             }
         }
-        System.out.println("Proper Usage: CLI | GUI hostname");
     }
 }

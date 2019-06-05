@@ -3,6 +3,7 @@ package it.polimi.ingsw.GUI;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.network.client.ServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;

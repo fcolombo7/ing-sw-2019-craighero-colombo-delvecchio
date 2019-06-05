@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -13,7 +13,9 @@ import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.IOException;
+import java.net.*;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -29,9 +31,21 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     private RMIServerHandler stub;
     private ExecutorService pool;
 
-
-    public RMIServerConnection(String hostname, int port, AdrenalineUI ui) throws RemoteException, NotBoundException, MalformedURLException {
+    public RMIServerConnection(String hostname, int port, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
         super(hostname, port, ui);
+        String codebase= new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+        Logger.log("Codebase: "+codebase);
+        String ip="";
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            ip = socket.getLocalAddress().getHostAddress();
+        }
+        Logger.log("ip: "+ip);
+        if(ip.equalsIgnoreCase("")) throw new IOException("Can not get the ip address.");
+        System.setProperty("java.rmi.server.hostname",ip);
+        System.setProperty("java.rmi.server.codebase","file://"+codebase);
+
+        Logger.log("Trying creating RMI connection...");
         Registry registry = LocateRegistry.getRegistry(hostname, port);
         StringBuilder builder=new StringBuilder();
         builder.append("RMI registry bindings:");
@@ -41,10 +55,11 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         Logger.log(builder.toString());
 
         stub = (RMIServerHandler) Naming.lookup("rmi://"+ this.getHostname()+":"+this.getPort()+"/"+Constants.RMI_SERVER_NAME);
+        Logger.log("STUB OK?");
         pool=Executors.newFixedThreadPool(5);
     }
 
-    public RMIServerConnection(String hostname, AdrenalineUI ui) throws RemoteException, NotBoundException, MalformedURLException {
+    public RMIServerConnection(String hostname, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
         this(hostname,Constants.RMI_PORT, ui);
     }
 
@@ -74,7 +89,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
                 if(stub.deregister(session))
                     Logger.log("Successfully closed RMI connection.");
                 else
-                    Logger.logErr("Error occures during the RMI connection closing");
+                    Logger.logErr("Error occurs during the RMI connection closing");
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call logout().");
                 Logger.logErr(e.getMessage());
@@ -102,40 +117,40 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call respawnPlayer().");
                 Logger.logErr(e.getMessage());
-            }});
+        }});
     }
 
     @Override
     public void closeTurn() {
         pool.submit(()->{
-            try {
-                stub.closeTurn(session);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call closeTurn().");
-                Logger.logErr(e.getMessage());
-            }});
+        try {
+            stub.closeTurn(session);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown when call closeTurn().");
+            Logger.logErr(e.getMessage());
+        }});
     }
 
     @Override
     public void selectAction(String action) {
         pool.submit(()->{
             try {
-                stub.selectAction(session,action);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call selectAction().");
-                Logger.logErr(e.getMessage());
-            }});
+            stub.selectAction(session,action);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown when call selectAction().");
+            Logger.logErr(e.getMessage());
+        }});
     }
 
     @Override
     public void movePlayer(String target, int[] newPosition) {
         pool.submit(()->{
             try {
-                stub.movePlayer(session,target,newPosition);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call movePlayer().");
-                Logger.logErr(e.getMessage());
-            }});
+            stub.movePlayer(session,target,newPosition);
+        } catch (RemoteException e) {
+            Logger.logErr("RemoteException has been thrown when call movePlayer().");
+            Logger.logErr(e.getMessage());
+        }});
     }
 
     @Override

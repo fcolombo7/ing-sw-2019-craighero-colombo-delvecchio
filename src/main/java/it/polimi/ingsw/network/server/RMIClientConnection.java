@@ -12,17 +12,16 @@ import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RMIClientConnection extends ClientConnection{
-    private RMIServerSkeleton server;
+    private RMIServer server;
     private RMIClientHandler clientStub;
     private String session;
     private ExecutorService pool;
 
-    public RMIClientConnection(RMIClientHandler clientStub,RMIServerSkeleton server){
+    public RMIClientConnection(RMIClientHandler clientStub,RMIServer server){
         super();
         this.clientStub=clientStub;
         this.server=server;
