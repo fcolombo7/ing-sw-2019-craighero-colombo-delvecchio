@@ -44,7 +44,7 @@ public class Cli implements AdrenalineUI{
         buildMap();
     }
 
-    public Cli() throws IOException, NotBoundException {
+    public Cli(String hostname) throws IOException, NotBoundException {
         Scanner in = new Scanner(System.in);
         Logger.print("\n" +
                 "      ___           ___           ___           ___           ___           ___           ___                   ___           ___     \n" +
@@ -68,8 +68,8 @@ public class Cli implements AdrenalineUI{
                             "2. SOCKET" + RESET);
         int connection = in.nextInt();
         if(connection == 1)
-            serverConnection = new RMIServerConnection(this);
-        else serverConnection = new SocketServerConnection("localhost", this);
+            serverConnection = new RMIServerConnection(hostname,this);
+        else serverConnection = new SocketServerConnection(hostname, this);
         serverConnection.login(name, motto);
 
         clearScreen();

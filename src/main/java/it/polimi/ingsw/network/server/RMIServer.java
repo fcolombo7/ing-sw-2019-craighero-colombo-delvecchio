@@ -3,13 +3,14 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.network.RMIClientHandler;
 import it.polimi.ingsw.network.RMIServerHandler;
-import it.polimi.ingsw.network.controller.messages.LoginMessage;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -23,24 +24,36 @@ public class RMIServer implements RMIServerHandler, Serializable {
     private static final long serialVersionUID = -6063956040408133376L;
     private transient Server server;
     private transient HashMap<String,String> rmiClients;
+    private transient String hostname;
 
-    public RMIServer(Server server){
+    public RMIServer(Server server, String hostname){
         this.server=server;
         rmiClients=new HashMap<>();
+        this.hostname=hostname;
     }
     
     public void start(int portNumber) throws ServerException {
         try{
-            Registry registry = LocateRegistry.createRegistry(portNumber);
+            //System.setProperty("java.rmi.server.hostname",hostname);
+            LocateRegistry.createRegistry(portNumber);
             RMIServerHandler stub = (RMIServerHandler) UnicastRemoteObject.exportObject(this, portNumber);
-            registry.bind(Constants.RMI_SERVER_NAME,stub);
+            Naming.rebind("rmi://"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME,stub);
+            //registry.rebind(Constants.RMI_SERVER_NAME,stub);
             Logger.log("RMI server started.");
         } catch (AccessException e) {
             throw new ServerException("RMI server not loaded (AccessException):\n"+e.getMessage());
         } catch (RemoteException e) {
             throw new ServerException("RMI server not loaded (RemoteException):\n"+e.getMessage());
-        } catch (AlreadyBoundException e) {
-            throw new ServerException("RMI server not loaded (AlreadyBoundException):\n"+e.getMessage());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Registry startRegistry(int portNumber) throws RemoteException {
+        try{
+            return LocateRegistry.getRegistry(portNumber);
+        } catch (RemoteException e) {
+            return LocateRegistry.createRegistry(portNumber);
         }
     }
 

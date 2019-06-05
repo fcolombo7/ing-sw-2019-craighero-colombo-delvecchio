@@ -10,6 +10,7 @@ public class Constants {
     public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
 
     /* NETWORKING PARAMETERS */
+    public static final String RMI_HOSTNAME = "192.168.1.133";
     public static final int SOCKET_PORT=12345;
     public static final int RMI_PORT=12346;
     public static final String RMI_SERVER_NAME="ADRENALINE_SERVER";
@@ -74,6 +75,7 @@ public class Constants {
     public static final String ACTION_SELECTED = "ACTION SELECTED";
     public static final String EFFECT_MOVE_ANSWER = "MOVE ANSWER";
     public static final String TURN_END_ANSWER = "TURN END ANSWER";
+
 
 
     /*ROUTINE ANSWERS*/

@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.io.IOException;
@@ -20,14 +21,10 @@ import java.util.Scanner;
 public class TestRMIClient {
     private static class DebugUI implements AdrenalineUI{
         private ServerConnection connection;
-        private boolean rmi;
-        DebugUI(boolean rmi){
-            this.rmi=rmi;
+        DebugUI(){
         }
-
         public void setUpConnection() throws IOException, NotBoundException {
-            if(rmi)this.connection = new RMIServerConnection(this);
-            else this.connection=new SocketServerConnection("localhost",this);
+            this.connection = new RMIServerConnection(Constants.RMI_HOSTNAME,this);
         }
 
         @Override
@@ -214,7 +211,7 @@ public class TestRMIClient {
         System.out.print("nick: ");
         nick=stdin.nextLine();
         try {
-            DebugUI ui1=new DebugUI(true);
+            DebugUI ui1=new DebugUI();
             ui1.setUpConnection();
             ui1.connection.login(nick,"MOTTO");
         } catch (IOException | NotBoundException e) {

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.ui.AdrenalineGUI;
-import it.polimi.ingsw.ui.AdrenalineUI;
 import it.polimi.ingsw.ui.Cli;
 
 import java.io.IOException;
@@ -9,17 +7,19 @@ import java.rmi.NotBoundException;
 
 public class Client {
     public static void main(String[] args) throws IOException, NotBoundException {
-        if(args.length==0){
-            //no args passed --> default
-            System.out.println("STARTING DEFAULT");
-            AdrenalineGUI.main(new String[]{});
-        }else if(args.length==1&&args[0].equalsIgnoreCase("CLI")) {
-            System.out.println("STARTING CLI");
-            AdrenalineUI ui=new Cli();
-        }else if(args.length==1&&args[0].equalsIgnoreCase("GUI")) {
-            System.out.println("STARTING GUI");
-            //AdrenalineUI ui=AdrenalineGUI.create();
-        }else
-            System.out.println("Proper Usage: CLI | GUI [default GUI]");
+        if(args.length!=2){
+            System.out.println("Proper Usage: CLI | GUI hostname");
+            return;
+        }
+        if((args[0].equalsIgnoreCase("CLI")||args[0].equalsIgnoreCase("GUI"))&&!args[1].equalsIgnoreCase("")) {
+            System.out.println("Starting "+args[0]+"...");
+            if(args[0].equalsIgnoreCase("CLI")) {
+                new Cli(args[1]);
+            }
+            else {
+                System.out.println("GUI");
+            }
+        }
+        System.out.println("Proper Usage: CLI | GUI hostname");
     }
 }

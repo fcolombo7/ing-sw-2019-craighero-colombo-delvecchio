@@ -19,14 +19,12 @@ import java.util.List;
 public class TestClient {
     private static class DebugUI implements AdrenalineUI{
         private ServerConnection connection;
-        private boolean rmi;
-        DebugUI(boolean rmi){
-            this.rmi=rmi;
+
+        DebugUI(){
         }
 
         public void setUpConnection() throws IOException, NotBoundException {
-            if(rmi)this.connection = new RMIServerConnection(this);
-            else this.connection=new SocketServerConnection("localhost",this);
+            this.connection=new SocketServerConnection("localhost",this);
         }
 
         @Override
@@ -215,7 +213,7 @@ public class TestClient {
         }*/
 
         try {
-            DebugUI ui2=new DebugUI(false);
+            DebugUI ui2=new DebugUI();
             ui2.setUpConnection();
             ui2.connection.login("CiaoSocket","MOTTO");
         } catch (IOException | NotBoundException e) {

@@ -26,7 +26,7 @@ public class TestClientSocket {
         }
 
         public void setUpConnection() throws IOException, NotBoundException {
-            if(rmi)this.connection = new RMIServerConnection(this);
+            if(rmi)this.connection = new RMIServerConnection("localhost",this);
             else this.connection=new SocketServerConnection("localhost",this);
         }
 

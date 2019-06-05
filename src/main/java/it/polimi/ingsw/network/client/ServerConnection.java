@@ -9,9 +9,13 @@ public abstract class ServerConnection {
     private static final long serialVersionUID = 8681502936497815461L;
     private AdrenalineUI ui;
     private String nickname;
+    private String hostname;
+    private int port;
 
-    ServerConnection(AdrenalineUI ui){
+    ServerConnection(String hostname, int port,AdrenalineUI ui){
         this.ui=ui;
+        this.hostname=hostname;
+        this.port=port;
     }
 
     public AdrenalineUI getUi() {
@@ -26,6 +30,13 @@ public abstract class ServerConnection {
         return nickname;
     }
 
+    public String getHostname() {
+        return hostname;
+    }
+
+    public int getPort() {
+        return port;
+    }
 
     /*------ CLIENT --> SERVER ------*/
     public abstract String login(String nickname, String motto);

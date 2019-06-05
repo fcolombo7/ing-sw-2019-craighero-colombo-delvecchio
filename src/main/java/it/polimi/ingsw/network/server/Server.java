@@ -19,10 +19,10 @@ public class Server{
 
     private HashMap<String, ClientConnection> players;
 
-    public Server() {
+    public Server(String hostname) {
         players=new HashMap<>();
         rooms=new ArrayList<>();
-        rmiServer=new RMIServer(this);
+        rmiServer=new RMIServer(this,hostname);
         socketServer=new SocketServer(this);
     }
 
@@ -96,7 +96,8 @@ public class Server{
 
     public static void main(String[] args) {
         try {
-            Server server = new Server();
+            String hostname=Constants.RMI_HOSTNAME;
+            Server server = new Server(hostname);
             server.startServer();
 
             Logger.log(Constants.RMI_SERVER_NAME + " started:");

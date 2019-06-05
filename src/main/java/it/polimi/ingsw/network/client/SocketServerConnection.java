@@ -23,8 +23,6 @@ import java.util.concurrent.Executors;
 
 public class SocketServerConnection extends ServerConnection {
     private static final String LOG_JSON ="[JSON ANSWER] ";
-    private String ip;
-    private int port;
     private Socket socket;
     private Scanner socketIn;
     private PrintWriter socketOut;
@@ -36,11 +34,9 @@ public class SocketServerConnection extends ServerConnection {
         void handle();
     }
 
-    public SocketServerConnection(String ip, int port, AdrenalineUI ui) throws IOException {
-        super(ui);
-        this.ip=ip;
-        this.port=port;
-        socket = new Socket(ip, port);
+    public SocketServerConnection(String hostname, int port, AdrenalineUI ui) throws IOException {
+        super(hostname, port, ui);
+        socket = new Socket(hostname, port);
         socketIn= new Scanner(socket.getInputStream());
         socketOut= new PrintWriter(socket.getOutputStream());
         executor = Executors.newFixedThreadPool(2);
@@ -48,16 +44,8 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log("SOCKET SET UP");
     }
 
-    public SocketServerConnection(String ip, AdrenalineUI ui) throws IOException {
-        this(ip,Constants.SOCKET_PORT,ui);
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public int getPort() {
-        return port;
+    public SocketServerConnection(String hostname, AdrenalineUI ui) throws IOException {
+        this(hostname,Constants.SOCKET_PORT,ui);
     }
 
     private void start(){
@@ -65,7 +53,6 @@ public class SocketServerConnection extends ServerConnection {
             try {
                 while (true) {
                     String socketLine = socketIn.nextLine();
-                    //Logger.log("[SERVER] "+socketLine);
                     receiverMap.get(socketLine).handle();
                 }
 

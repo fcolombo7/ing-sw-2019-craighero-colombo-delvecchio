@@ -8,12 +8,14 @@ import it.polimi.ingsw.network.RMIServerHandler;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
+import it.polimi.ingsw.ui.AdrenalineGUI;
 import it.polimi.ingsw.ui.AdrenalineUI;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
-import java.rmi.AlreadyBoundException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -25,16 +27,13 @@ import java.util.concurrent.Executors;
 
 public class RMIServerConnection extends ServerConnection implements RMIClientHandler {
     private String session;
-
     private RMIServerHandler stub;
     private ExecutorService pool;
 
 
-    public RMIServerConnection(AdrenalineUI ui) throws RemoteException, NotBoundException {
-        super(ui);
-
-        Registry registry = LocateRegistry.getRegistry(Constants.RMI_PORT);
-
+    public RMIServerConnection(String hostname, int port, AdrenalineUI ui) throws RemoteException, NotBoundException, MalformedURLException {
+        super(hostname, port, ui);
+        Registry registry = LocateRegistry.getRegistry(hostname, port);
         StringBuilder builder=new StringBuilder();
         builder.append("RMI registry bindings:");
         String[] regs = registry.list();
@@ -42,17 +41,19 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
             builder.append(e);
         Logger.log(builder.toString());
 
-        stub = (RMIServerHandler) registry.lookup(Constants.RMI_SERVER_NAME);
+        stub = (RMIServerHandler) Naming.lookup("rmi://"+ this.getHostname()+":"+this.getPort()+"/"+Constants.RMI_SERVER_NAME);
         pool=Executors.newFixedThreadPool(5);
+    }
+
+    public RMIServerConnection(String hostname, AdrenalineUI ui) throws RemoteException, NotBoundException, MalformedURLException {
+        this(hostname,Constants.RMI_PORT, ui);
     }
 
     /*------ SERVER CONNECTION METHODS ------*/
     @Override
     public String login(String nickname, String motto) {
         try {
-            Registry registry = LocateRegistry.getRegistry(Constants.RMI_PORT);
-            RMIClientHandler client= (RMIClientHandler) UnicastRemoteObject.exportObject(this, Constants.RMI_PORT+1);
-            registry.bind(nickname,client);
+            RMIClientHandler client= (RMIClientHandler) UnicastRemoteObject.exportObject(this, getPort()+1);
             String msg=stub.login(nickname,motto,client);
             if(msg!=null) {
                 session = msg;
@@ -61,7 +62,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
             }
             else
                 return Constants.MSG_SERVER_NEGATIVE_ANSWER;
-        } catch (RemoteException | AlreadyBoundException e) {
+        } catch (RemoteException /*| AlreadyBoundException */e) {
             Logger.logErr(e.getMessage());
             return Constants.MSG_SERVER_NEGATIVE_ANSWER;
         }
