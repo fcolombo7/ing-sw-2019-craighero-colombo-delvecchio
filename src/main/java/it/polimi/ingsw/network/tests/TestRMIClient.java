@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.network.client.RMIServerConnection;
 import it.polimi.ingsw.network.client.ServerConnection;
-import it.polimi.ingsw.network.client.SocketServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;

@@ -17,12 +17,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RMIClientConnection extends ClientConnection{
-    private RMIServer server;
+    private RMIServerSkeleton server;
     private RMIClientHandler clientStub;
     private String session;
     private ExecutorService pool;
 
-    public RMIClientConnection(RMIClientHandler clientStub,RMIServer server){
+    public RMIClientConnection(RMIClientHandler clientStub,RMIServerSkeleton server){
         super();
         this.clientStub=clientStub;
         this.server=server;
