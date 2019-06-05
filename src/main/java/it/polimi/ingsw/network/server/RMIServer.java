@@ -31,9 +31,11 @@ public class RMIServer {
             //System.setProperty("java.rmi.server.hostname",hostname);
             //RMIServerHandler stub = (RMIServerHandler) UnicastRemoteObject.exportObject(this, portNumber);
             //registry.rebind(Constants.RMI_SERVER_NAME,stub);
-            Registry registry=LocateRegistry.createRegistry(portNumber);
-            String name="rmi://"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME;
-            Naming.rebind("rmi://"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME,new RMIServerSkeleton(server));
+
+            System.setProperty("java.rmi.server.codebase","file://");
+            startRegistry(portNumber);
+            String name="//"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME;
+            Naming.rebind("//"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME,new RMIServerSkeleton(server));
             Logger.log("RMI server started. ["+name+"]");
         } catch (AccessException e) {
             throw new ServerException("RMI server not loaded (AccessException):\n"+e.getMessage());
@@ -44,11 +46,12 @@ public class RMIServer {
         }
     }
 
-    private Registry startRegistry(int portNumber) throws RemoteException {
+    private void startRegistry(int portNumber) throws RemoteException {
         try{
-            return LocateRegistry.getRegistry(portNumber);
+            LocateRegistry.getRegistry(portNumber);
+            LocateRegistry.getRegistry(portNumber).list();
         } catch (RemoteException e) {
-            return LocateRegistry.createRegistry(portNumber);
+            LocateRegistry.createRegistry(portNumber);
         }
     }
 

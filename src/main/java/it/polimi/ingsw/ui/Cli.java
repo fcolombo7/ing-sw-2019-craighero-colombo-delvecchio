@@ -4,9 +4,9 @@ import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.RoomColor;
-import it.polimi.ingsw.network.client.RMIServerConnection;
-import it.polimi.ingsw.network.client.ServerConnection;
-import it.polimi.ingsw.network.client.SocketServerConnection;
+import it.polimi.ingsw.network.server.RMIServerConnection;
+import it.polimi.ingsw.network.server.ServerConnection;
+import it.polimi.ingsw.network.server.SocketServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleSquare;
@@ -16,7 +16,6 @@ import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.*;
 
 import static it.polimi.ingsw.model.enums.Direction.*;

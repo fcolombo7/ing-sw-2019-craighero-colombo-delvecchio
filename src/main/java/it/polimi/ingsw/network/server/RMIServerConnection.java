@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.client;
+package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -8,7 +8,6 @@ import it.polimi.ingsw.network.RMIServerHandler;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
-import it.polimi.ingsw.ui.AdrenalineGUI;
 import it.polimi.ingsw.ui.AdrenalineUI;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
