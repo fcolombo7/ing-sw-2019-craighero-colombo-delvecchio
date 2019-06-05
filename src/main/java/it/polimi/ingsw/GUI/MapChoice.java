@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-
+//updMapChoice
 public class MapChoice {
 
     public static Stage stage;

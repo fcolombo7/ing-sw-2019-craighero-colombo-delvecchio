@@ -12,6 +12,7 @@ import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 
+//login
 public class LoginWindow {
 
     private  static int players=4;

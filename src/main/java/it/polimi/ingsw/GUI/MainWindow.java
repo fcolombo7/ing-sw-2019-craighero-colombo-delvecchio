@@ -28,6 +28,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.GUI.LoginWindow.pl;
 
+//mainWind
 public class MainWindow extends Application implements AdrenalineUI {
 
     private static boolean init=false;
