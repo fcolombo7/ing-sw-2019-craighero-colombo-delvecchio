@@ -1,7 +1,7 @@
 package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.GUI.Bye;
-import it.polimi.ingsw.GUI.GameWindow;
+import it.polimi.ingsw.GUI.ProvaWindow;
 import it.polimi.ingsw.GUI.Rules;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -1475,7 +1475,7 @@ public class AdrenalineGUI extends Application implements AdrenalineUI {
 
 
         Scene scene=new Scene(gp, 1200, 650);
-        scene.getStylesheets().addAll(GameWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+        scene.getStylesheets().addAll(ProvaWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setMaximized(true);

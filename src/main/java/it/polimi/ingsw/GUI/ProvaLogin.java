@@ -14,7 +14,7 @@ import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 
-public class LoginApplication extends Application {
+public class ProvaLogin extends Application {
 
     //public Scanner sn=new Scanner(System.in);
     //int players=sn.nextInt();
@@ -211,7 +211,7 @@ public class LoginApplication extends Application {
                             pl.add(namePl);
                             players=players+1;
                             //primaryStage.close();
-                            MapChoice.display();
+                            //MapChoice.display();
                         } else {
                             AnchorPane tooPlayers= new AnchorPane();
                             Label text= new Label("Sorry, too many players in game");
@@ -254,6 +254,7 @@ public class LoginApplication extends Application {
                 lb0.setText(msg);
             }
         });
+
         primaryStage.setResizable(false);
         Scene scene=new Scene(grid, 700, 500);
         scene.getStylesheets().addAll(this.getClass().getResource("/gui/login.css").toExternalForm());

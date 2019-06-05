@@ -26,3 +26,17 @@
     -fx-font-weight: bold;
     -fx-font-size: 10;
 }
+
+.nbigmark{
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-font-size: 10;
+}
+
+.nsmallmark{
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-font-size: 5;
+}

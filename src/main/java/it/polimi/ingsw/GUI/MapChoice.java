@@ -11,14 +11,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class MapChoice {
 
+    public static Stage stage;
+
     public static void display() {
-        Stage stage= new Stage();
+        stage= new Stage();
         stage.setTitle("Map choice");
         stage.setMinWidth(600);
         stage.setMinHeight(500);
@@ -46,18 +47,6 @@ public class MapChoice {
 
         AnchorPane grid= new AnchorPane();
         grid.getChildren().addAll(first, second, third, fourth, vote, image);
-        //GridPane.setColumnIndex(first, 1);
-        //GridPane.setRowIndex(first, 1);
-        //GridPane.setColumnIndex(second, 1);
-        //GridPane.setRowIndex(second, 2);
-        //GridPane.setColumnIndex(third, 1);
-        //GridPane.setRowIndex(third, 3);
-        //GridPane.setColumnIndex(fourth, 1);
-        //GridPane.setRowIndex(fourth, 4);
-        //GridPane.setColumnIndex(vote, 2);
-        //GridPane.setRowIndex(vote, 5);
-        //GridPane.setColumnIndex(image, 2);
-        //GridPane.setRowIndex(image, 7);
 
         first.setLayoutX(10);
         first.setLayoutY(5);
@@ -104,18 +93,21 @@ public class MapChoice {
         vote.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                vote.setDisable(true);
                 vote.setStyle("-fx-background-color: grey");
-                stage.close();
                 votes.add(image.getImage());
                 Image bestmap=votes.get(0);
-                String urlmap= bestmap.getUrl();
-                try{
-                    GameWindow.open(bestmap, urlmap);
-                } catch(IOException e){
-                    throw new RuntimeException(e);
-                }
+                MainWindow.image=bestmap;
+                MainWindow.urlmap= bestmap.getUrl();
+
+                //try{
+                //    ProvaWindow.open(bestmap, urlmap);
+                //} catch(IOException e){
+                //    throw new RuntimeException(e);
+                //}
             }
         });
+
 
         Scene scene= new Scene(grid, 600, 500);
         scene.getStylesheets().addAll(MapChoice.class.getResource("/gui/mapChoice.css").toExternalForm());
