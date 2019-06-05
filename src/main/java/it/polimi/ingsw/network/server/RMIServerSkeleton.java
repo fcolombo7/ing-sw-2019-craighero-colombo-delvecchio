@@ -14,8 +14,8 @@ import java.util.UUID;
 
 public class RMIServerSkeleton extends UnicastRemoteObject implements RMIServerHandler {
     private static final long serialVersionUID = 7000106595683551762L;
-    private transient  Server server;
-    private transient HashMap<String,String> rmiClients;
+    private  transient Server server;
+    private  transient HashMap<String,String> rmiClients;
 
     protected RMIServerSkeleton(Server server) throws RemoteException {
         super();
