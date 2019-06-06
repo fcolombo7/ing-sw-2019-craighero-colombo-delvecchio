@@ -7,8 +7,7 @@ import it.polimi.ingsw.network.client.ServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
-import it.polimi.ingsw.network.server.*;
-import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.ui.GUIHandler;
 import it.polimi.ingsw.utils.MatrixHelper;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -24,13 +23,20 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static it.polimi.ingsw.GUI.LoginWindow.pl;
-
 //mainWind
-public class MainWindow extends Application implements AdrenalineUI {
+public class MainWindow extends Application {
+
+    /* NETWORKING ATTRIBUTES */
+    private static String hostname;
+    private static GUIHandler networkHandler;
+    private static ServerConnection connection;
+    private static String logNickname;
+    private static List<String> playerInRoom;
+
 
     private static boolean init=false;
     private static Button user1;
@@ -187,16 +193,18 @@ public class MainWindow extends Application implements AdrenalineUI {
 
     protected static String urlmap;
     protected static Image image;
-    private static Stage s;
-
-    protected static ServerConnection connection;
+    private static Stage stage;
 
     @Override
-    public void start(Stage gameStage) throws  Exception {
+    public void start(Stage stage) throws  Exception {
+        MainWindow.stage=stage;
 
-        s = new Stage();
-        //LoginWindow.log(s);
-        initGameWindow();
+        /*INITIALIZE CONNECTION HANDLER*/
+        networkHandler=new GUIHandler();
+        playerInRoom=new ArrayList<>(4);
+
+        LoginWindow.log(stage);
+        //initGameWindow();
         plBhashmap.put(0, "/gui/playerBoard.png");
         plBhashmap.put(1, "/gui/pl1.png");
         plBhashmap.put(2, "/gui/pl2.png");
@@ -204,9 +212,23 @@ public class MainWindow extends Application implements AdrenalineUI {
         plBhashmap.put(4, "/gui/pl4.png");
     }
 
+    /**
+     * This method is called when the player successfully logged in.
+     * This method open the WaitingRoomWindow and close the LoginWindow
+     */
+    public static void onLoginCompleted() {
+        stage.close();
+        WaitingRoomWindow.create(stage);
+        if(playerInRoom.isEmpty())
+            WaitingRoomWindow.getArea().appendText("You are the first in the room! \n");
+        for (String s:playerInRoom) {
+            WaitingRoomWindow.getArea().appendText(s+" is in the room...\n");
+        }
+    }
+
     public static void initGameWindow(){
 
-        s.setTitle("ADRENALINE");
+        stage.setTitle("ADRENALINE");
 
         boolean mapp1=true;
         boolean mapp2=false;
@@ -453,27 +475,23 @@ public class MainWindow extends Application implements AdrenalineUI {
 
         Scene scene=new Scene(gp, 1200, 650);
         scene.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
-        s.setScene(scene);
-        s.setResizable(false);
-        s.setMaximized(true);
-        s.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setMaximized(true);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {
                 Bye.byebye();
-                s.close();
+                stage.close();
             }
         });
 
-        s.show();
+        stage.show();
     }
 
     public static void main(String args[]){
         launch(args);
-
-
     }
-
-
 
     private static void setPosButton(Button button, int x, int y){
         button.setLayoutX(x);
@@ -1341,56 +1359,87 @@ public class MainWindow extends Application implements AdrenalineUI {
 
 
     public static void ableButtons(List<Button> ableButtons){
-        //todo 
+        //todo
     }
 
 
+    /*-------- NETWORKING USEFUL METHODS --------*/
+    public static void setHostname(String hostname) {
+        MainWindow.hostname = hostname;
+    }
 
+    public static String getHostname() {
+        return hostname;
+    }
 
+    public static void setConnection(ServerConnection connection) {
+        MainWindow.connection = connection;
+    }
 
-    /*-------- ADRENALINE UI METHODS --------*/
-    @Override
-    public void onJoinRoomAdvise(String nickname) {
+    public static ServerConnection getConnection() {
+        return connection;
+    }
+
+    public static GUIHandler getNetworkHandler() {
+        return networkHandler;
+    }
+
+    public static void setLogNickname(String logNickname) {
+        MainWindow.logNickname = logNickname;
+    }
+
+    public static String getLogNickname() {
+        return logNickname;
+    }
+
+    /*-------- ADRENALINE UI HANDLER METHODS --------*/
+
+    public static void onJoinRoomAdvise(String nickname) {
+        playerInRoom.add(nickname);
+        if(WaitingRoomWindow.getArea()!=null){
+            WaitingRoomWindow.getArea().appendText(nickname+" join the room...\n");
+        }
+        /*
         LoginWindow.pl.add(nickname);
         LoginWindow.plOnline.setText(pl.toString());
+        */
 
     }
-
-    @Override
-    public void onExitRoomAdvise(String nickname) {
+    
+    public static void onExitRoomAdvise(String nickname) {
+        playerInRoom.remove(nickname);
+        if(WaitingRoomWindow.getArea()!=null){
+            WaitingRoomWindow.getArea().appendText(nickname+" left the room...\n");
+        }
+        /*
         LoginWindow.pl.remove(nickname);
         LoginWindow.plOnline.setText(pl.toString());
+        */
 
     }
-
-    @Override
-    public void onFirstInRoomAdvise() {
+    
+    public static void onFirstInRoomAdvise() {
+        /*
         LoginWindow.plOnline.setText("You are the first player.");
-
+         */
+        if(WaitingRoomWindow.getArea()!=null){
+            WaitingRoomWindow.getArea().appendText("You are the first in the room!\n");
+        }
     }
-
-    @Override
-    public void onPingAdvise() {
-
-    }
-
-    @Override
-    public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
+    
+    public static void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
         String myPlayB=plBhashmap.get(playerTurnNumber);
         playerBoard= new Image(myPlayB);
+
         MapChoice.display();
-
-
     }
-
-    @Override
-    public void onInvalidMessageReceived(String msg) {
+    
+    public static void onInvalidMessageReceived(String msg) {
         mess.setText(msg);
 
     }
-
-    @Override
-    public void onBoardUpdate(SimpleBoard gameBoard) {
+    
+    public static void onBoardUpdate(SimpleBoard gameBoard) {
         if(init==false){
             MapChoice.stage.close();
             initGameWindow();
@@ -1400,151 +1449,138 @@ public class MainWindow extends Application implements AdrenalineUI {
         }
 
     }
-
-    @Override
-    public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+    
+    public static void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
         if(frenzy){
 
         }
     }
+    
+    public static void onRespwanRequest(List<Card> powerups) {
 
-    @Override
-    public void onRespwanRequest(List<Card> powerups) {
+    }
+    
+    public static void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+
+    }
+    
+    public static void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+
+    }
+    
+    public static void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+
+    }
+    
+    public static void onGrabbableWeapons(List<Card> weapons) {
+
+    }
+    
+    public static void onDiscardWeapon(List<Card> weapons) {
+
+    }
+    
+    public static void onGrabbedWeapon(SimplePlayer player, Card weapon) {
 
     }
 
-    @Override
-    public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+    public static void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
 
     }
 
-    @Override
-    public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+    public static void onReloadableWeapons(List<Card> weapons) {
 
     }
 
-    @Override
-    public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+    public static void onTurnActions(List<String> actions) {
 
     }
 
-    @Override
-    public void onGrabbableWeapons(List<Card> weapons) {
+    public static void onTurnEnd() {
 
     }
 
-    @Override
-    public void onDiscardWeapon(List<Card> weapons) {
+    public static void onMoveAction(SimplePlayer player) {
 
     }
 
-    @Override
-    public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
+    
+    public static void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
 
     }
 
-    @Override
-    public void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
+    
+    public static void onMarkAction(String player, SimplePlayer selected, int value) {
 
     }
 
-    @Override
-    public void onReloadableWeapons(List<Card> weapons) {
+    
+    public static void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
 
     }
 
-    @Override
-    public void onTurnActions(List<String> actions) {
+    
+    public static void onDiscardedPowerup(SimplePlayer player, Card powerup) {
 
     }
 
-    @Override
-    public void onTurnEnd() {
+    
+    public static void onTurnCreation(String currentPlayer) {
 
     }
 
-    @Override
-    public void onMoveAction(SimplePlayer player) {
+    
+    public static void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
 
     }
 
-    @Override
-    public void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
-
-    }
-
-    @Override
-    public void onMarkAction(String player, SimplePlayer selected, int value) {
-
-    }
-
-    @Override
-    public void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
-
-    }
-
-    @Override
-    public void onDiscardedPowerup(SimplePlayer player, Card powerup) {
-
-    }
-
-    @Override
-    public void onTurnCreation(String currentPlayer) {
-
-    }
-
-    @Override
-    public void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
-
-    }
-
-    @Override
-    public void onCanUsePowerup() {
+    
+    public static void onCanUsePowerup() {
         mess.setText("Vuoi usare un potenziamento?");
         yes.setDisable(false);
         no.setDisable(false);
     }
 
-    @Override
-    public void onCanStopRoutine() {
+    
+    public static void onCanStopRoutine() {
         mess.setText("Vuoi fermarti qui?");
         yes.setDisable(false);
         no.setDisable(false);
     }
 
-    @Override
-    public void onUsableWeapons(List<Card> usableWeapons) {
+    
+    public static void onUsableWeapons(List<Card> usableWeapons) {
 
 
     }
 
-    @Override
-    public void onAvailableEffects(List<String> effects) {
+    
+    public static void onAvailableEffects(List<String> effects) {
 
     }
 
-    @Override
-    public void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
+    
+    public static void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
 
     }
 
-    @Override
-    public void onUsedCard(Card card) {
+    
+    public static void onUsedCard(Card card) {
 
     }
 
-    @Override
-    public void onAvailablePowerups(List<Card> powerups) {
+    
+    public static void onAvailablePowerups(List<Card> powerups) {
 
     }
 
-    @Override
-    public void onRunCompleted(SimplePlayer player, int[] newPosition) {
+    
+    public static void onRunCompleted(SimplePlayer player, int[] newPosition) {
 
     }
 
-    @Override
-    public void onRunRoutine(MatrixHelper matrix) {
+    
+    public static void onRunRoutine(MatrixHelper matrix) {
 
     }
 }

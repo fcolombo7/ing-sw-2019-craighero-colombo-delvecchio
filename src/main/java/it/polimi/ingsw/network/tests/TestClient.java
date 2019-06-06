@@ -42,11 +42,6 @@ public class TestClient {
         }
 
         @Override
-        public void onPingAdvise() {
-
-        }
-
-        @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
             System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
         }

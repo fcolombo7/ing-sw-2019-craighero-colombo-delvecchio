@@ -21,8 +21,6 @@ public interface AdrenalineUI {
 
     void onFirstInRoomAdvise();
 
-    void onPingAdvise();
-
     /*MATCH METHOD*/
     void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber);
 

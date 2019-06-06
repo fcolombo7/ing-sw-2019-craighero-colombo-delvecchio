@@ -533,11 +533,6 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onPingAdvise() {
-
-    }
-
-    @Override
     public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
 
     }

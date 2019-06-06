@@ -43,11 +43,6 @@ public class TestRMIClient {
         }
 
         @Override
-        public void onPingAdvise() {
-
-        }
-
-        @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
             System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
             Scanner stdin = new Scanner(System.in);

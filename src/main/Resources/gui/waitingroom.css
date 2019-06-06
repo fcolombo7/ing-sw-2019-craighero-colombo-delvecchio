@@ -2,9 +2,15 @@
     -fx-background-image: url("blocks.jpg");
     -fx-background-size: cover;
     -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
-    -fx-border-color: black;
-    -fx-border-width: 5 ;
+    -fx-background-repeat: repeat-x;
+}
+
+.text-area .content{
+    -fx-background-color: #191056;
+}
+
+.scroll-pane{
+    -fx-text-fill: white;
 }
 
 .label{
@@ -13,13 +19,15 @@
     -fx-font-size: 20;
 }
 
-.button{
-    -fx-background-color: white;
-    -fx-text-fill: red;
-    -fx-font-weight: bolder;
-    -fx-font-size: 20;
-    -fx-border-color: red;
+.text-input {
+    -fx-text-fill: white;
+}
 
+.button{
+    -fx-background-color: #191056;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
 }
 
 .refr{

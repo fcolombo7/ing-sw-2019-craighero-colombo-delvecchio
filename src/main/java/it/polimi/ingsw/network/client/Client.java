@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.GUI.MainWindow;
 import it.polimi.ingsw.ui.Cli;
 
 import java.io.IOException;
@@ -18,7 +19,6 @@ public class Client {
                 new Cli(args[1]);
             }
             else {
-                System.out.println("GUI");
             }
         }
     }
