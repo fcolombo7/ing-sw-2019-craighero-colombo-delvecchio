@@ -8,96 +8,110 @@ import it.polimi.ingsw.model.exceptions.MatchConfigurationException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.utils.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Controller{
     private Game game;
-    private List<Player> suspended;
+    private Room room;
     private List<Player> disconnected;
-    private List<Integer> boardPreference;
+    private Map<String,Integer> boardPreference;
+    private int playerIndex;
+    private Timer boardTimer;
+    private Map<String, Timer> timerMap;
 
-    public Controller(Game game) {
+    public Controller(Game game, Room room) {
         this.game = game;
-    }
-
-    public GameStatus getGameStatus() {
-        return game.getStatus();
-    }
-
-    public boolean isPlaying(String nickname) {
-        return game.getCurrentPlayer().getNickname().equals(nickname);
+        this.room=room;
+        playerIndex=-1;
+        boardPreference=new HashMap<>();
+        timerMap=new HashMap<>();
     }
 
     public void start() {
-        boardPreference=new ArrayList<>(game.getPlayers().size());
-        suspended=new ArrayList<>(game.getPlayers().size());
         disconnected=new ArrayList<>(game.getPlayers().size());
-
         game.startMessage();
+        boardTimer=new Timer();
+        boardTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Logger.logErr("Timeout for choosing the board.");
+                setGameboard();
+            }
+        },Constants.QUICK_MOVE_TIMER*1000);
     }
 
     /*---------- METHODS USED IN CLIENT CONNECTION ----------*/
-
-    //TODO: GESTIONE IN CASO DI STESSO PLAYER RICEVUTO
     public void roomPreferenceManager(String sender, int boardNumber) {
+        if(boardPreference.containsKey(sender)) return;
         String folderName= Constants.BOARD_FOLDER;
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles==null) throw new MatchConfigurationException("No boards in "+folderName);
         for(File file:listOfFiles){
             if(file.getName().equalsIgnoreCase("board"+boardNumber+".xml")) {
-                boardPreference.add(boardNumber);
+                boardPreference.put(sender,boardNumber);
                 break;
             }
         }
         if(boardPreference.size()==game.getPlayers().size()){
-            int selBoard=mostCommonBoard();
-            game.setGameBoard(selBoard);
+            boardTimer.cancel();
+            boardTimer.purge();
+            setGameboard();
         }
     }
-    private int mostCommonBoard() {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (Integer value : boardPreference) {
-            Integer val = map.get(value);
-            map.put(value, val == null ? 1 : val + 1);
+
+    public synchronized void respawnPlayer(String sender, Card powerup){
+        if(!isDisconnected(sender)){
+            Timer t=timerMap.get(sender);
+            t.cancel();
+            t.purge();
+            timerMap.remove(sender);
         }
-
-        Map.Entry<Integer, Integer> max = null;
-
-        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
-            if (max == null || e.getValue() > max.getValue())
-                max = e;
-        }
-
-        return max==null?boardPreference.get(0):max.getValue();
-    }
-
-    //TODO: NOT FIRST SPAWN --> TIMER FOR NEW TURN && SUSPEND
-    public void respawnPlayer(String sender, Card powerup){
         for(Player p:game.getPlayers()) {
             if (p.getNickname().equals(sender)) {
                 game.respawnPlayer(p, powerup);
-                if(p.getStatus()== PlayerStatus.FIRST_SPAWN)
-                    game.createTurn();
+                if(p.getStatus()== PlayerStatus.PLAYING) {
+                    if(!isDisconnected(sender)) {
+                        Timer t=new Timer();
+                        timerMap.put(p.getNickname(),t);
+                        t.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Logger.logErr("TURN TIMEOUT ("+p.getNickname()+")");
+                                room.forceDisconnection(p.getNickname());
+                                timerMap.remove(p.getNickname());
+                                game.getCurrentTurn().forceClosing();
+                                closeTurn(p.getNickname());
+                            }
+                        },Constants.TURN_TIMER*1000);
+                        game.createTurn();
+                    }
+                    else
+                        handleNewTurn();
+                    return;
+                }
+                if(timerMap.isEmpty()) //IF IS EMPTY THEN ALL THE DEAD PLAYER HAS BEEN RESPAWNED
+                    handleNewTurn();
                 return;
             }
         }
         throw new IllegalStateException("INVALID PLAYER RECEIVED");
     }
 
-    //TODO: NOT FIRST SPAWN --> TIMER FOR NEW TURN && SUSPEND
     public void closeTurn(String sender){
-        for(Player p:game.getPlayers()) {
-            if (p.getNickname().equals(sender)) {
-                game.endTurn();
-                handleDeads();
-                return;
-            }
+        if(!isDisconnected(sender)){
+            Timer t=timerMap.get(sender);
+            t.cancel();
+            t.purge();
+            timerMap.remove(sender);
+        }
+        if (game.getCurrentPlayer().getNickname().equals(sender)) {
+            game.endTurn();
+            handleDeads();
+            return;
         }
         throw new IllegalStateException("INVALID PLAYER RECEIVED");
     }
@@ -146,12 +160,106 @@ public class Controller{
         game.getCurrentTurn().getInExecutionRoutine().handleAnswer(new WeaponAnswer(game.getCurrentPlayer().getNickname(),weapon));
     }
 
-    /*-------- OTHER METHODS --------*/
+    public void counterAttackAnswer(String nickname, boolean counterAttack) {
+        game.getCurrentTurn().getInExecutionRoutine().handleAnswer(new CounterAttackAnswer(nickname,counterAttack));
+    }
 
-    //TODO:STARTING TIMER
+    /*-------- OTHER METHODS --------*/
+    public GameStatus getGameStatus() {
+        return game.getStatus();
+    }
+
+    public boolean isPlaying(String nickname) {
+        return game.getCurrentPlayer().getNickname().equals(nickname);
+    }
+    private void setGameboard() {
+        int selBoard=mostCommonBoard();
+        game.setGameBoard(selBoard);
+        handleNewTurn();
+    }
+
+    private void handleNewTurn() {
+        nextPlayer();
+        if(game.getCurrentPlayer().getStatus()==PlayerStatus.FIRST_SPAWN) {
+            Timer t=new Timer();
+            timerMap.put(game.getCurrentPlayer().getNickname(),t);
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Logger.logErr("RESPAWN TIMEOUT ("+game.getCurrentPlayer().getNickname()+")");
+                    room.forceDisconnection(game.getCurrentPlayer().getNickname());
+                    timerMap.remove(game.getCurrentPlayer().getNickname());
+                    respawnPlayer(game.getCurrentPlayer().getNickname(),game.getCurrentPlayer().getPowerups().get(0));
+                }
+            },Constants.QUICK_MOVE_TIMER*1000);
+            game.respawnPlayerRequest(game.getCurrentPlayer(), true);
+        }
+        else{
+            Timer t=new Timer();
+            timerMap.put(game.getCurrentPlayer().getNickname(),t);
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Logger.logErr("TURN TIMEOUT ("+game.getCurrentPlayer().getNickname()+")");
+                    room.forceDisconnection(game.getCurrentPlayer().getNickname());
+                    timerMap.remove(game.getCurrentPlayer().getNickname());
+                    game.getCurrentTurn().forceClosing();
+                    closeTurn(game.getCurrentPlayer().getNickname());
+                }
+            },Constants.TURN_TIMER*1000);
+            game.createTurn();
+        }
+    }
+
+    public void nextPlayer() {
+        if(playerIndex==-1)
+            playerIndex=game.getPlayers().indexOf(game.getCurrentPlayer());
+        else
+            incPlayerIndex();
+        while(disconnected.contains(game.getPlayers().get(playerIndex))){
+            incPlayerIndex();
+        }
+        game.setCurrentPlayer(playerIndex);
+    }
+
+    private void incPlayerIndex() {
+        if(playerIndex==game.getPlayers().size()-1)
+            playerIndex=0;
+        else
+            playerIndex++;
+    }
+
+    private int mostCommonBoard() {
+        if(boardPreference.isEmpty()) return 1;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Integer value : boardPreference.values()) {
+            Integer val = map.get(value);
+            map.put(value, val == null ? 1 : val + 1);
+        }
+
+        Map.Entry<Integer, Integer> max = null;
+
+        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
+            if (max == null || e.getValue() > max.getValue())
+                max = e;
+        }
+        return max==null?boardPreference.get(0):max.getValue();
+    }
+
     private void handleDeads() {
         for(Player player:game.getPlayers()){
             if(player.getStatus()==PlayerStatus.DEAD){
+                Timer t=new Timer();
+                timerMap.put(player.getNickname(),t);
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Logger.logErr("RESPAWN TIMEOUT ("+player.getNickname()+")");
+                        room.forceDisconnection(player.getNickname());
+                        timerMap.remove(player.getNickname());
+                        respawnPlayer(player.getNickname(),player.getPowerups().get(0));
+                    }
+                },Constants.QUICK_MOVE_TIMER*1000);
                 game.respawnPlayerRequest(player,false);
             }
         }
@@ -161,10 +269,46 @@ public class Controller{
         for(Player p:game.getPlayers()){
             if(p.getNickname().equals(nickname)){
                 disconnected.add(p);
-                suspended.remove(p);
+                debug();
                 return;
             }
         }
     }
 
+    public boolean isDisconnected(String nickname) {
+        for(Player p:disconnected){
+            if(p.getNickname().equals(nickname))
+                return true;
+        }
+        return false;
+    }
+
+    public Player getPlayerToRecover(String nickname) {
+        for(Player p:disconnected){
+            if(p.getNickname().equals(nickname))
+                return p;
+        }
+        throw new IllegalStateException("Cannot found '"+nickname+"' in the disconnected players");
+    }
+
+    public void recoverPlayer(Player player) {
+        for(Player p:disconnected){
+            if(p.equals(player)){
+                disconnected.remove(player);
+                game.recoverPlayer(player);
+                debug();
+                return;
+            }
+        }
+        throw new IllegalStateException("Cannot found '"+player.getNickname()+"' in the disconnected players");
+    }
+
+    private void debug(){
+        StringBuilder builder=new StringBuilder();
+        builder.append("Offline players: ");
+        for(Player p:disconnected){
+            builder.append(p.getNickname()).append(" ");
+        }
+        Logger.log(builder.toString());
+    }
 }

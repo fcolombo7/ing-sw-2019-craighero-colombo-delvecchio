@@ -207,132 +207,145 @@ public class Effect {
     }
 
     /**
+     * This requirement check update the matrix with the only squares visible/not visible from the current position (not if value is false)
+     */
+    private static MatrixHelper visibleRequirement(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        if(Boolean.parseBoolean(value)) return matrix.bitWiseAnd(board.getVisibilityMatrix(curPos[0],curPos[1]));
+        else return matrix.bitWiseAnd(board.getGameboardMatrix()
+                .bitWiseAnd(board.getVisibilityMatrix(curPos[0],curPos[1]).bitWiseNot()));
+    }
+
+    /**
+     * This requirement check update the matrix with the only squares which distance from the current position is at least 'value'
+     */
+    private static MatrixHelper minDistanceRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        int val=Integer.parseInt(value);
+        return matrix.bitWiseAnd(board.getDistanceMatrix(curPos[0],curPos[1],val-1)
+                .bitWiseNot()
+                .bitWiseAnd(board.getGameboardMatrix()));
+    }
+
+    /**
+     * This requirement check update the matrix with the only squares which distance from the current position is at last 'value'
+     */
+    private static MatrixHelper maxDistanceRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        int val=Integer.parseInt(value);
+        return matrix.bitWiseAnd(board.getDistanceMatrix(curPos[0],curPos[1],val));
+    }
+
+    /**
+     * This requirement check update the matrix with the only squares visible (not) from the last position (not if value is false)
+     */
+    private static MatrixHelper prevVisibleRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        if(Boolean.parseBoolean(value)) return matrix.bitWiseAnd(board.getVisibilityMatrix(lastPos[0],lastPos[1]));
+        else return matrix.bitWiseAnd(board.getGameboardMatrix()
+                .bitWiseAnd(board.getVisibilityMatrix(lastPos[0],lastPos[1]).bitWiseNot()));
+    }
+
+    /**
+     * This requirement check update the matrix with the only square which correspond to the last position
+     */
+    private static MatrixHelper prevPlayerPositionRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        boolean val=Boolean.parseBoolean(value);
+        int colLength=board.getGameboardMatrix().getColLength();
+        int rowLength=board.getGameboardMatrix().getRowLength();
+        boolean [][]mat=new boolean[rowLength][colLength];
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++)
+                mat[i][i]=val==(i==lastPos[0]&&j==lastPos[1]);
+        }
+        return matrix.bitWiseAnd(new MatrixHelper(mat));
+    }
+
+    /**
+     * This requirement check update the matrix with the only squares which are (not) NORTH|EAST|SOUTH|WEST of the current position. (not if value is false)
+     */
+    private static MatrixHelper onDirectionRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        boolean val=Boolean.parseBoolean(value);
+        int colLength=board.getGameboardMatrix().getColLength();
+        int rowLength=board.getGameboardMatrix().getRowLength();
+        boolean [][]mat=new boolean[rowLength][colLength];
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++)
+                mat[i][j]=(i==curPos[0]||j==curPos[1]);
+        }
+        MatrixHelper directionMatrix=new MatrixHelper(mat);
+        if(!val) directionMatrix=directionMatrix.bitWiseNot();
+        return matrix.bitWiseAnd(board.getGameboardMatrix()
+                .bitWiseAnd(directionMatrix));
+    }
+
+    /**
+     * This requirement check update the matrix with the only squares which are not (are) in the same room of the current position. (are if value is false)
+     */
+    private static MatrixHelper notInRoomRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        boolean val=Boolean.parseBoolean(value);
+        int colLength=board.getGameboardMatrix().getColLength();
+        int rowLength=board.getGameboardMatrix().getRowLength();
+        boolean [][]mat=new boolean[rowLength][colLength];
+        RoomColor roomColor=board.getSquare(curPos[0],curPos[1]).getRoomColor();
+
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++)
+                mat[i][j]=board.hasSquare(i,j)&&!board.getSquare(i,j).getRoomColor().equals(roomColor);
+        }
+        MatrixHelper notInRommMatrix=new MatrixHelper(mat);
+        if(val) return matrix.bitWiseAnd(notInRommMatrix);
+        else return matrix.bitWiseAnd(board.getGameboardMatrix()
+                .bitWiseAnd(notInRommMatrix.bitWiseNot()));
+    }
+
+    /**
+     * This requirement check update the matrix adding all the squares which are at distance 'value' from the current matrix.
+     */
+    private static MatrixHelper shiftableRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        int val=Integer.parseInt(value);
+        int colLength=board.getGameboardMatrix().getColLength();
+        int rowLength=board.getGameboardMatrix().getRowLength();
+        boolean[][] curMat=matrix.toBooleanMatrix();
+        MatrixHelper retMatrix=new MatrixHelper(curMat);
+        for(int i=0;i<rowLength;i++){
+            for(int j=0;j<colLength;j++) {
+                if (curMat[i][j])
+                    retMatrix=retMatrix.bitWiseOr(board.getDistanceMatrix(i, j, val));
+            }
+        }
+        return retMatrix;
+    }
+
+    /**
+     * This requirement check is used when target is 'ME' and it update the matrix adding all the squares which are visible from the current matrix.
+     */
+    private static MatrixHelper firstVisibilityRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        return requirementsMap.get("VISIBLE").checkRequirement(value,curPos,lastPos,board,matrix);
+    }
+
+    /**
+     * This requirement check is used when target is 'ME' and it update the matrix setting/not setting the curPos
+     */
+    private static MatrixHelper firstSquareRequirements(String value, int[] curPos, int[] lastPos, GameBoard board, MatrixHelper matrix){
+        if(Boolean.parseBoolean(value))
+            return requirementsMap.get("MAX_DISTANCE").checkRequirement("0",curPos,lastPos,board,matrix);
+        else
+            return requirementsMap.get("MIN_DISTANCE").checkRequirement("1",curPos,lastPos,board,matrix);
+    }
+
+    /**
      * This method initialized the HashMap used to check the Effect Requirements
      */
     private static HashMap<String,Requirement> initRequirements(){
         HashMap<String,Requirement> requirementsMap=new HashMap<>();
 
-        /*
-        This requirement check update the matrix with the only squares visible/not visible from the current position (not if value is false)
-         */
-        requirementsMap.put("VISIBLE",(value, curPos, lastPos, board, matrix) -> {
-            if(Boolean.parseBoolean(value)) return matrix.bitWiseAnd(board.getVisibilityMatrix(curPos[0],curPos[1]));
-            else return matrix.bitWiseAnd(board.getGameboardMatrix()
-                    .bitWiseAnd(board.getVisibilityMatrix(curPos[0],curPos[1]).bitWiseNot()));
-        });
-
-        /*
-        This requirement check update the matrix with the only squares which distance from the current position is at least 'value'
-         */
-        requirementsMap.put("MIN_DISTANCE",(value, curPos, lastPos, board, matrix) -> {
-            int val=Integer.parseInt(value);
-            return matrix.bitWiseAnd(board.getDistanceMatrix(curPos[0],curPos[1],val-1)
-                    .bitWiseNot()
-                    .bitWiseAnd(board.getGameboardMatrix()));
-        });
-
-        /*
-        This requirement check update the matrix with the only squares which distance from the current position is at last 'value'
-         */
-        requirementsMap.put("MAX_DISTANCE",(value, curPos, lastPos, board, matrix) -> {
-            int val=Integer.parseInt(value);
-            return matrix.bitWiseAnd(board.getDistanceMatrix(curPos[0],curPos[1],val));
-        });
-
-        /*
-        This requirement check update the matrix with the only squares visible (not) from the last position (not if value is false)
-         */
-        requirementsMap.put("PREV_VISIBLE",(value, curPos, lastPos, board, matrix) -> {
-            if(Boolean.parseBoolean(value)) return matrix.bitWiseAnd(board.getVisibilityMatrix(lastPos[0],lastPos[1]));
-            else return matrix.bitWiseAnd(board.getGameboardMatrix()
-                    .bitWiseAnd(board.getVisibilityMatrix(lastPos[0],lastPos[1]).bitWiseNot()));
-        });
-
-        /*
-        This requirement check update the matrix with the only square which correspond to the last position
-         */
-        requirementsMap.put("PREV_PLAYER_POSITION",(value, curPos, lastPos, board, matrix) -> {
-            boolean val=Boolean.parseBoolean(value);
-            int colLength=board.getGameboardMatrix().getColLength();
-            int rowLength=board.getGameboardMatrix().getRowLength();
-            boolean [][]mat=new boolean[rowLength][colLength];
-            for(int i=0;i<rowLength;i++){
-                for(int j=0;j<colLength;j++)
-                    mat[i][i]=val==(i==lastPos[0]&&j==lastPos[1]);
-            }
-            return matrix.bitWiseAnd(new MatrixHelper(mat));
-        });
-
-        /*
-        This requirement check update the matrix with the only squares which are (not) NORTH|EAST|SOUTH|WEST of the current position. (not if value is false)
-         */
-        requirementsMap.put("ON_DIRECTION",(value, curPos, lastPos, board, matrix) -> {
-            boolean val=Boolean.parseBoolean(value);
-            int colLength=board.getGameboardMatrix().getColLength();
-            int rowLength=board.getGameboardMatrix().getRowLength();
-            boolean [][]mat=new boolean[rowLength][colLength];
-            for(int i=0;i<rowLength;i++){
-                for(int j=0;j<colLength;j++)
-                    mat[i][j]=(i==curPos[0]||j==curPos[1]);
-            }
-            MatrixHelper directionMatrix=new MatrixHelper(mat);
-            if(!val) directionMatrix=directionMatrix.bitWiseNot();
-            return matrix.bitWiseAnd(board.getGameboardMatrix()
-                    .bitWiseAnd(directionMatrix));
-        });
-
-        /*
-        This requirement check update the matrix with the only squares which are not (are) in the same room of the current position. (are if value is false)
-         */
-        requirementsMap.put("NOT_IN_ROOM",(value, curPos, lastPos, board, matrix) -> {
-            boolean val=Boolean.parseBoolean(value);
-            int colLength=board.getGameboardMatrix().getColLength();
-            int rowLength=board.getGameboardMatrix().getRowLength();
-            boolean [][]mat=new boolean[rowLength][colLength];
-            RoomColor roomColor=board.getSquare(curPos[0],curPos[1]).getRoomColor();
-
-            for(int i=0;i<rowLength;i++){
-                for(int j=0;j<colLength;j++)
-                    mat[i][j]=board.hasSquare(i,j)&&!board.getSquare(i,j).getRoomColor().equals(roomColor);
-            }
-            MatrixHelper notInRommMatrix=new MatrixHelper(mat);
-            if(val) return matrix.bitWiseAnd(notInRommMatrix);
-            else return matrix.bitWiseAnd(board.getGameboardMatrix()
-                    .bitWiseAnd(notInRommMatrix.bitWiseNot()));
-        });
-
-        /*
-        This requirement check update the matrix adding all the squares which are at distance 'value' from the current matrix.
-         */
-        requirementsMap.put("SHIFTABLE",(value, curPos, lastPos, board, matrix) -> {
-            int val=Integer.parseInt(value);
-            int colLength=board.getGameboardMatrix().getColLength();
-            int rowLength=board.getGameboardMatrix().getRowLength();
-            boolean[][] curMat=matrix.toBooleanMatrix();
-            MatrixHelper retMatrix=new MatrixHelper(curMat);
-            for(int i=0;i<rowLength;i++){
-                for(int j=0;j<colLength;j++) {
-                    if (curMat[i][j])
-                        retMatrix=retMatrix.bitWiseOr(board.getDistanceMatrix(i, j, val));
-                }
-            }
-            return retMatrix;
-        });
-
-        /*
-        This requirement check is used when target is 'ME' and it update the matrix adding all the squares which are visible from the current matrix.
-         */
-        requirementsMap.put("IF_FIRST_CHECK_VISIBILITY_AFTER_SHIFT", (value, curPos, lastPos, board, matrix) -> requirementsMap.get("VISIBLE").checkRequirement(value,curPos,lastPos,board,matrix));
-
-        /*
-        This requirement check is used when target is 'ME' and it update the matrix setting/not setting the curPos
-         */
-        requirementsMap.put("IF_FIRST_CHECK_IN_SQUARE_AFTER_SHIFT", (value, curPos, lastPos, board, matrix) -> {
-            if(Boolean.parseBoolean(value))
-                return requirementsMap.get("MAX_DISTANCE").checkRequirement("0",curPos,lastPos,board,matrix);
-            else
-                return requirementsMap.get("MIN_DISTANCE").checkRequirement("1",curPos,lastPos,board,matrix);
-        });
+        requirementsMap.put("VISIBLE",Effect::visibleRequirement);
+        requirementsMap.put("MIN_DISTANCE",Effect::minDistanceRequirements);
+        requirementsMap.put("MAX_DISTANCE",Effect::maxDistanceRequirements);
+        requirementsMap.put("PREV_VISIBLE",Effect::prevVisibleRequirements);
+        requirementsMap.put("PREV_PLAYER_POSITION",Effect::prevPlayerPositionRequirements);
+        requirementsMap.put("ON_DIRECTION",Effect::onDirectionRequirements);
+        requirementsMap.put("NOT_IN_ROOM",Effect::notInRoomRequirements);
+        requirementsMap.put("SHIFTABLE",Effect::shiftableRequirements);
+        requirementsMap.put("IF_FIRST_CHECK_VISIBILITY_AFTER_SHIFT",Effect::firstVisibilityRequirements);
+        requirementsMap.put("IF_FIRST_CHECK_IN_SQUARE_AFTER_SHIFT", Effect::firstSquareRequirements);
 
         return requirementsMap;
     }
@@ -820,7 +833,7 @@ public class Effect {
     }
 
     /**
-     * This method check if the number of selected target is compatible with the definition of the effect target
+     * This method checks if the number of selected target is compatible with the definition of the effect target
      * @param selected representing the nicknames of the selected players (group by target)
      * @return true if the selectedNicknames are correct, in other case return false
      */
@@ -831,6 +844,12 @@ public class Effect {
         return false;
     }
 
+    /**
+     * This method converts the lists of string representing the nicknames of the players in lists of players, group by target
+     * @param selectedNickname representing the nicknames of the selected players (group by target)
+     * @param turn representing the current turn of the game
+     * @return a Collection of selected players group by target
+     */
     private List<List<Player>> composeSelected(List<List<String>> selectedNickname, Turn turn) {
         List<List<Player>> selectedPlayers=new ArrayList<>();
         List<Player> players=turn.getGame().getPlayers();
@@ -852,6 +871,10 @@ public class Effect {
         return selectedPlayers;
     }
 
+    /**
+     * This method manages the extra action of the effect
+     * @param turn representing the current turn of the game
+     */
     private void handleExtra(Turn turn) {
         for(String[] extra: extra){
             extraMap.get(extra[0]).exec(turn,extra[1]);
@@ -860,6 +883,11 @@ public class Effect {
             turn.getInExecutionRoutine().onEffectPerformed();
     }
 
+    /**
+     * This method handles the 'GO_THERE' extra
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     */
     private static void goThereExtra(Turn turn,String value){
         Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
@@ -869,6 +897,11 @@ public class Effect {
         Logger.log("Moving the current player due to Extra");
     }
 
+    /**
+     * This method handles the 'AGAIN_DIRECTION' extra
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     */
     private static void againDirectionExtra(Turn turn, String value) {
         Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
@@ -901,6 +934,11 @@ public class Effect {
         repeatEffectInDirection(turn, value, position);
     }
 
+    /**
+     * This method handles the 'AGAIN_DIRECTION' extra
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     */
     private static void repeatEffectInDirection(Turn turn, String value, Square position) {
         if (turn.getCurEffect().target.getType() == TargetType.SQUARE) {
             for (Action action : turn.getCurEffect().actions) {
@@ -919,6 +957,12 @@ public class Effect {
         }
     }
 
+    /**
+     * This method marks the players due to the repetition of the effect caused by the 'AGAIN DIRECTION' extra
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     * @param position representing the position where to apply the effect
+     */
     private static void repeatMarkToPlayer(Turn turn, String value, Square position) {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
@@ -929,6 +973,12 @@ public class Effect {
         }
     }
 
+    /**
+     * This method damages the players due to the repetition of the effect caused by the 'AGAIN DIRECTION' extra
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     * @param position representing the position where to apply the effect
+     */
     private static void repeatDamageToPlayer(Turn turn, String value, Square position) {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
@@ -942,6 +992,12 @@ public class Effect {
         }
     }
 
+    /**
+     * This method marks all the players in the square due to the extra of the effect
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     * @param position representing the position where to apply the effect
+     */
     private static void repeatMarkInSquare(Turn turn, String value, Square position) {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
@@ -951,6 +1007,12 @@ public class Effect {
         }
     }
 
+    /**
+     * This method damages all the players in the square due to the extra of the effect
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     * @param position representing the position where to apply the effect
+     */
     private static void repeatDamageInSquare(Turn turn, String value, Square position) {
         for (Player p : turn.getGame().getPlayers()) {
             if(p!=turn.getGame().getCurrentPlayer()&&p.getPosition()==position){
@@ -963,6 +1025,11 @@ public class Effect {
         }
     }
 
+    /**
+     * This method marks all the players in the square due to the extra of the effect
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     */
     private static void markSquareExtra(Turn turn, String value) {
         Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
@@ -971,6 +1038,11 @@ public class Effect {
         Logger.log("Mark all the player in the last square due to Extra");
     }
 
+    /**
+     * This method damages all the players in the square due to the extra of the effect
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     */
     private static void damageSquareExtra(Turn turn, String value) {
         Player last=turn.getSelectedPlayers().peek();
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
@@ -979,6 +1051,11 @@ public class Effect {
         Logger.log("Damage all the player in the last square due to Extra");
     }
 
+    /**
+     * This method change the position of the player due to the extra of the effect
+     * @param turn representing the current turn of the game
+     * @param value representing the value of the extra
+     */
     private static void shiftInSquareExtra(Turn turn, String value) {
         Square position=turn.getGame().getCurrentPlayer().getPosition();
         Player player=turn.getSelectedPlayers().peek();
@@ -988,6 +1065,10 @@ public class Effect {
         Logger.log("Moving the last shot player due to Extra");
     }
 
+    /**
+     * This method checks the player status (check if it is alive)
+     * @param p representing the player you want to check
+     */
     private static void checkPlayerStatus(Player p) {
         if (p.getStatus()==PlayerStatus.DEAD){
             p.setPosition(null);
@@ -1046,6 +1127,7 @@ public class Effect {
         msg.append("}");
         return msg.toString();
     }
+
     @FunctionalInterface
     private interface Requirement {
 

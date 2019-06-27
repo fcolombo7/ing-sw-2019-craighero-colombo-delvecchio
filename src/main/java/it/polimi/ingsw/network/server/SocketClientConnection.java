@@ -3,6 +3,8 @@ package it.polimi.ingsw.network.server;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameBoard;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
@@ -83,6 +85,8 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             messageHandler.put(Constants.STOP_ROUTINE_ANSWER,this::onStopRoutineAnswer);
             messageHandler.put(Constants.USE_POWERUP_ANSWER,this::onUsePowerupAnswer);
             messageHandler.put(Constants.DISCARDED_WEAPON_ANSWER,this::onDiscardWeaponAnswer);
+            messageHandler.put(Constants.COUNTER_ATTACK_ANSWER,this::onCounterAttackAnswer);
+            messageHandler.put(Constants.POWERUP_ANSWER,this::onPowerupAnswer);
         }
     }
 
@@ -99,19 +103,23 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             LoginMessage loginMessage=gson.fromJson(msg, LoginMessage.class);
             String cNickname = loginMessage.getNickname();
             String cMotto = loginMessage.getMotto();
-            if (server.checkClientLogin(cNickname, this)) {
+            int response=server.checkClientLogin(cNickname, this);
+            if (response==1||response==2) {
                 msg = Constants.MSG_SERVER_POSITIVE_ANSWER;
                 setOnline(true);
-            } else {
+            } else if(response==0){
                 msg = Constants.MSG_SERVER_NEGATIVE_ANSWER;
             }
 
             out.println(msg);
             out.flush();
-            if (msg.equalsIgnoreCase(Constants.MSG_SERVER_POSITIVE_ANSWER)) {
+            if (response==1||response==2) {
                 setNickname(cNickname);
                 setMotto(cMotto);
-                server.joinAvailableRoom(this);
+                if(response==1)
+                    server.joinAvailableRoom(this);
+                else
+                    server.joinRecoveredRoom(this);
             }
         }catch (Exception e){
             Logger.logErr("Cannot get a correct LoginMessage from the received Json string.");
@@ -137,7 +145,6 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     private void closeRequest() {
         closeConnection();
-        //server.deregisterConnection(this);
     }
 
     @Override
@@ -150,7 +157,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             Logger.logErr(e.getMessage());
         }
         setOnline(false);
-        server.deregisterConnection(this);
+        if(getRoom().isPlaying())
+            server.disconnectConnection(this);
+        else
+            server.deregisterConnection(this);
     }
 
 
@@ -182,6 +192,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     @Override
     public void firstInRoomAdvise() {
         sendRoomMessage(new FirstInMessage());
+    }
+
+    @Override
+    public void recoverAdvise(String nickname) {
+        sendRoomMessage(new RecoverMessage(nickname));
     }
 
     @Override
@@ -222,6 +237,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     @Override
     public void matchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
         sendMatchMessage(new MatchUpdateMessage(players,gameBoard,frenzy));
+    }
+
+    @Override
+    public void recoveringPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+        sendMatchMessage(new RecoveringPlayerMessage(getNickname(),players,gameBoard,frenzy));
     }
 
     @Override
@@ -305,6 +325,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     @Override
+    public void fullOfPowerup() {
+        sendMatchMessage(new FullOfPowerupsMessage(getNickname()));
+    }
+
+    @Override
     public void turnCreation(String currentPlayer) {
         sendMatchMessage(new TurnCreationMessage(currentPlayer));
     }
@@ -360,7 +385,40 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         sendMatchMessage(new RunMessage(getNickname(),matrix));
     }
 
+    @Override
+    public void canCounterAttack() {
+        sendMatchMessage(new CanCounterAttackMessage(getNickname()));
+    }
+
+    @Override
+    public void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+        sendMatchMessage(new CounterAttackMessage(currentPlayer,player,powerup));
+    }
+
+    @Override
+    public void counterAttackTimeOut() {
+        sendMatchMessage(new CounterAttackTimeOut(getNickname()));
+    }
+
+
     /*------ ANSWER HANDLER ------*/
+    private void onCounterAttackAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            CounterAttackAnswer answer=gson.fromJson(line, CounterAttackAnswer .class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)) throw new IllegalArgumentException("NOT COUNTER ATTACK ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().counterAttackAnswer(answer.getSender(),answer.counterAttack());
+        }catch (Exception e){
+            Logger.logErr(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
 
     private void onBoardPreferenceAnswer() {
         Gson gson=new Gson();
@@ -373,6 +431,24 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             //check if can receive this answer
             if(!checkStatus(GameStatus.CREATED)) throw new IllegalStateException(ILLEGAL_STATE);
             getRoom().getController().roomPreferenceManager(answer.getSender(),answer.getRoomReference());
+        }catch (Exception e){
+            Logger.logErr(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void onPowerupAnswer() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            SelectedPowerupAnswer answer=gson.fromJson(line, SelectedPowerupAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.POWERUP_ANSWER)) throw new IllegalArgumentException("NOT POWERUP ANSWER");
+
+            //check if can receive this answer
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().selectPowerup(answer.getPowerup());
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE

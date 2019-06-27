@@ -17,7 +17,7 @@ public abstract class ClientConnection{
     private String motto;
     private Room room;
 
-    ClientConnection(){
+    public ClientConnection(){
         online=false;
     }
 
@@ -73,6 +73,8 @@ public abstract class ClientConnection{
 
     public abstract void matchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
 
+    public abstract void recoveringPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
+
     public abstract void respwanRequest(List<Card> powerups);
 
     public abstract void respwanCompleted(SimplePlayer player, Card discardedPowerup);
@@ -105,6 +107,8 @@ public abstract class ClientConnection{
 
     public abstract void discardedPowerup(SimplePlayer player, Card powerup);
 
+    public abstract void fullOfPowerup();
+
     public abstract void turnCreation(String currentPlayer);
 
     public abstract void selectablePlayers(List<List<String>> selectable, SimpleTarget target);
@@ -126,4 +130,12 @@ public abstract class ClientConnection{
     public abstract void runCompleted(SimplePlayer player, int[] newPosition);
 
     public abstract void runRoutine(MatrixHelper matrix);
+
+    public abstract void recoverAdvise(String nickname);
+
+    public abstract void canCounterAttack();
+
+    public abstract void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup);
+
+    public abstract void counterAttackTimeOut();
 }

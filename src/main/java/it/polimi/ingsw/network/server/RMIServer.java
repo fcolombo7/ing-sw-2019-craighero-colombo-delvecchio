@@ -8,14 +8,12 @@ import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.File;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.rmi.AccessException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +22,6 @@ import java.util.UUID;
 
 public class RMIServer  implements RMIServerHandler{
 
-    private static final long serialVersionUID = -6063956040408133376L;
     private Server server;
     private String hostname;
     private HashMap<String,String> rmiClients;
@@ -72,13 +69,17 @@ public class RMIServer  implements RMIServerHandler{
     public synchronized String login(String nickname, String motto, RMIClientHandler client) {
         Logger.log("[Received a login request form RMI]");
         RMIClientConnection clientConnection = new RMIClientConnection(client,this);
-        if(server.checkClientLogin(nickname,clientConnection)){
+        int response=server.checkClientLogin(nickname,clientConnection);
+        if(response==1||response==2){
             clientConnection.setNickname(nickname);
             clientConnection.setMotto(motto);
-            server.joinAvailableRoom(clientConnection);
             String session= UUID.randomUUID().toString();
             rmiClients.put(session,nickname);
             clientConnection.setSession(session);
+            if(response==1)
+                server.joinAvailableRoom(clientConnection);
+            else
+                server.joinRecoveredRoom(clientConnection);
             return session;
         }
         return null;
@@ -88,7 +89,11 @@ public class RMIServer  implements RMIServerHandler{
     public boolean deregister(String session) {
         String nick=rmiClients.get(session);
         if(nick==null) return false;
-        server.deregisterConnection(server.getClientConnection(nick));
+        ClientConnection connection= server.getClientConnection(nick);
+        if(connection.getRoom().isPlaying())
+            server.disconnectConnection(connection);
+        else
+            server.deregisterConnection(connection);
         return true;
     }
 
@@ -189,6 +194,13 @@ public class RMIServer  implements RMIServerHandler{
         String nick=rmiClients.get(session);
         if(nick!=null)
             server.getClientConnection(nick).getRoom().getController().selectWeapon(weapon);
+    }
+
+    @Override
+    public void counterAttackAnswer(String session, boolean counterAttack) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().counterAttackAnswer(nick,counterAttack);
     }
 
 }

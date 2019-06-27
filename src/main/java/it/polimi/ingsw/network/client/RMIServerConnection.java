@@ -270,6 +270,18 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     }
 
+    @Override
+    public void counterAttackAnswer(boolean counterAttack) {
+        pool.submit(()->{
+            try {
+                stub.counterAttackAnswer(session,counterAttack);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call counterAttackAnswer().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
 
     /*------ RMIClientHandler REMOTE METHODS [called on server] ------*/
 
@@ -287,6 +299,12 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void firstInRoom() {
         getUi().onFirstInRoomAdvise();
+    }
+
+    @Override
+    public void recoverPlayer(String nickname) {
+        //TODO
+        //getUi().onRecoverPlayerAdvise(nickname);
     }
 
     @Override
@@ -448,5 +466,35 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void runRoutine(MatrixHelper matrix) {
         getUi().onRunRoutine(matrix);
+    }
+
+    @Override
+    public void wakeUpPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+        //TODO
+        //getUi().onPlayerWakeUp(nickname);
+    }
+
+    @Override
+    public void fullOfPowerup() {
+        //TODO
+        //getUi().onFullOfPowerup();
+    }
+
+    @Override
+    public void canCounterAttack() {
+        //TODO
+        //getUi().onCanCounterAttack();
+    }
+
+    @Override
+    public void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+        //TODO
+        //getUi().onCounterAttack(currentPlayer,player,powerup);
+    }
+
+    @Override
+    public void counterAttackTimeOut() {
+        //TODO
+        //getUi().onCounterAttackTimeOut();
     }
 }

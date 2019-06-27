@@ -64,6 +64,54 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
+    public void recoverAdvise(String nickname) {
+        pool.submit(() -> {
+            try {
+                clientStub.recoverPlayer(nickname);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call recoverAdvise().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void canCounterAttack() {
+        pool.submit(() -> {
+            try {
+                clientStub.canCounterAttack();
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call canCounterAttack().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+        pool.submit(() -> {
+            try {
+                clientStub.counterAttack(currentPlayer,player,powerup);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call counterAttack().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void counterAttackTimeOut() {
+        pool.submit(() -> {
+            try {
+                clientStub.counterAttackTimeOut();
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call counterAttackTimeOut().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void exitRoomAdvise(String nickname) {
         pool.submit(() -> {
             try {
@@ -134,6 +182,19 @@ public class RMIClientConnection extends ClientConnection{
                 clientStub.matchUpdate(players,gameBoard,frenzy);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call matchUpdate().");
+                Logger.logErr(e.getMessage());
+                closeConnection();
+            }
+        });
+    }
+
+    @Override
+    public void recoveringPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+        pool.submit(() -> {
+            try {
+                clientStub.wakeUpPlayer(players,gameBoard,frenzy);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call recoveringPlayer().");
                 Logger.logErr(e.getMessage());
                 closeConnection();
             }
@@ -349,6 +410,19 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
+    public void fullOfPowerup() {
+        pool.submit(() -> {
+            try {
+                clientStub.fullOfPowerup();
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call fullOfPowerup().");
+                Logger.logErr(e.getMessage());
+                closeConnection();
+            }
+        });
+    }
+
+    @Override
     public void turnCreation(String currentPlayer) {
         pool.submit(() -> {
             try {
@@ -490,4 +564,5 @@ public class RMIClientConnection extends ClientConnection{
             }
         });
     }
+
 }

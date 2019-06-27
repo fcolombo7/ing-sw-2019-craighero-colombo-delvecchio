@@ -25,31 +25,94 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class is the abstract representation of the Adrenaline match. It is the Model class of the MVC pattern
+ */
 public class Game extends Observable<MatchMessage> {
 
+    /**
+     * This attributes contains the current player of the match
+     */
     private Player currentPlayer;
+
+    /**
+     * This attributes contains the current turn of the match
+     */
     private Turn currentTurn;
+
+    /**
+     * This attributes contains the index of the ammo deck
+     */
     private int ammoIndex = 0;
+
+    /**
+     * This attributes contains the status of the match
+     */
     private GameStatus status;
 
     /**
      * This attribute contains the all the ammo tiles
      */
     private List<AmmoTile> ammoTileDeck;
+
+    /**
+     * This attributes contains the index of the weapon deck
+     */
     private int weaponIndex = 0;
+
+    /**
+     * This attributes represents the deck of the weapon. So it contains all the Adrenaline weapons.
+     */
     private List<Card> weaponDeck;
+
+    /**
+     * This attributes contains the index of the powerup deck.
+     */
     private int powerupIndex = 0;
+
+    /**
+     * This attributes is used to check if the powerup deck is shuffled.
+     */
     private boolean powerupShuffled = false;
+
+    /**
+     * This attributes represents the deck of the powerup. So it contains all the Adrenaline powerups.
+     */
     private List<Card> powerupDeck;
+
+    /**
+     * This attributes contains the players of the match.
+     */
     private List<Player> players;
+
+    /**
+     * This attribute contains the game board of the match.
+     */
     private GameBoard gameBoard;
+
+    /**
+     * This attribute contains the skull number of the match.
+     */
     private int skullNumber;
 
+    /**
+     * This attribute is used to check if the game is, or is not, in frenzy mode.
+     */
     private boolean frenzyMode = false;
+
+    /**
+     * This attribute is used to check if the game is, or is not, ended.
+     */
     private boolean gameEnded = false;
 
+    /**
+     * This attribute contains the last player who takes the turn in normal mode, before the game turns in frenzy.
+     */
     private Player lastPlayerBeforeFrenzy =null;
 
+    /**
+     * This constructor instantiates the Game object
+     */
     public Game(){
         weaponDeck = new ArrayList<>();
         powerupDeck = new ArrayList<>();
@@ -82,6 +145,11 @@ public class Game extends Observable<MatchMessage> {
         shuffleDeck(ammoTileDeck);
     }
 
+    /**
+     * This method is used to build the card deck.
+     * @param deck representing the deck (the container which will be update).
+     * @param card representing the XML Node read from the configuration file.
+     */
     private void buildCardDeck(List<Card> deck, Node card){
         NodeList cardNode = card.getChildNodes();
         String id = "";
@@ -114,10 +182,19 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method sets the skull number of the match
+     * @param node representing the node read from the XML file, which contains the skull number.
+     */
     private void setSkullNumber(Node node){
         skullNumber=Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method builds the Ammo deck.
+     * @param deck representing the deck (the container which will be update).
+     * @param ammo representing the XML Node read from the configuration file.
+     */
     private void buildAmmoDeck(List<AmmoTile> deck, Node ammo){
         NodeList ammoNode = ammo.getChildNodes();
         String id = "";
@@ -145,6 +222,13 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method instantiates an ammo
+     * @param id representing the id of the ammo
+     * @param powerup a boolean which is true if the ammo has a powerup
+     * @param colors representing the color of the ammo
+     * @return an AmmoTile representing the ammo instantiated
+     */
     private AmmoTile createAmmo(String id, boolean powerup, String colors){
         AmmoTile a;
         if(powerup)
@@ -155,6 +239,11 @@ public class Game extends Observable<MatchMessage> {
         return a;
     }
 
+    /**
+     * This method is used to parse a character value representing a Color
+     * @param c char representing the the value you want to parse
+     * @return the corresponding color
+     */
     private Color parseColor(char c){
         switch(c){
             case 'y':
@@ -168,6 +257,11 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method instantiates a XML parser and parse the XML file you passed as parameter
+     * @param path a string representing the XML file you want to parse
+     * @return a Node representing the root of the XML file
+     */
     private Node parsingXMLFile(String path){
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -203,38 +297,74 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method return the ammo tile deck
+     * @return a Collection representing the ammo tile deck
+     */
     public List<AmmoTile> getAmmoTileDeck() {
         return new ArrayList<>(ammoTileDeck);
     }
 
+    /**
+     * This method return the weapon deck
+     * @return a Collection representing the weapon deck
+     */
     public List<Card> getWeaponDeck() {
         return new ArrayList<>(weaponDeck);
     }
 
+    /**
+     * This method return the powerup deck
+     * @return a Collection representing the powerup deck
+     */
     public List<Card> getPowerupDeck() {
         return new ArrayList<>(powerupDeck);
     }
 
+    /**
+     * This method return all the players of the game
+     * @return a collection containing all the players of the game
+     */
     public List<Player> getPlayers() {
         return new ArrayList<>(players);
     }
 
+    /**
+     * This method return the gameboard
+     * @return the bameboard of the game
+     */
     public GameBoard getGameBoard() {
         return gameBoard;
     }
 
+    /**
+     * This method return the skull number of the game
+     * @return an integer representing the skull number of the match
+     */
     public int getSkullNumber(){return skullNumber;}
 
+    /**
+     * This method is used to draw a weapon
+     * @return a Weapon card drawn from the Weapon deck
+     */
     public Weapon drawWeapon(){
         if(weaponIndex>weaponDeck.size()-1)
             throw new IndexOutOfBoundsException("All the weapons are already on the boards");
         return new Weapon(weaponDeck.get(weaponIndex++));
     }
 
+    /**
+     * This method checks if you can draw a weapon
+     * @return true if you can draw a weapon
+     */
     private boolean canDrawWeapon(){
         return (weaponIndex<=weaponDeck.size()-1);
     }
 
+    /**
+     * This method is used to draw a powerup
+     * @return a Weapon card drawn from the powerup deck
+     */
     public Powerup drawPowerup(){
         if(powerupIndex>powerupDeck.size()-1) {
             shuffleDeck(powerupDeck);
@@ -249,6 +379,10 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method is used to draw an ammo tile
+     * @return a Weapon card drawn from the ammo tile deck
+     */
     public AmmoTile drawAmmoTile(){
         if(ammoIndex>ammoTileDeck.size()-1){
             shuffleDeck(ammoTileDeck);
@@ -257,16 +391,28 @@ public class Game extends Observable<MatchMessage> {
         return ammoTileDeck.get(ammoIndex++);
     }
 
+    /**
+     * This method is used to shuffle a Deck
+     * @param deck the deck ypu want to shuffle
+     */
     private void shuffleDeck(List<?> deck){
         Collections.shuffle(deck);
     }
 
+    /**
+     * This method is used to add a player to the game
+     * @param player a Player obj representing the player you want to add to the game.
+     */
     public void addPlayer(Player player) {
         if(getPlayers().size()>4)
             throw new IndexOutOfBoundsException("Maximum number of player reached [5]");
         players.add(player);
     }
 
+    /**
+     * This method is used to compute the winner of the game
+     * @return a Map containing the Players and their points
+     */
     public Map<Player, Integer> calcWinner() {
         Map<Player, Integer> map = new HashMap<>();
         for (Player player : players) map.put(player, player.getScore());
@@ -276,31 +422,58 @@ public class Game extends Observable<MatchMessage> {
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
+    /**
+     * This method checks if the game is in frenzy mode
+     * @return true if the game is in frenzy mode
+     */
     public boolean isFrenzy() {
         return frenzyMode;
     }
 
+    /**
+     * This method returns the game status
+     * @return the game status
+     */
     public GameStatus getStatus() {
         return status;
     }
 
+    /**
+     * This method sets who is the last player who plays in the normal mode, before the Frenzy mode is activated
+     * @param lastPlayer representing the last player who plays in the normal mode, before the Frenzy mode is activated
+     */
     public void setFrenzy(Player lastPlayer){
         frenzyMode=true;
         this.lastPlayerBeforeFrenzy =lastPlayer;
     }
 
+    /**
+     * This method return the last player who plays before the frenzy mode
+     * @return the last player who plays before the frenzy mode
+     */
     Player getLastPlayerBeforeFrenzy() {
         return lastPlayerBeforeFrenzy;
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    /**
+     * This method sets the current player
+     * @param playerIndex index representing the position where the player you want to set as current is in the collection of players
+     */
+    public void setCurrentPlayer(int playerIndex) {
+        this.currentPlayer = players.get(playerIndex);
     }
 
+    /**
+     * This method return the current player
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * This method fill the gameboard: all the square which are not empty, if possible, will be filled
+     */
     private void fillGameboard(){
         int[] boardDimension=gameBoard.getBoardDimension();
         for(int i=0;i<boardDimension[0];i++){
@@ -312,6 +485,11 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method fill a square (if possible)
+     * @param x representing the row index of the gameboard
+     * @param y representing the y index of the gameboard
+     */
     private void fillSquare(int x, int y) {
         Square square=gameBoard.getSquare(x,y);
         if(!square.isFull()){
@@ -332,6 +510,9 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method is used to send to the players a notification in order to advise them that the match is started
+     */
     public void startMessage() {
         status=GameStatus.CREATED;
         for(int i=0;i<players.size();i++) {
@@ -341,6 +522,10 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method is used to choose the gameboard type
+     * @param mapNumber representing the number of the map you want to set as gameboard
+     */
     public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
@@ -370,10 +555,17 @@ public class Game extends Observable<MatchMessage> {
         status=GameStatus.READY;
     }
 
+    /**
+     * This method is used get the current turn
+     * @return the current turn
+     */
     public Turn getCurrentTurn(){
         return currentTurn;
     }
 
+    /**
+     * This method create a turn and notify all the players which are playing
+     */
     public void createTurn() {
         if(gameEnded)
             throw new IllegalStateException("Game is ended");
@@ -381,7 +573,7 @@ public class Game extends Observable<MatchMessage> {
             throw new IllegalStateException("Cannot create turn without having instantiated the Gameboard.");
         if (currentPlayer.getStatus() == PlayerStatus.FIRST_SPAWN)
             throw new IllegalStateException("Current player need to be Spawned.");
-        if (currentPlayer.getStatus() != PlayerStatus.WAITING)
+        if (currentPlayer.getStatus() != PlayerStatus.PLAYING)
             throw new IllegalStateException("Cannot create turn.[Illegal player status: " + currentPlayer.getStatus().name() + "]");
         if (currentTurn!=null&&currentTurn.getStatus()!= TurnStatus.END)
             throw new IllegalStateException("Cannot create turn. [Another one is still being played]");
@@ -390,6 +582,9 @@ public class Game extends Observable<MatchMessage> {
         currentTurn= new Turn(this);
     }
 
+    /**
+     * This method ends the turn
+     */
     public void endTurn() {
         if(currentTurn==null)  throw new IllegalStateException("No turn is playing now.");
         if(currentTurn.getStatus()!= TurnStatus.END) throw new IllegalStateException("TurnStatus is not END");
@@ -425,10 +620,17 @@ public class Game extends Observable<MatchMessage> {
     private void endGame() {
     }
 
+    /** TODO
+     * This method force the the end of the game
+     */
     public void forceEndGame(){
         gameEnded=true;
     }
 
+    /**
+     * This method assigns the kill points to all the players that damaged the dead Player passed as parameter
+     * @param player representing the dead Player
+     */
     private void cashDamages(Player player) {
         List<Integer> values=player.getBoard().getBoardScoreValues();
         List<Player> selectedPlayers=player.getBoard().getDamage();
@@ -454,6 +656,9 @@ public class Game extends Observable<MatchMessage> {
         player.getBoard().clearDamage();
     }
 
+    /**
+     * This method enable the frenzy mode and update all the player boards
+     */
     private void enableFrenzy() {
         setFrenzy(currentPlayer);
         for(Player p:players){
@@ -462,6 +667,11 @@ public class Game extends Observable<MatchMessage> {
         }
     }
 
+    /**
+     * This method send a respawn request to the player passed as parameter
+     * @param player representing the player to respawn
+     * @param firstSpawn true if is the first respawn
+     */
     public void respawnPlayerRequest(Player player, boolean firstSpawn) {
         if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN) throw new IllegalStateException("Cannot respawn the player '"+player.getNickname()+"'. ["+player.getStatus().name()+"]");
         ArrayList<Card> drawnPowerups;
@@ -474,6 +684,11 @@ public class Game extends Observable<MatchMessage> {
         notify(message);
     }
 
+    /**
+     * This method complete the player respawn
+     * @param player the player to respawn
+     * @param discardedPowerup the powerup discarded for the respawn
+     */
     public void respawnPlayer(Player player, Card discardedPowerup){
         if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN){
             Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: status]");
@@ -488,7 +703,7 @@ public class Game extends Observable<MatchMessage> {
                     if(powerup.getColor().name().equalsIgnoreCase(square.getRoomColor().name()))
                         player.setPosition(square);
                 }
-
+                player.setStatus(player.getStatus()==PlayerStatus.FIRST_SPAWN?PlayerStatus.PLAYING:PlayerStatus.WAITING);
                 MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup);
                 notify(message);
                 return;
@@ -498,5 +713,13 @@ public class Game extends Observable<MatchMessage> {
         MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
         notify(message);
         throw new IllegalArgumentException("MISSING POWERUP");
+    }
+
+    /**
+     * This method is used to wake up a player who was disconnected
+     * @param player representing the player that need to be waken up
+     */
+    public void recoverPlayer(Player player) {
+        notify(new RecoveringPlayerMessage(player.getNickname(),players,gameBoard,frenzyMode));
     }
 }

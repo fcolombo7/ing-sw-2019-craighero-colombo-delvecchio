@@ -43,6 +43,7 @@ public class RemoteView extends View{
         senderMap.put(Constants.INVALID_ANSWER,this::invalidAnswer);
         senderMap.put(Constants.BOARD_UPDATE_MESSAGE,this::boardUpdate);
         senderMap.put(Constants.UPDATE_MESSAGE,this::matchUpdate);
+        senderMap.put(Constants.RECOVERING_PLAYER,this::recoveringPlayer);
         senderMap.put(Constants.RESPAWN_REQUEST_MESSAGE,this::respwanRequest);
         senderMap.put(Constants.RESPAWN_COMPLETED_MESSAGE,this::respwanCompleted);
 
@@ -56,6 +57,7 @@ public class RemoteView extends View{
         senderMap.put(Constants.GRABBABLE_WEAPONS_MESSAGE,this::grabbableWeapons);
         senderMap.put(Constants.GRABBED_POWERUP,this::grabbedPowerup);
         senderMap.put(Constants.GRABBED_TILE_MESSAGE,this::grabbedTile);
+        senderMap.put(Constants.FULL_OF_POWERUP,this::fullOfPowerup);
 
         senderMap.put(Constants.RUN_ROUTINE_MESSAGE,this::runRoutine);
         senderMap.put(Constants.RUN_COMPLETED,this::runCompleted);
@@ -73,6 +75,30 @@ public class RemoteView extends View{
         senderMap.put(Constants.EFFECT_MARK_MESSAGE,this::markAction);
         senderMap.put(Constants.EFFECT_MOVE_REQUEST_MESSAGE,this::moveRequest);
         senderMap.put(Constants.EFFECT_MOVE_MESSAGE,this::moveAction);
+
+        senderMap.put(Constants.CAN_COUNTER_ATTACK,this::canCounterAttack);
+        senderMap.put(Constants.COUNTER_ATTACK_COMPLETED,this::counterAttack);
+        senderMap.put(Constants.COUNTER_ATTACK_TIMEOUT,this::counterAttackTimeout);
+    }
+
+    private void counterAttackTimeout(MatchMessage message) {
+        CounterAttackTimeOut msg=(CounterAttackTimeOut) message;
+        clientConnection.counterAttackTimeOut();
+    }
+
+    private void counterAttack(MatchMessage message) {
+        CounterAttackMessage msg=(CounterAttackMessage) message;
+        clientConnection.counterAttack(msg.getCurrentPlayer(),msg.getPlayer(),msg.getPowerup());
+    }
+
+    private void canCounterAttack(MatchMessage message) {
+        CanCounterAttackMessage msg=(CanCounterAttackMessage) message;
+        clientConnection.canCounterAttack();
+    }
+
+    private void fullOfPowerup(MatchMessage message) {
+        FullOfPowerupsMessage msg=(FullOfPowerupsMessage) message;
+        clientConnection.fullOfPowerup();
     }
 
     private void moveAction(MatchMessage message) {
@@ -215,6 +241,11 @@ public class RemoteView extends View{
     private void matchUpdate(MatchMessage message){
         MatchUpdateMessage msg=(MatchUpdateMessage)message;
         clientConnection.matchUpdate(msg.getPlayers(),msg.getGameBoard(),msg.isFrenzy());
+    }
+
+    private void recoveringPlayer(MatchMessage message){
+        RecoveringPlayerMessage msg=(RecoveringPlayerMessage)message;
+        clientConnection.recoveringPlayer(msg.getPlayers(),msg.getGameBoard(),msg.isFrenzy());
     }
 
     private void respwanRequest(MatchMessage message){

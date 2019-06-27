@@ -13,8 +13,7 @@ import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ShootingRoutine implements TurnRoutine {
 
@@ -24,6 +23,7 @@ public class ShootingRoutine implements TurnRoutine {
     private List<Effect> curAvailableEffects;
     private Effect selEffect;
     private Weapon selWeapon;
+    private Map<String, Timer> counterAttackMap;
 
     ShootingRoutine(boolean checkLoaded, MatrixHelper moveBeforeShot, Turn turn) {
         this.checkLoaded = checkLoaded;
@@ -60,6 +60,9 @@ public class ShootingRoutine implements TurnRoutine {
         }
         else if(answer.getRoutineAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)){
             onUsePowerupAnswer((UsePowerupAnswer)answer);
+        }
+        else if(answer.getRoutineAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)){
+            onCounterAttackAnswer((CounterAttackAnswer)answer);
         }
         else{
             Logger.log("Invalid TurnRoutineMessage received");
@@ -201,6 +204,7 @@ public class ShootingRoutine implements TurnRoutine {
         TurnRoutine routine=new ReloadingRoutine(turn, selWeapon);
         routine.start();
     }
+
     @Override
     public TurnRoutineType getType() {
         return TurnRoutineType.SHOOT;
@@ -254,10 +258,60 @@ public class ShootingRoutine implements TurnRoutine {
     }
 
     private void handleCounterAttack() {
-        /*
-        TODO!!!
-         */
-        checkNewEffects();
+        counterAttackMap=new HashMap<>();
+        List<Player> canCounterAttackPlayers=getCounterAttackPlayers();
+        for(Player player:canCounterAttackPlayers){
+            Timer t=new Timer();
+            counterAttackMap.put(player.getNickname(),t);
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Logger.logErr("COUNTER ATTACK TIME OUT ("+player.getNickname()+")");
+                    turn.getGame().notify(new CounterAttackTimeOut(player.getNickname()));
+                    onCounterAttackAnswer(new CounterAttackAnswer(player.getNickname(),false));
+                }
+            },Constants.QUICK_MOVE_TIMER*1000);
+            turn.getGame().notify(new CanCounterAttackMessage(player.getNickname()));
+        }
+        if(canCounterAttackPlayers.isEmpty())
+            checkNewEffects();
+    }
+
+    private synchronized void onCounterAttackAnswer(CounterAttackAnswer answer) {
+        String nickname=answer.getSender();
+        Timer t= counterAttackMap.get(nickname);
+        if(t!=null){
+            t.cancel();
+            t.purge();
+            counterAttackMap.remove(nickname);
+        }
+        if(answer.counterAttack()){
+            for(Player p:turn.getGame().getPlayers()) {
+                if(p.getNickname().equals(nickname)){
+                    turn.getGame().getCurrentPlayer().getBoard().addMarks(p,1);
+                    for(Powerup powerup:p.getPowerups()){
+                        if(powerup.getTiming()==TurnStatus.COUNTER_ATTACK){
+                            p.getPowerups().remove(powerup);
+                            turn.getGame().notify(new CounterAttackMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),new SimplePlayer(p),new Card(powerup)));
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        if(counterAttackMap.isEmpty()){
+            checkNewEffects();
+        }
+    }
+
+    private List<Player> getCounterAttackPlayers() {
+        List<Player> list=new ArrayList<>();
+        for(Player player:turn.getLastDamagedPlayers()){
+            if(player.hasTimingPowerup(TurnStatus.COUNTER_ATTACK))
+                list.add(player);
+        }
+        return list;
     }
 
     private void checkNewEffects() {

@@ -33,6 +33,7 @@ public class Room {
     private Map<String, View> views;
 
     private Controller controller;
+
     private Game model;
 
     public Room(ClientConnection client) {
@@ -56,6 +57,10 @@ public class Room {
         return !(playing||full);
     }
 
+    public boolean isPlaying(){
+        return  playing;
+    }
+
     public List<ClientConnection> getPlayers() {
         return players;
     }
@@ -73,7 +78,6 @@ public class Room {
             if (players.size() == MAX_PLAYERS) {
                 full = true;
                 startCountDown(Constants.KEEP_ALIVE_WAITING_TIME);
-                startMatch();
             } else if (players.size() == MIN_PLAYERS) {
                 startCountDown(Constants.WAITING_ROOM_TIMER);
             }
@@ -86,7 +90,6 @@ public class Room {
         if(!players.contains(client)) throw new IllegalStateException("Removing player which not exits");
         //REMOVING TIMERS
         resetClientTimers(client);
-
         players.remove(client);
         for (ClientConnection cc : players) {
             cc.exitRoomAdvise(client.getNickname());
@@ -95,7 +98,6 @@ public class Room {
         Logger.log(client.getNickname() + " has left the room " + roomNumber);
         if (players.size() < Constants.ROOM_MIN_PLAYERS)
             resetCountDown();
-
         return players.isEmpty();
     }
 
@@ -134,23 +136,6 @@ public class Room {
         keepingAliveTimers.put(client.getNickname(), t);
     }
 
-    private void resetKeepAlive() {
-        for(Timer t:waitingTimers.values()) {
-            if(t!=null){
-                t.cancel();
-                t.purge();
-            }
-        }
-        for(Timer t:keepingAliveTimers.values()){
-            if(t!=null){
-                t.cancel();
-                t.purge();
-            }
-        }
-        waitingTimers.clear();
-        keepingAliveTimers.clear();
-    }
-
     private void keepClientAlive(ClientConnection client){
         Timer t=new Timer();
         t.schedule(new TimerTask() {
@@ -185,6 +170,15 @@ public class Room {
         client.closeConnection();
     }
 
+    public void forceDisconnection(String nickname) {
+        for(ClientConnection cc: players){
+            if(cc.getNickname().equals(nickname)) {
+                handleDisconnection(cc);
+                return;
+            }
+        }
+    }
+
     private void resetClientTimers(ClientConnection client){
         Timer t= keepingAliveTimers.get(client.getNickname());
         if(t!=null){
@@ -202,7 +196,7 @@ public class Room {
 
     private void startMatch() {
         model= new Game();
-        controller= new Controller(model);
+        controller= new Controller(model,this);
         boolean first=true;
         for (ClientConnection client:players) {
             boolean val=false;
@@ -221,4 +215,20 @@ public class Room {
         controller.start();
     }
 
+    public void recoverClient(ClientConnection client) {
+        if(controller.isDisconnected(client.getNickname())){
+            Player p=controller.getPlayerToRecover(client.getNickname());
+            Logger.log(client.getNickname() + " has been recovered in the room " + roomNumber);
+            View pView=new RemoteView(p,client);
+            model.register(pView);
+            views.put(p.getNickname(),pView);
+            controller.recoverPlayer(p);
+            for (ClientConnection cc:players) {
+                if(!cc.getNickname().equals(client.getNickname())) {
+                    cc.recoverAdvise(client.getNickname());
+                }
+            }
+            setUpKeepAlive(client);
+        }else throw new IllegalStateException("Player "+client.getNickname()+" is not disconnected.");
+    }
 }

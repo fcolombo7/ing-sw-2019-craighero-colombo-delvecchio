@@ -19,8 +19,11 @@ public class Server{
 
     private HashMap<String, ClientConnection> players;
 
+    private HashMap<String, Integer> disconnected;
+
     public Server(String hostname) {
         players=new HashMap<>();
+        disconnected=new HashMap<>();
         rooms=new ArrayList<>();
         rmiServer=new RMIServer(this,hostname);
         socketServer=new SocketServer(this);
@@ -31,16 +34,23 @@ public class Server{
         socketServer.startServer(Constants.SOCKET_PORT);
     }
 
-
-    public synchronized boolean checkClientLogin(String nickname, ClientConnection client){
+    public synchronized int checkClientLogin(String nickname, ClientConnection client){
         Logger.log("Login request received from " + nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
-            players.put(nickname, client);
-            Logger.log(nickname+" is in.");
-            return true;
+            if(!disconnected.containsKey(nickname)){
+                players.put(nickname, client);
+                Logger.log(nickname+" is in.");
+                return 1;
+            }else {
+                Room room=rooms.get(disconnected.get(nickname));
+                players.put(nickname, client);
+                client.setRoom(room);
+                Logger.log(nickname+" is back in room "+ room.getRoomNumber()+".");
+                return 2;
+            }
         }else{
             Logger.log(nickname+" is already in.");
-            return false;
+            return 0;
         }
     }
 
@@ -58,6 +68,13 @@ public class Server{
         }
     }
 
+    public void disconnectConnection(ClientConnection client) {
+        Logger.log("Disconnecting "+client.getNickname()+" from server");
+        disconnected.put(client.getNickname(),client.getRoom().getRoomNumber());
+        //client.getRoom().disconnect(client);
+        players.remove(client.getNickname());
+    }
+
     public synchronized void joinAvailableRoom(ClientConnection client){
         try {
             joinRoom(client);
@@ -65,6 +82,12 @@ public class Server{
             addNewRoom(client);
             Logger.log("New room has been created");
         }
+    }
+
+    public void joinRecoveredRoom(ClientConnection client) {
+        Room room=rooms.get(disconnected.get(client.getNickname()));
+        disconnected.remove(client.getNickname());
+        room.recoverClient(client);
     }
 
     private void joinRoom(ClientConnection client) throws JoinRoomException {
@@ -106,5 +129,4 @@ public class Server{
             Logger.logErr(e.getMessage());
         }
     }
-
 }

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages;
 
 import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.TurnRoutineMessage;
 import it.polimi.ingsw.utils.Constants;
 

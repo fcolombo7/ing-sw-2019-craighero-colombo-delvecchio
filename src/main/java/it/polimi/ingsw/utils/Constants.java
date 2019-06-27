@@ -33,6 +33,10 @@ public class Constants {
     public static final long KEEP_ALIVE_FREQUENCY=8;//SEC
     public static final long KEEP_ALIVE_WAITING_TIME=4;//SEC
 
+    /* CONTROLLER PARAMETERS */
+    public static final long TURN_TIMER=120;//SEC
+    public static final long QUICK_MOVE_TIMER=10;//SEC
+
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";
     public static final String BOARD_UPDATE_MESSAGE ="BOARD UPDATE";
@@ -56,6 +60,7 @@ public class Constants {
     public static final String DISCARDED_POWERUP_MESSAGE = "DISCARDED POWERUP";
     public static final String TURN_CREATION_MESSAGE = "NEW TURN STARTED";
     public static final String TURN_END_MESSAGE = "TURN END MESSAGE";
+    public static final String RECOVERING_PLAYER = "RECOVERING PLAYER";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
@@ -68,6 +73,9 @@ public class Constants {
     public static final String GRABBED_POWERUP ="GRABBED POWERUP";
     public static final String GRABBABLE_WEAPONS_MESSAGE = "GRABBABLE WEAPONS";
     public static final String DISCARD_WEAPON_MESSAGE = "DISCARD WEAPON";
+    public static final String CAN_COUNTER_ATTACK = "CAN COUNTER ATTACK";
+    public static final String COUNTER_ATTACK_TIMEOUT = "COUNTER ATTACK TIMEOUT" ;
+    public static final String COUNTER_ATTACK_COMPLETED = "COUNTER ATTACK COMPLETED";
 
     /*MODEL ANSWERS*/
     public static final String BOARD_SETTING_ANSWER="BOARD PREFERENCE";
@@ -76,8 +84,6 @@ public class Constants {
     public static final String ACTION_SELECTED = "ACTION SELECTED";
     public static final String EFFECT_MOVE_ANSWER = "MOVE ANSWER";
     public static final String TURN_END_ANSWER = "TURN END ANSWER";
-
-
 
     /*ROUTINE ANSWERS*/
     public static final String RUN_ROUTINE_ANSWER ="RUN ROUTINE ANSWER";
@@ -89,6 +95,8 @@ public class Constants {
     public static final String STOP_ROUTINE_ANSWER = "STOP ROUTINE ANSWER";
     public static final String USE_POWERUP_ANSWER = "USE POWERUP ANSWER";
     public static final String DISCARDED_WEAPON_ANSWER = "DISCARDED WEAPON";
+    public static final String FULL_OF_POWERUP = "FULL OF POWERUP";
+    public static final String COUNTER_ATTACK_ANSWER = "COUNTER ATTACK ANSWER";
 
     /*ROOM MESSAGE*/
     public static final String PLAYER_EXIT ="PLAYER EXIT";
@@ -96,6 +104,9 @@ public class Constants {
     public static final String PING_CHECK ="PING";
     public static final String PONG_ANSWER ="PONG";
     public static final String FIRST_PLAYER = "FIRST IN ROOM";
+    public static final String PLAYER_RECOVER = "PLAYER RECOVER";
+
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /*CLI CHARACTERS AND COLORS*/
     public static final String RESET = "\u001b[0m";

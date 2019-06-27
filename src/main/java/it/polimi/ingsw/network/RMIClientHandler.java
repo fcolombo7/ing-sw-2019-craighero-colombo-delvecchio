@@ -18,6 +18,7 @@ public interface RMIClientHandler extends Remote {
     void joinPlayer(String nickname) throws RemoteException;
     void exitPlayer(String nickname) throws RemoteException;
     void firstInRoom() throws RemoteException;
+    void recoverPlayer(String nickname) throws RemoteException;
     void keepAlive() throws RemoteException;
 
     /*MATCH REMOTE METHOD*/
@@ -52,4 +53,9 @@ public interface RMIClientHandler extends Remote {
     void availablePowerups(List<Card> powerups) throws RemoteException;
     void runCompleted(SimplePlayer player, int[] newPosition) throws RemoteException;
     void runRoutine(MatrixHelper matrix) throws RemoteException;
+    void wakeUpPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) throws RemoteException;
+    void fullOfPowerup() throws RemoteException;
+    void canCounterAttack() throws RemoteException;
+    void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) throws RemoteException;
+    void counterAttackTimeOut() throws RemoteException;
 }

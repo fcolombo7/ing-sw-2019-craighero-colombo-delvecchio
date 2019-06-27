@@ -164,6 +164,7 @@ public class TestWeapon {
                     path=folderName.concat("/").concat(file.getName());
                     Weapon w= new Weapon("weapon_id","name",path);
                     w.init();
+                    System.out.println("INITIALIZATION OF " + w.getName());
                 }
             }
         } catch (Exception e) {

@@ -186,9 +186,9 @@ public class TestGame {
         }catch(IllegalStateException e){
             assertThat(e.getMessage(),is("Cannot create turn.[Illegal player status: " + p1.getStatus().name() + "]"));
         }
-        p1.setStatus(PlayerStatus.WAITING);
+        p1.setStatus(PlayerStatus.PLAYING);
         game.createTurn();
-        p1.setStatus(PlayerStatus.WAITING);
+        p1.setStatus(PlayerStatus.PLAYING);
         try{
             game.createTurn();
         }catch(IllegalStateException e){
@@ -273,7 +273,7 @@ public class TestGame {
         p3.setPosition(game.getGameBoard().getSquare(1,1));
         p4.setPosition(game.getGameBoard().getSquare(1,1));
 
-        p1.setStatus(PlayerStatus.WAITING);
+        p1.setStatus(PlayerStatus.PLAYING);
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         p4.setStatus(PlayerStatus.WAITING);

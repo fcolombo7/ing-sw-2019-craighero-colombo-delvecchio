@@ -84,4 +84,17 @@ public interface AdrenalineUI {
 
     void onRunRoutine(MatrixHelper matrix);
 
+    /* TODO: da aggiungere
+    void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
+
+    void onRecoverPlayerAdvise(String nickname);
+
+    void onFullOfPowerup();
+
+    void onCanCounterAttack();
+
+    void onCounterAttack(currentPlayer,player,powerup);
+
+    void onCounterAttackTimeOut();
+     */
 }

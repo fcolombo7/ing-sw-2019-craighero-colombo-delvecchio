@@ -2,7 +2,6 @@ package it.polimi.ingsw.turntests;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PlayerStatus;
-import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.DiscardedWeaponAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.RunAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.WeaponAnswer;
@@ -53,6 +52,7 @@ public class GrabbingRoutineTest {
 
         turn.getInExecutionRoutine().handleAnswer(new RunAnswer(p1.getNickname(),p1.getPosition().getBoardIndexes()));
 
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.GRABBED_TILE_MESSAGE));
         if(collector.size()==2){

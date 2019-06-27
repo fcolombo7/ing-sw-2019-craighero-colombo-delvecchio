@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.Dis
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.WeaponAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.DiscardWeaponMessage;
+import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.FullOfPowerupsMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.GrabbableWeaponsMessage;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.GrabbedPowerupMessage;
 import it.polimi.ingsw.utils.Constants;
@@ -22,6 +23,7 @@ public class GrabbingRoutine implements TurnRoutine {
     private Turn turn;
     private MatrixHelper grabMatrix;
     private Weapon grabbedWeapon;
+    private Powerup grabbedPowerup;
     private List<Weapon> inSquareWeapons;
 
     GrabbingRoutine(Turn turn, MatrixHelper grabMatrix){
@@ -127,12 +129,19 @@ public class GrabbingRoutine implements TurnRoutine {
                 ammo.add(grabbedTile.getAmmo(2));
             else{
                 Powerup powerup=turn.getGame().drawPowerup();
-                turn.getGame().getCurrentPlayer().addPowerup(powerup);
-                turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(),new SimplePlayer(turn.getGame().getCurrentPlayer()),powerup));
+                grabbedPowerup=powerup;
+                if(turn.getGame().getCurrentPlayer().getPowerups().size()<3) {
+                    turn.getGame().getCurrentPlayer().addPowerup(powerup);
+                    turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(turn.getGame().getCurrentPlayer()), powerup));
+                }
+                else{
+                    turn.getGame().notify(new FullOfPowerupsMessage(turn.getGame().getCurrentPlayer().getNickname()));
+                }
             }
             turn.getGame().getCurrentPlayer().getBoard().addAmmo(ammo);
             turn.getGame().notify(new GrabbedAmmoTileMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),grabbedTile));
             turn.getGame().notify(new BoardUpdateMessage(turn.getGame().getGameBoard()));
+            turn.endRoutine();
         }
     }
 

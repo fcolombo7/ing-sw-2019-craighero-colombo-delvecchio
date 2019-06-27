@@ -426,4 +426,104 @@ public class ShootingRoutineTest {
 
         Logger.log("Test Finished");
     }
+
+    @Test
+    public void CounterAttackTest(){
+        Game game=new Game();
+        Player p1=new Player("nickname1", "", true);
+        Player p2=new Player("nickname2", "", false);
+        Player p3=new Player("nickname3", "", false);
+        Player p4=new Player("nickname4", "", false);
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
+
+        ArrayDeque<MatchMessage> collector=new ArrayDeque<>();
+        ArrayDeque<MatchMessage> collector2=new ArrayDeque<>();
+
+        DebugView view=new DebugView(p1,collector);
+        DebugView view2=new DebugView(p2,collector2);
+
+        game.register(view);
+        game.register(view2);
+
+        game.setGameBoard(1);
+        p1.setPosition(game.getGameBoard().getSquare(1,1));
+        p2.setPosition(game.getGameBoard().getSquare(1,1));
+        p3.setPosition(game.getGameBoard().getSquare(1,1));
+        p4.setPosition(game.getGameBoard().getSquare(1,1));
+
+        Logger.log("FIRST PLAYER");
+        Logger.log(p1.toString());
+        Logger.log("AMMO: "+p1.getBoard().getAmmo().toString());
+
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
+        assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
+        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/distruttore.xml"));
+        Powerup powerup=new Powerup(new Card("id","granata venom","src/main/Resources/powerups/granatavenomb.xml"));
+        p1.addWeapon(weapon);
+        ArrayList<Powerup> pList=new ArrayList<>();
+        for(Powerup power: p1.getPowerups()){
+            pList.add(power);
+        }
+        for(Powerup p:pList)
+            p1.popPowerup(p);
+
+        Logger.log("DROWN WEAPON");
+        Logger.log(weapon.toString());
+        p2.addPowerup(powerup);
+
+
+
+        Turn turn= new Turn(game);
+
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
+
+        turn.selectAction("SHOOT");
+
+        assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
+
+        turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),new Card(weapon)));
+
+        assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        AvailableEffectsMessage msg= (AvailableEffectsMessage)collector.pop();
+        assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
+
+        Logger.log("RECEIVED EFFECTS\n"+msg.getEffects().toString());
+
+        turn.getInExecutionRoutine().handleAnswer(new EffectAnswer(p1.getNickname(),"BASE"));
+
+        assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.SELECTABLE_PLAYERS_MESSAGE));
+
+        List<String> list=new ArrayList<>();
+        list.add(p2.getNickname());
+        List<List<String>> selected=new ArrayList<>();
+        selected.add(list);
+
+        turn.getInExecutionRoutine().handleAnswer(new SelectedPlayersAnswer(p1.getNickname(),selected));
+
+        assertEquals(2,p2.getBoard().getHealthBar().size());
+        assertEquals(1,p2.getBoard().getMarks().size());
+        assertThat(collector2.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector2.pop()).getRoutineRequest(), is(Constants.CAN_COUNTER_ATTACK));
+        collector2.clear();
+        assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
+        turn.getInExecutionRoutine().handleAnswer(new CounterAttackAnswer(p2.getNickname(),true));
+        assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.CAN_STOP_ROUTINE));
+        assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.COUNTER_ATTACK_COMPLETED));
+
+        turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(),true));
+
+        Logger.log("Test Finished");
+    }
 }

@@ -3,9 +3,7 @@ package it.polimi.ingsw.network.client;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
-import it.polimi.ingsw.network.controller.messages.matchanswer.BoardPreferenceAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.RespawnAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.TurnEndAnswer;
+import it.polimi.ingsw.network.controller.messages.matchanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.*;
@@ -77,7 +75,9 @@ public class SocketServerConnection extends ServerConnection {
         receiverMap.put(Constants.FIRST_PLAYER,this::firstPlayer);
         receiverMap.put(Constants.PLAYER_EXIT,this::exitPlayer);
         receiverMap.put(Constants.PING_CHECK,this::ping);
+        receiverMap.put(Constants.PLAYER_RECOVER,this::recoverPlayer);
 
+        receiverMap.put(Constants.RECOVERING_PLAYER,this::wakeUpPlayer);
         receiverMap.put(Constants.CREATION_MESSAGE,this::matchCreation);
         receiverMap.put(Constants.INVALID_ANSWER,this::invalidMessageReceived);
         receiverMap.put(Constants.BOARD_UPDATE_MESSAGE,this::boardUpdate);
@@ -109,6 +109,38 @@ public class SocketServerConnection extends ServerConnection {
         receiverMap.put(Constants.AVAILABLE_POWERUPS_MESSAGE,this::availablePowerups);
         receiverMap.put(Constants.RUN_COMPLETED,this::runCompleted);
         receiverMap.put(Constants.RUN_ROUTINE_MESSAGE,this::runRoutine);
+    }
+
+    private void wakeUpPlayer() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            RecoveringPlayerMessage message=gson.fromJson(line, RecoveringPlayerMessage.class);
+            if(!message.getRequest().equalsIgnoreCase(Constants.RECOVERING_PLAYER)) throw new IllegalArgumentException("NOT RECOVERING PLAYER MESSAGE");
+            //TODO
+            //getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
+    }
+
+    private void recoverPlayer() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
+            if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
+            //TODO
+            //getUi().onRecoverPlayerAdvise(message.getPlayer());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived();
+        }
     }
 
     /*------ SERVER CONNECTION METHODS ------*/
@@ -164,43 +196,43 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void selectAction(String action) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.ACTION_SELECTED);
         Gson gson = new Gson();
-        TurnEndAnswer answer= new TurnEndAnswer(getNickname());
+        ActionSelectedAnswer answer= new ActionSelectedAnswer(getNickname(),action);
         socketOut.println(gson.toJson(answer));
         socketOut.flush();
     }
 
     @Override
     public void movePlayer(String target, int[] newPosition) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.EFFECT_MOVE_ANSWER);
         Gson gson = new Gson();
-        TurnEndAnswer answer= new TurnEndAnswer(getNickname());
+        MoveAnswer answer= new MoveAnswer(getNickname(),target,newPosition);
         socketOut.println(gson.toJson(answer));
         socketOut.flush();
     }
 
     @Override
     public void discardWeapon(Card weapon) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.DISCARDED_WEAPON_ANSWER);
         Gson gson = new Gson();
-        TurnEndAnswer answer= new TurnEndAnswer(getNickname());
+        DiscardedWeaponAnswer answer= new DiscardedWeaponAnswer(getNickname(),weapon);
         socketOut.println(gson.toJson(answer));
         socketOut.flush();
     }
 
     @Override
     public void selectEffect(String effectName) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.EFFECT_ANSWER);
         Gson gson = new Gson();
-        TurnEndAnswer answer= new TurnEndAnswer(getNickname());
+        EffectAnswer answer= new EffectAnswer(getNickname(),effectName);
         socketOut.println(gson.toJson(answer));
         socketOut.flush();
     }
 
     @Override
     public void loadableWeapon(Card weapon) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.LOADABLE_WEAPON_SELECTED);
         Gson gson = new Gson();
         LoadableWeaponSelectedAnswer answer= new LoadableWeaponSelectedAnswer(getNickname(),weapon);
         socketOut.println(gson.toJson(answer));
@@ -209,7 +241,7 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void runAction(int[] newPosition) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.RUN_ROUTINE_ANSWER);
         Gson gson = new Gson();
         RunAnswer answer= new RunAnswer(getNickname(),newPosition);
         socketOut.println(gson.toJson(answer));
@@ -218,7 +250,7 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void selectPlayers(List<List<String>> selected) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.SELECTED_PLAYERS_ANSWER);
         Gson gson = new Gson();
         SelectedPlayersAnswer answer= new SelectedPlayersAnswer(getNickname(),selected);
         socketOut.println(gson.toJson(answer));
@@ -227,7 +259,7 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void selectPowerup(Card powerup) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.POWERUP_ANSWER);
         Gson gson = new Gson();
         SelectedPowerupAnswer answer= new SelectedPowerupAnswer(getNickname(),powerup);
         socketOut.println(gson.toJson(answer));
@@ -236,7 +268,7 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void stopRoutine(boolean stop) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.STOP_ROUTINE_ANSWER);
         Gson gson = new Gson();
         StopRoutineAnswer answer= new StopRoutineAnswer(getNickname(),stop);
         socketOut.println(gson.toJson(answer));
@@ -245,7 +277,7 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void usePowerup(boolean use) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.USE_POWERUP_ANSWER);
         Gson gson = new Gson();
         UsePowerupAnswer answer= new UsePowerupAnswer(getNickname(),use);
         socketOut.println(gson.toJson(answer));
@@ -254,9 +286,18 @@ public class SocketServerConnection extends ServerConnection {
 
     @Override
     public void selectWeapon(Card weapon) {
-        socketOut.println(Constants.TURN_END_ANSWER);
+        socketOut.println(Constants.WEAPON_ANSWER);
         Gson gson = new Gson();
         WeaponAnswer answer= new WeaponAnswer(getNickname(),weapon);
+        socketOut.println(gson.toJson(answer));
+        socketOut.flush();
+    }
+
+    @Override
+    public void counterAttackAnswer(boolean counterAttack) {
+        socketOut.println(Constants.COUNTER_ATTACK_ANSWER);
+        Gson gson = new Gson();
+        CounterAttackAnswer answer= new CounterAttackAnswer(getNickname(),counterAttack);
         socketOut.println(gson.toJson(answer));
         socketOut.flush();
     }
@@ -448,7 +489,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON +line);
         try{
             MarkMessage message=gson.fromJson(line, MarkMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MOVE_REQUEST_MESSAGE)) throw new IllegalArgumentException("NOT MARK MESSAGE");
+            if(!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MARK_MESSAGE)) throw new IllegalArgumentException("NOT MARK MESSAGE");
             getUi().onMarkAction(message.getPlayer(),message.getSelected(),message.getValue());
         }catch (Exception e){
             Logger.log(e.getMessage());
@@ -583,7 +624,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON +line);
         try{
             DiscardWeaponMessage message=gson.fromJson(line, DiscardWeaponMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_TILE_MESSAGE)) throw new IllegalArgumentException("NOT DISCARD WEAPON MESSAGE");
+            if(!message.getRequest().equalsIgnoreCase(Constants.DISCARD_WEAPON_MESSAGE)) throw new IllegalArgumentException("NOT DISCARD WEAPON MESSAGE");
             getUi().onDiscardWeapon(message.getWeapons());
         }catch (Exception e){
             Logger.log(e.getMessage());
@@ -598,7 +639,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON +line);
         try{
             GrabbableWeaponsMessage message=gson.fromJson(line, GrabbableWeaponsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_TILE_MESSAGE)) throw new IllegalArgumentException("NOT GRABBABLE WEAPON MESSAGE");
+            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBABLE_WEAPONS_MESSAGE)) throw new IllegalArgumentException("NOT GRABBABLE WEAPON MESSAGE");
             getUi().onGrabbableWeapons(message.getWeapons());
         }catch (Exception e){
             Logger.log(e.getMessage());
@@ -613,7 +654,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON +line);
         try{
             GrabbedPowerupMessage message=gson.fromJson(line, GrabbedPowerupMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_TILE_MESSAGE)) throw new IllegalArgumentException("NOT GRABBED POWERUP MESSAGE");
+            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_POWERUP)) throw new IllegalArgumentException("NOT GRABBED POWERUP MESSAGE");
             getUi().onGrabbedPowerup(message.getPlayer(),message.getPowerup());
         }catch (Exception e){
             Logger.log(e.getMessage());
