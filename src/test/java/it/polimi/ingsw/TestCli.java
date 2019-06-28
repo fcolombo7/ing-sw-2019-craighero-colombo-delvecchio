@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,22 +44,26 @@ public class TestCli {
         SimplePlayer ccc = new SimplePlayer(new Player("c", "ccc", false));
         SimplePlayer ddd = new SimplePlayer(new Player("d", "ddd", false));
         SimplePlayer eee = new SimplePlayer(new Player("e", "eee", false));
+        SimplePlayer me = new SimplePlayer(new Player("me", "meee", false));
         Map<String, String> enemies = new HashMap<>();
         enemies.put(bbb.getNickname(), RED_W);
         enemies.put(ccc.getNickname(), WHITE_W);
         enemies.put(ddd.getNickname(), GREEN_W);
         enemies.put(eee.getNickname(), BLUE_W);
-        cli.setEnemiesColor(enemies);
+        enemies.put(me.getNickname(), YELLOW_W);
+        cli.setPlayersColor(enemies);
         Map<String, int[]> offsets = new HashMap<>();
         offsets.put(RED_W, new int[]{3, 10});
-        offsets.put(WHITE_W, new int[]{3, 18});
-        offsets.put(GREEN_W, new int[]{7, 10});
-        offsets.put(BLUE_W, new int[]{7, 18});
+        offsets.put(WHITE_W, new int[]{4, 16});
+        offsets.put(GREEN_W, new int[]{6, 10});
+        offsets.put(BLUE_W, new int[]{7, 16});
+        offsets.put(YELLOW_W, new int[]{5, 13});
         cli.setSquareOffset(offsets);
         cli.setPlayerPosition(bbb, new int[]{0, 0});
-        cli.setPlayerPosition(ccc, new int[]{2, 1});
-        cli.setPlayerPosition(ddd, new int[]{2, 1});
-        cli.setPlayerPosition(eee, new int[]{2, 1});
+        cli.setPlayerPosition(ccc, new int[]{0, 0});
+        cli.setPlayerPosition(ddd, new int[]{0, 0});
+        cli.setPlayerPosition(eee, new int[]{0, 0});
+        cli.setPlayerPosition(me, new int[]{0, 0});
         cli.printMap();
     }
 
@@ -106,7 +109,7 @@ public class TestCli {
         enemies.put(c.getNickname(), WHITE_W);
         enemies.put(d.getNickname(), GREEN_W);
         enemies.put(e.getNickname(), BLUE_W);
-        cli.setEnemiesColor(enemies);
+        cli.setPlayersColor(enemies);
         Logger.print(cli.buildPlayerBoard(player).toString());
     }
 
@@ -129,7 +132,7 @@ public class TestCli {
         enemies.put(c.getNickname(), WHITE_W);
         enemies.put(d.getNickname(), GREEN_W);
         enemies.put(e.getNickname(), BLUE_W);
-        cli.setEnemiesColor(enemies);
+        cli.setPlayersColor(enemies);
         cli.printMarks(player);
     }
 
