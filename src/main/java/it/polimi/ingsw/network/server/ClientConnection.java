@@ -138,4 +138,10 @@ public abstract class ClientConnection{
     public abstract void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup);
 
     public abstract void counterAttackTimeOut();
+
+    public abstract void notifyDisconnetion();
+
+    public abstract void gameEnd(List<SimplePlayer> players);
+
+    public abstract void sendLeaderboard(List<String> nicknames, List<Integer> points);
 }

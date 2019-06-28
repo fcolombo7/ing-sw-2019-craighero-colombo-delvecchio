@@ -282,6 +282,17 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         });
     }
 
+    @Override
+    public void confirmEndGame() {
+        pool.submit(()->{
+            try {
+                stub.confirmEndGame(session);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call confirmEndGame().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
 
     /*------ RMIClientHandler REMOTE METHODS [called on server] ------*/
 
@@ -496,5 +507,23 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     public void counterAttackTimeOut() {
         //TODO
         //getUi().onCounterAttackTimeOut();
+    }
+
+    @Override
+    public void notifyDisconnection() {
+        //TODO
+        //getUi().onDisconnectionAdvise();
+    }
+
+    @Override
+    public void gameEnd(List<SimplePlayer> players) throws RemoteException {
+        //TODO
+        //getUi().onGameEnd(players);
+    }
+
+    @Override
+    public void sendLeaderboard(List<String> nicknames, List<Integer> points) throws RemoteException {
+        //TODO
+        //getUi().onLeaderboardReceived(nicknames,points);
     }
 }

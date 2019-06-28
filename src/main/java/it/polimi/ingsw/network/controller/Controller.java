@@ -21,6 +21,7 @@ public class Controller{
     private int playerIndex;
     private Timer boardTimer;
     private Map<String, Timer> timerMap;
+    private Timer lastTimer;
 
     public Controller(Game game, Room room) {
         this.game = game;
@@ -179,35 +180,36 @@ public class Controller{
     }
 
     private void handleNewTurn() {
-        nextPlayer();
-        if(game.getCurrentPlayer().getStatus()==PlayerStatus.FIRST_SPAWN) {
-            Timer t=new Timer();
-            timerMap.put(game.getCurrentPlayer().getNickname(),t);
-            t.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Logger.logErr("RESPAWN TIMEOUT ("+game.getCurrentPlayer().getNickname()+")");
-                    room.forceDisconnection(game.getCurrentPlayer().getNickname());
-                    timerMap.remove(game.getCurrentPlayer().getNickname());
-                    respawnPlayer(game.getCurrentPlayer().getNickname(),game.getCurrentPlayer().getPowerups().get(0));
-                }
-            },Constants.QUICK_MOVE_TIMER*1000);
-            game.respawnPlayerRequest(game.getCurrentPlayer(), true);
-        }
-        else{
-            Timer t=new Timer();
-            timerMap.put(game.getCurrentPlayer().getNickname(),t);
-            t.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Logger.logErr("TURN TIMEOUT ("+game.getCurrentPlayer().getNickname()+")");
-                    room.forceDisconnection(game.getCurrentPlayer().getNickname());
-                    timerMap.remove(game.getCurrentPlayer().getNickname());
-                    game.getCurrentTurn().forceClosing();
-                    closeTurn(game.getCurrentPlayer().getNickname());
-                }
-            },Constants.TURN_TIMER*1000);
-            game.createTurn();
+        if(game.getStatus()!=GameStatus.END) {
+            nextPlayer();
+            if (game.getCurrentPlayer().getStatus() == PlayerStatus.FIRST_SPAWN) {
+                Timer t = new Timer();
+                timerMap.put(game.getCurrentPlayer().getNickname(), t);
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Logger.logErr("RESPAWN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
+                        room.forceDisconnection(game.getCurrentPlayer().getNickname());
+                        timerMap.remove(game.getCurrentPlayer().getNickname());
+                        respawnPlayer(game.getCurrentPlayer().getNickname(), game.getCurrentPlayer().getPowerups().get(0));
+                    }
+                }, Constants.QUICK_MOVE_TIMER * 1000);
+                game.respawnPlayerRequest(game.getCurrentPlayer(), true);
+            } else {
+                Timer t = new Timer();
+                timerMap.put(game.getCurrentPlayer().getNickname(), t);
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Logger.logErr("TURN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
+                        room.forceDisconnection(game.getCurrentPlayer().getNickname());
+                        timerMap.remove(game.getCurrentPlayer().getNickname());
+                        game.getCurrentTurn().forceClosing();
+                        closeTurn(game.getCurrentPlayer().getNickname());
+                    }
+                }, Constants.TURN_TIMER * 1000);
+                game.createTurn();
+            }
         }
     }
 
@@ -270,6 +272,16 @@ public class Controller{
             if(p.getNickname().equals(nickname)){
                 disconnected.add(p);
                 debug();
+                if(game.getPlayers().size()-disconnected.size()<Constants.ROOM_MIN_PLAYERS){
+                    for (Timer t:timerMap.values()){
+                        t.cancel();
+                        t.purge();
+                    }
+                    timerMap.clear();
+                    if(game.getStatus()==GameStatus.PLAYING_TURN)
+                        closeTurn(game.getCurrentPlayer().getNickname());
+                    game.forceEndGame();
+                }
                 return;
             }
         }
@@ -310,5 +322,20 @@ public class Controller{
             builder.append(p.getNickname()).append(" ");
         }
         Logger.log(builder.toString());
+    }
+
+    public synchronized void gameEndAck(String sender) {
+        if(lastTimer==null){
+            lastTimer=new Timer();
+            lastTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    //TODO: need to be checked
+                    room.close();
+                }
+            },Constants.QUICK_MOVE_TIMER*1000);
+        }
+        room.stopTimers(sender);
+        game.sendLeaderBoard(sender,disconnected);
     }
 }

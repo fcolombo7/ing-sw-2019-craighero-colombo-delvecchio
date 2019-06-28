@@ -56,4 +56,5 @@ public abstract class ServerConnection {
     public abstract void usePowerup(boolean use);
     public abstract void selectWeapon(Card weapon);
     public abstract void counterAttackAnswer(boolean counterAttack);
+    public abstract void confirmEndGame();
 }

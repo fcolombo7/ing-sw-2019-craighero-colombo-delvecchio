@@ -58,4 +58,7 @@ public interface RMIClientHandler extends Remote {
     void canCounterAttack() throws RemoteException;
     void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) throws RemoteException;
     void counterAttackTimeOut() throws RemoteException;
+    void notifyDisconnection() throws RemoteException;
+    void gameEnd(List<SimplePlayer> players) throws RemoteException;
+    void sendLeaderboard(List<String> nicknames, List<Integer> points) throws RemoteException;
 }

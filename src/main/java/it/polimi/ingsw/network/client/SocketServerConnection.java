@@ -76,6 +76,7 @@ public class SocketServerConnection extends ServerConnection {
         receiverMap.put(Constants.PLAYER_EXIT,this::exitPlayer);
         receiverMap.put(Constants.PING_CHECK,this::ping);
         receiverMap.put(Constants.PLAYER_RECOVER,this::recoverPlayer);
+        receiverMap.put(Constants.DISCONNECTION,this::notifyDisconnection);
 
         receiverMap.put(Constants.RECOVERING_PLAYER,this::wakeUpPlayer);
         receiverMap.put(Constants.CREATION_MESSAGE,this::matchCreation);
@@ -109,38 +110,8 @@ public class SocketServerConnection extends ServerConnection {
         receiverMap.put(Constants.AVAILABLE_POWERUPS_MESSAGE,this::availablePowerups);
         receiverMap.put(Constants.RUN_COMPLETED,this::runCompleted);
         receiverMap.put(Constants.RUN_ROUTINE_MESSAGE,this::runRoutine);
-    }
-
-    private void wakeUpPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RecoveringPlayerMessage message=gson.fromJson(line, RecoveringPlayerMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RECOVERING_PLAYER)) throw new IllegalArgumentException("NOT RECOVERING PLAYER MESSAGE");
-            //TODO
-            //getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy());
-        }catch (Exception e){
-            Logger.log(e.getMessage());
-            //HANDLE ERRORS HERE
-            handleInvalidReceived();
-        }
-    }
-
-    private void recoverPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
-            //TODO
-            //getUi().onRecoverPlayerAdvise(message.getPlayer());
-        }catch (Exception e){
-            Logger.log(e.getMessage());
-            //HANDLE ERRORS HERE
-            handleInvalidReceived();
-        }
+        receiverMap.put(Constants.GAME_END_MESSAGE,this::gameEnd);
+        receiverMap.put(Constants.LEADERBOARD_MESSAGE,this::leaderboard);
     }
 
     /*------ SERVER CONNECTION METHODS ------*/
@@ -302,7 +273,34 @@ public class SocketServerConnection extends ServerConnection {
         socketOut.flush();
     }
 
+    @Override
+    public void confirmEndGame() {
+        socketOut.println(Constants.CONFIRM_END_GAME);
+        Gson gson = new Gson();
+        ConfirmEndGameAnswer answer= new ConfirmEndGameAnswer(getNickname());
+        socketOut.println(gson.toJson(answer));
+        socketOut.flush();
+    }
+
+
     /*------ MATCH RECEIVED MESSAGES ------*/
+
+    private void wakeUpPlayer() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            RecoveringPlayerMessage message=gson.fromJson(line, RecoveringPlayerMessage.class);
+            if(!message.getRequest().equalsIgnoreCase(Constants.RECOVERING_PLAYER)) throw new IllegalArgumentException("NOT RECOVERING PLAYER MESSAGE");
+            //TODO
+            //getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("WAKE UP PLAYER",e.getMessage());
+        }
+    }
+
     private void runRoutine() {
         Gson gson=new Gson();
         String line=socketIn.nextLine();
@@ -314,7 +312,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RUN ROUNTINE",e.getMessage());
         }
     }
 
@@ -329,7 +327,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RUN COMPLETED",e.getMessage());
         }
     }
 
@@ -344,7 +342,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("AVAILABLE POWERUPS",e.getMessage());
         }
     }
 
@@ -359,7 +357,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("USED CARD",e.getMessage());
         }
     }
 
@@ -374,7 +372,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("PAY EFFECT",e.getMessage());
         }
     }
 
@@ -389,7 +387,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("AVAILABLE EFFECTS",e.getMessage());
         }
     }
 
@@ -404,7 +402,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("USABLE WEAPONS",e.getMessage());
         }
     }
 
@@ -419,7 +417,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("CAN STOP ROUTINE",e.getMessage());
         }
     }
 
@@ -434,7 +432,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("CAN USE POWERUP",e.getMessage());
         }
     }
 
@@ -449,7 +447,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("SELECTABLE PLAYERS",e.getMessage());
         }
     }
 
@@ -464,7 +462,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("DISCARDED POWERUP",e.getMessage());
         }
     }
 
@@ -479,7 +477,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("DAMAGE ACTION",e.getMessage());
         }
     }
 
@@ -494,7 +492,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("MARK ACTION",e.getMessage());
         }
     }
 
@@ -509,7 +507,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("MOVE REQUEST",e.getMessage());
         }
     }
 
@@ -524,7 +522,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("MOVE ACTION",e.getMessage());
         }
     }
 
@@ -539,7 +537,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("TURN END",e.getMessage());
         }
     }
 
@@ -554,7 +552,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("TURN ACTIONS",e.getMessage());
         }
     }
 
@@ -569,7 +567,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("TURN CREATION",e.getMessage());
         }
     }
 
@@ -584,7 +582,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RELOADABLE WEAPONS",e.getMessage());
         }
     }
 
@@ -599,7 +597,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RELOADED WEAPON",e.getMessage());
         }
     }
 
@@ -614,7 +612,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("GRABBED WEAPON",e.getMessage());
         }
     }
 
@@ -629,7 +627,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("DISCARD WEAPON",e.getMessage());
         }
     }
 
@@ -644,7 +642,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("GRABBABLE WEAPONS ACTION",e.getMessage());
         }
     }
 
@@ -659,7 +657,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("GRABBED POWERUP",e.getMessage());
         }
     }
 
@@ -674,7 +672,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("GRABBED TILE",e.getMessage());
         }
     }
 
@@ -689,7 +687,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RESPAWN COMPLETED",e.getMessage());
         }
     }
 
@@ -704,7 +702,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RESPAWN REQUEST",e.getMessage());
         }
     }
 
@@ -719,7 +717,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("MATCH UPDATE",e.getMessage());
         }
     }
 
@@ -734,7 +732,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("BOARD UPDATE",e.getMessage());
         }
     }
 
@@ -749,7 +747,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("INVALID MESSAGE RECEIVED",e.getMessage());
         }
     }
 
@@ -764,7 +762,41 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("MATCH CREATION",e.getMessage());
+        }
+    }
+
+    private void leaderboard() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            LeaderboardMessage message=gson.fromJson(line, LeaderboardMessage.class);
+            if(!message.getRequest().equalsIgnoreCase(Constants.LEADERBOARD_MESSAGE)) throw new IllegalArgumentException("NOT LEADERBOARD MESSAGE");
+            //TODO
+            //getUi().onLeaderboardReceived(message.getNicknames(),message.getPoints());
+
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("LEADERBOARD",e.getMessage());
+        }
+    }
+
+    private void gameEnd() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            GameEndMessage message=gson.fromJson(line, GameEndMessage.class);
+            if(!message.getRequest().equalsIgnoreCase(Constants.GAME_END_MESSAGE)) throw new IllegalArgumentException("NOT GAME END MESSAGE");
+            //TODO
+            //getUi().onGameEnd(message.getPlayers());
+
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("GAME END",e.getMessage());
         }
     }
 
@@ -781,7 +813,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("EXIT PLAYERS",e.getMessage());
         }
     }
 
@@ -796,7 +828,7 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("FIRST PLAYER",e.getMessage());
         }
     }
 
@@ -811,7 +843,42 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("JOIN PLAYER",e.getMessage());
+        }
+    }
+
+    private void recoverPlayer() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
+            if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
+            //TODO
+            //getUi().onRecoverPlayerAdvise(message.getPlayer());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("RECOVER PLAYER",e.getMessage());
+        }
+    }
+
+    private void notifyDisconnection() {
+        Gson gson=new Gson();
+        String line=socketIn.nextLine();
+        Logger.log(LOG_JSON +line);
+        try{
+            DisconnectionMessage message=gson.fromJson(line, DisconnectionMessage.class);
+            if(!message.getType().equalsIgnoreCase(Constants.DISCONNECTION)) throw new IllegalArgumentException("NOT DISCONNECTION MESSAGE");
+            //TODO
+            //getUi().onDisconnectionAdvise();
+            socketOut.close();
+            socketIn.close();
+            socket.close();
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("DISCONNECTION",e.getMessage());
         }
     }
 
@@ -830,11 +897,15 @@ public class SocketServerConnection extends ServerConnection {
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("PING",e.getMessage());
         }
     }
 
     //TODO
-    private void handleInvalidReceived() {
+    private void handleInvalidReceived(String cause, String message) {
+        String builder=("An error occurred while trying to execute '")+(cause)+("':\n")+(message);
+        Logger.logErr(builder);
+        //getUi().handleFatalError(cause, message);
+        logout();
     }
 }

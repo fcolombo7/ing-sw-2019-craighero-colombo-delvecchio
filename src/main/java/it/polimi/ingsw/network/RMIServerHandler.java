@@ -27,4 +27,5 @@ public interface RMIServerHandler extends Remote {
     void usePowerup(String session, boolean use) throws RemoteException;
     void selectWeapon(String session, Card weapon) throws RemoteException;
     void counterAttackAnswer(String session, boolean counterAttack) throws RemoteException;
+    void confirmEndGame(String session) throws RemoteException;
 }

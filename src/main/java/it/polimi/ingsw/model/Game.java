@@ -91,9 +91,9 @@ public class Game extends Observable<MatchMessage> {
     private GameBoard gameBoard;
 
     /**
-     * This attribute contains the skull number of the match.
+     * This attribute contains the skulls number of the match.
      */
-    private int skullNumber;
+    private int skullsNumber;
 
     /**
      * This attribute is used to check if the game is, or is not, in frenzy mode.
@@ -135,7 +135,7 @@ public class Game extends Observable<MatchMessage> {
                         buildAmmoDeck(ammoTileDeck, cardNode);
                         break;
                     case "skull":
-                        setSkullNumber(cardNode);
+                        setSkullsNumber(cardNode);
                         break;
                         default: break;
                 }
@@ -186,8 +186,8 @@ public class Game extends Observable<MatchMessage> {
      * This method sets the skull number of the match
      * @param node representing the node read from the XML file, which contains the skull number.
      */
-    private void setSkullNumber(Node node){
-        skullNumber=Integer.parseInt(node.getFirstChild().getNodeValue());
+    private void setSkullsNumber(Node node){
+        skullsNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
     /**
@@ -341,7 +341,15 @@ public class Game extends Observable<MatchMessage> {
      * This method return the skull number of the game
      * @return an integer representing the skull number of the match
      */
-    public int getSkullNumber(){return skullNumber;}
+    public int getSkullsNumber(){return skullsNumber;}
+
+    /**
+     * This method force the skull number of the match to the value you put as parameter
+     * @param skullNumber representing the skull number of the game
+     */
+    public void forceSkullsNumber(int skullNumber){
+        this.skullsNumber =skullNumber;
+    }
 
     /**
      * This method is used to draw a weapon
@@ -472,7 +480,7 @@ public class Game extends Observable<MatchMessage> {
     }
 
     /**
-     * This method fill the gameboard: all the square which are not empty, if possible, will be filled
+     * This method fill the game board: all the square which are not empty, if possible, will be filled
      */
     private void fillGameboard(){
         int[] boardDimension=gameBoard.getBoardDimension();
@@ -529,16 +537,16 @@ public class Game extends Observable<MatchMessage> {
     public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD1_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD1_FILEPATH), skullsNumber,mapNumber);
                 break;
             case 2:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD2_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD2_FILEPATH), skullsNumber,mapNumber);
                 break;
             case 3:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD3_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD3_FILEPATH), skullsNumber,mapNumber);
                 break;
             case 4:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullsNumber,mapNumber);
                 break;
             default: throw new IllegalArgumentException("An invalid map number has been chosen: game board not initialized");
         }
@@ -606,25 +614,50 @@ public class Game extends Observable<MatchMessage> {
         }
         boolean frenzyInTurn=false;
 
-        if(!isFrenzy()&&gameBoard.getKillshotTrack().size()>=skullNumber){
+        if(!isFrenzy()&&gameBoard.getKillshotTrack().size()>= skullsNumber){
             enableFrenzy();
             frenzyInTurn=true;
         }
         if(!frenzyInTurn&&lastPlayerBeforeFrenzy==currentPlayer){
             gameEnded=true;
+            status=GameStatus.END;
         }else
             notify(new MatchUpdateMessage(players,gameBoard,frenzyMode));
     }
 
-    //TODO
+    /**
+     * This method is used to assign the last point to the player and end the game.
+     */
     private void endGame() {
+        for(Player player:players){
+            List<Integer> values=player.getBoard().getBoardScoreValues();
+            List<Player> selectedPlayers=player.getBoard().getDamage();
+            List<Player> healthBar=player.getBoard().getHealthBar();
+            for(Player p:selectedPlayers){
+                p.updateScore(values.get(0));
+                values.remove(0);
+            }
+            //first blood?
+            if(!player.getBoard().isSwitched()&&!healthBar.isEmpty())
+                healthBar.get(0).updateScore(1);
+            player.getBoard().clearDamage();
+        }
+        List<Integer> values=GameBoard.getDefaultScoreValues();
+        List<Player> selectedPlayers=gameBoard.getKillShotDamage();
+        for(Player p:selectedPlayers){
+            p.updateScore(values.get(0));
+            values.remove(0);
+        }
+        notify(new GameEndMessage(players));
     }
 
-    /** TODO
+    /**
      * This method force the the end of the game
      */
     public void forceEndGame(){
         gameEnded=true;
+        status=GameStatus.END;
+        endGame();
     }
 
     /**
@@ -721,5 +754,23 @@ public class Game extends Observable<MatchMessage> {
      */
     public void recoverPlayer(Player player) {
         notify(new RecoveringPlayerMessage(player.getNickname(),players,gameBoard,frenzyMode));
+    }
+
+    public void sendLeaderBoard(String nickname, List<Player> disconnected){
+        Map<Player, Integer> map=calcWinner();
+        List<String> nicknames;
+        List<Integer> points;
+        for(Player p:disconnected)  map.remove(p);
+        nicknames=new ArrayList<>(map.size());
+        points=new ArrayList<>(map.size());
+        for(Player player: map.keySet()){
+            int value=map.get(player);
+            int i=0;
+            while(i<points.size()&&points.get(i)<value)i++;
+            points.add(i,value);
+            nicknames.add(i, player.getNickname());
+        }
+
+        notify(new LeaderboardMessage(nickname,nicknames,points));
     }
 }

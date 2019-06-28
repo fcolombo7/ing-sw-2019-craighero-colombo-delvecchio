@@ -203,4 +203,11 @@ public class RMIServer  implements RMIServerHandler{
             server.getClientConnection(nick).getRoom().getController().counterAttackAnswer(nick,counterAttack);
     }
 
+    @Override
+    public void confirmEndGame(String session) throws RemoteException {
+        String nick=rmiClients.get(session);
+        if(nick!=null)
+            server.getClientConnection(nick).getRoom().getController().gameEndAck(nick);
+    }
+
 }

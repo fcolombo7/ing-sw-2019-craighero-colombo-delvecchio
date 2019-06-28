@@ -6,11 +6,9 @@ import it.polimi.ingsw.model.enums.RoomColor;
 import it.polimi.ingsw.utils.MatrixHelper;
 import org.w3c.dom.*;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the game board
@@ -422,5 +420,87 @@ public class GameBoard {
             }
         }
         return mat;
+    }
+
+    /**
+     * This method returns a list of player sorted by dealt damages in descending order (in case of equals sum of dealt damages, the one who hit first appears first)
+     * @return List containing Player representing the ranking of dealt damages
+     */
+    public List<Player> getKillShotDamage(){
+        Map<Player, Integer> orderDamages = new HashMap<>();
+        Integer i = 0;
+        for (Player p: killshotTrack) {
+            if(!orderDamages.containsKey(p)){
+                orderDamages.put(p, i);
+                i++;
+            }
+        }
+
+        Map<Player, Long> counterDamage = killshotTrack.stream().collect(Collectors.groupingBy((p -> p), Collectors.counting()));
+        GameBoard.GameComparator tbc = new GameBoard.GameComparator(counterDamage, orderDamages);
+        TreeMap<Player, Long> sortedMap = new TreeMap<>(tbc);
+        sortedMap.putAll(counterDamage);
+        return new ArrayList<>(sortedMap.keySet());
+    }
+
+    /**
+     *This private class is a player comparator, it compares them basing on two different maps
+     */
+    private class GameComparator implements Comparator<Player>{
+
+        /**
+         * This attribute contains the map primary used for comparing
+         */
+        Map<Player, Long> base;
+
+        /**
+         * This attribute contains the map used to break the tie in case of equal value in base map
+         */
+        Map<Player, Integer> order;
+
+        /**
+         * This constructor initializes the maps of the comparator
+         * @param base representing the base map for comparing player
+         * @param order representing the map that breaks the tie
+         */
+        GameComparator(Map<Player, Long> base, Map<Player, Integer> order){
+            this.base=base;
+            this.order=order;
+        }
+
+        /**
+         * This method overrides the compare method of Comparator interface
+         * @param a representing the first player to compare
+         * @param b representing the second player to compare
+         * @return int representing if parameter a is bigger/smaller than or equal to parameter b
+         */
+        @Override
+        public int compare(Player a, Player b){
+            if(base.get(a) < base.get(b))
+                return 1;
+            else if(base.get(a) > base.get(b))
+                return -1;
+            else if(base.get(a).equals(base.get(b))){
+                if(order.get(a) < order.get(b))
+                    return -1;
+                else return 1;
+            }
+            else return 0;
+        }
+    }
+
+    /**
+     * This method return the default values used to increase the players score
+     * @return List of integers representing the default values used to increase the players score
+     */
+    public static List<Integer> getDefaultScoreValues(){
+        List<Integer> values=new ArrayList<>(6);
+        values.add(8);
+        values.add(6);
+        values.add(4);
+        values.add(2);
+        values.add(1);
+        values.add(1);
+        return values;
     }
 }

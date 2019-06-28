@@ -167,6 +167,7 @@ public class Room {
             model.deregister(views.get(client.getNickname()));
             views.remove(client.getNickname());
         }
+        client.notifyDisconnetion();
         client.closeConnection();
     }
 
@@ -230,5 +231,25 @@ public class Room {
             }
             setUpKeepAlive(client);
         }else throw new IllegalStateException("Player "+client.getNickname()+" is not disconnected.");
+    }
+
+    public void stopTimers(String sender) {
+        for(ClientConnection cc:players){
+            if(cc.getNickname().equals(sender)) {
+                resetClientTimers(cc);
+                return;
+            }
+        }
+    }
+
+    public void close() {
+        for(ClientConnection cc:players){
+            resetClientTimers(cc);
+        }
+        full=true;
+        playing=false;
+        List<ClientConnection> clientConnections=new ArrayList<>(players);
+        players.clear();
+        for(ClientConnection cc:clientConnections) cc.closeConnection();
     }
 }

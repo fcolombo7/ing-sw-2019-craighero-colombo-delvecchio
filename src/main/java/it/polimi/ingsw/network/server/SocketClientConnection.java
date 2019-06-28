@@ -3,8 +3,6 @@ package it.polimi.ingsw.network.server;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.GameBoard;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.network.controller.messages.LoginMessage;
@@ -81,12 +79,13 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             messageHandler.put(Constants.WEAPON_ANSWER,this::onWeaponAnswer);
             messageHandler.put(Constants.LOADABLE_WEAPON_SELECTED,this::onLoadableWeaponAnswer);
             messageHandler.put(Constants.EFFECT_ANSWER,this::onEffectAnswer);
-            messageHandler.put(Constants.SELECTED_PLAYERS_ANSWER,this::onSelectedePlayersAnswer);
+            messageHandler.put(Constants.SELECTED_PLAYERS_ANSWER,this::onSelectedPlayersAnswer);
             messageHandler.put(Constants.STOP_ROUTINE_ANSWER,this::onStopRoutineAnswer);
             messageHandler.put(Constants.USE_POWERUP_ANSWER,this::onUsePowerupAnswer);
             messageHandler.put(Constants.DISCARDED_WEAPON_ANSWER,this::onDiscardWeaponAnswer);
             messageHandler.put(Constants.COUNTER_ATTACK_ANSWER,this::onCounterAttackAnswer);
             messageHandler.put(Constants.POWERUP_ANSWER,this::onPowerupAnswer);
+            messageHandler.put(Constants.CONFIRM_END_GAME,this::onGameEndAck);
         }
     }
 
@@ -137,8 +136,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             getRoom().isAlive(this);
         }catch (Exception e){
             Logger.log(e.getMessage());
-            //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("PONG ANSWER",e.getMessage());
         }
 
     }
@@ -400,6 +398,23 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         sendMatchMessage(new CounterAttackTimeOut(getNickname()));
     }
 
+    @Override
+    public void notifyDisconnetion() {
+        sendRoomMessage(new DisconnectionMessage());
+    }
+
+    @Override
+    public void gameEnd(List<SimplePlayer> players) {
+        GameEndMessage msg=new GameEndMessage();
+        msg.setPlayers(players);
+        sendMatchMessage(msg);
+    }
+
+    @Override
+    public void sendLeaderboard(List<String> nicknames, List<Integer> points) {
+        sendMatchMessage(new LeaderboardMessage(getNickname(),nicknames,points));
+    }
+
 
     /*------ ANSWER HANDLER ------*/
     private void onCounterAttackAnswer() {
@@ -416,7 +431,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("COUNTER ATTACK ANSWER",e.getMessage());
         }
     }
 
@@ -434,7 +449,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("BOARD PREFERENCE ANSWER",e.getMessage());
         }
     }
 
@@ -452,7 +467,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("POWERUP ANSWER",e.getMessage());
         }
     }
 
@@ -470,7 +485,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("DISCARD WEAPON ANSWER",e.getMessage());
         }
     }
 
@@ -488,7 +503,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("USE POWERUP ANSWER",e.getMessage());
         }
     }
 
@@ -506,11 +521,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("STOP ROUTINE ANSWER",e.getMessage());
         }
     }
 
-    private void onSelectedePlayersAnswer() {
+    private void onSelectedPlayersAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
         Logger.log(JSON_ANSWER+line);
@@ -524,7 +539,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("SELECTED PLAYER ANSWER",e.getMessage());
         }
     }
 
@@ -542,7 +557,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("EFFECT ANSWER",e.getMessage());
         }
     }
 
@@ -560,7 +575,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("LOADABLE WEAPON ANSWER",e.getMessage());
         }
     }
 
@@ -578,7 +593,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("WEAPON ANSWER",e.getMessage());
         }
     }
 
@@ -596,7 +611,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("ROUTINE ANSWER",e.getMessage());
         }
     }
 
@@ -614,7 +629,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("TURN END ANSWER",e.getMessage());
         }
     }
 
@@ -632,7 +647,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("EFFECT MOVE ANSWER",e.getMessage());
         }
     }
 
@@ -650,7 +665,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("ACTION SELECTED ANSWER",e.getMessage());
         }
     }
 
@@ -668,7 +683,25 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived();
+            handleInvalidReceived("RESPAWN ANSWER",e.getMessage());
+        }
+    }
+
+    private void onGameEndAck() {
+        Gson gson=new Gson();
+        String line=in.nextLine();
+        Logger.log(JSON_ANSWER+line);
+        try{
+            ConfirmEndGameAnswer answer=gson.fromJson(line, ConfirmEndGameAnswer.class);
+            if(!answer.getAnswer().equalsIgnoreCase(Constants.CONFIRM_END_GAME)) throw new IllegalArgumentException("NOT END GAME CONFIRM ANSWER");
+
+            //check if can receive this message
+            if(!(checkStatus(GameStatus.END))) throw new IllegalStateException(ILLEGAL_STATE);
+            getRoom().getController().gameEndAck(answer.getSender());
+        }catch (Exception e){
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("END GAME CONFIRM",e.getMessage());
         }
     }
     
@@ -681,9 +714,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         return (status==getRoom().getController().getGameStatus());
     }
     
-    
-    //TODO
-    private void handleInvalidReceived() {
+    private void handleInvalidReceived(String cause,String message) {
+        String builder=("An error occurred while trying to execute '")+(cause)+("':\n")+(message);
+        Logger.logErr(builder);
+        getRoom().forceDisconnection(getNickname());
     }
 
 }

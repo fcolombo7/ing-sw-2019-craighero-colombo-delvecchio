@@ -231,4 +231,19 @@ class TestClient extends ClientConnection {
     public void counterAttackTimeOut() {
 
     }
+
+    @Override
+    public void notifyDisconnetion() {
+
+    }
+
+    @Override
+    public void gameEnd(List<SimplePlayer> players) {
+
+    }
+
+    @Override
+    public void sendLeaderboard(List<String> nicknames, List<Integer> points) {
+
+    }
 }

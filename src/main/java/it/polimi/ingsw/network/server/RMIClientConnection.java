@@ -112,6 +112,42 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
+    public void notifyDisconnetion() {
+        pool.submit(() -> {
+            try {
+                clientStub.notifyDisconnection();
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call notifyDisconnetion().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void gameEnd(List<SimplePlayer> players) {
+        pool.submit(() -> {
+            try {
+                clientStub.gameEnd(players);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call gameEnd().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void sendLeaderboard(List<String> nicknames, List<Integer> points) {
+        pool.submit(() -> {
+            try {
+                clientStub.sendLeaderboard(nicknames,points);
+            } catch (RemoteException e) {
+                Logger.logErr("RemoteException has been thrown when call sendLeaderboard().");
+                Logger.logErr(e.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void exitRoomAdvise(String nickname) {
         pool.submit(() -> {
             try {

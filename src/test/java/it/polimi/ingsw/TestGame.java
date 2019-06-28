@@ -1,10 +1,8 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.model.enums.PlayerStatus;
-import it.polimi.ingsw.model.enums.TurnStatus;
-import it.polimi.ingsw.network.controller.messages.matchanswer.ActionSelectedAnswer;
-import it.polimi.ingsw.network.controller.messages.matchanswer.RespawnAnswer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.turntests.DebugView;
 import it.polimi.ingsw.utils.Constants;
@@ -110,7 +108,7 @@ public class TestGame {
         Map<Player, Integer> example = game.calcWinner();
         List<Player> res= new ArrayList<>(example.keySet());
 
-        /*assertThat(res.toString(), is("[Player\n" +
+        assertThat(res.toString(), is("[Player\n" +
                 "Nickname: d\n" +
                 "Motto: ddd\n" +
                 "Score: 34\n" +
@@ -135,8 +133,6 @@ public class TestGame {
                 "Motto: bbb\n" +
                 "Score: 0\n" +
                 "Room: Nowhere\n]"));
-
-         */
     }
 
     @Test
@@ -156,7 +152,7 @@ public class TestGame {
     @Test
     public void SkullNumberInitializationTest(){
         Game game=new Game();
-        assertTrue(game.getSkullNumber()!=0);
+        assertTrue(game.getSkullsNumber()!=0);
     }
 
     @Test
@@ -291,7 +287,65 @@ public class TestGame {
         assertEquals(1,p2.getBoard().getDeathCounter());
     }
 
+    @Test
+    public void EndGameTest(){
+        Game game= new Game();
+        Player p1=new Player("nickname1", "", true);
+        Player p2=new Player("nickname2", "", false);
+        Player p3=new Player("nickname3", "", false);
+        Player p4=new Player("nickname4", "", false);
 
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
 
+        game.setGameBoard(1);
+        game.forceSkullsNumber(1);
+        p1.setPosition(game.getGameBoard().getSquare(1,1));
+        p2.setPosition(game.getGameBoard().getSquare(1,1));
+        p3.setPosition(game.getGameBoard().getSquare(1,1));
+        p4.setPosition(game.getGameBoard().getSquare(1,1));
 
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
+        p4.setStatus(PlayerStatus.WAITING);
+
+        game.createTurn();
+        Turn turn=game.getCurrentTurn();
+        p2.getBoard().addDamage(p1,6);
+        p2.getBoard().addDamage(p3,5);
+        p2.setStatus(PlayerStatus.ALMOST_DEAD);
+        turn.selectAction("END");
+        game.endTurn();
+
+        assertEquals(9,p1.getScore());
+        assertEquals(6,p3.getScore());
+        assertEquals(1,p2.getBoard().getDeathCounter());
+        assertTrue(game.isFrenzy());
+        game.respawnPlayerRequest(p2,false);
+        game.respawnPlayer(p2,p2.getPowerups().get(0));
+
+        p4.setStatus(PlayerStatus.PLAYING);
+        p1.setStatus(PlayerStatus.WAITING);
+        game.setCurrentPlayer(3);
+        game.createTurn();
+        turn=game.getCurrentTurn();
+        p4.getBoard().addDamage(p1,3);
+        p4.getBoard().addDamage(p2,5);
+        turn.selectAction("END");
+
+        game.endTurn();
+        assertTrue(game.isFrenzy());
+
+        p1.setStatus(PlayerStatus.PLAYING);
+        p4.setStatus(PlayerStatus.WAITING);
+        game.setCurrentPlayer(0);
+        game.createTurn();
+        turn=game.getCurrentTurn();
+        turn.selectAction("END");
+        game.endTurn();
+        assertEquals(game.getStatus(), GameStatus.END);
+    }
 }

@@ -61,6 +61,8 @@ public class Constants {
     public static final String TURN_CREATION_MESSAGE = "NEW TURN STARTED";
     public static final String TURN_END_MESSAGE = "TURN END MESSAGE";
     public static final String RECOVERING_PLAYER = "RECOVERING PLAYER";
+    public static final String GAME_END_MESSAGE = "GAME END";
+    public static final String LEADERBOARD_MESSAGE = "LEADERBOARD";
 
     /*ROUTINE MESSAGES*/
     public static final String RUN_ROUTINE_MESSAGE ="RUN ROUTINE";
@@ -84,6 +86,7 @@ public class Constants {
     public static final String ACTION_SELECTED = "ACTION SELECTED";
     public static final String EFFECT_MOVE_ANSWER = "MOVE ANSWER";
     public static final String TURN_END_ANSWER = "TURN END ANSWER";
+    public static final String CONFIRM_END_GAME = "END GAME CONFIRM";
 
     /*ROUTINE ANSWERS*/
     public static final String RUN_ROUTINE_ANSWER ="RUN ROUTINE ANSWER";
@@ -105,6 +108,8 @@ public class Constants {
     public static final String PONG_ANSWER ="PONG";
     public static final String FIRST_PLAYER = "FIRST IN ROOM";
     public static final String PLAYER_RECOVER = "PLAYER RECOVER";
+    public static final String DISCONNECTION = "DISCONNECTION";
+
 
     /*----------------------------------------------------------------------------------------------------------------*/
 

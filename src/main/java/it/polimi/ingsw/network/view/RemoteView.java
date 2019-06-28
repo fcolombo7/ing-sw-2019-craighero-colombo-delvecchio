@@ -79,6 +79,19 @@ public class RemoteView extends View{
         senderMap.put(Constants.CAN_COUNTER_ATTACK,this::canCounterAttack);
         senderMap.put(Constants.COUNTER_ATTACK_COMPLETED,this::counterAttack);
         senderMap.put(Constants.COUNTER_ATTACK_TIMEOUT,this::counterAttackTimeout);
+
+        senderMap.put(Constants.LEADERBOARD_MESSAGE,this::leaderboardMessage);
+        senderMap.put(Constants.GAME_END_MESSAGE,this::gameEndMessage);
+    }
+
+    private void leaderboardMessage(MatchMessage message) {
+        LeaderboardMessage msg=(LeaderboardMessage) message;
+        clientConnection.sendLeaderboard(msg.getNicknames(),msg.getPoints());
+    }
+
+    private void gameEndMessage(MatchMessage message) {
+        GameEndMessage msg=(GameEndMessage) message;
+        clientConnection.gameEnd(msg.getPlayers());
     }
 
     private void counterAttackTimeout(MatchMessage message) {

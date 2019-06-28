@@ -96,5 +96,13 @@ public interface AdrenalineUI {
     void onCounterAttack(currentPlayer,player,powerup);
 
     void onCounterAttackTimeOut();
+
+    void handleFatalError(String cause, String message);
+
+    void onDisconnectionAdvise();
+
+    void onGameEnd(List<SimplePlayer> players);
+
+    void onLeaderboardReceived(List<String> nicknames, List<Integer> points);
      */
 }
