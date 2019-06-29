@@ -42,14 +42,16 @@ public class Logger {
 
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();
-        try{
-            for (File file:listOfFiles) {
-                if (file.isFile()&&file.getName().equals(name)){
-                    name=name+"_2";
+        if(listOfFiles!=null) {
+            try {
+                for (File file : listOfFiles) {
+                    if (file.isFile() && file.getName().equals(name)) {
+                        name = name + "_2";
+                    }
                 }
+            } catch (Exception e) {
+                throw new IllegalArgumentException("FILES ERROR");
             }
-        } catch (Exception e) {
-            throw  new IllegalArgumentException("FILES ERROR");
         }
         filename=folderName+name;
         print("LOGGER: "+filename);
