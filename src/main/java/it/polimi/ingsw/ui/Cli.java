@@ -646,7 +646,7 @@ public class Cli implements AdrenalineUI{
     @Override
     public void onBoardUpdate(SimpleBoard gameBoard) {
         this.board=gameBoard;
-        updateMap();
+        buildMap();
         printMap();
     }
 

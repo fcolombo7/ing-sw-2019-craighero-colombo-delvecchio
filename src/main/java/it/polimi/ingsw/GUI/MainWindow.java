@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.GUIHandler;
 import it.polimi.ingsw.utils.MatrixHelper;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -524,11 +525,13 @@ public class MainWindow extends Application {
     public static void onLoginCompleted() {
         stage.close();
         WaitingRoomWindow.create(stage);
+        /*
         if(playerInRoom.isEmpty())
             WaitingRoomWindow.getArea().appendText("You are the first in the room! \n");
         for (String s:playerInRoom) {
             WaitingRoomWindow.getArea().appendText(s+" is in the room...\n");
         }
+         */
     }
 
     public static void initGameWindow(int numMap, int skullNumber){
@@ -3055,7 +3058,13 @@ public class MainWindow extends Application {
                 cur++;
             }
         }
-        //stage.close();
+        Platform.runLater(()->{
+            try {
+                stage.close();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        });
         MapChoice.display(stage);
     }
 
