@@ -643,7 +643,7 @@ public class Game extends Observable<MatchMessage> {
             player.getBoard().clearDamage();
         }
         List<Integer> values=GameBoard.getDefaultScoreValues();
-        List<Player> selectedPlayers=gameBoard.getKillShotDamage();
+        List<Player> selectedPlayers=gameBoard==null?new ArrayList<>():gameBoard.getKillShotDamage();
         for(Player p:selectedPlayers){
             p.updateScore(values.get(0));
             values.remove(0);

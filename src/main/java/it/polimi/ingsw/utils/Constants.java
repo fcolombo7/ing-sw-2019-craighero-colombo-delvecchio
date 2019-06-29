@@ -10,7 +10,7 @@ public class Constants {
     public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
 
     /* NETWORKING PARAMETERS */
-    public static final String RMI_HOSTNAME = "192.168.1.133";
+    public static final String RMI_HOSTNAME = "localhost";
 
     public static final int SOCKET_PORT=12345;
     public static final int RMI_PORT=12346;
@@ -35,7 +35,7 @@ public class Constants {
 
     /* CONTROLLER PARAMETERS */
     public static final long TURN_TIMER=120;//SEC
-    public static final long QUICK_MOVE_TIMER=10;//SEC
+    public static final long QUICK_MOVE_TIMER=15;//SEC
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";

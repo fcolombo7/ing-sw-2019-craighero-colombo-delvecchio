@@ -55,8 +55,8 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         Logger.log(builder.toString());
 
         stub = (RMIServerHandler) Naming.lookup("rmi://"+ this.getHostname()+":"+this.getPort()+"/"+Constants.RMI_SERVER_NAME);
-        Logger.log("STUB OK?");
-        pool=Executors.newFixedThreadPool(5);
+        Logger.log("STUB INITIALIZED");
+        pool=Executors.newFixedThreadPool(6);
     }
 
     public RMIServerConnection(String hostname, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {

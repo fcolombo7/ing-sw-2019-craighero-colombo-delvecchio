@@ -141,7 +141,7 @@ public class Room {
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                Logger.logErr("TIMER SCADUTO PER "+client.getNickname());
+                Logger.logErr("KEEP ALIVE: TIMER SCADUTO PER "+client.getNickname());
                 handleDisconnection(client);
             }
         },Constants.KEEP_ALIVE_WAITING_TIME*1000);

@@ -38,68 +38,73 @@ public class Controller{
         boardTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Logger.logErr("Timeout for choosing the board.");
-                setGameboard();
+                if(game.getStatus()!=GameStatus.END) {
+                    Logger.logErr("Timeout for choosing the board.");
+                    setGameboard();
+                }
             }
         },Constants.QUICK_MOVE_TIMER*1000);
     }
 
     /*---------- METHODS USED IN CLIENT CONNECTION ----------*/
     public void roomPreferenceManager(String sender, int boardNumber) {
-        if(boardPreference.containsKey(sender)) return;
-        String folderName= Constants.BOARD_FOLDER;
-        File folder = new File(folderName);
-        File[] listOfFiles = folder.listFiles();
-        if(listOfFiles==null) throw new MatchConfigurationException("No boards in "+folderName);
-        for(File file:listOfFiles){
-            if(file.getName().equalsIgnoreCase("board"+boardNumber+".xml")) {
-                boardPreference.put(sender,boardNumber);
-                break;
+        if(game.getStatus()!=GameStatus.END) {
+            if (boardPreference.containsKey(sender)) return;
+            String folderName = Constants.BOARD_FOLDER;
+            File folder = new File(folderName);
+            File[] listOfFiles = folder.listFiles();
+            if (listOfFiles == null) throw new MatchConfigurationException("No boards in " + folderName);
+            for (File file : listOfFiles) {
+                if (file.getName().equalsIgnoreCase("board" + boardNumber + ".xml")) {
+                    boardPreference.put(sender, boardNumber);
+                    break;
+                }
             }
-        }
-        if(boardPreference.size()==game.getPlayers().size()){
-            boardTimer.cancel();
-            boardTimer.purge();
-            setGameboard();
+            if (boardPreference.size() == game.getPlayers().size()) {
+                boardTimer.cancel();
+                boardTimer.purge();
+                setGameboard();
+            }
         }
     }
 
     public synchronized void respawnPlayer(String sender, Card powerup){
-        if(!isDisconnected(sender)){
-            Timer t=timerMap.get(sender);
-            t.cancel();
-            t.purge();
-            timerMap.remove(sender);
-        }
-        for(Player p:game.getPlayers()) {
-            if (p.getNickname().equals(sender)) {
-                game.respawnPlayer(p, powerup);
-                if(p.getStatus()== PlayerStatus.PLAYING) {
-                    if(!isDisconnected(sender)) {
-                        Timer t=new Timer();
-                        timerMap.put(p.getNickname(),t);
-                        t.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                Logger.logErr("TURN TIMEOUT ("+p.getNickname()+")");
-                                room.forceDisconnection(p.getNickname());
-                                timerMap.remove(p.getNickname());
-                                game.getCurrentTurn().forceClosing();
-                                closeTurn(p.getNickname());
-                            }
-                        },Constants.TURN_TIMER*1000);
-                        game.createTurn();
+        if(game.getStatus()!=GameStatus.END) {
+            if (!isDisconnected(sender)) {
+                Timer t = timerMap.get(sender);
+                t.cancel();
+                t.purge();
+                timerMap.remove(sender);
+            }
+            for (Player p : game.getPlayers()) {
+                if (p.getNickname().equals(sender)) {
+                    game.respawnPlayer(p, powerup);
+                    if (p.getStatus() == PlayerStatus.PLAYING) {
+                        if (!isDisconnected(sender)) {
+                            Timer t = new Timer();
+                            timerMap.put(p.getNickname(), t);
+                            t.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    Logger.logErr("TURN TIMEOUT (" + p.getNickname() + ")");
+                                    room.forceDisconnection(p.getNickname());
+                                    timerMap.remove(p.getNickname());
+                                    game.getCurrentTurn().forceClosing();
+                                    closeTurn(p.getNickname());
+                                }
+                            }, Constants.TURN_TIMER * 1000);
+                            game.createTurn();
+                        } else
+                            handleNewTurn();
+                        return;
                     }
-                    else
+                    if (timerMap.isEmpty()) //IF IS EMPTY THEN ALL THE DEAD PLAYER HAS BEEN RESPAWNED
                         handleNewTurn();
                     return;
                 }
-                if(timerMap.isEmpty()) //IF IS EMPTY THEN ALL THE DEAD PLAYER HAS BEEN RESPAWNED
-                    handleNewTurn();
-                return;
             }
+            throw new IllegalStateException("INVALID PLAYER RECEIVED");
         }
-        throw new IllegalStateException("INVALID PLAYER RECEIVED");
     }
 
     public void closeTurn(String sender){

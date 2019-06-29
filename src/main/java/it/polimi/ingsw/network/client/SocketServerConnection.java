@@ -26,6 +26,7 @@ public class SocketServerConnection extends ServerConnection {
     private PrintWriter socketOut;
     private Map<String,MessageReceiver> receiverMap;
     private ExecutorService executor;
+    private ExecutorService pool;
 
     @FunctionalInterface
     private interface MessageReceiver{
@@ -38,6 +39,7 @@ public class SocketServerConnection extends ServerConnection {
         socketIn= new Scanner(socket.getInputStream());
         socketOut= new PrintWriter(socket.getOutputStream());
         executor = Executors.newFixedThreadPool(2);
+        pool=Executors.newFixedThreadPool(6);
         initReceiverMap();
         Logger.log("SOCKET SET UP");
     }
@@ -286,618 +288,665 @@ public class SocketServerConnection extends ServerConnection {
     /*------ MATCH RECEIVED MESSAGES ------*/
 
     private void wakeUpPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RecoveringPlayerMessage message=gson.fromJson(line, RecoveringPlayerMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RECOVERING_PLAYER)) throw new IllegalArgumentException("NOT RECOVERING PLAYER MESSAGE");
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            RecoveringPlayerMessage message = gson.fromJson(line, RecoveringPlayerMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RECOVERING_PLAYER))
+                throw new IllegalArgumentException("NOT RECOVERING PLAYER MESSAGE");
             //TODO
-            //getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy());
-        }catch (Exception e){
+            //pool.submit(()->getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("WAKE UP PLAYER",e.getMessage());
+            handleInvalidReceived("WAKE UP PLAYER", e.getMessage());
         }
     }
 
     private void runRoutine() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RunMessage message=gson.fromJson(line, RunMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RUN_ROUTINE_MESSAGE)) throw new IllegalArgumentException("NOT RUN MESSAGE");
-            getUi().onRunRoutine(message.getMatrix());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            RunMessage message = gson.fromJson(line, RunMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RUN_ROUTINE_MESSAGE))
+                throw new IllegalArgumentException("NOT RUN MESSAGE");
+            pool.submit(()->getUi().onRunRoutine(message.getMatrix()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RUN ROUNTINE",e.getMessage());
+            handleInvalidReceived("RUN ROUNTINE", e.getMessage());
         }
     }
 
     private void runCompleted() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RunCompleted message=gson.fromJson(line, RunCompleted.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RUN_COMPLETED)) throw new IllegalArgumentException("NOT RUN COMPLETED MESSAGE");
-            getUi().onRunCompleted(message.getPlayer(),message.getNewPosition());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            RunCompleted message = gson.fromJson(line, RunCompleted.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RUN_COMPLETED))
+                throw new IllegalArgumentException("NOT RUN COMPLETED MESSAGE");
+            pool.submit(()->getUi().onRunCompleted(message.getPlayer(), message.getNewPosition()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RUN COMPLETED",e.getMessage());
+            handleInvalidReceived("RUN COMPLETED", e.getMessage());
         }
     }
 
     private void availablePowerups() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            AvailablePowerupsMessage message=gson.fromJson(line, AvailablePowerupsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.AVAILABLE_POWERUPS_MESSAGE)) throw new IllegalArgumentException("NOT AVAILABLE POWERUPS MESSAGE");
-            getUi().onAvailablePowerups(message.getPowerups());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            AvailablePowerupsMessage message = gson.fromJson(line, AvailablePowerupsMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.AVAILABLE_POWERUPS_MESSAGE))
+                throw new IllegalArgumentException("NOT AVAILABLE POWERUPS MESSAGE");
+            pool.submit(()->getUi().onAvailablePowerups(message.getPowerups()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("AVAILABLE POWERUPS",e.getMessage());
+            handleInvalidReceived("AVAILABLE POWERUPS", e.getMessage());
         }
     }
 
     private void usedCard() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            UsedCardMessage message=gson.fromJson(line, UsedCardMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.USED_CARD_MESSAGE)) throw new IllegalArgumentException("NOT USED CARD MESSAGE");
-            getUi().onUsedCard(message.getCard());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            UsedCardMessage message = gson.fromJson(line, UsedCardMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.USED_CARD_MESSAGE))
+                throw new IllegalArgumentException("NOT USED CARD MESSAGE");
+            pool.submit(()->getUi().onUsedCard(message.getCard()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("USED CARD",e.getMessage());
+            handleInvalidReceived("USED CARD", e.getMessage());
         }
     }
 
     private void payEffect() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            PayEffectMessage message=gson.fromJson(line, PayEffectMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.PAY_EFFECT_MESSAGE)) throw new IllegalArgumentException("NOT PAY EFFECT MESSAGE");
-            getUi().onPayEffect(message.getPlayer(),message.getDiscardedPowerups(),message.getUsedAmmo());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            PayEffectMessage message = gson.fromJson(line, PayEffectMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.PAY_EFFECT_MESSAGE))
+                throw new IllegalArgumentException("NOT PAY EFFECT MESSAGE");
+            pool.submit(()->getUi().onPayEffect(message.getPlayer(), message.getDiscardedPowerups(), message.getUsedAmmo()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("PAY EFFECT",e.getMessage());
+            handleInvalidReceived("PAY EFFECT", e.getMessage());
         }
     }
 
     private void availableEffects() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            AvailableEffectsMessage message=gson.fromJson(line, AvailableEffectsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.AVAILABLE_EFFECTS_MESSAGE)) throw new IllegalArgumentException("NOT AVAILABLE EFFECTS MESSAGE");
-            getUi().onAvailableEffects(message.getEffects());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            AvailableEffectsMessage message = gson.fromJson(line, AvailableEffectsMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.AVAILABLE_EFFECTS_MESSAGE))
+                throw new IllegalArgumentException("NOT AVAILABLE EFFECTS MESSAGE");
+            pool.submit(()->getUi().onAvailableEffects(message.getEffects()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("AVAILABLE EFFECTS",e.getMessage());
+            handleInvalidReceived("AVAILABLE EFFECTS", e.getMessage());
         }
     }
 
     private void usableWeapons() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            UsableWeaponsMessage message=gson.fromJson(line, UsableWeaponsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.USABLE_WEAPONS_MESSAGE)) throw new IllegalArgumentException("NOT USABLE WEAPON MESSAGE");
-            getUi().onUsableWeapons(message.getUsableWeapons());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            UsableWeaponsMessage message = gson.fromJson(line, UsableWeaponsMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.USABLE_WEAPONS_MESSAGE))
+                throw new IllegalArgumentException("NOT USABLE WEAPON MESSAGE");
+            pool.submit(()->getUi().onUsableWeapons(message.getUsableWeapons()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("USABLE WEAPONS",e.getMessage());
+            handleInvalidReceived("USABLE WEAPONS", e.getMessage());
         }
     }
 
     private void canStopRoutine() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            CanStopMessage message=gson.fromJson(line, CanStopMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.CAN_STOP_ROUTINE)) throw new IllegalArgumentException("NOT CAN STOP MESSAGE");
-            getUi().onCanStopRoutine();
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            CanStopMessage message = gson.fromJson(line, CanStopMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.CAN_STOP_ROUTINE))
+                throw new IllegalArgumentException("NOT CAN STOP MESSAGE");
+            pool.submit(()->getUi().onCanStopRoutine());
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("CAN STOP ROUTINE",e.getMessage());
+            handleInvalidReceived("CAN STOP ROUTINE", e.getMessage());
         }
+
     }
 
     private void canUsePowerup() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            CanUsePowerupMessage message=gson.fromJson(line, CanUsePowerupMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.CAN_USE_POWERUP)) throw new IllegalArgumentException("NOT CAN USE POWERUP MESSAGE");
-            getUi().onCanUsePowerup();
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            CanUsePowerupMessage message = gson.fromJson(line, CanUsePowerupMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.CAN_USE_POWERUP))
+                throw new IllegalArgumentException("NOT CAN USE POWERUP MESSAGE");
+            pool.submit(()->getUi().onCanUsePowerup());
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("CAN USE POWERUP",e.getMessage());
+            handleInvalidReceived("CAN USE POWERUP", e.getMessage());
         }
     }
 
     private void selectablePlayers() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            SelectablePlayersMessage message=gson.fromJson(line, SelectablePlayersMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.SELECTABLE_PLAYERS_MESSAGE)) throw new IllegalArgumentException("NOT SELECTABLE PLAYER MESSAGE");
-            getUi().onSelectablePlayers(message.getSelectable(),message.getTarget());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            SelectablePlayersMessage message = gson.fromJson(line, SelectablePlayersMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.SELECTABLE_PLAYERS_MESSAGE))
+                throw new IllegalArgumentException("NOT SELECTABLE PLAYER MESSAGE");
+            pool.submit(()->getUi().onSelectablePlayers(message.getSelectable(), message.getTarget()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("SELECTABLE PLAYERS",e.getMessage());
+            handleInvalidReceived("SELECTABLE PLAYERS", e.getMessage());
         }
     }
 
     private void discardedPowerup() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            DiscardedPowerupMessage message=gson.fromJson(line, DiscardedPowerupMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.DISCARDED_POWERUP_MESSAGE)) throw new IllegalArgumentException("NOT DISCARDED POWERUP MESSAGE");
-            getUi().onDiscardedPowerup(message.getPlayer(),message.getPowerup());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            DiscardedPowerupMessage message = gson.fromJson(line, DiscardedPowerupMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.DISCARDED_POWERUP_MESSAGE))
+                throw new IllegalArgumentException("NOT DISCARDED POWERUP MESSAGE");
+            pool.submit(()->getUi().onDiscardedPowerup(message.getPlayer(), message.getPowerup()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("DISCARDED POWERUP",e.getMessage());
+            handleInvalidReceived("DISCARDED POWERUP", e.getMessage());
         }
     }
 
     private void damageAction() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            DamageMessage message=gson.fromJson(line, DamageMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.EFFECT_DAMAGE_MESSAGE)) throw new IllegalArgumentException("NOT DAMAGE MESSAGE");
-            getUi().onDamageAction(message.getPlayer(),message.getSelected(),message.getDamageValue(),message.getConvertedMarks());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            DamageMessage message = gson.fromJson(line, DamageMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.EFFECT_DAMAGE_MESSAGE))
+                throw new IllegalArgumentException("NOT DAMAGE MESSAGE");
+            pool.submit(()->getUi().onDamageAction(message.getPlayer(), message.getSelected(), message.getDamageValue(), message.getConvertedMarks()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("DAMAGE ACTION",e.getMessage());
+            handleInvalidReceived("DAMAGE ACTION", e.getMessage());
         }
     }
 
     private void markAction() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            MarkMessage message=gson.fromJson(line, MarkMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MARK_MESSAGE)) throw new IllegalArgumentException("NOT MARK MESSAGE");
-            getUi().onMarkAction(message.getPlayer(),message.getSelected(),message.getValue());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            MarkMessage message = gson.fromJson(line, MarkMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MARK_MESSAGE))
+                throw new IllegalArgumentException("NOT MARK MESSAGE");
+            pool.submit(()->getUi().onMarkAction(message.getPlayer(), message.getSelected(), message.getValue()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("MARK ACTION",e.getMessage());
+            handleInvalidReceived("MARK ACTION", e.getMessage());
         }
     }
 
     private void moveRequest() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            MoveRequestMessage message=gson.fromJson(line, MoveRequestMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MOVE_REQUEST_MESSAGE)) throw new IllegalArgumentException("NOT MOVE REQUEST MESSAGE");
-            getUi().onMoveRequest(message.getMatrix(),message.getTargetPlayer());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            MoveRequestMessage message = gson.fromJson(line, MoveRequestMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MOVE_REQUEST_MESSAGE))
+                throw new IllegalArgumentException("NOT MOVE REQUEST MESSAGE");
+            pool.submit(()->getUi().onMoveRequest(message.getMatrix(), message.getTargetPlayer()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("MOVE REQUEST",e.getMessage());
+            handleInvalidReceived("MOVE REQUEST", e.getMessage());
         }
     }
 
     private void moveAction() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            MoveMessage message=gson.fromJson(line, MoveMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MOVE_MESSAGE)) throw new IllegalArgumentException("NOT MOVE MESSAGE");
-            getUi().onMoveAction(message.getPlayer());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            MoveMessage message = gson.fromJson(line, MoveMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.EFFECT_MOVE_MESSAGE))
+                throw new IllegalArgumentException("NOT MOVE MESSAGE");
+            pool.submit(()->getUi().onMoveAction(message.getPlayer()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("MOVE ACTION",e.getMessage());
+            handleInvalidReceived("MOVE ACTION", e.getMessage());
         }
     }
 
     private void turnEnd() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            TurnEndMessage message=gson.fromJson(line, TurnEndMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.TURN_END_MESSAGE)) throw new IllegalArgumentException("NOT TURN END MESSAGE");
-            getUi().onTurnEnd();
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            TurnEndMessage message = gson.fromJson(line, TurnEndMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.TURN_END_MESSAGE))
+                throw new IllegalArgumentException("NOT TURN END MESSAGE");
+            pool.submit(()->getUi().onTurnEnd());
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("TURN END",e.getMessage());
+            handleInvalidReceived("TURN END", e.getMessage());
         }
     }
 
     private void turnActions() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            TurnActionsMessage message=gson.fromJson(line, TurnActionsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.TURN_AVAILABLE_ACTIONS)) throw new IllegalArgumentException("NOT TURN ACTIONS MESSAGE");
-            getUi().onTurnActions(message.getActions());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            TurnActionsMessage message = gson.fromJson(line, TurnActionsMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.TURN_AVAILABLE_ACTIONS))
+                throw new IllegalArgumentException("NOT TURN ACTIONS MESSAGE");
+            pool.submit(()->getUi().onTurnActions(message.getActions()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("TURN ACTIONS",e.getMessage());
+            handleInvalidReceived("TURN ACTIONS", e.getMessage());
         }
     }
 
     private void turnCreation() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            TurnCreationMessage message=gson.fromJson(line, TurnCreationMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.TURN_CREATION_MESSAGE)) throw new IllegalArgumentException("NOT TURN CREATION MESSAGE");
-            getUi().onTurnCreation(message.getCurrentPlayer());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            TurnCreationMessage message = gson.fromJson(line, TurnCreationMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.TURN_CREATION_MESSAGE))
+                throw new IllegalArgumentException("NOT TURN CREATION MESSAGE");
+            pool.submit(()->getUi().onTurnCreation(message.getCurrentPlayer()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("TURN CREATION",e.getMessage());
+            handleInvalidReceived("TURN CREATION", e.getMessage());
         }
     }
 
     private void reloadableWeapons() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            ReloadableWeaponsMessage message=gson.fromJson(line, ReloadableWeaponsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RELOADABLE_WEAPONS_MESSAGE)) throw new IllegalArgumentException("NOT RELOADABLE WEAPONS MESSAGE");
-            getUi().onReloadableWeapons(message.getWeapons());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            ReloadableWeaponsMessage message = gson.fromJson(line, ReloadableWeaponsMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RELOADABLE_WEAPONS_MESSAGE))
+                throw new IllegalArgumentException("NOT RELOADABLE WEAPONS MESSAGE");
+            pool.submit(()->getUi().onReloadableWeapons(message.getWeapons()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RELOADABLE WEAPONS",e.getMessage());
+            handleInvalidReceived("RELOADABLE WEAPONS", e.getMessage());
         }
     }
 
     private void reloadedWeapon() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            WeaponReloadedMessage message=gson.fromJson(line, WeaponReloadedMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RELOAD_COMPLETED)) throw new IllegalArgumentException("NOT RELOAD WEAPON MESSAGE");
-            getUi().onReloadedWeapon(message.getPlayer(),message.getWeapon(),message.getDiscardedPowerups(),message.getTotalCost());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            WeaponReloadedMessage message = gson.fromJson(line, WeaponReloadedMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RELOAD_COMPLETED))
+                throw new IllegalArgumentException("NOT RELOAD WEAPON MESSAGE");
+            pool.submit(()->getUi().onReloadedWeapon(message.getPlayer(), message.getWeapon(), message.getDiscardedPowerups(), message.getTotalCost()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RELOADED WEAPON",e.getMessage());
+            handleInvalidReceived("RELOADED WEAPON", e.getMessage());
         }
     }
 
     private void grabbedWeapon() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            GrabbedWeaponMessage message=gson.fromJson(line, GrabbedWeaponMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_WEAPON_MESSAGE)) throw new IllegalArgumentException("NOT GRABBED WEAPON MESSAGE");
-            getUi().onGrabbedWeapon(message.getPlayer(),message.getWeapon());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            GrabbedWeaponMessage message = gson.fromJson(line, GrabbedWeaponMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.GRABBED_WEAPON_MESSAGE))
+                throw new IllegalArgumentException("NOT GRABBED WEAPON MESSAGE");
+            pool.submit(()->getUi().onGrabbedWeapon(message.getPlayer(), message.getWeapon()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("GRABBED WEAPON",e.getMessage());
+            handleInvalidReceived("GRABBED WEAPON", e.getMessage());
         }
     }
 
     private void discardWeapon() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            DiscardWeaponMessage message=gson.fromJson(line, DiscardWeaponMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.DISCARD_WEAPON_MESSAGE)) throw new IllegalArgumentException("NOT DISCARD WEAPON MESSAGE");
-            getUi().onDiscardWeapon(message.getWeapons());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            DiscardWeaponMessage message = gson.fromJson(line, DiscardWeaponMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.DISCARD_WEAPON_MESSAGE))
+                throw new IllegalArgumentException("NOT DISCARD WEAPON MESSAGE");
+            pool.submit(()->getUi().onDiscardWeapon(message.getWeapons()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("DISCARD WEAPON",e.getMessage());
+            handleInvalidReceived("DISCARD WEAPON", e.getMessage());
         }
     }
 
     private void grabbableWeapons() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            GrabbableWeaponsMessage message=gson.fromJson(line, GrabbableWeaponsMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBABLE_WEAPONS_MESSAGE)) throw new IllegalArgumentException("NOT GRABBABLE WEAPON MESSAGE");
-            getUi().onGrabbableWeapons(message.getWeapons());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            GrabbableWeaponsMessage message = gson.fromJson(line, GrabbableWeaponsMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.GRABBABLE_WEAPONS_MESSAGE))
+                throw new IllegalArgumentException("NOT GRABBABLE WEAPON MESSAGE");
+            pool.submit(()->getUi().onGrabbableWeapons(message.getWeapons()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("GRABBABLE WEAPONS ACTION",e.getMessage());
+            handleInvalidReceived("GRABBABLE WEAPONS ACTION", e.getMessage());
         }
+
     }
 
     private void grabbedPowerup() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            GrabbedPowerupMessage message=gson.fromJson(line, GrabbedPowerupMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_POWERUP)) throw new IllegalArgumentException("NOT GRABBED POWERUP MESSAGE");
-            getUi().onGrabbedPowerup(message.getPlayer(),message.getPowerup());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            GrabbedPowerupMessage message = gson.fromJson(line, GrabbedPowerupMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.GRABBED_POWERUP))
+                throw new IllegalArgumentException("NOT GRABBED POWERUP MESSAGE");
+            pool.submit(()->getUi().onGrabbedPowerup(message.getPlayer(), message.getPowerup()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("GRABBED POWERUP",e.getMessage());
+            handleInvalidReceived("GRABBED POWERUP", e.getMessage());
         }
     }
 
     private void grabbedTile() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            GrabbedAmmoTileMessage message=gson.fromJson(line, GrabbedAmmoTileMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GRABBED_TILE_MESSAGE)) throw new IllegalArgumentException("NOT GRABBED TILE MESSAGE");
-            getUi().onGrabbedTile(message.getPlayer(),message.getGrabbedTile());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            GrabbedAmmoTileMessage message = gson.fromJson(line, GrabbedAmmoTileMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.GRABBED_TILE_MESSAGE))
+                throw new IllegalArgumentException("NOT GRABBED TILE MESSAGE");
+            pool.submit(()->getUi().onGrabbedTile(message.getPlayer(), message.getGrabbedTile()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("GRABBED TILE",e.getMessage());
+            handleInvalidReceived("GRABBED TILE", e.getMessage());
         }
     }
 
     private void respwanCompleted() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RespawnMessage message=gson.fromJson(line, RespawnMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RESPAWN_COMPLETED_MESSAGE)) throw new IllegalArgumentException("NOT RESPAWN MESSAGE");
-            getUi().onRespwanCompleted(message.getPlayer(),message.getDiscardedPowerup());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            RespawnMessage message = gson.fromJson(line, RespawnMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RESPAWN_COMPLETED_MESSAGE))
+                throw new IllegalArgumentException("NOT RESPAWN MESSAGE");
+            pool.submit(()->getUi().onRespwanCompleted(message.getPlayer(), message.getDiscardedPowerup()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RESPAWN COMPLETED",e.getMessage());
+            handleInvalidReceived("RESPAWN COMPLETED", e.getMessage());
         }
+
     }
 
     private void respwanRequest() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RespawnRequestMessage message=gson.fromJson(line, RespawnRequestMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.RESPAWN_REQUEST_MESSAGE)) throw new IllegalArgumentException("NOT RESPAWN REQUEST MESSAGE");
-            getUi().onRespwanRequest(message.getPowerups());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            RespawnRequestMessage message = gson.fromJson(line, RespawnRequestMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.RESPAWN_REQUEST_MESSAGE))
+                throw new IllegalArgumentException("NOT RESPAWN REQUEST MESSAGE");
+            pool.submit(() -> getUi().onRespwanRequest(message.getPowerups()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RESPAWN REQUEST",e.getMessage());
+            handleInvalidReceived("RESPAWN REQUEST", e.getMessage());
         }
     }
 
     private void matchUpdate() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            MatchUpdateMessage message=gson.fromJson(line, MatchUpdateMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.UPDATE_MESSAGE)) throw new IllegalArgumentException("NOT UPDATE MESSAGE");
-            getUi().onMatchUpdate(message.getPlayers(),message.getGameBoard(),message.isFrenzy());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            MatchUpdateMessage message = gson.fromJson(line, MatchUpdateMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.UPDATE_MESSAGE))
+                throw new IllegalArgumentException("NOT UPDATE MESSAGE");
+            pool.submit(()->getUi().onMatchUpdate(message.getPlayers(), message.getGameBoard(), message.isFrenzy()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("MATCH UPDATE",e.getMessage());
+            handleInvalidReceived("MATCH UPDATE", e.getMessage());
         }
     }
 
     private void boardUpdate() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            BoardUpdateMessage message=gson.fromJson(line, BoardUpdateMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.BOARD_UPDATE_MESSAGE)) throw new IllegalArgumentException("NOT BOARD UPDATE MESSAGE");
-            getUi().onBoardUpdate(message.getGameBoard());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            BoardUpdateMessage message = gson.fromJson(line, BoardUpdateMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.BOARD_UPDATE_MESSAGE))
+                throw new IllegalArgumentException("NOT BOARD UPDATE MESSAGE");
+            pool.submit(()->getUi().onBoardUpdate(message.getGameBoard()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("BOARD UPDATE",e.getMessage());
+            handleInvalidReceived("BOARD UPDATE", e.getMessage());
         }
     }
 
     private void invalidMessageReceived() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            InvalidAnswerMessage message=gson.fromJson(line, InvalidAnswerMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.INVALID_ANSWER)) throw new IllegalArgumentException("NOT INVALID ANSWER MESSAGE");
-            getUi().onInvalidMessageReceived(message.getMsg());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            InvalidAnswerMessage message = gson.fromJson(line, InvalidAnswerMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.INVALID_ANSWER))
+                throw new IllegalArgumentException("NOT INVALID ANSWER MESSAGE");
+            pool.submit(() -> getUi().onInvalidMessageReceived(message.getMsg()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("INVALID MESSAGE RECEIVED",e.getMessage());
+            handleInvalidReceived("INVALID MESSAGE RECEIVED", e.getMessage());
         }
     }
 
     private void matchCreation() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            MatchCreationMessage message=gson.fromJson(line, MatchCreationMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.CREATION_MESSAGE)) throw new IllegalArgumentException("NOT CREATION MESSAGE");
-            getUi().onMatchCreation(message.getPlayers(),message.getPlayerTurnNumber());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            MatchCreationMessage message = gson.fromJson(line, MatchCreationMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.CREATION_MESSAGE))
+                throw new IllegalArgumentException("NOT CREATION MESSAGE");
+            pool.submit(() -> getUi().onMatchCreation(message.getPlayers(), message.getPlayerTurnNumber()));
+        } catch (Exception e) {
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("MATCH CREATION",e.getMessage());
+            handleInvalidReceived("MATCH CREATION", e.getMessage());
         }
     }
 
     private void leaderboard() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            LeaderboardMessage message=gson.fromJson(line, LeaderboardMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.LEADERBOARD_MESSAGE)) throw new IllegalArgumentException("NOT LEADERBOARD MESSAGE");
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            LeaderboardMessage message = gson.fromJson(line, LeaderboardMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.LEADERBOARD_MESSAGE))
+                throw new IllegalArgumentException("NOT LEADERBOARD MESSAGE");
             //TODO
-            //getUi().onLeaderboardReceived(message.getNicknames(),message.getPoints());
-
-        }catch (Exception e){
+            //pool.submit(()-> getUi().onLeaderboardReceived(message.getNicknames(),message.getPoints()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("LEADERBOARD",e.getMessage());
+            handleInvalidReceived("LEADERBOARD", e.getMessage());
         }
     }
 
     private void gameEnd() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            GameEndMessage message=gson.fromJson(line, GameEndMessage.class);
-            if(!message.getRequest().equalsIgnoreCase(Constants.GAME_END_MESSAGE)) throw new IllegalArgumentException("NOT GAME END MESSAGE");
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            GameEndMessage message = gson.fromJson(line, GameEndMessage.class);
+            if (!message.getRequest().equalsIgnoreCase(Constants.GAME_END_MESSAGE))
+                throw new IllegalArgumentException("NOT GAME END MESSAGE");
             //TODO
-            //getUi().onGameEnd(message.getPlayers());
-
-        }catch (Exception e){
+            //pool.submit(()-> getUi().onGameEnd(message.getPlayers()));
+            } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("GAME END",e.getMessage());
+            handleInvalidReceived("GAME END", e.getMessage());
         }
     }
 
     /*------ ROOM RECEIVED MESSAGES ------*/
 
     private void exitPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            ExitMessage message=gson.fromJson(line, ExitMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.PLAYER_EXIT)) throw new IllegalArgumentException("NOT EXIT MESSAGE");
-            getUi().onExitRoomAdvise(message.getPlayer());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            ExitMessage message = gson.fromJson(line, ExitMessage.class);
+            if (!message.getType().equalsIgnoreCase(Constants.PLAYER_EXIT))
+                throw new IllegalArgumentException("NOT EXIT MESSAGE");
+            pool.submit(() -> getUi().onExitRoomAdvise(message.getPlayer()));
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("EXIT PLAYERS",e.getMessage());
+            handleInvalidReceived("EXIT PLAYERS", e.getMessage());
         }
+
     }
 
     private void firstPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            FirstInMessage message=gson.fromJson(line, FirstInMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.FIRST_PLAYER)) throw new IllegalArgumentException("NOT FIRST IN MESSAGE");
-            getUi().onFirstInRoomAdvise();
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            FirstInMessage message = gson.fromJson(line, FirstInMessage.class);
+            if (!message.getType().equalsIgnoreCase(Constants.FIRST_PLAYER))
+                throw new IllegalArgumentException("NOT FIRST IN MESSAGE");
+            pool.submit(()-> {
+                getUi().onFirstInRoomAdvise();
+            });
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("FIRST PLAYER",e.getMessage());
+            handleInvalidReceived("FIRST PLAYER", e.getMessage());
         }
     }
 
     private void joinPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            JoinMessage message=gson.fromJson(line, JoinMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.PLAYER_JOIN)) throw new IllegalArgumentException("NOT JOIN MESSAGE");
-            getUi().onJoinRoomAdvise(message.getPlayer());
-        }catch (Exception e){
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            JoinMessage message = gson.fromJson(line, JoinMessage.class);
+            if (!message.getType().equalsIgnoreCase(Constants.PLAYER_JOIN))
+                throw new IllegalArgumentException("NOT JOIN MESSAGE");
+            pool.submit(() -> {
+                getUi().onJoinRoomAdvise(message.getPlayer());
+            });
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("JOIN PLAYER",e.getMessage());
+            handleInvalidReceived("JOIN PLAYER", e.getMessage());
         }
     }
 
     private void recoverPlayer() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
-            //TODO
-            //getUi().onRecoverPlayerAdvise(message.getPlayer());
-        }catch (Exception e){
-            Logger.log(e.getMessage());
-            //HANDLE ERRORS HERE
-            handleInvalidReceived("RECOVER PLAYER",e.getMessage());
-        }
+        pool.submit(()->{
+            Gson gson=new Gson();
+            String line=socketIn.nextLine();
+            Logger.log(LOG_JSON +line);
+            try{
+                RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
+                if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
+                //TODO
+                //pool.submit(()->getUi().onRecoverPlayerAdvise(message.getPlayer()));
+            }catch (Exception e){
+                Logger.log(e.getMessage());
+                //HANDLE ERRORS HERE
+                handleInvalidReceived("RECOVER PLAYER",e.getMessage());
+            }
+        });
     }
 
     private void notifyDisconnection() {
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
-        Logger.log(LOG_JSON +line);
-        try{
-            DisconnectionMessage message=gson.fromJson(line, DisconnectionMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.DISCONNECTION)) throw new IllegalArgumentException("NOT DISCONNECTION MESSAGE");
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            DisconnectionMessage message = gson.fromJson(line, DisconnectionMessage.class);
+            if (!message.getType().equalsIgnoreCase(Constants.DISCONNECTION))
+                throw new IllegalArgumentException("NOT DISCONNECTION MESSAGE");
             //TODO
-            //getUi().onDisconnectionAdvise();
+            //pool.submit(()->getUi().onDisconnectionAdvise());
             socketOut.close();
             socketIn.close();
             socket.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("DISCONNECTION",e.getMessage());
+            handleInvalidReceived("DISCONNECTION", e.getMessage());
         }
     }
 
-    private void ping(){
-        Gson gson=new Gson();
-        String line=socketIn.nextLine();
+    private void ping() {
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
         //Logger.log(LOG_JSON +line);
         Logger.log("[KEEPING ALIVE (SOCKET)]");
-        try{
-            PingMessage message=gson.fromJson(line, PingMessage.class);
-            if(!message.getType().equalsIgnoreCase(Constants.PING_CHECK)) throw new IllegalArgumentException("NOT PING MESSAGE");
-            PongAnswer pong= new PongAnswer();
+        try {
+            PingMessage message = gson.fromJson(line, PingMessage.class);
+            if (!message.getType().equalsIgnoreCase(Constants.PING_CHECK))
+                throw new IllegalArgumentException("NOT PING MESSAGE");
+            PongAnswer pong = new PongAnswer();
             socketOut.println(pong.getType());
             socketOut.println(gson.toJson(pong));
             socketOut.flush();
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("PING",e.getMessage());
+            handleInvalidReceived("PING", e.getMessage());
         }
     }
 
@@ -905,7 +954,7 @@ public class SocketServerConnection extends ServerConnection {
     private void handleInvalidReceived(String cause, String message) {
         String builder=("An error occurred while trying to execute '")+(cause)+("':\n")+(message);
         Logger.logErr(builder);
-        //getUi().handleFatalError(cause, message);
+        //pool.submit(()->getUi().handleFatalError(cause, message));
         logout();
     }
 }

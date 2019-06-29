@@ -50,6 +50,7 @@ public class TestClientSocket {
         @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
             System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            connection.boardPreference(1);
         }
 
         @Override

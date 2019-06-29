@@ -6,7 +6,6 @@ import it.polimi.ingsw.ui.AdrenalineUI;
 import java.util.List;
 
 public abstract class ServerConnection {
-    private static final long serialVersionUID = 8681502936497815461L;
     private AdrenalineUI ui;
     private String nickname;
     private String hostname;
