@@ -3,107 +3,107 @@
 <config>
   <weapons quantity="">
     <weapon>
-      <id>022</id>
+      <id>15</id>
       <name>Martello_Ionico</name>
       <path>src/main/Resources/weapons/martelloionico.xml</path>
     </weapon>
     <weapon>
-      <id>023</id>
+      <id>16</id>
       <name>Spada_Fotonica</name>
       <path>src/main/Resources/weapons/spadafotonica.xml</path>
     </weapon>
     <weapon>
-      <id>024</id>
+      <id>17</id>
       <name>Cyberguanto</name>
       <path>src/main/Resources/weapons/cyberguanto.xml</path>
     </weapon>
     <weapon>
-      <id>025</id>
+      <id>18</id>
       <name>Fucile_A_Pompa</name>
       <path>src/main/Resources/weapons/fucileapompa.xml</path>
     </weapon>
     <weapon>
-      <id>026</id>
+      <id>19</id>
       <name>Fucile_Laser</name>
       <path>src/main/Resources/weapons/fucilelaser.xml</path>
     </weapon>
     <weapon>
-      <id>027</id>
+      <id>20</id>
       <name>Zx-2</name>
       <path>src/main/Resources/weapons/zx-2.xml</path>
     </weapon>
     <weapon>
-      <id>028</id>
+      <id>21</id>
       <name>Onda_D'Urto</name>
       <path>src/main/Resources/weapons/ondadurto.xml</path>
     </weapon>
     <weapon>
-      <id>029</id>
+      <id>22</id>
       <name>Cannone_Vortex</name>
       <path>src/main/Resources/weapons/cannonevortex.xml</path>
     </weapon>
     <weapon>
-      <id>0210</id>
+      <id>23</id>
       <name>Razzo_Termico</name>
       <path>src/main/Resources/weapons/razzotermico.xml</path>
     </weapon>
     <weapon>
-      <id>0211</id>
+      <id>24</id>
       <name>Lanciarazzi</name>
       <path>src/main/Resources/weapons/lanciarazzi.xml</path>
     </weapon>
     <weapon>
-      <id>0212</id>
+      <id>25</id>
       <name>Lanciagranate</name>
       <path>src/main/Resources/weapons/lanciagranate.xml</path>
     </weapon>
     <weapon>
-      <id>0213</id>
+      <id>26</id>
       <name>Lanciafiamme</name>
       <path>src/main/Resources/weapons/lanciafiamme.xml</path>
     </weapon>
     <weapon>
-      <id>0214</id>
+      <id>27</id>
       <name>Vulcanizzatore</name>
       <path>src/main/Resources/weapons/vulcanizzatore.xml</path>
     </weapon>
     <weapon>
-      <id>0215</id>
+      <id>28</id>
       <name>Raggio_Solare</name>
       <path>src/main/Resources/weapons/raggiosolare.xml</path>
     </weapon>
     <weapon>
-      <id>0216</id>
+      <id>29</id>
       <name>Torpedine</name>
       <path>src/main/Resources/weapons/torpedine.xml</path>
     </weapon>
     <weapon>
-      <id>0217</id>
+      <id>30</id>
       <name>Raggio_Traente</name>
       <path>src/main/Resources/weapons/raggiotraente.xml</path>
     </weapon>
     <weapon>
-      <id>0218</id>
+      <id>31</id>
       <name>Fucile_Di_Precisione</name>
       <path>src/main/Resources/weapons/fucilediprecisione.xml</path>
     </weapon>
     <weapon>
-      <id>0219</id>
+      <id>32</id>
       <name>Fucile_Al_Plasma</name>
       <path>src/main/Resources/weapons/fucilealplasma.xml</path>
     </weapon>
     <weapon>
-      <id>0220</id>
+      <id>33</id>
       <name>Mitragliatrice</name>
       <path>src/main/Resources/weapons/mitragliatrice.xml</path>
     </weapon>
     <weapon>
-      <id>0221</id>
+      <id>34</id>
       <name>Distruttore</name>
       <path>src/main/Resources/weapons/distruttore.xml</path>
     </weapon>
     <weapon>
-      <id>0222</id>
+      <id>35</id>
       <name>Falce_Protonica</name>
       <path>src/main/Resources/weapons/falceprotonica.xml</path>
     </weapon>
