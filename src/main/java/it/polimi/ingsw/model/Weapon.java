@@ -103,19 +103,19 @@ public class Weapon extends Card{
         builder.setErrorHandler(new ErrorHandler() {
             @Override
             public void warning(SAXParseException e) throws SAXException {
-                Logger.log("WARNING : " + e.getMessage()); // do nothing
+                Logger.logServer("WARNING : " + e.getMessage()); // do nothing
                 throw e;
             }
 
             @Override
             public void error(SAXParseException e) throws SAXException {
-                Logger.log("ERROR : " + e.getMessage());
+                Logger.logServer("ERROR : " + e.getMessage());
                 throw e;
             }
 
             @Override
             public void fatalError(SAXParseException e) throws SAXException {
-                Logger.log("FATAL : " + e.getMessage());
+                Logger.logServer("FATAL : " + e.getMessage());
                 throw e;
             }
         });
@@ -143,13 +143,13 @@ public class Weapon extends Card{
             initialized = true;
             loaded = true;
         } catch (ParserConfigurationException e) {
-            Logger.log("Parsing errors occur during the initialization of the weapon:\n"+this.toString());
+            Logger.logServer("Parsing errors occur during the initialization of the weapon:\n"+this.toString());
             Logger.logErr(e.getMessage());
         } catch (IOException e) {
-            Logger.log("IO errors occur during the initialization of the weapon:\n"+this.toString());
+            Logger.logServer("IO errors occur during the initialization of the weapon:\n"+this.toString());
             Logger.logErr(e.getMessage());
         } catch (SAXException e) {
-            Logger.log("SAX errors occur during the initialization of the weapon:\n"+this.toString());
+            Logger.logServer("SAX errors occur during the initialization of the weapon:\n"+this.toString());
             Logger.logErr(e.getMessage());
         }
     }

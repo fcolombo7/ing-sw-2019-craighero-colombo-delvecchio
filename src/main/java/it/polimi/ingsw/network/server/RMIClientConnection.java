@@ -42,7 +42,6 @@ public class RMIClientConnection extends ClientConnection{
         pool.submit(() -> {
             try {
                 clientStub.keepAlive();
-                Logger.log("["+getNickname()+" IS ALIVE]");
                 getRoom().isAlive(this);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call keepAlive().");

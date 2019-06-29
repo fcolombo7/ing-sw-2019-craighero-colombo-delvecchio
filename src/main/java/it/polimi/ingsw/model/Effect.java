@@ -771,23 +771,23 @@ public class Effect {
             }
         }
         if(selectedPlayer==null){
-            Logger.log("Invalid target received");
+            Logger.logServer("Invalid target received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"INVALID TARGET RECEIVED")));
             return;
         }
         MatrixHelper playerMatrix=turn.getPlayerMatrix(selectedPlayer);
         if(playerMatrix==null){
-            Logger.log("Invalid target received");
+            Logger.logServer("Invalid target received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"INVALID TARGET RECEIVED")));
             return;
         }
         if(playerMatrix.toBooleanMatrix()[newPosition[0]][newPosition[1]]){
             selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(newPosition[0],newPosition[1]));
             turn.getGame().notify(new MoveMessage(new SimplePlayer(selectedPlayer)));
-            Logger.log("Moving the selected player");
+            Logger.logServer("Moving the selected player");
             handleExtra(turn);
         }else{
-            Logger.log("Invalid newPosition received");
+            Logger.logServer("Invalid newPosition received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"UNREACHABLE POSITION RECEIVED")));
         }
     }
@@ -894,7 +894,7 @@ public class Effect {
         Square lastPosition=last.getPosition();
         turn.getGame().getCurrentPlayer().setPosition(lastPosition);
         turn.getGame().notify(new MoveMessage(new SimplePlayer(turn.getGame().getCurrentPlayer())));
-        Logger.log("Moving the current player due to Extra");
+        Logger.logServer("Moving the current player due to Extra");
     }
 
     /**
@@ -1035,7 +1035,7 @@ public class Effect {
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square position=last.getPosition();
         repeatMarkInSquare(turn,value,position);
-        Logger.log("Mark all the player in the last square due to Extra");
+        Logger.logServer("Mark all the player in the last square due to Extra");
     }
 
     /**
@@ -1048,7 +1048,7 @@ public class Effect {
         if(last==null||last.getPosition()==null) throw new IllegalStateException("last shot player or his position is null");
         Square position=last.getPosition();
         repeatDamageInSquare(turn,value,position);
-        Logger.log("Damage all the player in the last square due to Extra");
+        Logger.logServer("Damage all the player in the last square due to Extra");
     }
 
     /**
@@ -1062,7 +1062,7 @@ public class Effect {
         if(player==null) throw new IllegalStateException("last shot player is null");
         player.setPosition(position);
         turn.getGame().notify(new MoveMessage(new SimplePlayer(turn.getGame().getCurrentPlayer())));
-        Logger.log("Moving the last shot player due to Extra");
+        Logger.logServer("Moving the last shot player due to Extra");
     }
 
     /**

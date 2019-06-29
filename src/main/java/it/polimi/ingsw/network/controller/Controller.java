@@ -321,7 +321,7 @@ public class Controller{
         for(Player p:disconnected){
             builder.append(p.getNickname()).append(" ");
         }
-        Logger.log(builder.toString());
+        Logger.logServer(builder.toString());
     }
 
     public synchronized void gameEndAck(String sender) {

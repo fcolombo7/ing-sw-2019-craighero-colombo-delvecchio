@@ -34,15 +34,15 @@ public class RMIServer  implements RMIServerHandler{
     
     public void start(int portNumber) throws ServerException {
         try{
-            Logger.log("Present Project Directory : "+ System.getProperty("user.dir"));
-            Logger.log("Composing codebase path: "+ "file://"+new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
+            Logger.logServer("Present Project Directory : "+ System.getProperty("user.dir"));
+            Logger.logServer("Composing codebase path: "+ "file://"+new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
             System.setProperty("java.rmi.server.hostname",hostname);
             System.setProperty("java.rmi.server.codebase","file://"+System.getProperty("user.dir")+"/target/classes");
             startRegistry(portNumber);
             RMIServerHandler stub = (RMIServerHandler) UnicastRemoteObject.exportObject(this, portNumber);
             String name="rmi//"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME;
             Naming.rebind("//"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME,stub);
-            Logger.log("RMI server started. ["+name+"]");
+            Logger.logServer("RMI server started. ["+name+"]");
         } catch (AccessException e) {
             throw new ServerException("RMI server not loaded (AccessException):\n"+e.getMessage());
         } catch (RemoteException e) {
@@ -67,7 +67,7 @@ public class RMIServer  implements RMIServerHandler{
 
     @Override
     public synchronized String login(String nickname, String motto, RMIClientHandler client) {
-        Logger.log("[Received a login request form RMI]");
+        Logger.logServer("[Received a login request form RMI]");
         RMIClientConnection clientConnection = new RMIClientConnection(client,this);
         int response=server.checkClientLogin(nickname,clientConnection);
         if(response==1||response==2){

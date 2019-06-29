@@ -114,13 +114,13 @@ public class Powerup extends Card {
 
             this.initialized = true;
         } catch (ParserConfigurationException e) {
-            Logger.log("Parsing errors occur during the initialization of the powerup:\n"+this.toString());
+            Logger.logServer("Parsing errors occur during the initialization of the powerup:\n"+this.toString());
             Logger.logErr(e.getMessage());
         } catch (IOException e) {
-            Logger.log("IO errors occur during the initialization of the powerup:\n"+this.toString());
+            Logger.logServer("IO errors occur during the initialization of the powerup:\n"+this.toString());
             Logger.logErr(e.getMessage());
         } catch (SAXException e) {
-            Logger.log("SAX errors occur during the initialization of the powerup:\n"+this.toString());
+            Logger.logServer("SAX errors occur during the initialization of the powerup:\n"+this.toString());
             Logger.logErr(e.getMessage());
         }
     }

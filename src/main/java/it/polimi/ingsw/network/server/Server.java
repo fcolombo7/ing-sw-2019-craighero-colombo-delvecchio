@@ -35,27 +35,27 @@ public class Server{
     }
 
     public synchronized int checkClientLogin(String nickname, ClientConnection client){
-        Logger.log("Login request received from " + nickname);
+        Logger.logServer("Login request received from " + nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
             if(!disconnected.containsKey(nickname)){
                 players.put(nickname, client);
-                Logger.log(nickname+" is in.");
+                Logger.logServer(nickname+" is in.");
                 return 1;
             }else {
                 Room room=rooms.get(disconnected.get(nickname));
                 players.put(nickname, client);
                 client.setRoom(room);
-                Logger.log(nickname+" is back in room "+ room.getRoomNumber()+".");
+                Logger.logServer(nickname+" is back in room "+ room.getRoomNumber()+".");
                 return 2;
             }
         }else{
-            Logger.log(nickname+" is already in.");
+            Logger.logServer(nickname+" is already in.");
             return 0;
         }
     }
 
     public synchronized void deregisterConnection(ClientConnection client){
-        Logger.log("Deregistering "+client.getNickname()+" from server");
+        Logger.logServer("Deregistering "+client.getNickname()+" from server");
         players.remove(client.getNickname());
         Room room=client.getRoom();
         if(room.remove(client)){
@@ -69,7 +69,7 @@ public class Server{
     }
 
     public void disconnectConnection(ClientConnection client) {
-        Logger.log("Disconnecting "+client.getNickname()+" from server");
+        Logger.logServer("Disconnecting "+client.getNickname()+" from server");
         disconnected.put(client.getNickname(),client.getRoom().getRoomNumber());
         //client.getRoom().disconnect(client);
         players.remove(client.getNickname());
@@ -80,7 +80,7 @@ public class Server{
             joinRoom(client);
         } catch (JoinRoomException e) {
             addNewRoom(client);
-            Logger.log("New room has been created");
+            Logger.logServer("New room has been created");
         }
     }
 
@@ -123,8 +123,8 @@ public class Server{
             Server server = new Server(hostname);
             server.startServer();
 
-            Logger.log(Constants.RMI_SERVER_NAME + " started:");
-            Logger.log("(RMI: " + Constants.RMI_PORT + ", socket: " + Constants.SOCKET_PORT + ")");
+            Logger.logServer(Constants.RMI_SERVER_NAME + " started:");
+            Logger.logServer("(RMI: " + Constants.RMI_PORT + ", socket: " + Constants.SOCKET_PORT + ")");
         } catch (ServerException e) {
             Logger.logErr(e.getMessage());
         }

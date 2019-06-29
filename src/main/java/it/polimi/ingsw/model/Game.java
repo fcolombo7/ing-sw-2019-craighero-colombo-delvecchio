@@ -552,7 +552,7 @@ public class Game extends Observable<MatchMessage> {
         }
         fillGameboard();
         BoardUpdateMessage boardUpdateMessage=new BoardUpdateMessage(new GameBoard(gameBoard));
-        Logger.log("Sending board created message...");
+        Logger.logServer("Sending board created message...");
         notify(boardUpdateMessage);
         for (Player p:players) {
             if(p.isFirst()) {
@@ -724,7 +724,7 @@ public class Game extends Observable<MatchMessage> {
      */
     public void respawnPlayer(Player player, Card discardedPowerup){
         if(player.getStatus()!=PlayerStatus.DEAD&&player.getStatus()!=PlayerStatus.FIRST_SPAWN){
-            Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: status]");
+            Logger.logServer("Invalid answer received form player "+player.getNickname()+". [RESPAWN: status]");
             MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
             notify(message);
             return;
@@ -742,7 +742,7 @@ public class Game extends Observable<MatchMessage> {
                 return;
             }
         }
-        Logger.log("Invalid answer received form player "+player.getNickname()+". [RESPAWN: missing powerup]");
+        Logger.logServer("Invalid answer received form player "+player.getNickname()+". [RESPAWN: missing powerup]");
         MatchMessage message= new InvalidAnswerMessage(player.getNickname(),"Cannot respawn the player. ["+player.getStatus().name()+"]");
         notify(message);
         throw new IllegalArgumentException("MISSING POWERUP");

@@ -73,7 +73,7 @@ public class Room {
             }
             players.add(client);
             setUpKeepAlive(client);
-            Logger.log(client.getNickname() + " has joined the room " + roomNumber);
+            Logger.logServer(client.getNickname() + " has joined the room " + roomNumber);
 
             if (players.size() == MAX_PLAYERS) {
                 full = true;
@@ -95,7 +95,7 @@ public class Room {
             cc.exitRoomAdvise(client.getNickname());
         }
 
-        Logger.log(client.getNickname() + " has left the room " + roomNumber);
+        Logger.logServer(client.getNickname() + " has left the room " + roomNumber);
         if (players.size() < Constants.ROOM_MIN_PLAYERS)
             resetCountDown();
         return players.isEmpty();
@@ -150,6 +150,7 @@ public class Room {
     }
 
     public synchronized void isAlive(ClientConnection client){
+        //Logger.logServer("["+client.getNickname()+" IS ALIVE]");
         if(waitingTimers !=null){
             Timer t= waitingTimers.get(client.getNickname());
             if(t!=null){
@@ -219,7 +220,7 @@ public class Room {
     public void recoverClient(ClientConnection client) {
         if(controller.isDisconnected(client.getNickname())){
             Player p=controller.getPlayerToRecover(client.getNickname());
-            Logger.log(client.getNickname() + " has been recovered in the room " + roomNumber);
+            Logger.logServer(client.getNickname() + " has been recovered in the room " + roomNumber);
             View pView=new RemoteView(p,client);
             model.register(pView);
             views.put(p.getNickname(),pView);

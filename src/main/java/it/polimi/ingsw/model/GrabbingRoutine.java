@@ -48,7 +48,7 @@ public class GrabbingRoutine implements TurnRoutine {
             onDiscardedWeaponReceived((DiscardedWeaponAnswer)answer);
         }
         else{
-            Logger.log("Invalid TurnRoutineMessage received");
+            Logger.logServer("Invalid TurnRoutineMessage received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Received a "+answer.getRoutineAnswer()+" message.")));
         }
 
@@ -69,7 +69,7 @@ public class GrabbingRoutine implements TurnRoutine {
                 return;
             }
         }
-        Logger.log("Not existing weapon received");
+        Logger.logServer("Not existing weapon received");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Not existing weapon received")));
     }
 
@@ -95,7 +95,7 @@ public class GrabbingRoutine implements TurnRoutine {
                 }
             }
         }
-        Logger.log("Not existing weapon received");
+        Logger.logServer("Not existing weapon received");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Not existing weapon received")));
     }
 
@@ -185,7 +185,7 @@ public class GrabbingRoutine implements TurnRoutine {
     }
 
     private void logError(TurnRoutineType routineType) {
-        Logger.log(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
+        Logger.logServer(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]")));
     }
 
@@ -201,7 +201,7 @@ public class GrabbingRoutine implements TurnRoutine {
 
     @Override
     public void onEffectPerformed() {
-        Logger.log("GrabbingRoutine can not perform an effect");
+        Logger.logServer("GrabbingRoutine can not perform an effect");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"GrabbingRoutine can not perform an effect")));
     }
 }
