@@ -89,7 +89,7 @@ public class Cli implements AdrenalineUI{
         Logger.print(BOLD + "Ora seleziona il tipo di connessione con cui vorresti giocare:\n" +
                             "1. RMI\n" +
                             "2. SOCKET" + RESET);
-        int connection = in.nextInt();
+        int connection = Integer.parseInt(in.nextLine());
         if(connection == 1)
             serverConnection = new RMIServerConnection(hostname,this);
         else serverConnection = new SocketServerConnection(hostname, this);
@@ -151,7 +151,7 @@ public class Cli implements AdrenalineUI{
             Logger.print("3. Board 3 (" + UNDERLINE + "best for 5 players" + RESET + ")");
             Logger.print("4. Board 4 (" + UNDERLINE + "best for 4 players" + RESET + ")");
             Logger.print("Your choice: ");
-            int choice = reader.nextInt();
+            int choice = Integer.parseInt(reader.nextLine());
 
             switch (choice) {
                 case 1:
@@ -591,10 +591,10 @@ public class Cli implements AdrenalineUI{
         return weapons.get(reader.nextInt() + 1);
     }*/
 
-    private Card choosingPowerup(){
+    public Card choosingPowerup(){
         for(Card powerup: powerups)
             Logger.print((powerups.indexOf(powerup)+1) + ". " + powerup.getName() + "\n");
-        return powerups.get(reader.nextInt() - 1);
+        return powerups.get(Integer.parseInt(reader.nextLine()) - 1);
     }
 
     @Override
@@ -670,7 +670,9 @@ public class Cli implements AdrenalineUI{
     public void onRespwanRequest(List<Card> powerups) {
         stopScan();
         this.powerups.addAll(powerups);
-        serverConnection.respawnPlayer(choosingPowerup());
+        Logger.print("Scegli un powerup da scartare per resuscitare: \n");
+        Card powerup = choosingPowerup();
+        serverConnection.respawnPlayer(powerup);
     }
 
     @Override
@@ -1015,6 +1017,65 @@ public class Cli implements AdrenalineUI{
         String coordinates = reader.nextLine();
         serverConnection.runAction(parseCoordinates(coordinates));
     }
+/*
+    void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
+        onMatchUpdate(players, gameBoard, frenzy);
+    }
+
+    void onRecoverPlayerAdvise(String nickname){
+
+    }
+
+    void onFullOfPowerup(){
+        Logger.print("Hai raggiunto il numero massimo di powerup\n");
+    }
+
+    void onCanCounterAttack(){
+        stopScan();
+        scanner.start();
+        Logger.print("Puoi contrattaccare con una Granata Venom, vuoi usarla? [S/N]");
+        String choice = reader.nextLine();
+        serverConnection.counterAttackAnswer(choice.equals("S"));
+    }
+
+    void onCounterAttack(currentPlayer,player,powerup){
+
+    }
+
+    void onCounterAttackTimeOut(){
+        Logger.print("E' scaduto il tempo utile per contrattaccare...\n");
+    }
+
+    void handleFatalError(String cause, String message){
+
+    }
+
+    void onDisconnectionAdvise(){
+
+    }
+
+    void onGameEnd(List<SimplePlayer> players){
+
+    }
+
+    void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
+        Logger.print("\n\n\n\n");
+        Logger.print("________________________________________________________");
+        Logger.print(REVERSE + BLUE_W + "LA PARTITA E' FINITA\n" + RESET);
+        int counter = 1;
+        for(String player: nicknames) {
+            if (!player.equals(nicknames.get(0)) && points.get(nicknames.indexOf(player)).equals(points.get(nicknames.indexOf(player) - 1)))
+                counter++;
+            Logger.print(counter + ". " + BOLD + player + GREEN_W + points.get(nicknames.indexOf(player)) + RESET + "\n");
+        }
+        Logger.print("________________________________________________________");
+        Logger.print("\n\n\n\n");
+    }
+*/
+
+    private boolean correctInput(List<String> rightWords, String input){
+        return rightWords.contains(input);
+    }
 
     private void updateActionLog(SimplePlayer player, Card weapon, ActionsLog actionsLog){
         String a;
@@ -1131,7 +1192,6 @@ public class Cli implements AdrenalineUI{
 
         synchronized void doStop() {
             this.doStop = true;
-            reader.close();
         }
 
         private synchronized boolean keepRunning() {

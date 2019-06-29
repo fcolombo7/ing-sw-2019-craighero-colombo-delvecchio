@@ -113,6 +113,15 @@ public class TestCli {
         Logger.print(cli.buildPlayerBoard(player).toString());
     }
 
+    public static void main (String[] args){
+        Cli cli = new Cli(2);
+        List<Card> pow = new ArrayList<>();
+        pow.add(new Card("1","aaa", "aaa"));
+        pow.add(new Card("1","bbb", "aaa"));
+        pow.add(new Card("1","ccc", "aaa"));
+        cli.onRespwanRequest(pow);
+    }
+
     @Test
     public void testPrintMarks(){
         Cli cli = new Cli(2);
