@@ -290,6 +290,12 @@ public class MainWindow extends Application {
     private static Image dozerFrenzyPlBImage;
     private static Image bansheeFrenzyPlBImage;
     private static Image violetFrenzyPlBImage;
+    private static Image dstructorSemiFrPlBImage;
+    private static Image sprogSemiFrPlBImage;
+    private static Image dozerSemiFrPlBImage;
+    private static Image bansheeSemiFrPlBImage;
+    private static Image violetSemiFrPlBImage;
+
 
     private static Image yammo;
     private static ImageView yam;
@@ -404,9 +410,9 @@ public class MainWindow extends Application {
 
     public static SquareWindow[][] squareMatrix= new SquareWindow[3][4];
 
-    private static List<String> myPowerups;
-    private static List<String> avEffects;
-    private static List<String> avWeapons;
+    //private static List<String> myPowerups;
+    //private static List<String> avEffects;
+    //private static List<String> avWeapons;
 
     public static double widthScaleFactor;
     public static double heightScaleFactor;
@@ -529,72 +535,38 @@ public class MainWindow extends Application {
 
         stage.setTitle("ADRENALINA");
 
-        plBhashmap.put(0, "/gui/playerBoard.png");
-        plBhashmap.put(1, "/gui/pl1.png");
-        plBhashmap.put(2, "/gui/pl2.png");
-        plBhashmap.put(3, "/gui/pl3.png");
-        plBhashmap.put(4, "/gui/pl4.png");
 
-        dstructorPlBImage=new Image("/gui/playerBoard.png");
-        dozerPlBImage=new Image("/gui/pl1.png");
-        bansheePlBImage= new Image("/gui/pl2.png");
-        sprogPlBImage= new Image("/gui/pl3.png");
-        violetPlBImage=new Image("/gui/pl4.png");
-        dstructorFrenzyPlBImage=new Image("/gui/playerBoardfr.png");
-        dozerFrenzyPlBImage=new Image("/gui/pl1fr.png");
-        bansheeFrenzyPlBImage=new Image("/gui/pl2fr.png");
-        sprogFrenzyPlBImage=new Image("/gui/pl3fr.png");
-        violetFrenzyPlBImage=new Image("/gui/pl4fr.png");
 
-        imDropBlue=new Image("/gui/bluedrop.png");
-        imDropGreen= new Image("/gui/greendrop.png");
-        imDropGrey=new Image("/gui/greydrop.png");
-        imDropYellow=new Image("/gui/yellowdrop.png");
-        imDropPurple= new Image("/gui/purpledrop.png");
-
-        //settare le Image im1,.. im21
-        im1=new Image("/gui/15.png");
-        im2=new Image("/gui/16.png");
-        im3=new Image("/gui/17.png");
-        im4=new Image("/gui/18.png");
-        im5=new Image("/gui/19.png");
-        im6=new Image("/gui/20.png");
-        im7=new Image("/gui/21.png");
-        im8=new Image("/gui/22.png");
-        im9=new Image("/gui/23.png");
-        im10=new Image("/gui/24.png");
-        im11=new Image("/gui/25.png");
-        im12=new Image("/gui/26.png");
-        im13=new Image("/gui/27.png");
-        im14=new Image("/gui/28.png");
-        im15=new Image("/gui/29.png");
-        im16=new Image("/gui/30.png");
-        im17=new Image("/gui/31.png");
-        im18=new Image("/gui/32.png");
-        im19=new Image("/gui/33.png");
-        im20=new Image("/gui/34.png");
-        im21=new Image("/gui/35.png");
-
-        boolean mapp1=false;
-        boolean mapp2=true;
-        boolean mapp3=false;
-        boolean mapp4=false;
+        //boolean mapp1=false;
+        //boolean mapp2=true;
+        //boolean mapp3=false;
+        //boolean mapp4=false;
         //if(urlmap.contains("/gui/map1.png")) mapp1=true;
         //if(urlmap.contains("/gui/map2.png")) mapp2=true;
         //if(urlmap.contains("/gui/map3.png")) mapp3=true;
         //if(urlmap.contains("/gui/map4.png")) mapp4=true;
+
+        AnchorPane gp= new AnchorPane();
+
+
+
         if(numMap==1) {
             image = new Image("/gui/map1.png");
+            initMap1(gp);
         }
         if(numMap==2){
             image = new Image("/gui/map2.png");
+            initMap2(gp);
         }
         if(numMap==3){
             image = new Image("/gui/map3.png");
+            initMap3(gp);
         }
         if(numMap==4){
             image = new Image("/gui/map4.png");
+            initMap4(gp);
         }
+
         map=new ImageView(image);
         configImageView(map, 600, 454, 0, 0);
         //playerBoard= new Image("/gui/pl4fr.png");
@@ -609,7 +581,6 @@ public class MainWindow extends Application {
         //devo inizializzare tutte le hashmap
 
 
-        AnchorPane gp= new AnchorPane();
 
         myWeap1Label=new Label();
         myPowerup1Label=new Label();
@@ -841,7 +812,7 @@ public class MainWindow extends Application {
 
         gp.getChildren().add(map);
 
-        if(mapp2) initMap2(gp);
+        //if(mapp2) initMap2(gp);
 
 
 
@@ -2232,7 +2203,11 @@ public class MainWindow extends Application {
 
     private static void switchBoards(List<SimplePlayer> players){
         for(int i=0; i<players.size(); i++){
-            if(players.get(i).isSwitched()) plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+6));
+            if(players.get(i).isSwitched()) {
+                plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+6));
+            }else {
+                plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+11));
+            }
             //else devo solo girare la cosa a sinistra
         }
 
@@ -2510,6 +2485,12 @@ public class MainWindow extends Application {
         plBImageHashMap.put(8, bansheeFrenzyPlBImage);
         plBImageHashMap.put(9, sprogFrenzyPlBImage);
         plBImageHashMap.put(10, violetFrenzyPlBImage);
+        plBImageHashMap.put(11, dstructorFrenzyPlBImage);
+        plBImageHashMap.put(12, dozerFrenzyPlBImage);
+        plBImageHashMap.put(13, bansheeFrenzyPlBImage);
+        plBImageHashMap.put(14, sprogFrenzyPlBImage);
+        plBImageHashMap.put(15, violetFrenzyPlBImage);
+
     }
 
     private static void initMyPowerupsImVHashMap(){
@@ -2924,8 +2905,54 @@ public class MainWindow extends Application {
         initInfoWindowPlayerHashMap();
         initWeaponsHashMap();
 
+        plBhashmap.put(0, "/gui/playerBoard.png");
+        plBhashmap.put(1, "/gui/pl1.png");
+        plBhashmap.put(2, "/gui/pl2.png");
+        plBhashmap.put(3, "/gui/pl3.png");
+        plBhashmap.put(4, "/gui/pl4.png");
 
-        String myPlayB=plBhashmap.get(playerTurnNumber);
+        dstructorPlBImage=new Image("/gui/playerBoard.png");
+        dozerPlBImage=new Image("/gui/pl1.png");
+        bansheePlBImage= new Image("/gui/pl2.png");
+        sprogPlBImage= new Image("/gui/pl3.png");
+        violetPlBImage=new Image("/gui/pl4.png");
+        dstructorFrenzyPlBImage=new Image("/gui/playerBoardfr.png");
+        dozerFrenzyPlBImage=new Image("/gui/pl1fr.png");
+        bansheeFrenzyPlBImage=new Image("/gui/pl2fr.png");
+        sprogFrenzyPlBImage=new Image("/gui/pl3fr.png");
+        violetFrenzyPlBImage=new Image("/gui/pl4fr.png");
+
+        imDropBlue=new Image("/gui/bluedrop.png");
+        imDropGreen= new Image("/gui/greendrop.png");
+        imDropGrey=new Image("/gui/greydrop.png");
+        imDropYellow=new Image("/gui/yellowdrop.png");
+        imDropPurple= new Image("/gui/purpledrop.png");
+
+        //settare le Image im1,.. im21
+        im1=new Image("/gui/15.png");
+        im2=new Image("/gui/16.png");
+        im3=new Image("/gui/17.png");
+        im4=new Image("/gui/18.png");
+        im5=new Image("/gui/19.png");
+        im6=new Image("/gui/20.png");
+        im7=new Image("/gui/21.png");
+        im8=new Image("/gui/22.png");
+        im9=new Image("/gui/23.png");
+        im10=new Image("/gui/24.png");
+        im11=new Image("/gui/25.png");
+        im12=new Image("/gui/26.png");
+        im13=new Image("/gui/27.png");
+        im14=new Image("/gui/28.png");
+        im15=new Image("/gui/29.png");
+        im16=new Image("/gui/30.png");
+        im17=new Image("/gui/31.png");
+        im18=new Image("/gui/32.png");
+        im19=new Image("/gui/33.png");
+        im20=new Image("/gui/34.png");
+        im21=new Image("/gui/35.png");
+
+
+        String myPlayB=plBhashmap.get(playerTurnNumber-1);
         playerBoard= new Image(myPlayB);
         myTurn=playerTurnNumber;
         myNickname=players.get(myTurn-1).getNickname();
@@ -2945,11 +2972,28 @@ public class MainWindow extends Application {
             numbEnemyNickname.put(i+1, otherPlayers.get(i).getNickname());
         }
 
-        damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
-        damagesHashMap.put(players.get(1).getNickname(), imDropGrey );
-        damagesHashMap.put(players.get(2).getNickname(), imDropBlue);
-        damagesHashMap.put(players.get(3).getNickname(), imDropGreen);
-        damagesHashMap.put(players.get(4).getNickname(), imDropPurple);
+        if(players.size()==2) {
+            damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
+            damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
+        }
+        if(players.size()==3) {
+            damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
+            damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
+            damagesHashMap.put(players.get(2).getNickname(), imDropBlue);
+        }
+        if(players.size()==4) {
+            damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
+            damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
+            damagesHashMap.put(players.get(2).getNickname(), imDropBlue);
+            damagesHashMap.put(players.get(3).getNickname(), imDropGreen);
+        }
+        if(players.size()==5) {
+            damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
+            damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
+            damagesHashMap.put(players.get(2).getNickname(), imDropBlue);
+            damagesHashMap.put(players.get(3).getNickname(), imDropGreen);
+            damagesHashMap.put(players.get(4).getNickname(), imDropPurple);
+        }
 
 
         plBHashMap.put(myTurn, plB);
@@ -3011,7 +3055,8 @@ public class MainWindow extends Application {
                 cur++;
             }
         }
-        MapChoice.display();
+        //stage.close();
+        MapChoice.display(stage);
     }
 
     public static void onInvalidMessageReceived(String msg) {
@@ -3021,7 +3066,8 @@ public class MainWindow extends Application {
 
     public static void onBoardUpdate(SimpleBoard gameBoard) {
         if(!init){
-            MapChoice.stage.close();
+
+            //MapChoice.stage.close();
             initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
             init=true;
         }else{
@@ -3048,6 +3094,7 @@ public class MainWindow extends Application {
 
     public static void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
         if(player.getNickname().equalsIgnoreCase(myNickname)) {
+            mess.setText("Ti sei rigenerato");
             setMyPowerups(player.getPowerupCards());
             setMyPosition(player.getPosition());
         }else {
@@ -3227,9 +3274,10 @@ public class MainWindow extends Application {
         countPlayerList2=0;
         countPlayerList3=0;
         countPlayerList4=0;
-        mess.setText(selectable.toString() + "/n /n Seleziona le liste e premi ok");
+        mess.setText(selectable.toString() + "\n \n Seleziona le liste e premi ok");
         if(selectable.size()==1){
-
+            eff1.setDisable(false);
+            eff1.setOnAction(null);
         }
         if(selectable.size()==2){
             eff1.setDisable(false);
@@ -3518,6 +3566,72 @@ public class MainWindow extends Application {
             }
         }
 
+    }
+
+    public static void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
+        updateBoard(gameBoard);
+        updatePlayerBoards(players, frenzy);
+    }
+
+    public static void onRecoverPlayerAdvise(String nickname){
+        mess.setText(nickname + " è tornato in partita");
+    }
+
+    public static void onFullOfPowerup(){
+        mess.setText("Hai già 3 potenziamenti");
+    }
+
+    public static void onCanCounterAttack(){
+        mess.setText("Vuoi usare una granata venom?");
+        yes.setDisable(false);
+        no.setDisable(false);
+        yes.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                no.setOnAction(null);
+                yes.setOnAction(null);
+                no.setDisable(true);
+                yes.setDisable(true);
+
+                connection.counterAttackAnswer(true);
+            }
+        });
+        no.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                yes.setOnAction(null);
+                no.setOnAction(null);
+                yes.setDisable(true);
+                no.setDisable(true);
+                connection.counterAttackAnswer(false);
+            }
+        });
+    }
+
+    /*public static void onCounterAttack(currentPlayer,player,powerup){
+
+    }*/
+
+    public static void onCounterAttackTimeOut(){
+        yes.setDisable(true);
+        no.setDisable(true);
+        mess.setText("Tempo scaduto!");
+    }
+
+    public static void handleFatalError(String cause, String message){
+        mess.setText(message+ "\n" + cause);
+    }
+
+    public static void onDisconnectionAdvise(){
+        mess.setText("Un giocatore si è disconnesso");
+    }
+
+    public static void onGameEnd(List<SimplePlayer> players){
+        mess.setText("La partita è terminata");
+    }
+
+    public static void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
+        mess.setText(nicknames.get(0) + " = " +points.get(0) + "/n" +nicknames.get(1) + " = " +points.get(1) + "/n" + nicknames.get(2) + " = " +points.get(2) + "/n");
     }
 }
 

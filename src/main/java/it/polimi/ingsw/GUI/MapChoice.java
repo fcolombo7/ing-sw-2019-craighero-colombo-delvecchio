@@ -17,12 +17,12 @@ import java.util.ArrayList;
 //updMapChoice
 public class MapChoice {
 
-    public static Stage stage;
+    //public static Stage stage;
     private static ServerConnection connection;
 
-    public static void display() {
-        stage= new Stage();
-        stage.setTitle("Map choice");
+    public static void display(Stage stage) {
+        //stage= new Stage();
+        //stage.setTitle("Map choice");
         stage.setMinWidth(600);
         stage.setMinHeight(500);
         RadioButton first= new RadioButton("First map");

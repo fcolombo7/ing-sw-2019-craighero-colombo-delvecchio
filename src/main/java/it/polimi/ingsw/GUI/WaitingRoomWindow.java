@@ -15,7 +15,7 @@ public class WaitingRoomWindow {
     public static void create(Stage stage){
         stage.setMinHeight(500);
         stage.setMinWidth(600);
-        stage.setHeight(500);
+        stage.setHeight(550);
         stage.setWidth(600);
         AnchorPane waitingRoom = new AnchorPane();
         Label text = new Label("Waiting for other players...");
@@ -55,4 +55,8 @@ public class WaitingRoomWindow {
     public static TextArea getArea() {
         return area;
     }
+
+
 }
+
+
