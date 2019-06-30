@@ -146,11 +146,13 @@ public class Server{
     private static void setUpConfiguration() throws ParserConfigurationException, IOException, SAXException, URISyntaxException {
         String path;
         String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+        Logger.logServer(inExecutionFile);
         int last = 0;
         for (int i = 0; i < inExecutionFile.length(); i++) {
             if (inExecutionFile.charAt(i) == '/')
                 last = i;
         }
+        Logger.logServer(inExecutionFile.substring(0, last + 1));
         path = inExecutionFile.substring(0, last + 1) + "config.xml";
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

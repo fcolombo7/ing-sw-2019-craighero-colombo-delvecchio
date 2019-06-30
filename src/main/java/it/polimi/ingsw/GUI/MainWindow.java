@@ -534,115 +534,113 @@ public class MainWindow extends Application {
          */
     }
 
-    public static void initGameWindow(int numMap, int skullNumber){
-
-        Platform.setImplicitExit(false);
-        Platform.runLater(()-> {
-
-            stage.setTitle("ADRENALINA");
+    public static void initGameWindow(int numMap, int skullNumber) {
 
 
-            //boolean mapp1=false;
-            //boolean mapp2=true;
-            //boolean mapp3=false;
-            //boolean mapp4=false;
-            //if(urlmap.contains("/gui/map1.png")) mapp1=true;
-            //if(urlmap.contains("/gui/map2.png")) mapp2=true;
-            //if(urlmap.contains("/gui/map3.png")) mapp3=true;
-            //if(urlmap.contains("/gui/map4.png")) mapp4=true;
-
-            AnchorPane gp = new AnchorPane();
+        stage.setTitle("ADRENALINA");
 
 
-            if (numMap == 1) {
-                image = new Image("/gui/map1.png");
-                initMap1(gp);
-            }
-            if (numMap == 2) {
-                image = new Image("/gui/map2.png");
-                initMap2(gp);
-            }
-            if (numMap == 3) {
-                image = new Image("/gui/map3.png");
-                initMap3(gp);
-            }
-            if (numMap == 4) {
-                image = new Image("/gui/map4.png");
-                initMap4(gp);
-            }
+        //boolean mapp1=false;
+        //boolean mapp2=true;
+        //boolean mapp3=false;
+        //boolean mapp4=false;
+        //if(urlmap.contains("/gui/map1.png")) mapp1=true;
+        //if(urlmap.contains("/gui/map2.png")) mapp2=true;
+        //if(urlmap.contains("/gui/map3.png")) mapp3=true;
+        //if(urlmap.contains("/gui/map4.png")) mapp4=true;
 
-            map = new ImageView(image);
-            configImageView(map, 600, 454, 0, 0);
-            //playerBoard= new Image("/gui/pl4fr.png");
-            plB = new ImageView(playerBoard);
-            configImgv(plB, 600, 0, 480);
-            zoomedimg = new ImageView();
-            configImageView(zoomedimg, 150, 253, 1030, 410);
-            zoomedUser = new ImageView();
-            configImageView(zoomedUser, 129, 137, 1030, 410);
+        AnchorPane gp = new AnchorPane();
 
 
-            //devo inizializzare tutte le hashmap
+        if (numMap == 1) {
+            image = new Image("/gui/map1.png");
+            initMap1(gp);
+        }
+        if (numMap == 2) {
+            image = new Image("/gui/map2.png");
+            initMap2(gp);
+        }
+        if (numMap == 3) {
+            image = new Image("/gui/map3.png");
+            initMap3(gp);
+        }
+        if (numMap == 4) {
+            image = new Image("/gui/map4.png");
+            initMap4(gp);
+        }
+
+        map = new ImageView(image);
+        configImageView(map, 600, 454, 0, 0);
+        //playerBoard= new Image("/gui/pl4fr.png");
+        plB = new ImageView(playerBoard);
+        configImgv(plB, 600, 0, 480);
+        zoomedimg = new ImageView();
+        configImageView(zoomedimg, 150, 253, 1030, 410);
+        zoomedUser = new ImageView();
+        configImageView(zoomedUser, 129, 137, 1030, 410);
 
 
-            myWeap1Label = new Label();
-            myPowerup1Label = new Label();
-            setPosLabel(myWeap1Label, 640, 520);
-            setPosLabel(myPowerup1Label, 640, 380);
-            myWeap2Label = new Label();
-            setPosLabel(myWeap2Label, 730, 520);
-            myWeap3Label = new Label();
-            setPosLabel(myWeap3Label, 820, 520);
-            myPowerup2Label = new Label();
-            setPosLabel(myPowerup2Label, 730, 380);
-            myPowerup3Label = new Label();
-            setPosLabel(myPowerup3Label, 820, 380);
-            myPowerup4Label = new Label();
-            setPosLabel(myPowerup4Label, 910, 380);
+        //devo inizializzare tutte le hashmap
 
 
-            mess = new Label();
-            setPosLabel(mess, 1030, 50);
-            mess.setPrefWidth(180 * widthScaleFactor);
-            mess.setPrefWidth(200 * heightScaleFactor);
-            mess.setTextAlignment(TextAlignment.CENTER);
-
-            eff1 = new Button("1");
-            eff2 = new Button("2");
-            eff3 = new Button("3");
-            eff4 = new Button("4");
-            eff1.setDisable(true);
-            eff2.setDisable(true);
-            eff3.setDisable(true);
-            eff4.setDisable(true);
-
-
-            yes = new Button("Si");
-            setPosButton(yes, 1060, 270);
-            yes.setStyle("-fx-background-color: green");
-            yes.setDisable(true);
+        myWeap1Label = new Label();
+        myPowerup1Label = new Label();
+        setPosLabel(myWeap1Label, 640, 520);
+        setPosLabel(myPowerup1Label, 640, 380);
+        myWeap2Label = new Label();
+        setPosLabel(myWeap2Label, 730, 520);
+        myWeap3Label = new Label();
+        setPosLabel(myWeap3Label, 820, 520);
+        myPowerup2Label = new Label();
+        setPosLabel(myPowerup2Label, 730, 380);
+        myPowerup3Label = new Label();
+        setPosLabel(myPowerup3Label, 820, 380);
+        myPowerup4Label = new Label();
+        setPosLabel(myPowerup4Label, 910, 380);
 
 
-            no = new Button("No");
-            setPosButton(no, 1120, 270);
-            no.setStyle("-fx-background-color: red");
-            no.setDisable(true);
+        mess = new Label();
+        setPosLabel(mess, 1030, 50);
+        mess.setPrefWidth(180 * widthScaleFactor);
+        mess.setPrefWidth(200 * heightScaleFactor);
+        mess.setTextAlignment(TextAlignment.CENTER);
+
+        eff1 = new Button("1");
+        eff2 = new Button("2");
+        eff3 = new Button("3");
+        eff4 = new Button("4");
+        eff1.setDisable(true);
+        eff2.setDisable(true);
+        eff3.setDisable(true);
+        eff4.setDisable(true);
 
 
-            ok = new Button("Invia");
-            setPosButton(ok, 1120, 310);
-            ok.setStyle("-fx-background-color: green");
-            ok.setDisable(true);
+        yes = new Button("Si");
+        setPosButton(yes, 1060, 270);
+        yes.setStyle("-fx-background-color: green");
+        yes.setDisable(true);
 
-            okay = new Button("Ok");
-            setPosButton(okay, 1060, 310);
-            okay.setStyle("-fx-background-color: blue");
-            okay.setDisable(true);
 
-            setPosButton(eff1, 1030, 350);
-            setPosButton(eff2, 1070, 350);
-            setPosButton(eff3, 1110, 350);
-            setPosButton(eff4, 1150, 350);
+        no = new Button("No");
+        setPosButton(no, 1120, 270);
+        no.setStyle("-fx-background-color: red");
+        no.setDisable(true);
+
+
+        ok = new Button("Invia");
+        setPosButton(ok, 1120, 310);
+        ok.setStyle("-fx-background-color: green");
+        ok.setDisable(true);
+
+        okay = new Button("Ok");
+        setPosButton(okay, 1060, 310);
+        okay.setStyle("-fx-background-color: blue");
+        okay.setDisable(true);
+
+        setPosButton(eff1, 1030, 350);
+        setPosButton(eff2, 1070, 350);
+        setPosButton(eff3, 1110, 350);
+        setPosButton(eff4, 1150, 350);
 
 
 
@@ -658,123 +656,123 @@ public class MainWindow extends Application {
         b10= new Button(); */
 
 
-            infostage1 = new AnchorPane();
-            infostage2 = new AnchorPane();
-            infostage3 = new AnchorPane();
-            infostage4 = new AnchorPane();
+        infostage1 = new AnchorPane();
+        infostage2 = new AnchorPane();
+        infostage3 = new AnchorPane();
+        infostage4 = new AnchorPane();
 
 
-            inf1 = new Button("Info");
-            inf2 = new Button("Info");
-            inf3 = new Button("Info");
-            inf4 = new Button("Info");
-            inf1.getStyleClass().add("info");
-            inf2.getStyleClass().add("info");
-            inf3.getStyleClass().add("info");
-            inf4.getStyleClass().add("info");
-            inf1.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(1)));
+        inf1 = new Button("Info");
+        inf2 = new Button("Info");
+        inf3 = new Button("Info");
+        inf4 = new Button("Info");
+        inf1.getStyleClass().add("info");
+        inf2.getStyleClass().add("info");
+        inf3.getStyleClass().add("info");
+        inf4.getStyleClass().add("info");
+        inf1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(1)));
 
-                }
-            });
-            inf2.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(2)));
-                }
-            });
-            inf3.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(3)));
-                }
-            });
-            inf4.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(4)));
-                }
-            });
+            }
+        });
+        inf2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(2)));
+            }
+        });
+        inf3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(3)));
+            }
+        });
+        inf4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(4)));
+            }
+        });
 
-            shoot = new Button("Spara");
-            grab = new Button("Raccogli");
-            move = new Button("Muovi");
-            loadWeapon = new Button("Ricarica");
-            usePowerup = new Button("Potenziamento");
-            end = new Button("Fine");
-            shoot.getStyleClass().add("actionbuttons");
-            grab.getStyleClass().add("actionbuttons");
-            move.getStyleClass().add("actionbuttons");
-            loadWeapon.getStyleClass().add("actionbuttons");
-            usePowerup.getStyleClass().add("actionbuttons");
-            end.getStyleClass().add("actionbuttons");
-            end.setPrefWidth(70 * widthScaleFactor);
-            usePowerup.setPrefWidth(110 * widthScaleFactor);
-            shoot.setPrefWidth(110 * widthScaleFactor);
-            grab.setPrefWidth(110 * widthScaleFactor);
-            move.setPrefWidth(110 * widthScaleFactor);
-            loadWeapon.setPrefWidth(110 * widthScaleFactor);
-            shoot.setDisable(true);
-            grab.setDisable(true);
-            move.setDisable(true);
-            loadWeapon.setDisable(true);
-            usePowerup.setDisable(true);
-            end.setDisable(true);
-            grab.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    connection.selectAction("GRAB");
-                    grab.setDisable(true);
-                }
-            });
-            shoot.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    connection.selectAction("SHOOT");
-                    shoot.setDisable(true);
-                }
-            });
-            move.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    connection.selectAction("MOVE");
-                    move.setDisable(true);
-                }
-            });
-            loadWeapon.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    connection.selectAction("RELOAD");
-                    loadWeapon.setDisable(true);
-                }
-            });
-            usePowerup.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    connection.selectAction("POWERUP");
-                    usePowerup.setDisable(true);
-                }
-            });
-            end.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    connection.selectAction("END");
-                    end.setDisable(true);
-                }
-            });
+        shoot = new Button("Spara");
+        grab = new Button("Raccogli");
+        move = new Button("Muovi");
+        loadWeapon = new Button("Ricarica");
+        usePowerup = new Button("Potenziamento");
+        end = new Button("Fine");
+        shoot.getStyleClass().add("actionbuttons");
+        grab.getStyleClass().add("actionbuttons");
+        move.getStyleClass().add("actionbuttons");
+        loadWeapon.getStyleClass().add("actionbuttons");
+        usePowerup.getStyleClass().add("actionbuttons");
+        end.getStyleClass().add("actionbuttons");
+        end.setPrefWidth(70 * widthScaleFactor);
+        usePowerup.setPrefWidth(110 * widthScaleFactor);
+        shoot.setPrefWidth(110 * widthScaleFactor);
+        grab.setPrefWidth(110 * widthScaleFactor);
+        move.setPrefWidth(110 * widthScaleFactor);
+        loadWeapon.setPrefWidth(110 * widthScaleFactor);
+        shoot.setDisable(true);
+        grab.setDisable(true);
+        move.setDisable(true);
+        loadWeapon.setDisable(true);
+        usePowerup.setDisable(true);
+        end.setDisable(true);
+        grab.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                connection.selectAction("GRAB");
+                grab.setDisable(true);
+            }
+        });
+        shoot.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                connection.selectAction("SHOOT");
+                shoot.setDisable(true);
+            }
+        });
+        move.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                connection.selectAction("MOVE");
+                move.setDisable(true);
+            }
+        });
+        loadWeapon.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                connection.selectAction("RELOAD");
+                loadWeapon.setDisable(true);
+            }
+        });
+        usePowerup.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                connection.selectAction("POWERUP");
+                usePowerup.setDisable(true);
+            }
+        });
+        end.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                connection.selectAction("END");
+                end.setDisable(true);
+            }
+        });
 
 
-            Image deckweap = new Image("/gui/weaponcover.png");
-            ImageView dw = new ImageView(deckweap);
-            dw.setFitWidth(58 * widthScaleFactor);
-            dw.setFitHeight(97 * heightScaleFactor);
+        Image deckweap = new Image("/gui/weaponcover.png");
+        ImageView dw = new ImageView(deckweap);
+        dw.setFitWidth(58 * widthScaleFactor);
+        dw.setFitHeight(97 * heightScaleFactor);
 
-            Image deckpow = new Image("/gui/powerupcover.png");
-            ImageView dp = new ImageView(deckpow);
-            dp.setFitWidth(44 * widthScaleFactor);
-            dp.setFitHeight(63 * heightScaleFactor);
+        Image deckpow = new Image("/gui/powerupcover.png");
+        ImageView dp = new ImageView(deckpow);
+        dp.setFitWidth(44 * widthScaleFactor);
+        dp.setFitHeight(63 * heightScaleFactor);
 
 
 
@@ -791,7 +789,7 @@ public class MainWindow extends Application {
         });  */
 
 
-            //infoStage= new Stage();
+        //infoStage= new Stage();
 
 
 
@@ -808,94 +806,94 @@ public class MainWindow extends Application {
         ammsq6= new Button();
         ammsq7= new Button(); */
 
-            gp.getChildren().add(map);
+        gp.getChildren().add(map);
 
-            //if(mapp2) initMap2(gp);
-
-
-            //gp.getChildren().addAll(map, plB, fmarkdr, nfmarkdr, smarkdr, nsmarkdr, tmarkdr, ntmarkdr, fomarkdr, nfomarkdr, fimarkdr, nfimarkdr, firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, pl1, pl2, pl3, pl4, fmarkdr1, nfmarkdr1, smarkdr1, nsmarkdr1, tmarkdr1, ntmarkdr1, fomarkdr1, nfomarkdr1, fimarkdr1, nfimarkdr1, fmarkdr2, nfmarkdr2, smarkdr2, nsmarkdr2, tmarkdr2, ntmarkdr2, fomarkdr2, nfomarkdr2, fimarkdr2, nfimarkdr2, fmarkdr3, nfmarkdr3, smarkdr3, nsmarkdr3, tmarkdr3, ntmarkdr3, fomarkdr3, nfomarkdr3, fimarkdr3, nfimarkdr3, fmarkdr4, nfmarkdr4, smarkdr4, nsmarkdr4, tmarkdr4, ntmarkdr4, fomarkdr4, nfomarkdr4, fimarkdr4, nfimarkdr4, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, o3sdr, o4sdr, ss2dr, s3sdr, s4sdr, ts2dr, t3sdr, t4sdr, fs2dr, f3sdr, f4sdr, fi2sdr, fi3sdr, fi4sdr, si2sdr, si3sdr, si4sdr, se2sdr, se3sdr, se4sdr, e2sdr, e3sdr, e4sdr, n2sdr, n3sdr, n4sdr, te2sdr, te3sdr, te4sdr, el2sdr, el3sdr, el4sdr, tw2sdr, tw3sdr, tw4sdr, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7);
-            //aggiungere per mappe con piu cose di map2 e aggiungere users
+        //if(mapp2) initMap2(gp);
 
 
-            user1 = new Button();
-            user1.setMinSize(8, 9);
-            configButton(user1, 8, 9, 123, 150);
-            user1.setStyle("-fx-background-image: url('/gui/user1.png')");
-
-            user2 = new Button();
-            user2.setMinSize(8, 9);
-            configButton(user2, 8, 9, 138, 150);
-            user2.setStyle("-fx-background-image: url('/gui/user2.png')");
-
-            user3 = new Button();
-            user3.setMinSize(8, 9);
-            configButton(user3, 8, 9, 153, 150);
-            user3.setStyle("-fx-background-image: url('/gui/user3.png')");
-
-            user4 = new Button();
-            user4.setMinSize(8, 9);
-            configButton(user4, 8, 9, 168, 150);
-            user4.setStyle("-fx-background-image: url('/gui/user4.png')");
-
-            user5 = new Button();
-            user5.setMinSize(8, 9);
-            configButton(user5, 8, 9, 183, 150);
-            user5.setStyle("-fx-background-image: url('/gui/user5.png')");
+        //gp.getChildren().addAll(map, plB, fmarkdr, nfmarkdr, smarkdr, nsmarkdr, tmarkdr, ntmarkdr, fomarkdr, nfomarkdr, fimarkdr, nfimarkdr, firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, pl1, pl2, pl3, pl4, fmarkdr1, nfmarkdr1, smarkdr1, nsmarkdr1, tmarkdr1, ntmarkdr1, fomarkdr1, nfomarkdr1, fimarkdr1, nfimarkdr1, fmarkdr2, nfmarkdr2, smarkdr2, nsmarkdr2, tmarkdr2, ntmarkdr2, fomarkdr2, nfomarkdr2, fimarkdr2, nfimarkdr2, fmarkdr3, nfmarkdr3, smarkdr3, nsmarkdr3, tmarkdr3, ntmarkdr3, fomarkdr3, nfomarkdr3, fimarkdr3, nfimarkdr3, fmarkdr4, nfmarkdr4, smarkdr4, nsmarkdr4, tmarkdr4, ntmarkdr4, fomarkdr4, nfomarkdr4, fimarkdr4, nfimarkdr4, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, o3sdr, o4sdr, ss2dr, s3sdr, s4sdr, ts2dr, t3sdr, t4sdr, fs2dr, f3sdr, f4sdr, fi2sdr, fi3sdr, fi4sdr, si2sdr, si3sdr, si4sdr, se2sdr, se3sdr, se4sdr, e2sdr, e3sdr, e4sdr, n2sdr, n3sdr, n4sdr, te2sdr, te3sdr, te4sdr, el2sdr, el3sdr, el4sdr, tw2sdr, tw3sdr, tw4sdr, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7);
+        //aggiungere per mappe con piu cose di map2 e aggiungere users
 
 
-            skull1img = new Image("/gui/redskull.jpg");
-            skull1 = new ImageView(skull1img);
-            skull2 = new ImageView(skull1img);
-            skull3 = new ImageView(skull1img);
-            skull4 = new ImageView(skull1img);
-            skull5 = new ImageView(skull1img);
-            skull6 = new ImageView(skull1img);
-            skull7 = new ImageView(skull1img);
-            skull8 = new ImageView(skull1img);
-            skull9 = new ImageView(skull1img);
-            configImageView(skull1, 18, 26, 47, 27);
-            configImageView(skull2, 18, 26, 72, 27);
-            configImageView(skull3, 18, 26, 97, 27);
-            configImageView(skull4, 18, 26, 122, 27);
-            configImageView(skull5, 18, 26, 147, 27);
-            configImageView(skull6, 18, 26, 172, 27);
-            configImageView(skull7, 18, 26, 197, 27);
-            configImageView(skull8, 18, 26, 222, 27);
-            configImageView(skull9, 18, 26, 247, 27);
+        user1 = new Button();
+        user1.setMinSize(8, 9);
+        configButton(user1, 8, 9, 123, 150);
+        user1.setStyle("-fx-background-image: url('/gui/user1.png')");
 
-            numbKill1 = new Label();
-            numbKill2 = new Label();
-            numbKill3 = new Label();
-            numbKill4 = new Label();
-            numbKill5 = new Label();
-            numbKill6 = new Label();
-            numbKill7 = new Label();
-            numbKill8 = new Label();
-            numbKill9 = new Label();
+        user2 = new Button();
+        user2.setMinSize(8, 9);
+        configButton(user2, 8, 9, 138, 150);
+        user2.setStyle("-fx-background-image: url('/gui/user2.png')");
 
-            //setPosLabel(numbKill1, 50, 30);
-            //setPosLabel(numbKill2, 75, 30);
-            //setPosLabel(numbKill3, 100, 30);
-            //setPosLabel(numbKill4, 125, 30);
-            //setPosLabel(numbKill5, 150, 30);
-            //setPosLabel(numbKill6, 175, 30);
-            //setPosLabel(numbKill7, 200, 30);
-            //setPosLabel(numbKill8, 225, 30);
-            //setPosLabel(numbKill9, 250, 30);
-            killshotTrack.add(skull1);
-            killshotTrack.add(skull2);
-            killshotTrack.add(skull3);
-            killshotTrack.add(skull4);
+        user3 = new Button();
+        user3.setMinSize(8, 9);
+        configButton(user3, 8, 9, 153, 150);
+        user3.setStyle("-fx-background-image: url('/gui/user3.png')");
 
-            overkillTrack.add(numbKill1);
-            overkillTrack.add(numbKill2);
-            overkillTrack.add(numbKill3);
-            overkillTrack.add(numbKill4);
-            overkillTrack.add(numbKill5);
-            overkillTrack.add(numbKill6);
-            overkillTrack.add(numbKill7);
-            overkillTrack.add(numbKill8);
-            overkillTrack.add(numbKill9);
+        user4 = new Button();
+        user4.setMinSize(8, 9);
+        configButton(user4, 8, 9, 168, 150);
+        user4.setStyle("-fx-background-image: url('/gui/user4.png')");
+
+        user5 = new Button();
+        user5.setMinSize(8, 9);
+        configButton(user5, 8, 9, 183, 150);
+        user5.setStyle("-fx-background-image: url('/gui/user5.png')");
+
+
+        skull1img = new Image("/gui/redskull.jpg");
+        skull1 = new ImageView(skull1img);
+        skull2 = new ImageView(skull1img);
+        skull3 = new ImageView(skull1img);
+        skull4 = new ImageView(skull1img);
+        skull5 = new ImageView(skull1img);
+        skull6 = new ImageView(skull1img);
+        skull7 = new ImageView(skull1img);
+        skull8 = new ImageView(skull1img);
+        skull9 = new ImageView(skull1img);
+        configImageView(skull1, 18, 26, 47, 27);
+        configImageView(skull2, 18, 26, 72, 27);
+        configImageView(skull3, 18, 26, 97, 27);
+        configImageView(skull4, 18, 26, 122, 27);
+        configImageView(skull5, 18, 26, 147, 27);
+        configImageView(skull6, 18, 26, 172, 27);
+        configImageView(skull7, 18, 26, 197, 27);
+        configImageView(skull8, 18, 26, 222, 27);
+        configImageView(skull9, 18, 26, 247, 27);
+
+        numbKill1 = new Label();
+        numbKill2 = new Label();
+        numbKill3 = new Label();
+        numbKill4 = new Label();
+        numbKill5 = new Label();
+        numbKill6 = new Label();
+        numbKill7 = new Label();
+        numbKill8 = new Label();
+        numbKill9 = new Label();
+
+        //setPosLabel(numbKill1, 50, 30);
+        //setPosLabel(numbKill2, 75, 30);
+        //setPosLabel(numbKill3, 100, 30);
+        //setPosLabel(numbKill4, 125, 30);
+        //setPosLabel(numbKill5, 150, 30);
+        //setPosLabel(numbKill6, 175, 30);
+        //setPosLabel(numbKill7, 200, 30);
+        //setPosLabel(numbKill8, 225, 30);
+        //setPosLabel(numbKill9, 250, 30);
+        killshotTrack.add(skull1);
+        killshotTrack.add(skull2);
+        killshotTrack.add(skull3);
+        killshotTrack.add(skull4);
+
+        overkillTrack.add(numbKill1);
+        overkillTrack.add(numbKill2);
+        overkillTrack.add(numbKill3);
+        overkillTrack.add(numbKill4);
+        overkillTrack.add(numbKill5);
+        overkillTrack.add(numbKill6);
+        overkillTrack.add(numbKill7);
+        overkillTrack.add(numbKill8);
+        overkillTrack.add(numbKill9);
 
             /*configPlayerBoards();
             configMyWeap();
@@ -925,34 +923,34 @@ public class MainWindow extends Application {
             }
         });*/
 
-            setPosButton(shoot, 5, 670);
-            setPosButton(grab, 125, 670);
-            setPosButton(move, 245, 670);
-            setPosButton(loadWeapon, 365, 670);
-            setPosButton(usePowerup, 485, 670);
-            setPosButton(end, 650, 670);
+        setPosButton(shoot, 5, 670);
+        setPosButton(grab, 125, 670);
+        setPosButton(move, 245, 670);
+        setPosButton(loadWeapon, 365, 670);
+        setPosButton(usePowerup, 485, 670);
+        setPosButton(end, 650, 670);
 
 
-            ny.setLayoutX(980 * widthScaleFactor);
-            ny.setLayoutY(505 * heightScaleFactor);
-            nb.setLayoutX(980 * widthScaleFactor);
-            nb.setLayoutY(555 * heightScaleFactor);
-            nr.setLayoutX(980 * widthScaleFactor);
-            nr.setLayoutY(605 * heightScaleFactor);
+        ny.setLayoutX(980 * widthScaleFactor);
+        ny.setLayoutY(505 * heightScaleFactor);
+        nb.setLayoutX(980 * widthScaleFactor);
+        nb.setLayoutY(555 * heightScaleFactor);
+        nr.setLayoutX(980 * widthScaleFactor);
+        nr.setLayoutY(605 * heightScaleFactor);
 
 
-            setPosButton(inf1, 940, 45);
-            setPosButton(inf2, 940, 125);
-            setPosButton(inf3, 940, 205);
-            setPosButton(inf4, 940, 285);
+        setPosButton(inf1, 940, 45);
+        setPosButton(inf2, 940, 125);
+        setPosButton(inf3, 940, 205);
+        setPosButton(inf4, 940, 285);
 
         /*deck.setLayoutX(522*widthScaleFactor);
         deck.setLayoutY(121*heightScaleFactor);*/
 
-            dw.setLayoutX(522 * widthScaleFactor);
-            dw.setLayoutY(121 * heightScaleFactor);
-            dp.setLayoutX(537 * widthScaleFactor);
-            dp.setLayoutY(24 * heightScaleFactor);
+        dw.setLayoutX(522 * widthScaleFactor);
+        dw.setLayoutY(121 * heightScaleFactor);
+        dp.setLayoutX(537 * widthScaleFactor);
+        dp.setLayoutY(24 * heightScaleFactor);
 
         /*b4.setDisable(false);
         b4.setOnAction(new EventHandler<ActionEvent>() {
@@ -963,29 +961,26 @@ public class MainWindow extends Application {
         });*/
 
 
-            gp.getChildren().addAll(plB, pl1, pl2, pl3, pl4, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, usePowerup, end, wp1, wp2, wp3, myw1, myw2, myw3, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, inf1, inf2, inf3, inf4, user1, user2, user3, user4, user5, myPowerup1Label, myPowerup2Label, myPowerup3Label, myPowerup4Label, myWeap1Label, myWeap2Label, myWeap3Label, mess, yes, no, ok, okay, eff1, eff2, eff3, eff4);
-            gp.getChildren().addAll(skull1, skull2, skull3, skull4, skull5, skull6, skull7, skull8, skull9, numbKill1, numbKill2, numbKill3, numbKill4, numbKill5, numbKill6, numbKill7, numbKill8, numbKill9, zoomedimg, zoomedUser);
-            gp.getChildren().addAll(fmarkdr, fmarkdr1, fmarkdr2, fmarkdr3, fmarkdr4, nfmarkdr, nfmarkdr2, nfmarkdr3, nfmarkdr4, nfmarkdr5, smarkdr, smarkdr1, smarkdr2, smarkdr3, smarkdr4, nsmarkdr, nsmarkdr2, nsmarkdr3, nsmarkdr4, nsmarkdr5, tmarkdr, tmarkdr1, tmarkdr2, tmarkdr3, tmarkdr4, ntmarkdr, ntmarkdr2, ntmarkdr3, ntmarkdr4, ntmarkdr5, fomarkdr, fomarkdr1, fomarkdr2, fomarkdr3, fomarkdr4, nfomarkdr, nfomarkdr2, nfomarkdr3, nfomarkdr4, nfomarkdr5, fimarkdr, fimarkdr1, fimarkdr2, fimarkdr3, fimarkdr4, nfimarkdr, nfimarkdr2, nfimarkdr3, nfimarkdr4, nfimarkdr5);
-            gp.getChildren().addAll(firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, ss2dr, ts2dr, fs2dr, fis2dr, sis2dr, ses2dr, es2dr, ns2dr, tes2dr, els2dr, tws2dr, o3sdr, s3sdr, t3sdr, f3sdr, fi3sdr, si3sdr, se3sdr, e3sdr, n3sdr, te3sdr, el3sdr, tw3sdr, o4sdr, s4sdr, t4sdr, f4sdr, fi4sdr, si4sdr, se4sdr, e4sdr, n4sdr, te4sdr, el4sdr, tw4sdr);
-            //, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8
+        gp.getChildren().addAll(plB, pl1, pl2, pl3, pl4, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, usePowerup, end, wp1, wp2, wp3, myw1, myw2, myw3, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, inf1, inf2, inf3, inf4, user1, user2, user3, user4, user5, myPowerup1Label, myPowerup2Label, myPowerup3Label, myPowerup4Label, myWeap1Label, myWeap2Label, myWeap3Label, mess, yes, no, ok, okay, eff1, eff2, eff3, eff4);
+        gp.getChildren().addAll(skull1, skull2, skull3, skull4, skull5, skull6, skull7, skull8, skull9, numbKill1, numbKill2, numbKill3, numbKill4, numbKill5, numbKill6, numbKill7, numbKill8, numbKill9, zoomedimg, zoomedUser);
+        gp.getChildren().addAll(fmarkdr, fmarkdr1, fmarkdr2, fmarkdr3, fmarkdr4, nfmarkdr, nfmarkdr2, nfmarkdr3, nfmarkdr4, nfmarkdr5, smarkdr, smarkdr1, smarkdr2, smarkdr3, smarkdr4, nsmarkdr, nsmarkdr2, nsmarkdr3, nsmarkdr4, nsmarkdr5, tmarkdr, tmarkdr1, tmarkdr2, tmarkdr3, tmarkdr4, ntmarkdr, ntmarkdr2, ntmarkdr3, ntmarkdr4, ntmarkdr5, fomarkdr, fomarkdr1, fomarkdr2, fomarkdr3, fomarkdr4, nfomarkdr, nfomarkdr2, nfomarkdr3, nfomarkdr4, nfomarkdr5, fimarkdr, fimarkdr1, fimarkdr2, fimarkdr3, fimarkdr4, nfimarkdr, nfimarkdr2, nfimarkdr3, nfimarkdr4, nfimarkdr5);
+        gp.getChildren().addAll(firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, ss2dr, ts2dr, fs2dr, fis2dr, sis2dr, ses2dr, es2dr, ns2dr, tes2dr, els2dr, tws2dr, o3sdr, s3sdr, t3sdr, f3sdr, fi3sdr, si3sdr, se3sdr, e3sdr, n3sdr, te3sdr, el3sdr, tw3sdr, o4sdr, s4sdr, t4sdr, f4sdr, fi4sdr, si4sdr, se4sdr, e4sdr, n4sdr, te4sdr, el4sdr, tw4sdr);
+        //, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8
 
-            Scene scene = new Scene(gp, 1200 * widthScaleFactor, 675 * heightScaleFactor);
-            scene.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setFullScreen(true);
-            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent windowEvent) {
-                    Bye.byebye();
-                    stage.close();
-                }
-            });
-
-            stage.show();
+        Scene scene = new Scene(gp, 1200 * widthScaleFactor, 675 * heightScaleFactor);
+        scene.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setFullScreen(true);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                Bye.byebye();
+                stage.close();
+            }
         });
 
-
+        stage.show();
     }
 
     public static void main(String args[]){
@@ -1951,52 +1946,47 @@ public class MainWindow extends Application {
         }
     }
 
-    private static void setMyPowerups(List<Card> myPowerups){
-        Platform.setImplicitExit(false);
-        Platform.runLater(()-> {
-            mess.setText("ok");
+    private static void setMyPowerups(List<Card> myPowerups) {
+        mess.setText("ok");
+        for (int i = 0; i < myPowerups.size(); i++) {
+            String idPowerup = convertIdImg(myPowerups.get(i).getId());
+            Image myPowerup = new Image(idPowerup);
+            myPowerupsHashMap.get(i + 1).setImage(myPowerup);
+            myPowerupsPosition.put(myPowerups.get(i).getId(), i + 1);
+        }
 
-            for (int i = 0; i < myPowerups.size(); i++) {
-                String idPowerup = convertIdImg(myPowerups.get(i).getId());
-                Image myPowerup = new Image(idPowerup);
-                myPowerupsHashMap.get(i+1).setImage(myPowerup);
-                myPowerupsPosition.put(myPowerups.get(i).getId(), i + 1);
-            }
-
-            switch (myPowerups.size()) {
-                case 0:
-                    break;
-                case 1:
-                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                    powButtonId.put(myp1, myPowerups.get(0).getId());
-                    break;
-                case 2:
-                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                    powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
-                    powButtonId.put(myp1, myPowerups.get(0).getId());
-                    powButtonId.put(myp2, myPowerups.get(1).getId());
-                    break;
-                case 3:
-                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                    powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
-                    powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
-                    powButtonId.put(myp1, myPowerups.get(0).getId());
-                    powButtonId.put(myp2, myPowerups.get(1).getId());
-                    powButtonId.put(myp3, myPowerups.get(2).getId());
-                    break;
-                case 4:
-                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                    powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
-                    powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
-                    powerupAvailableLabel.put(myPowerups.get(3).getId(), myPowerup4Label);
-                    powButtonId.put(myp1, myPowerups.get(0).getId());
-                    powButtonId.put(myp2, myPowerups.get(1).getId());
-                    powButtonId.put(myp3, myPowerups.get(2).getId());
-                    powButtonId.put(myp4, myPowerups.get(3).getId());
-                    break;
-            }
-        });
-
+        switch (myPowerups.size()) {
+            case 0:
+                break;
+            case 1:
+                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                powButtonId.put(myp1, myPowerups.get(0).getId());
+                break;
+            case 2:
+                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
+                powButtonId.put(myp1, myPowerups.get(0).getId());
+                powButtonId.put(myp2, myPowerups.get(1).getId());
+                break;
+            case 3:
+                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
+                powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
+                powButtonId.put(myp1, myPowerups.get(0).getId());
+                powButtonId.put(myp2, myPowerups.get(1).getId());
+                powButtonId.put(myp3, myPowerups.get(2).getId());
+                break;
+            case 4:
+                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
+                powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
+                powerupAvailableLabel.put(myPowerups.get(3).getId(), myPowerup4Label);
+                powButtonId.put(myp1, myPowerups.get(0).getId());
+                powButtonId.put(myp2, myPowerups.get(1).getId());
+                powButtonId.put(myp3, myPowerups.get(2).getId());
+                powButtonId.put(myp4, myPowerups.get(3).getId());
+                break;
+        }
     }
 
     private static void setMyDeathCounter(SimplePlayer player){
@@ -3108,20 +3098,17 @@ public class MainWindow extends Application {
 
     public static void onBoardUpdate(SimpleBoard gameBoard) {
         if(!init){
-
-            //MapChoice.stage.close();
             Platform.setImplicitExit(false);
             Platform.runLater(()->{
-                try {
-                    stage.close();
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+                stage.close();
+                initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
+                init=true;
             });
-            initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
-            init=true;
         }else{
-            updateBoard(gameBoard);
+            Platform.setImplicitExit(false);
+            Platform.runLater(()-> {
+                updateBoard(gameBoard);
+            });
         }
 
     }
