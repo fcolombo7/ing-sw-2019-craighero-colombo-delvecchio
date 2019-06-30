@@ -148,12 +148,22 @@ public class Server{
         String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
         Logger.logServer(inExecutionFile);
         int last = 0;
+        int last2=0;
         for (int i = 0; i < inExecutionFile.length(); i++) {
             if (inExecutionFile.charAt(i) == '/')
                 last = i;
         }
-        Logger.logServer(inExecutionFile.substring(0, last + 1));
-        path = inExecutionFile.substring(0, last + 1) + "config.xml";
+        for (int i = 0; i < inExecutionFile.length(); i++) {
+            if (inExecutionFile.charAt(i) == '\\')
+                last2 = i;
+        }
+        if(last>last2){
+            Logger.logServer(inExecutionFile.substring(0, last + 1));
+            path = inExecutionFile.substring(0, last + 1) + "config.xml";
+        }else{
+            Logger.logServer(inExecutionFile.substring(0, last2 + 1));
+            path = inExecutionFile.substring(0, last2 + 1) + "config.xml";
+        }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
