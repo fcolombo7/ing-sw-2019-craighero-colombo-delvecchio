@@ -725,6 +725,11 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 connection.selectAction("GRAB");
                 grab.setDisable(true);
+                shoot.setDisable(true);
+                loadWeapon.setDisable(true);
+                move.setDisable(true);
+                usePowerup.setDisable(true);
+                end.setDisable(true);
             }
         });
         shoot.setOnAction(new EventHandler<ActionEvent>() {
@@ -732,6 +737,11 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 connection.selectAction("SHOOT");
                 shoot.setDisable(true);
+                grab.setDisable(true);
+                loadWeapon.setDisable(true);
+                move.setDisable(true);
+                usePowerup.setDisable(true);
+                end.setDisable(true);
             }
         });
         move.setOnAction(new EventHandler<ActionEvent>() {
@@ -739,6 +749,11 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 connection.selectAction("MOVE");
                 move.setDisable(true);
+                grab.setDisable(true);
+                shoot.setDisable(true);
+                loadWeapon.setDisable(true);
+                usePowerup.setDisable(true);
+                end.setDisable(true);
             }
         });
         loadWeapon.setOnAction(new EventHandler<ActionEvent>() {
@@ -746,6 +761,11 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 connection.selectAction("RELOAD");
                 loadWeapon.setDisable(true);
+                grab.setDisable(true);
+                shoot.setDisable(true);
+                move.setDisable(true);
+                usePowerup.setDisable(true);
+                end.setDisable(true);
             }
         });
         usePowerup.setOnAction(new EventHandler<ActionEvent>() {
@@ -753,6 +773,11 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 connection.selectAction("POWERUP");
                 usePowerup.setDisable(true);
+                grab.setDisable(true);
+                shoot.setDisable(true);
+                loadWeapon.setDisable(true);
+                move.setDisable(true);
+                end.setDisable(true);
             }
         });
         end.setOnAction(new EventHandler<ActionEvent>() {
@@ -760,6 +785,11 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 connection.selectAction("END");
                 end.setDisable(true);
+                grab.setDisable(true);
+                shoot.setDisable(true);
+                loadWeapon.setDisable(true);
+                move.setDisable(true);
+                usePowerup.setDisable(true);
             }
         });
 
@@ -1210,16 +1240,54 @@ public class MainWindow extends Application {
     }
 
     private static void configPlayerBoards(){
-        pla1= new Image("/gui/pl1.png");
+
+        if(myTurn==1){
+            pla1= new Image("/gui/pl1.png");
+            pla2= new Image("/gui/pl2.png");
+            pla3= new Image("/gui/pl3.png");
+            pla4= new Image("/gui/pl4.png");
+
+        }
+        if(myTurn==2){
+            pla1= new Image("/gui/playerBoard.png");
+            pla2= new Image("/gui/pl2.png");
+            pla3= new Image("/gui/pl3.png");
+            pla4= new Image("/gui/pl4.png");
+
+        }
+        if(myTurn==3){
+            pla1= new Image("/gui/playerBoard.png");
+            pla2= new Image("/gui/pl1.png");
+            pla3= new Image("/gui/pl3.png");
+            pla4= new Image("/gui/pl4.png");
+
+        }
+        if(myTurn==4){
+            pla1= new Image("/gui/playerBoard.png");
+            pla2= new Image("/gui/pl1.png");
+            pla3= new Image("/gui/pl2.png");
+            pla4= new Image("/gui/pl4.png");
+
+        }
+        if(myTurn==5){
+            pla1= new Image("/gui/playerBoard.png");
+            pla2= new Image("/gui/pl1.png");
+            pla3= new Image("/gui/pl2.png");
+            pla4= new Image("/gui/pl3.png");
+
+        }
+
+
+        //pla1= new Image("/gui/pl1.png");
         pl1= new ImageView(pla1);
         configImgv(pl1, 304, 630, 20);
-        pla2= new Image("/gui/pl2.png");
+        //pla2= new Image("/gui/pl2.png");
         pl2= new ImageView(pla2);
         configImgv(pl2, 304, 630, 100);
-        pla3= new Image("/gui/pl3.png");
+        //pla3= new Image("/gui/pl3.png");
         pl3= new ImageView(pla3);
         configImgv(pl3, 304, 630, 180);
-        pla4= new Image("/gui/pl4.png");
+        //pla4= new Image("/gui/pl4.png");
         pl4= new ImageView(pla4);
         configImgv(pl4, 304, 630, 260);
     }
@@ -1947,46 +2015,54 @@ public class MainWindow extends Application {
     }
 
     private static void setMyPowerups(List<Card> myPowerups) {
-        mess.setText("ok");
-        for (int i = 0; i < myPowerups.size(); i++) {
-            String idPowerup = convertIdImg(myPowerups.get(i).getId());
-            Image myPowerup = new Image(idPowerup);
-            myPowerupsHashMap.get(i + 1).setImage(myPowerup);
-            myPowerupsPosition.put(myPowerups.get(i).getId(), i + 1);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
 
-        switch (myPowerups.size()) {
-            case 0:
-                break;
-            case 1:
-                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                powButtonId.put(myp1, myPowerups.get(0).getId());
-                break;
-            case 2:
-                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
-                powButtonId.put(myp1, myPowerups.get(0).getId());
-                powButtonId.put(myp2, myPowerups.get(1).getId());
-                break;
-            case 3:
-                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
-                powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
-                powButtonId.put(myp1, myPowerups.get(0).getId());
-                powButtonId.put(myp2, myPowerups.get(1).getId());
-                powButtonId.put(myp3, myPowerups.get(2).getId());
-                break;
-            case 4:
-                powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
-                powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
-                powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
-                powerupAvailableLabel.put(myPowerups.get(3).getId(), myPowerup4Label);
-                powButtonId.put(myp1, myPowerups.get(0).getId());
-                powButtonId.put(myp2, myPowerups.get(1).getId());
-                powButtonId.put(myp3, myPowerups.get(2).getId());
-                powButtonId.put(myp4, myPowerups.get(3).getId());
-                break;
-        }
+            pu1.setImage(null);
+            pu2.setImage(null);
+            pu3.setImage(null);
+            pu4.setImage(null);
+
+            for (int i = 0; i < myPowerups.size(); i++) {
+                String idPowerup = convertIdImg(myPowerups.get(i).getId());
+                Image myPowerup = new Image(idPowerup);
+                myPowerupsHashMap.get(i + 1).setImage(myPowerup);
+                myPowerupsPosition.put(myPowerups.get(i).getId(), i + 1);
+            }
+
+            switch (myPowerups.size()) {
+                case 0:
+                    break;
+                case 1:
+                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                    powButtonId.put(myp1, myPowerups.get(0).getId());
+                    break;
+                case 2:
+                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                    powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
+                    powButtonId.put(myp1, myPowerups.get(0).getId());
+                    powButtonId.put(myp2, myPowerups.get(1).getId());
+                    break;
+                case 3:
+                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                    powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
+                    powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
+                    powButtonId.put(myp1, myPowerups.get(0).getId());
+                    powButtonId.put(myp2, myPowerups.get(1).getId());
+                    powButtonId.put(myp3, myPowerups.get(2).getId());
+                    break;
+                case 4:
+                    powerupAvailableLabel.put(myPowerups.get(0).getId(), myPowerup1Label);
+                    powerupAvailableLabel.put(myPowerups.get(1).getId(), myPowerup2Label);
+                    powerupAvailableLabel.put(myPowerups.get(2).getId(), myPowerup3Label);
+                    powerupAvailableLabel.put(myPowerups.get(3).getId(), myPowerup4Label);
+                    powButtonId.put(myp1, myPowerups.get(0).getId());
+                    powButtonId.put(myp2, myPowerups.get(1).getId());
+                    powButtonId.put(myp3, myPowerups.get(2).getId());
+                    powButtonId.put(myp4, myPowerups.get(3).getId());
+                    break;
+            }
+        });
     }
 
     private static void setMyDeathCounter(SimplePlayer player){
@@ -2247,68 +2323,72 @@ public class MainWindow extends Application {
         idWeaponPosition.clear();
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
-                if(!gameBoard.getBoard()[i][j].isSpawnPoint()) {
-                    if(gameBoard.getBoard()[i][j].getAmmoTile()!=null) {
-                        String ammoT = convertIdImg(gameBoard.getBoard()[i][j].getAmmoTile().getId());
-                        squareMatrix[i][j].getAmmo().setStyle("-fx-background-image: "+ ammoT +" ");
-                        boardTileButtonHashMap.put(gameBoard.getBoard()[i][j].getAmmoTile().getId(), squareMatrix[i][j].getAmmo());
-                    }else{
-                        squareMatrix[i][j].getAmmo().setStyle(null);
-                        boardTileButtonHashMap.remove(gameBoard.getBoard()[i][j].getAmmoTile().getId());
-                    }
-                }else{
+                if(squareMatrix[i][j]!=null&&gameBoard.getBoard()[i][j]!=null) {
+                    if (!gameBoard.getBoard()[i][j].isSpawnPoint()) {
+                        if (gameBoard.getBoard()[i][j].getAmmoTile() != null) {
+                            String ammoT = convertIdImg(gameBoard.getBoard()[i][j].getAmmoTile().getId());
+                            if (squareMatrix[i][j] != null) {
+                                squareMatrix[i][j].getAmmo().setStyle("-fx-background-color: blue ");
+                            }
+                            boardTileButtonHashMap.put(gameBoard.getBoard()[i][j].getAmmoTile().getId(), squareMatrix[i][j].getAmmo());
+                        } else {
+                            squareMatrix[i][j].getAmmo().setStyle(null);
+                            boardTileButtonHashMap.remove(gameBoard.getBoard()[i][j].getAmmoTile().getId());
+                        }
+                    } else {
                     /*String w1=convertIdImg(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId());
                     String w2=convertIdImg(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId());
                     String w3=convertIdImg(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId());
                     squareMatrix[i][j].getWeapon1().setStyle("-fx-image: w1");
                     squareMatrix[i][j].getWeapon2().setStyle("-fx-image: w2");
                     squareMatrix[i][j].getWeapon3().setStyle("-fx-image: w3");*/
-                    if(i==0&&j==2) {
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 1);
-                            boardWeapImVHashMap.get(1).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
-                        }
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 2);
-                            boardWeapImVHashMap.get(2).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
+                        if (i == 0 && j == 2) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 1);
+                                boardWeapImVHashMap.get(1).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
+                            }
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 2);
+                                boardWeapImVHashMap.get(2).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
 
-                        }
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 3);
-                            boardWeapImVHashMap.get(3).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
+                            }
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 3);
+                                boardWeapImVHashMap.get(3).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
 
+                            }
                         }
-                    }
-                    if(i==1&&j==0) {
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 4);
-                            boardWeapImVHashMap.get(4).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
-                        }
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 5);
-                            boardWeapImVHashMap.get(5).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
+                        if (i == 1 && j == 0) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 4);
+                                boardWeapImVHashMap.get(4).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
+                            }
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 5);
+                                boardWeapImVHashMap.get(5).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
 
-                        }
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 6);
-                            boardWeapImVHashMap.get(6).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
+                            }
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 6);
+                                boardWeapImVHashMap.get(6).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
 
+                            }
                         }
-                    }
-                    if(i==2&&j==3) {
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 7);
-                            boardWeapImVHashMap.get(7).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
-                        }
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 8);
-                            boardWeapImVHashMap.get(8).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
+                        if (i == 2 && j == 3) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 7);
+                                boardWeapImVHashMap.get(7).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
+                            }
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 8);
+                                boardWeapImVHashMap.get(8).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
 
-                        }
-                        if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
-                            idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 9);
-                            boardWeapImVHashMap.get(9).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
+                            }
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
+                                idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 9);
+                                boardWeapImVHashMap.get(9).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
 
+                            }
                         }
                     }
                 }
@@ -2893,21 +2973,30 @@ public class MainWindow extends Application {
 
     public static void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
 
-        initDamageImVHashMap();
-        initMyDamagesImVHashMap();
-        initMyMarksLabelHashMap();
-        initMarkLabelHashMap();
-        initPlBImageHashMap();
-        initMyPowerupsImVHashMap();
-        initMyWeaponHashMap();
-        initBoardWeapImVHashMap();
-        initUserButtonHashMap();
-        initMyWeaponsLabel();
-        initBoardWeaponsButton();
-        initMyWeaponsButton();
-        initMyPowerupsButton();
-        initInfoWindowPlayerHashMap();
-        initWeaponsHashMap();
+
+        myTurn=playerTurnNumber;
+
+
+        configPlayerBoards();
+        configMyWeap();
+        configMyPowerups();
+        configMyAmmo();
+        configMyDamages();
+        configMyMarks();
+        configPl1Damages();
+        configPl1Marks();
+        configPl2Damages();
+        configPl2Marks();
+        configPl3Damages();
+        configPl3Marks();
+        configPl4Damages();
+        configPl4Marks();
+        configWeapBoardImg();
+        configWeapBoardButtons();
+        configUserButtons();
+
+
+
 
         plBhashmap.put(0, "/gui/playerBoard.png");
         plBhashmap.put(1, "/gui/pl1.png");
@@ -2954,6 +3043,23 @@ public class MainWindow extends Application {
         im19=new Image("/gui/33.png");
         im20=new Image("/gui/34.png");
         im21=new Image("/gui/35.png");
+
+
+        initDamageImVHashMap();
+        initMyDamagesImVHashMap();
+        initMyMarksLabelHashMap();
+        initMarkLabelHashMap();
+        initPlBImageHashMap();
+        initMyPowerupsImVHashMap();
+        initMyWeaponHashMap();
+        initBoardWeapImVHashMap();
+        initUserButtonHashMap();
+        initMyWeaponsLabel();
+        initBoardWeaponsButton();
+        initMyWeaponsButton();
+        initMyPowerupsButton();
+        initInfoWindowPlayerHashMap();
+        initWeaponsHashMap();
 
 
         String myPlayB=plBhashmap.get(playerTurnNumber-1);
@@ -3034,6 +3140,8 @@ public class MainWindow extends Application {
                 break;
         }
 
+
+
         int cur=0;
 
         for(int i=1; i<=players.size(); i++){
@@ -3061,23 +3169,9 @@ public class MainWindow extends Application {
         }
 
 
-        configPlayerBoards();
-        configMyWeap();
-        configMyPowerups();
-        configMyAmmo();
-        configMyDamages();
-        configMyMarks();
-        configPl1Damages();
-        configPl1Marks();
-        configPl2Damages();
-        configPl2Marks();
-        configPl3Damages();
-        configPl3Marks();
-        configPl4Damages();
-        configPl4Marks();
-        configWeapBoardImg();
-        configWeapBoardButtons();
-        configUserButtons();
+
+
+
 
 
         Platform.setImplicitExit(false);
@@ -3103,6 +3197,7 @@ public class MainWindow extends Application {
                 stage.close();
                 initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
                 init=true;
+                updateBoard(gameBoard);
             });
         }else{
             Platform.setImplicitExit(false);
@@ -3134,14 +3229,18 @@ public class MainWindow extends Application {
     }
 
     public static void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)) {
-            mess.setText("Ti sei rigenerato");
-            setMyPowerups(player.getPowerupCards());
-            setMyPosition(player.getPosition());
-        }else {
-            mess.setText(player.getNickname() + "si è rigenerato");
-            setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText("Ti sei rigenerato");
+                setMyPowerups(player.getPowerupCards());
+                setMyPosition(player.getPosition());
+            } else {
+                mess.setText(player.getNickname() + "si è rigenerato");
+                setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
+            }
+        });
 
     }
 
@@ -3168,11 +3267,15 @@ public class MainWindow extends Application {
     }
 
     public static void onGrabbableWeapons(List<Card> weapons) {
-        mess.setText("Seleziona l'arma chee vuoi raccogliere");
-        for(int i=0; i<weapons.size(); i++){
-            String grabbableWeapon= weapons.get(i).getId();
-            setClickGrabWeapon(weapons, grabbableWeapon);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            mess.setText("Seleziona l'arma che vuoi raccogliere");
+            for (int i = 0; i < weapons.size(); i++) {
+                String grabbableWeapon = weapons.get(i).getId();
+                setClickGrabWeapon(weapons, grabbableWeapon);
+            }
+        });
 
     }
 
@@ -3220,27 +3323,31 @@ public class MainWindow extends Application {
     }
 
     public static void onTurnActions(List<String> actions) {
-        for(int i=0; i<actions.size(); i++){
-            //quali nomi può avere questa stringa?
-            if(actions.get(i).equalsIgnoreCase("shoot")){
-                shoot.setDisable(false);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            for (int i = 0; i < actions.size(); i++) {
+                //quali nomi può avere questa stringa?
+                if (actions.get(i).equalsIgnoreCase("shoot")) {
+                    shoot.setDisable(false);
+                }
+                if (actions.get(i).equalsIgnoreCase("move")) {
+                    move.setDisable(false);
+                }
+                if (actions.get(i).equalsIgnoreCase("grab")) {
+                    grab.setDisable(false);
+                }
+                if (actions.get(i).equalsIgnoreCase("reload")) {
+                    loadWeapon.setDisable(false);
+                }
+                if (actions.get(i).equalsIgnoreCase("powerup")) {
+                    usePowerup.setDisable(false);
+                }
+                if (actions.get(i).equalsIgnoreCase("end")) {
+                    end.setDisable(false);
+                }
             }
-            if(actions.get(i).equalsIgnoreCase("move")){
-                move.setDisable(false);
-            }
-            if(actions.get(i).equalsIgnoreCase("grab")){
-                grab.setDisable(false);
-            }
-            if(actions.get(i).equalsIgnoreCase("reload")){
-                loadWeapon.setDisable(false);
-            }
-            if (actions.get(i).equalsIgnoreCase("powerup")){
-                usePowerup.setDisable(false);
-            }
-            if(actions.get(i).equalsIgnoreCase("end")){
-                end.setDisable(false);
-            }
-        }
+        });
 
     }
 
@@ -3300,11 +3407,15 @@ public class MainWindow extends Application {
 
 
     public static void onTurnCreation(String currentPlayer) {
-        if(currentPlayer.equalsIgnoreCase(turnNicknameHashMap.get(myTurn))){
-            mess.setText("Inizia il tuo turno!");
-        }else {
-            mess.setText("Turno di: " + currentPlayer);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (currentPlayer.equalsIgnoreCase(turnNicknameHashMap.get(myTurn))) {
+                mess.setText("Inizia il tuo turno!");
+            } else {
+                mess.setText("Turno di: " + currentPlayer);
+            }
+        });
     }
 
 
