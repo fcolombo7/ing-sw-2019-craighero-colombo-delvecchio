@@ -21,6 +21,7 @@ import java.util.Scanner;
 
 public class TestClientSocket {
     private static class DebugUI implements AdrenalineUI{
+        private static int count=0;
         private ServerConnection connection;
         private boolean rmi;
         DebugUI(boolean rmi){
@@ -49,7 +50,8 @@ public class TestClientSocket {
 
         @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
-            System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            System.out.println(count+" MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            count++;
             connection.boardPreference(1);
         }
 
@@ -60,22 +62,27 @@ public class TestClientSocket {
 
         @Override
         public void onBoardUpdate(SimpleBoard gameBoard) {
-
+            System.out.println(count+" BOARD UPDATE");
+            count++;
         }
 
         @Override
         public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-
+            System.out.println(count+" MATCH UPDATE");
+            count++;
         }
 
         @Override
         public void onRespwanRequest(List<Card> powerups) {
-
+            System.out.println(count+" RESPAWN REQUEST");
+            count++;
+            connection.respawnPlayer(powerups.get(0));
         }
 
         @Override
         public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
-
+            System.out.println(count+" RESPAWN COMPLETED");
+            count++;
         }
 
         @Override
@@ -115,12 +122,14 @@ public class TestClientSocket {
 
         @Override
         public void onTurnActions(List<String> actions) {
-
+            System.out.println(count+" TURN ACTIONS");
+            count++;
         }
 
         @Override
         public void onTurnEnd() {
-
+            System.out.println(count+" TURN END");
+            count++;
         }
 
         @Override
@@ -150,7 +159,8 @@ public class TestClientSocket {
 
         @Override
         public void onTurnCreation(String currentPlayer) {
-
+            System.out.println(count+" TURN CREATION");
+            count++;
         }
 
         @Override

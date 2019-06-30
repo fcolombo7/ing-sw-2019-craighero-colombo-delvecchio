@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.model.exceptions.MatchConfigurationException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
+import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
@@ -43,7 +44,7 @@ public class Controller{
                     setGameboard();
                 }
             }
-        },Constants.QUICK_MOVE_TIMER*1000);
+        }, Server.getQuickMoveTimer()*1000);
     }
 
     /*---------- METHODS USED IN CLIENT CONNECTION ----------*/
@@ -92,7 +93,7 @@ public class Controller{
                                     game.getCurrentTurn().forceClosing();
                                     closeTurn(p.getNickname());
                                 }
-                            }, Constants.TURN_TIMER * 1000);
+                            }, Server.getTurnTimer() * 1000);
                             game.createTurn();
                         } else
                             handleNewTurn();
@@ -198,7 +199,7 @@ public class Controller{
                         timerMap.remove(game.getCurrentPlayer().getNickname());
                         respawnPlayer(game.getCurrentPlayer().getNickname(), game.getCurrentPlayer().getPowerups().get(0));
                     }
-                }, Constants.QUICK_MOVE_TIMER * 1000);
+                }, Server.getQuickMoveTimer() * 1000);
                 game.respawnPlayerRequest(game.getCurrentPlayer(), true);
             } else {
                 Timer t = new Timer();
@@ -212,7 +213,7 @@ public class Controller{
                         game.getCurrentTurn().forceClosing();
                         closeTurn(game.getCurrentPlayer().getNickname());
                     }
-                }, Constants.TURN_TIMER * 1000);
+                }, Server.getTurnTimer() * 1000);
                 game.createTurn();
             }
         }
@@ -266,7 +267,7 @@ public class Controller{
                         timerMap.remove(player.getNickname());
                         respawnPlayer(player.getNickname(),player.getPowerups().get(0));
                     }
-                },Constants.QUICK_MOVE_TIMER*1000);
+                },Server.getQuickMoveTimer()*1000);
                 game.respawnPlayerRequest(player,false);
             }
         }
@@ -277,7 +278,7 @@ public class Controller{
             if(p.getNickname().equals(nickname)){
                 disconnected.add(p);
                 debug();
-                if(game.getPlayers().size()-disconnected.size()<Constants.ROOM_MIN_PLAYERS){
+                if(game.getPlayers().size()-disconnected.size()<Server.getMinPlayerNumber()){
                     for (Timer t:timerMap.values()){
                         t.cancel();
                         t.purge();
@@ -338,7 +339,7 @@ public class Controller{
                     //TODO: need to be checked
                     room.close();
                 }
-            },Constants.QUICK_MOVE_TIMER*1000);
+            },Server.getQuickMoveTimer()*1000);
         }
         room.stopTimers(sender);
         game.sendLeaderBoard(sender,disconnected);

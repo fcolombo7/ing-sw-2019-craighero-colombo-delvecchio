@@ -10,11 +10,12 @@ public class Constants {
     public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
 
     /* NETWORKING PARAMETERS */
+    //TODO:DEVONO ESSERE RIMOSSI!!!
     public static final String RMI_HOSTNAME = "localhost";
-
     public static final int SOCKET_PORT=12345;
     public static final int RMI_PORT=12346;
     public static final String RMI_SERVER_NAME="ADRENALINE_SERVER";
+
 
     /* SOCKET MESSAGES */
     public static final String MSG_CLIENT_LOGIN="LoginRequest";
@@ -27,15 +28,19 @@ public class Constants {
     public static final String MSG_SERVER_CLOSE = "CLOSING CONNECTION";
 
     /* ROOM PARAMETERS */
+    /*
     public static final int ROOM_MIN_PLAYERS=2;
     public static final int ROOM_MAX_PLAYERS=3;
     public static final long WAITING_ROOM_TIMER = 30; //SEC
     public static final long KEEP_ALIVE_FREQUENCY=8;//SEC
     public static final long KEEP_ALIVE_WAITING_TIME=4;//SEC
+     */
 
     /* CONTROLLER PARAMETERS */
+    /*
     public static final long TURN_TIMER=120;//SEC
     public static final long QUICK_MOVE_TIMER=15;//SEC
+     */
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";

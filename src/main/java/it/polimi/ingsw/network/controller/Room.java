@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.server.ClientConnection;
+import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.network.view.RemoteView;
 import it.polimi.ingsw.network.view.View;
 import it.polimi.ingsw.utils.Constants;
@@ -12,9 +13,9 @@ import java.util.*;
 
 public class Room {
 
-    private static final int MIN_PLAYERS = Constants.ROOM_MIN_PLAYERS;
+    private static final int MIN_PLAYERS = Server.getMinPlayerNumber();
 
-    private static final int MAX_PLAYERS = Constants.ROOM_MAX_PLAYERS;
+    private static final int MAX_PLAYERS = Server.getMaxPlayerNumber();
 
     private List<ClientConnection> players;
 
@@ -77,9 +78,9 @@ public class Room {
 
             if (players.size() == MAX_PLAYERS) {
                 full = true;
-                startCountDown(Constants.KEEP_ALIVE_WAITING_TIME);
+                startCountDown(Server.getKeepAliveTimer());
             } else if (players.size() == MIN_PLAYERS) {
-                startCountDown(Constants.WAITING_ROOM_TIMER);
+                startCountDown(Server.getWaitingRoomTimer());
             }
         } else {
             throw new JoinRoomException("full");
@@ -96,7 +97,7 @@ public class Room {
         }
 
         Logger.logServer(client.getNickname() + " has left the room " + roomNumber);
-        if (players.size() < Constants.ROOM_MIN_PLAYERS)
+        if (players.size() < Server.getMinPlayerNumber())
             resetCountDown();
         return players.isEmpty();
     }
@@ -132,7 +133,7 @@ public class Room {
             public void run() {
                 keepClientAlive(client);
             }
-        }, Constants.KEEP_ALIVE_WAITING_TIME*1000, Constants.KEEP_ALIVE_FREQUENCY * 1000);
+        }, Server.getKeepAliveTimer()*1000, Server.getKeepAliveFrequency() * 1000);
         keepingAliveTimers.put(client.getNickname(), t);
     }
 
@@ -144,7 +145,7 @@ public class Room {
                 Logger.logErr("KEEP ALIVE: TIMER SCADUTO PER "+client.getNickname());
                 handleDisconnection(client);
             }
-        },Constants.KEEP_ALIVE_WAITING_TIME*1000);
+        },Server.getKeepAliveTimer()*1000);
         waitingTimers.put(client.getNickname(),t);
         client.keepAlive();
     }

@@ -40,8 +40,8 @@ public class RMIServer  implements RMIServerHandler{
             System.setProperty("java.rmi.server.codebase","file://"+System.getProperty("user.dir")+"/target/classes");
             startRegistry(portNumber);
             RMIServerHandler stub = (RMIServerHandler) UnicastRemoteObject.exportObject(this, portNumber);
-            String name="rmi//"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME;
-            Naming.rebind("//"+this.hostname+":"+portNumber+"/"+Constants.RMI_SERVER_NAME,stub);
+            String name="rmi//"+this.hostname+":"+portNumber+"/"+Server.getRmiServerName();
+            Naming.rebind("//"+this.hostname+":"+portNumber+"/"+Server.getRmiServerName(),stub);
             Logger.logServer("RMI server started. ["+name+"]");
         } catch (AccessException e) {
             throw new ServerException("RMI server not loaded (AccessException):\n"+e.getMessage());

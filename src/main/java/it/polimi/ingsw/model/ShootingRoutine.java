@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.controller.messages.matchanswer.TurnRoutineAnswer
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.*;
+import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
@@ -270,7 +271,7 @@ public class ShootingRoutine implements TurnRoutine {
                     turn.getGame().notify(new CounterAttackTimeOut(player.getNickname()));
                     onCounterAttackAnswer(new CounterAttackAnswer(player.getNickname(),false));
                 }
-            },Constants.QUICK_MOVE_TIMER*1000);
+            }, Server.getQuickMoveTimer()*1000);
             turn.getGame().notify(new CanCounterAttackMessage(player.getNickname()));
         }
         if(canCounterAttackPlayers.isEmpty())

@@ -1,16 +1,42 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.controller.JoinRoomException;
 import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Server{
 
+    /* CONFIG PARAMETERS */
+    private static String rmiServerName;
+    private static int rmiServerPort;
+    private static int socketServerPort;
+    private static int minPlayerNumber;
+    private static int maxPlayerNumber;
+    private static long waitingRoomTimer;
+    private static long keepAliveFrequency;
+    private static long keepAliveTimer;
+    private static long turnTimer;
+    private static long quickMoveTimer;
+
+
+    /*OTHER ATTRIBUTES*/
     private SocketServer socketServer;
 
     private RMIServer rmiServer;
@@ -30,8 +56,8 @@ public class Server{
     }
 
     public void startServer() throws ServerException {
-        rmiServer.start(Constants.RMI_PORT);
-        socketServer.startServer(Constants.SOCKET_PORT);
+        rmiServer.start(Server.getRmiServerPort());
+        socketServer.startServer(Server.getSocketServerPort());
     }
 
     public synchronized int checkClientLogin(String nickname, ClientConnection client){
@@ -117,16 +143,158 @@ public class Server{
         throw new IllegalArgumentException("No player connected with nickname "+nickname);
     }
 
+    private static void setUpConfiguration() throws ParserConfigurationException, IOException, SAXException, URISyntaxException {
+        String path;
+        String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+        int last = 0;
+        for (int i = 0; i < inExecutionFile.length(); i++) {
+            if (inExecutionFile.charAt(i) == '/')
+                last = i;
+        }
+        path = inExecutionFile.substring(0, last + 1) + "config.xml";
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new File(path));
+        document.normalizeDocument();
+        Element root = document.getDocumentElement();
+        root.normalize();
+
+        setRMIServerName(root.getElementsByTagName("rmiServerName"));
+        setRMIServerPort(root.getElementsByTagName("rmiServerPort"));
+        setSocketServerPort(root.getElementsByTagName("socketServerPort"));
+        setMinPlayerNumber(root.getElementsByTagName("minPlayerNumber"));
+        setMaxPlayerNumber(root.getElementsByTagName("maxPlayerNumber"));
+        setWaitingRoomTimer(root.getElementsByTagName("waitingRoomTimer"));
+        setKeepAliveFrequency(root.getElementsByTagName("keepAliveFrequency"));
+        setKeepAliveTimer(root.getElementsByTagName("keepAliveTimer"));
+        setTurnTimer(root.getElementsByTagName("turnTimer"));
+        setQuickMoveTimer(root.getElementsByTagName("quickMoveTimer"));
+
+        Logger.logServer("Configuration completed.");
+    }
+
+    private static Node getNode(NodeList nodeList){
+        int count=0;
+        while(count<nodeList.getLength()){
+            if(nodeList.item(count).getNodeType()!=Node.TEXT_NODE) return nodeList.item(count);
+        }
+        return null;
+    }
+
+    private static void setQuickMoveTimer(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        quickMoveTimer=Long.parseLong(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setTurnTimer(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        turnTimer=Long.parseLong(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setKeepAliveTimer(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        keepAliveTimer=Long.parseLong(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setKeepAliveFrequency(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        keepAliveFrequency=Long.parseLong(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setWaitingRoomTimer(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        waitingRoomTimer=Long.parseLong(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setMaxPlayerNumber(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        maxPlayerNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setMinPlayerNumber(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        minPlayerNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setSocketServerPort(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        socketServerPort=Integer.parseInt(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setRMIServerPort(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        rmiServerPort=Integer.parseInt(node.getFirstChild().getNodeValue());
+    }
+
+    private static void setRMIServerName(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        rmiServerName=node.getFirstChild().getNodeValue();
+    }
+
+    public static String getRmiServerName() {
+        return rmiServerName;
+    }
+
+    public static int getRmiServerPort() {
+        return rmiServerPort;
+    }
+
+    public static int getSocketServerPort() {
+        return socketServerPort;
+    }
+
+    public static int getMinPlayerNumber() {
+        return minPlayerNumber;
+    }
+
+    public static int getMaxPlayerNumber() {
+        return maxPlayerNumber;
+    }
+
+    public static long getWaitingRoomTimer() {
+        return waitingRoomTimer;
+    }
+
+    public static long getKeepAliveFrequency() {
+        return keepAliveFrequency;
+    }
+
+    public static long getKeepAliveTimer() {
+        return keepAliveTimer;
+    }
+
+    public static long getTurnTimer() {
+        return turnTimer;
+    }
+
+    public static long getQuickMoveTimer() {
+        return quickMoveTimer;
+    }
+
     public static void main(String[] args) {
         try {
+            setUpConfiguration();
             String hostname=Constants.RMI_HOSTNAME;
             Server server = new Server(hostname);
             server.startServer();
 
-            Logger.logServer(Constants.RMI_SERVER_NAME + " started:");
-            Logger.logServer("(RMI: " + Constants.RMI_PORT + ", socket: " + Constants.SOCKET_PORT + ")");
+            Logger.logServer(Server.getRmiServerName() + " started:");
+            Logger.logServer("(RMI: " + Server.getRmiServerPort()+ ", socket: " + Server.getSocketServerPort()+ ")");
         } catch (ServerException e) {
             Logger.logErr(e.getMessage());
+        } catch (IOException | URISyntaxException | ParserConfigurationException | SAXException e) {
+            Logger.logErr("CONFIG.XML - "+e.getMessage());
         }
     }
 }
