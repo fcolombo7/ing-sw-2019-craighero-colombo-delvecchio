@@ -31,11 +31,20 @@ public class Logger {
     private static synchronized void createLogFile() throws URISyntaxException {
         String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
         int last = 0;
+        int last2=0;
         for (int i = 0; i < inExecutionFile.length(); i++) {
             if (inExecutionFile.charAt(i) == '/')
                 last = i;
         }
-        String folderName=inExecutionFile.substring(0, last + 1);
+        for (int i = 0; i < inExecutionFile.length(); i++) {
+            if (inExecutionFile.charAt(i) == '\\')
+                last2 = i;
+        }
+        String folderName;
+        if(last>last2)
+            folderName=inExecutionFile.substring(0, last + 1);
+        else
+            folderName=inExecutionFile.substring(0, last2 + 1);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd_HH/mm/ss");
         Date date = new Date();
         String name="log_"+dateFormat.format(date).replaceAll("/","")+".txt";

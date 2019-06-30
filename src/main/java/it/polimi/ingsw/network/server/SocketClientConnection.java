@@ -14,6 +14,7 @@ import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.*;
 import it.polimi.ingsw.network.controller.messages.room.*;
+import it.polimi.ingsw.utils.ConsoleInput;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
@@ -205,7 +206,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     private void sendMatchMessage(MatchMessage message) {
         Gson gson= new Gson();
-        Logger.logServer("[Socket] "+message.getRequest()+" sending to "+getNickname());
+        String msg=message.getRequest();
+        if(msg.equals(Constants.TURN_ROUTINE_MESSAGE))
+            msg=((TurnRoutineMessage)message).getRoutineRequest();
+        Logger.logServer("[Socket] "+msg+" sending to "+getNickname());
         try {
             out.println(message.getRequest());
             out.println(gson.toJson(message));

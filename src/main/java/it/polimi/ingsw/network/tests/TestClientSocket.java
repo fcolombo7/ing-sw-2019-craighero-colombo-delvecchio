@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.utils.ConsoleInput;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.MatrixHelper;
 
@@ -18,6 +19,9 @@ import java.net.URISyntaxException;
 import java.rmi.NotBoundException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TestClientSocket {
     private static class DebugUI implements AdrenalineUI{
@@ -27,25 +31,38 @@ public class TestClientSocket {
         DebugUI(boolean rmi){
             this.rmi=rmi;
         }
+        Scanner stdin=new Scanner(System.in);
+        ConsoleInput consoleInput;
+        ExecutorService ex = Executors.newFixedThreadPool(5);
 
         public void setUpConnection() throws IOException, NotBoundException, URISyntaxException {
             if(rmi)this.connection = new RMIServerConnection("localhost",this);
             else this.connection=new SocketServerConnection(Constants.RMI_HOSTNAME,this);
+            consoleInput= new ConsoleInput();
         }
 
         @Override
         public void onJoinRoomAdvise(String nickname) {
-            System.out.println("User "+ nickname+" has join the room...");
+            ex.submit(()->{
+                System.out.println("User "+ nickname+" has join the room...");
+            });
         }
 
         @Override
         public void onExitRoomAdvise(String nickname) {
-            System.out.println("User "+ nickname+" has left the room...");
+            ex.submit(()->{
+                System.out.println("User "+ nickname+" has left the room...");
+            });
         }
 
         @Override
         public void onFirstInRoomAdvise() {
-            System.out.println("You are the first player in the room...");
+            ex.submit(()->{
+                System.out.println("You are the first player in the room...");
+                consoleInput.cancel();
+                System.out.println(consoleInput.readLine());
+            });
+
         }
 
         @Override
@@ -74,9 +91,13 @@ public class TestClientSocket {
 
         @Override
         public void onRespwanRequest(List<Card> powerups) {
-            System.out.println(count+" RESPAWN REQUEST");
-            count++;
-            connection.respawnPlayer(powerups.get(0));
+            ex.submit(()->{
+                System.out.println(count+" RESPAWN REQUEST");
+                count++;
+                consoleInput.cancel();
+                int val=Integer.parseInt(consoleInput.readLine());
+                connection.respawnPlayer(powerups.get(val));
+            });
         }
 
         @Override
@@ -124,12 +145,14 @@ public class TestClientSocket {
         public void onTurnActions(List<String> actions) {
             System.out.println(count+" TURN ACTIONS");
             count++;
+            connection.selectAction(actions.get(actions.size()-1));
         }
 
         @Override
         public void onTurnEnd() {
             System.out.println(count+" TURN END");
             count++;
+            connection.closeTurn();
         }
 
         @Override
