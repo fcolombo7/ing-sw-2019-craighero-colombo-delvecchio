@@ -1,7 +1,5 @@
 package it.polimi.ingsw.GUI;
 
-import it.polimi.ingsw.network.client.ServerConnection;
-import it.polimi.ingsw.utils.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,9 +18,10 @@ import java.util.ArrayList;
 public class MapChoice {
 
     //public static Stage stage;
-    private static ServerConnection connection;
+    //private static ServerConnection connection;
 
     public static void display(Stage stage) {
+        Platform.setImplicitExit(false);
         Platform.runLater(()-> {
             stage.setTitle("Map choice");
             stage.setMinWidth(600);
@@ -99,10 +98,10 @@ public class MapChoice {
                 public void handle(ActionEvent actionEvent) {
                     vote.setDisable(true);
                     vote.setStyle("-fx-background-color: grey");
-                    if (first.isSelected()) connection.boardPreference(1);
-                    if (second.isSelected()) connection.boardPreference(2);
-                    if (third.isSelected()) connection.boardPreference(3);
-                    if (fourth.isSelected()) connection.boardPreference(4);
+                    if (first.isSelected()) MainWindow.getConnection().boardPreference(1);
+                    if (second.isSelected()) MainWindow.getConnection().boardPreference(2);
+                    if (third.isSelected()) MainWindow.getConnection().boardPreference(3);
+                    if (fourth.isSelected()) MainWindow.getConnection().boardPreference(4);
 
                     //votes.add(image.getImage());
                     //Image bestmap=votes.get(0);
