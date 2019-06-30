@@ -12,10 +12,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.polimi.ingsw.TestGameboard.parsingXMLFile;
 import static it.polimi.ingsw.utils.Constants.*;
@@ -115,11 +112,9 @@ public class TestCli {
 
     public static void main (String[] args){
         Cli cli = new Cli(2);
-        List<Card> pow = new ArrayList<>();
-        pow.add(new Card("1","aaa", "aaa"));
-        pow.add(new Card("1","bbb", "aaa"));
-        pow.add(new Card("1","ccc", "aaa"));
-        cli.onRespwanRequest(pow);
+        Scanner sc = new Scanner(System.in);
+        String proof = sc.nextLine();
+        System.out.print(proof);
     }
 
     @Test

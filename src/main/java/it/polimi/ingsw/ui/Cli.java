@@ -98,7 +98,7 @@ public class Cli implements AdrenalineUI{
         Logger.print("Sei in attesa di altri giocatori... \n");
     }
 
-    public void printInterface(){
+    private synchronized void printInterface(){
         updateMap();
         printMap();
         Logger.print(playersColor.get(me.getNickname()) + PLAYER + RESET + " POINTS: " + me.getScore() + "\n");
@@ -592,29 +592,58 @@ public class Cli implements AdrenalineUI{
     }*/
 
     public Card choosingPowerup(){
-        for(Card powerup: powerups)
-            Logger.print((powerups.indexOf(powerup)+1) + ". " + powerup.getName() + "\n");
-        return powerups.get(Integer.parseInt(reader.nextLine()) - 1);
+        int choice;
+        boolean rightChoice = false;
+        List<String> list = new ArrayList<>();
+        do {
+            for (Card powerup : powerups) {
+                Logger.print((powerups.indexOf(powerup) + 1) + ". " + powerup.getName() + "\n");
+                list.add(String.valueOf(powerups.indexOf(powerup) + 1));
+            }
+            choice = Integer.parseInt(reader.nextLine()) - 1;
+            if(correctInput(list, String.valueOf(choice+1)))
+                rightChoice=true;
+        }while (!rightChoice);
+        return powerups.get(choice);
+    }
+
+    private Card chooseWeapon(List<Card> weapons){
+        stopScan();
+        int i;
+        boolean rightChoice=false;
+        List<String> list = new ArrayList<>();
+        do {
+            for (Card weapon : weapons) {
+                Logger.print((weapons.indexOf(weapon) + 1) + ". " + weapon.getName() + "\n");
+                list.add(String.valueOf(weapons.indexOf(weapon) + 1));
+            }
+            Logger.print("Choose weapon to load: ");
+            scanner.start();
+            i = Integer.parseInt(reader.nextLine());
+            if(correctInput(list, String.valueOf(i)))
+                rightChoice=true;
+        }while(!rightChoice);
+        return weapons.get(i-1);
     }
 
     @Override
-    public void onJoinRoomAdvise(String nickname) {
+    public synchronized void onJoinRoomAdvise(String nickname) {
         Logger.print(BOLD + nickname + RESET + " si è unito alla partita\n");
     }
 
     @Override
-    public void onExitRoomAdvise(String nickname) {
+    public synchronized void onExitRoomAdvise(String nickname) {
         Logger.print(BOLD + nickname + RESET + " si è disconnesso\n");
     }
 
     @Override
-    public void onFirstInRoomAdvise() {
+    public synchronized void onFirstInRoomAdvise() {
         Logger.print(CLAP + " Complimenti! Sei il primo giocatore che avrà il privilegio di giocare il turno! " + CLAP + "\n");
         Logger.print("Questo simobolo sarà accanto alla tua plancia per ridordartelo durante il gioco " + ARROW + " " + FIRST + "\n");
     }
 
     @Override
-    public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
+    public synchronized void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
         stopScan();
         for(SimplePlayer player: players){
             if(player.getNickname().equals(name))
@@ -637,22 +666,23 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onInvalidMessageReceived(String msg) {
+    public synchronized void onInvalidMessageReceived(String msg) {
         stopScan();
         Logger.print("Errore ricezione messaggio\n");
         while(true);
     }
 
     @Override
-    public void onBoardUpdate(SimpleBoard gameBoard) {
+    public synchronized void onBoardUpdate(SimpleBoard gameBoard) {
         this.board=gameBoard;
         buildMap();
         printMap();
     }
 
     @Override
-    public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+    public synchronized void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
         if(frenzy) {
+            this.frenzyMode=true;
             actionLog.add("FrenzyMode ON");
             updateActionLog();
         }
@@ -667,63 +697,64 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onRespwanRequest(List<Card> powerups) {
+    public synchronized void onRespwanRequest(List<Card> powerups) {
         stopScan();
         this.powerups.addAll(powerups);
         Logger.print("Scegli un powerup da scartare per resuscitare: \n");
         Card powerup = choosingPowerup();
+        this.powerups.remove(powerup);
         serverConnection.respawnPlayer(powerup);
     }
 
     @Override
-    public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
-        this.powerups.remove(discardedPowerup);
+    public synchronized void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
         updatePlayer(player, true);
         updateActionLog(player, ActionsLog.SPAWN);
         printInterface();
     }
 
     @Override
-    public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+    public synchronized void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
         updatePlayer(player, false);
         updateActionLog(player, grabbedTile);
         printInterface();
     }
 
     @Override
-    public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+    public synchronized void onGrabbedPowerup(SimplePlayer player, Card powerup) {
         if(me.getNickname().equals(player.getNickname()))
             this.powerups.add(powerup);
+        printActionLog();
     }
 
     @Override
-    public void onGrabbableWeapons(List<Card> weapons) {
+    public synchronized void onGrabbableWeapons(List<Card> weapons) {
         stopScan();
         int i;
-        for(Card weapon: weapons){
-            i = weapons.indexOf(weapon);
-            Logger.print(i+1 + ". " + weapon.getName() + "\n");
-        }
-        Logger.print("Choose weapon: ");
-        scanner.start();
-        i = reader.nextInt();
+        boolean rightChoice=false;
+        List<String> list = new ArrayList<>();
+        do {
+            for (Card weapon : weapons) {
+                i = weapons.indexOf(weapon);
+                Logger.print((i + 1) + ". " + weapon.getName() + "\n");
+                list.add(String.valueOf(i+1));
+            }
+            Logger.print("Choose weapon: ");
+            scanner.start();
+            i = reader.nextInt();
+            if(correctInput(list, String.valueOf(i)))
+                rightChoice = true;
+        }while (!rightChoice);
         serverConnection.selectWeapon(weapons.get(i-1));
     }
 
     @Override
-    public void onDiscardWeapon(List<Card> weapons) {
-        stopScan();
-        int i;
-        for(Card weapon: weapons)
-            Logger.print(weapons.indexOf(weapon)+1 + ". " + weapon.getName() + "\n");
-        Logger.print("Choose weapon to discard: ");
-        scanner.start();
-        i = reader.nextInt();
-        serverConnection.discardWeapon(weapons.get(i-1));
+    public synchronized void onDiscardWeapon(List<Card> weapons) {
+        serverConnection.discardWeapon(chooseWeapon(weapons));
     }
 
     @Override
-    public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
+    public synchronized void onGrabbedWeapon(SimplePlayer player, Card weapon) {
         if(me.getNickname().equals(player.getNickname()))
             this.weapons.add((Weapon)weapon);
         else {
@@ -738,7 +769,7 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
+    public synchronized void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
         if(me.getNickname().equals(player.getNickname())) {
             me = player;
             this.powerups.removeAll(discardedPowerups);
@@ -754,74 +785,82 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onReloadableWeapons(List<Card> weapons) {
-        stopScan();
-        int i;
-        for(Card weapon: weapons)
-            Logger.print((weapons.indexOf(weapon) + 1) + ". " + weapon.getName() + "\n");
-        Logger.print("Choose weapon to load: ");
-        scanner.start();
-        i = reader.nextInt();
-        serverConnection.loadableWeapon(weapons.get(i-1));
+    public synchronized void onReloadableWeapons(List<Card> weapons) {
+        serverConnection.loadableWeapon(chooseWeapon(weapons));
     }
 
     @Override
-    public void onTurnActions(List<String> actions) {
+    public synchronized void onTurnActions(List<String> actions) {
         stopScan();
-        int i=0;
+        int i=1;
         int choice;
-        for(String action: actions) {
-            Logger.print((actions.indexOf(action) + 1) + ". " + action + "\n");
-            i++;
-        }
-        Logger.print(i++ + "Informazioni giocatore\n");
-        Logger.print(i + "Fine turno");
-        scanner.start();
-        choice = reader.nextInt();
-        if(choice == i)
+        boolean rightChoice=false;
+        List<String> list = new ArrayList<>();
+        do {
+            Logger.print("Scegli l'azione da fare: ");
+            for (String action : actions) {
+                Logger.print((actions.indexOf(action) + 1) + ". " + action + "\n");
+                list.add(String.valueOf(i++));
+            }
+            Logger.print(i++ + ". Informazioni giocatore\n");
+            list.add(String.valueOf(i));
+            Logger.print(i + ". Fine turno");
+            list.add(String.valueOf(i));
+            scanner.start();
+            choice = Integer.parseInt(reader.nextLine()) - 1;
+            if(correctInput(list, String.valueOf(choice+1)))
+                rightChoice=true;
+        }while (!rightChoice);
+        if (choice == i - 1)
             serverConnection.closeTurn();
-        if(choice == i-1);
+        else if (choice == i - 2) ;
             //TODO
-        serverConnection.selectAction(actions.get(choice-1));
+        else serverConnection.selectAction(actions.get(choice-1));
     }
 
     @Override
-    public void onTurnEnd() {
+    public synchronized void onTurnEnd() {
         stopScan();
         Logger.print("Waiting for your turn...");
     }
 
     @Override
-    public void onMoveAction(SimplePlayer player) {
+    public synchronized void onMoveAction(SimplePlayer player) {
         updatePlayer(player, true);
         updateActionLog(player, ActionsLog.MOVE);
         printInterface();
     }
 
     @Override
-    public void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
+    public synchronized void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
         stopScan();
-        Logger.print("Scegli dove vuoi spostare " + targetPlayer + ": " + squareList(matrix));
-        String coordinates = reader.nextLine();
+        String coordinates;
+        boolean rightChoice=false;
+        do {
+            Logger.print("Scegli dove vuoi spostare " + targetPlayer + "[<lettera><numero>]: " + squareList(matrix));
+            coordinates = reader.nextLine();
+            if(correctInput(squareList(matrix), coordinates))
+                rightChoice = true;
+        }while (!rightChoice);
         serverConnection.movePlayer(targetPlayer, parseCoordinates(coordinates));
     }
 
     @Override
-    public void onMarkAction(String player, SimplePlayer selected, int value) {
+    public synchronized void onMarkAction(String player, SimplePlayer selected, int value) {
         updatePlayer(selected, false);
         updateActionLog(selected, player, value, ActionsLog.MARK);
         printInterface();
     }
 
     @Override
-    public void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
+    public synchronized void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
         updatePlayer(selected, false);
         updateActionLog(selected, player, damageValue, ActionsLog.SHOOT);
         printInterface();
     }
 
     @Override
-    public void onDiscardedPowerup(SimplePlayer player, Card powerup) {
+    public synchronized void onDiscardedPowerup(SimplePlayer player, Card powerup) {
         if(player.getNickname().equals(me.getNickname()))
             this.powerups.remove(powerup);
         updateActionLog(player, powerup, ActionsLog.DISCARD);
@@ -829,14 +868,14 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onTurnCreation(String currentPlayer) {
+    public synchronized void onTurnCreation(String currentPlayer) {
         playingPlayer=currentPlayer;
         updateActionLog(currentPlayer);
         printInterface();
     }
 
     @Override
-    public void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
+    public synchronized void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
         stopScan();
         List<Integer> choice;
         List<List<String>> answer = new ArrayList<>();
@@ -953,30 +992,48 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onCanUsePowerup() {
+    public synchronized void onCanUsePowerup() {
         stopScan();
-        Logger.print("Puoi usare un powerup in base alla situazione di gioco corrente, vuoi usufruirne?\n [S/N]");
-        scanner.start();
-        String choice = reader.nextLine();
+        String choice;
+        boolean rightChoice=false;
+        List<String> list = new ArrayList<>();
+        do {
+            Logger.print("Puoi usare un powerup in base alla situazione di gioco corrente, vuoi usufruirne?\n [S/N]");
+            list.add("S");
+            list.add("N");
+            scanner.start();
+            choice = reader.nextLine();
+            if(correctInput(list, choice))
+                rightChoice = true;
+        }while (!rightChoice);
         serverConnection.usePowerup(choice.equals("S"));
     }
 
     @Override
-    public void onCanStopRoutine() {
+    public synchronized void onCanStopRoutine() {
         stopScan();
-        Logger.print("L'arma che stai usando ha effetti opzionali, vuoi usarli?\n [S/N]");
-        scanner.start();
-        String choice = reader.nextLine();
-        serverConnection.stopRoutine(choice.equals("S"));
+        String choice;
+        boolean rightChoice=false;
+        List<String> list = new ArrayList<>();
+        do {
+            Logger.print("Puoi usare effetti opzionali della tua arma, vuoi usarli?\n [S/N]");
+            list.add("S");
+            list.add("N");
+            scanner.start();
+            choice = reader.nextLine();
+            if(correctInput(list, choice))
+                rightChoice = true;
+        }while (!rightChoice);
+        serverConnection.usePowerup(choice.equals("S"));
     }
 
     @Override
-    public void onUsableWeapons(List<Card> usableWeapons) {
+    public synchronized void onUsableWeapons(List<Card> usableWeapons) {
         serverConnection.selectWeapon(availableCard(usableWeapons));
     }
 
     @Override
-    public void onAvailableEffects(List<String> effects) {
+    public synchronized void onAvailableEffects(List<String> effects) {
         stopScan();
         for(String effect: effects)
             Logger.print(effects.indexOf(effect)+1 + ". " + effect + "\n");
@@ -987,31 +1044,31 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
+    public synchronized void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
         if(player.getNickname().equals(me.getNickname()))
             this.powerups.removeAll(discardedPowerups);
         updatePlayer(player, false);
     }
 
     @Override
-    public void onUsedCard(Card card) {
+    public synchronized void onUsedCard(Card card) {
         updateActionLog(card);
         printInterface();
     }
 
     @Override
-    public void onAvailablePowerups(List<Card> powerups) {
+    public synchronized void onAvailablePowerups(List<Card> powerups) {
         serverConnection.selectPowerup(availableCard(powerups));
     }
 
     @Override
-    public void onRunCompleted(SimplePlayer player, int[] newPosition) {
+    public synchronized void onRunCompleted(SimplePlayer player, int[] newPosition) {
         updatePlayer(player, true);
         updateActionLog(player, ActionsLog.MOVE);
     }
 
     @Override
-    public void onRunRoutine(MatrixHelper matrix) {
+    public synchronized void onRunRoutine(MatrixHelper matrix) {
         stopScan();
         Logger.print("Scegli dove vuoi muoverti: " + squareList(matrix));
         String coordinates = reader.nextLine();
@@ -1074,6 +1131,8 @@ public class Cli implements AdrenalineUI{
 */
 
     private boolean correctInput(List<String> rightWords, String input){
+        if(!rightWords.contains(input))
+            Logger.print("\nErrore nell'input, riprova.\n");
         return rightWords.contains(input);
     }
 
@@ -1172,13 +1231,13 @@ public class Cli implements AdrenalineUI{
         return cards.get(i-1);
     }
 
-    private String squareList(MatrixHelper matrix){
-        StringBuilder squareList = new StringBuilder();
+    private List<String> squareList(MatrixHelper matrix){
+        List<String> squareList = new ArrayList<>();
         for (int i = 0; i < matrix.getRowLength(); i++)
             for (int j = 0 ; j < matrix.getColLength(); j++)
                 if(matrix.toBooleanMatrix()[i][j])
-                    squareList.append("" + (j+65) + i + " ");
-                return squareList.toString();
+                    squareList.add("" + (j+65) + i + " ");
+                return squareList;
     }
 
     private void stopScan(){
