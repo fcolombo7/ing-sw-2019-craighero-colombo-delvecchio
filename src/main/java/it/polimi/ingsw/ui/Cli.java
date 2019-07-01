@@ -210,7 +210,7 @@ public class Cli implements AdrenalineUI{
             enemiesPosition.put(player.getNickname(), coordinates);
         else {
             int[] oldPos = enemiesPosition.get(player.getNickname());
-            mapList.get(oldPos[0]).get(oldPos[1]).get(offsetsEx[0]).replace(offsetsEx[1], offsetsEx[1]+spaceFiller.length(), " ");
+            mapList.get(oldPos[0]).get(oldPos[1]).get(offsetsEx[0]).replace(offsetsEx[1], offsetsEx[1]+(playerColor + PLAYER + RESET + parseColor(board.getBoard()[coordinates[0]][coordinates[1]].getRoomColor())).length(), "  ");
             enemiesPosition.replace(player.getNickname(), coordinates);
         }
 

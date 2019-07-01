@@ -61,6 +61,16 @@ public class TestCli {
         cli.setPlayerPosition(ddd, new int[]{0, 0});
         cli.setPlayerPosition(eee, new int[]{0, 0});
         cli.setPlayerPosition(me, new int[]{0, 0});
+        cli.setPlayerPosition(bbb, new  int[]{1,2});
+        cli.setPlayerPosition(ccc, new  int[]{2,2});
+        cli.setPlayerPosition(ddd, new  int[]{1,0});
+        cli.setPlayerPosition(eee, new  int[]{0,0});
+        cli.setPlayerPosition(me, new int[]{2,2});
+        cli.setPlayerPosition(bbb, new  int[]{0,2});
+        cli.setPlayerPosition(ccc, new  int[]{2,1});
+        cli.setPlayerPosition(ddd, new  int[]{0,0});
+        cli.setPlayerPosition(eee, new  int[]{1,3});
+        cli.setPlayerPosition(me, new int[]{1,1});
         cli.printMap();
     }
 
