@@ -9,5 +9,9 @@ enum ActionsLog {
     SPAWN,
     GRAB,
     MARK,
-    DISCARD
+    DISCARD,
+    TO_LOAD,
+    TO_DISCARD,
+    USE_WEAPON,
+    USE_POWERUP
 }

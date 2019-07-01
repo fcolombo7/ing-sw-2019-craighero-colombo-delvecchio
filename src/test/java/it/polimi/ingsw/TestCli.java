@@ -112,9 +112,12 @@ public class TestCli {
 
     public static void main (String[] args){
         Cli cli = new Cli(2);
-        Scanner sc = new Scanner(System.in);
-        String proof = sc.nextLine();
-        System.out.print(proof);
+        List<String> a = new ArrayList<>();
+        a.add("AA");
+        a.add("BB");
+        a.add("CC");
+        a.add("DD");
+        cli.onTurnActions(a);
     }
 
     @Test

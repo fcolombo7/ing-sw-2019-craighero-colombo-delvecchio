@@ -124,21 +124,13 @@ public class Constants {
     public static final String	RED_W				= "\u001B[31m";
     public static final String	GREEN_W				= "\u001B[32m";
     public static final String	YELLOW_W			= "\u001B[33m";
-    public static final String	BLUE_W				= "\u001b[34;1m";
+    public static final String	BLUE_W				= "\u001b[34m";
     public static final String	MAGENTA_W			= "\u001B[35m";
     public static final String	CYAN_W				= "\u001B[36m";
     public static final String	WHITE_W				= "\u001B[37m";
     public static final String BOLD = "\u001b[1m";
     public static final String UNDERLINE = "\u001b[4m";
     public static final String REVERSE = "\u001b[7m";
-
-    /*public static final String	BACKGROUND_BLACK	= "\u001B[40m";
-    public static final String	BACKGROUND_RED		= "\u001B[41m";
-    public static final String	BACKGROUND_GREEN	= "\u001B[42m";
-    public static final String	BACKGROUND_YELLOW	= "\u001B[43m";
-    public static final String	BACKGROUND_BLUE		= "\u001B[44m";
-    public static final String	BACKGROUND_MAGENTA	= "\u001B[45m";
-    public static final String	BACKGROUND_CYAN		= "\u001B[46m";*/
     public static final String	BACKGROUND_WHITE	= "\u001B[47m";
 
     private static final String UH_BLOCK = "\u2580";
@@ -179,11 +171,6 @@ public class Constants {
     public static final String DCLASSIC_SIDE = DL_CORNER + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DR_CORNER;
     public static final String DDOOR_SIDE = DL_CORNER + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DL_QUAD + "  " + DR_QUAD + DH_BLOCK + DH_BLOCK + DH_BLOCK + DH_BLOCK + DR_CORNER;
     public static final String DSAME_ROOM_SIDE = DL_CORNER + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DT_BLOCK + DR_CORNER;
-    /*public static final String HWS_COLUMN_PIECE = LH_BLOCK + GUN + SPAWN + "      " + RH_BLOCK;
-    public static final String HAMMO_COLUMN_PIECE = LH_BLOCK + AMMO + "       " + RH_BLOCK;
-    public static final String TWS_COLUMN_PIECE = LT_BLOCK + GUN + SPAWN + "      " + RT_BLOCK;
-    public static final String TAMMO_COLUMN_PIECE = LT_BLOCK + AMMO + "       " + RT_BLOCK;
-    public static final String CLASSIC_COLUMN_PIECE = LH_BLOCK + "        " + RH_BLOCK;*/
     public static final String COL_FORMAT = "%s%s%13s";
     public static final String WEAPON_FORMAT = "%s%s%2s%s%10s";
     public static final String AMMO_FORMAT = "%s%s%2s%10s";
