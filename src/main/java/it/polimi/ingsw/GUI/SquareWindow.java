@@ -841,7 +841,7 @@ public class SquareWindow {
         button.setPrefHeight(prefHeight*heightScaleFactor);
         button.setLayoutX(x*widthScaleFactor);
         button.setLayoutY(y*heightScaleFactor);
-        button.setStyle("-fx-background-color: transparent");
+        button.setStyle("-fx-background-color: red");
         button.setDisable(true);
     }
 

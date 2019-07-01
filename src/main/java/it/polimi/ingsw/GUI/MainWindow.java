@@ -411,6 +411,8 @@ public class MainWindow extends Application {
 
     public static SquareWindow[][] squareMatrix= new SquareWindow[3][4];
 
+    public static Button[][] squareButtonMatrix=new Button[3][4];
+
     //private static List<String> myPowerups;
     //private static List<String> avEffects;
     //private static List<String> avWeapons;
@@ -475,6 +477,8 @@ public class MainWindow extends Application {
     private static HashMap<Button, String> powButtonId= new HashMap<>();
 
     private static String myNickname;
+
+    private static int numPlayers;
 
     //private static Stage zoomedImage;
 
@@ -551,26 +555,56 @@ public class MainWindow extends Application {
 
         AnchorPane gp = new AnchorPane();
 
-
         if (numMap == 1) {
             image = new Image("/gui/map1.png");
+            map=new ImageView(image);
+            configImageView(map, 600, 454, 0, 0);
+            gp.getChildren().add(map) ;
             initMap1(gp);
         }
         if (numMap == 2) {
             image = new Image("/gui/map2.png");
+            map=new ImageView(image);
+            configImageView(map, 600, 454, 0, 0);
+            gp.getChildren().add(map);
             initMap2(gp);
         }
         if (numMap == 3) {
             image = new Image("/gui/map3.png");
+            map=new ImageView(image);
+            configImageView(map, 600, 454, 0, 0);
+            gp.getChildren().add(map);
             initMap3(gp);
         }
         if (numMap == 4) {
             image = new Image("/gui/map4.png");
+            map=new ImageView(image);
+            configImageView(map, 600, 454, 0, 0);
+            gp.getChildren().add(map);
             initMap4(gp);
         }
 
-        map = new ImageView(image);
-        configImageView(map, 600, 454, 0, 0);
+        //map = new ImageView(image);
+        //map.setImage(image);
+
+        /*if (numMap == 1) {
+            //image = new Image("/gui/map1.png");
+            initMap1(gp);
+        }
+        if (numMap == 2) {
+            //image = new Image("/gui/map2.png");
+            initMap2(gp);
+        }
+        if (numMap == 3) {
+            //image = new Image("/gui/map3.png");
+            initMap3(gp);
+        }
+        if (numMap == 4) {
+            //image = new Image("/gui/map4.png");
+            initMap4(gp);
+        }*/
+
+
         //playerBoard= new Image("/gui/pl4fr.png");
         plB = new ImageView(playerBoard);
         configImgv(plB, 600, 0, 480);
@@ -696,6 +730,33 @@ public class MainWindow extends Application {
                 setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(4)));
             }
         });
+
+        if(numPlayers==2){
+            inf2.setText(null);
+            inf2.setDisable(true);
+            inf2.setStyle(null);
+            inf3.setText(null);
+            inf3.setDisable(true);
+            inf3.setStyle(null);
+            inf4.setText(null);
+            inf4.setDisable(true);
+            inf4.setStyle(null);
+        }
+
+        if(numPlayers==3){
+            inf3.setText(null);
+            inf3.setDisable(true);
+            inf3.setStyle(null);
+            inf4.setText(null);
+            inf4.setDisable(true);
+            inf4.setStyle(null);
+        }
+
+        if(numPlayers==4){
+            inf4.setText(null);
+            inf4.setDisable(true);
+            inf4.setStyle(null);
+        }
 
         shoot = new Button("Spara");
         grab = new Button("Raccogli");
@@ -837,7 +898,7 @@ public class MainWindow extends Application {
         ammsq6= new Button();
         ammsq7= new Button(); */
 
-        gp.getChildren().add(map);
+        //gp.getChildren().add(map);
 
         //if(mapp2) initMap2(gp);
 
@@ -996,6 +1057,38 @@ public class MainWindow extends Application {
         gp.getChildren().addAll(skull1, skull2, skull3, skull4, skull5, skull6, skull7, skull8, skull9, numbKill1, numbKill2, numbKill3, numbKill4, numbKill5, numbKill6, numbKill7, numbKill8, numbKill9, zoomedimg, zoomedUser);
         gp.getChildren().addAll(fmarkdr, fmarkdr1, fmarkdr2, fmarkdr3, fmarkdr4, nfmarkdr, nfmarkdr2, nfmarkdr3, nfmarkdr4, nfmarkdr5, smarkdr, smarkdr1, smarkdr2, smarkdr3, smarkdr4, nsmarkdr, nsmarkdr2, nsmarkdr3, nsmarkdr4, nsmarkdr5, tmarkdr, tmarkdr1, tmarkdr2, tmarkdr3, tmarkdr4, ntmarkdr, ntmarkdr2, ntmarkdr3, ntmarkdr4, ntmarkdr5, fomarkdr, fomarkdr1, fomarkdr2, fomarkdr3, fomarkdr4, nfomarkdr, nfomarkdr2, nfomarkdr3, nfomarkdr4, nfomarkdr5, fimarkdr, fimarkdr1, fimarkdr2, fimarkdr3, fimarkdr4, nfimarkdr, nfimarkdr2, nfimarkdr3, nfimarkdr4, nfimarkdr5);
         gp.getChildren().addAll(firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, ss2dr, ts2dr, fs2dr, fis2dr, sis2dr, ses2dr, es2dr, ns2dr, tes2dr, els2dr, tws2dr, o3sdr, s3sdr, t3sdr, f3sdr, fi3sdr, si3sdr, se3sdr, e3sdr, n3sdr, te3sdr, el3sdr, tw3sdr, o4sdr, s4sdr, t4sdr, f4sdr, fi4sdr, si4sdr, se4sdr, e4sdr, n4sdr, te4sdr, el4sdr, tw4sdr);
+
+        /*if(numMap==1) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (!(i == 2 && j == 0)) gp.getChildren().add(squareButtonMatrix[i][j]);
+                }
+            }
+        }
+
+        if(numMap==2) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (!((i == 2 && j == 0)||(i==0&&j==3))) gp.getChildren().add(squareButtonMatrix[i][j]);
+                }
+            }
+        }
+
+        if(numMap==3) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    gp.getChildren().add(squareButtonMatrix[i][j]);
+                }
+            }
+        }
+
+        if(numMap==4) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (!(i == 0 && j == 3)) gp.getChildren().add(squareButtonMatrix[i][j]);
+                }
+            }
+        }*/
         //, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8
 
         Scene scene = new Scene(gp, 1200 * widthScaleFactor, 675 * heightScaleFactor);
@@ -1419,6 +1512,7 @@ public class MainWindow extends Application {
 
         fmarkdr2=new ImageView();
         configImg(fmarkdr2, 8, 792, 102);
+        //se meno giocatori togliere numero label
         nfmarkdr3=new Label("2");
         nfmarkdr3.getStyleClass().add("nsmallmark");
         setPosLabel(nfmarkdr3, 794, 104);
@@ -1748,6 +1842,7 @@ public class MainWindow extends Application {
                     continue;
                 }else{
                     squareMatrix[i][j]= new SquareWindow(i, j, 1, widthScaleFactor, heightScaleFactor);
+                    //squareButtonMatrix[i][j]=squareMatrix[i][j].getSquareButton();
                     ap.getChildren().add(squareMatrix[i][j].getSquareButton());
                     if(squareMatrix[i][j].hasAmmoPoint()) ap.getChildren().add(squareMatrix[i][j].getAmmo());
                     if(squareMatrix[i][j].hasRespawn()) ap.getChildren().addAll(squareMatrix[i][j].getWeapon1(), squareMatrix[i][j].getWeapon2(), squareMatrix[i][j].getWeapon3());
@@ -1800,6 +1895,7 @@ public class MainWindow extends Application {
                     continue;
                 }else{
                     squareMatrix[i][j]= new SquareWindow(i, j, 2, widthScaleFactor, heightScaleFactor);
+                    //squareButtonMatrix[i][j]=squareMatrix[i][j].getSquareButton();
                     ap.getChildren().add(squareMatrix[i][j].getSquareButton());
                     if(squareMatrix[i][j].hasAmmoPoint()) ap.getChildren().add(squareMatrix[i][j].getAmmo());
                     if(squareMatrix[i][j].hasRespawn()) ap.getChildren().addAll(squareMatrix[i][j].getWeapon1(), squareMatrix[i][j].getWeapon2(), squareMatrix[i][j].getWeapon3());
@@ -1840,6 +1936,7 @@ public class MainWindow extends Application {
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                     squareMatrix[i][j]= new SquareWindow(i, j, 3, widthScaleFactor, heightScaleFactor);
+                    //squareButtonMatrix[i][j]=squareMatrix[i][j].getSquareButton();
                     ap.getChildren().add(squareMatrix[i][j].getSquareButton());
                     if(squareMatrix[i][j].hasAmmoPoint()) ap.getChildren().add(squareMatrix[i][j].getAmmo());
                     if(squareMatrix[i][j].hasRespawn()) ap.getChildren().addAll(squareMatrix[i][j].getWeapon1(), squareMatrix[i][j].getWeapon2(), squareMatrix[i][j].getWeapon3());
@@ -1897,6 +1994,7 @@ public class MainWindow extends Application {
                     continue;
                 }else{
                     squareMatrix[i][j]= new SquareWindow(i, j, 4, widthScaleFactor, heightScaleFactor);
+                    //squareButtonMatrix[i][j]=squareMatrix[i][j].getSquareButton();
                     ap.getChildren().add(squareMatrix[i][j].getSquareButton());
                     if(squareMatrix[i][j].hasAmmoPoint()) ap.getChildren().add(squareMatrix[i][j].getAmmo());
                     if(squareMatrix[i][j].hasRespawn()) ap.getChildren().addAll(squareMatrix[i][j].getWeapon1(), squareMatrix[i][j].getWeapon2(), squareMatrix[i][j].getWeapon3());
@@ -2213,7 +2311,7 @@ public class MainWindow extends Application {
                     myp2.setDisable(true);
                     myp3.setDisable(true);
                     myp4.setDisable(true);
-                    mess.setText("");
+                    mess.setText("ok");
                     String idSelPowerup = powButtonId.get(myPowerupsButton.get(myPowerupsPosition.get(usPowerup)));
                     for (int i = 0; i < powerups.size(); i++) {
                         if (powerups.get(i).getId().equalsIgnoreCase(idSelPowerup)) {
@@ -2996,7 +3094,7 @@ public class MainWindow extends Application {
 
     public static void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
 
-
+        numPlayers=players.size();
         myTurn=playerTurnNumber;
 
 
@@ -3106,15 +3204,21 @@ public class MainWindow extends Application {
         }
 
         if(players.size()==2) {
+            pl2.setImage(null);
+            pl3.setImage(null);
+            pl4.setImage(null);
             damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
             damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
         }
         if(players.size()==3) {
+            pl3.setImage(null);
+            pl4.setImage(null);
             damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
             damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
             damagesHashMap.put(players.get(2).getNickname(), imDropBlue);
         }
         if(players.size()==4) {
+            pl4.setImage(null);
             damagesHashMap.put(players.get(0).getNickname(), imDropYellow);
             damagesHashMap.put(players.get(1).getNickname(), imDropGrey);
             damagesHashMap.put(players.get(2).getNickname(), imDropBlue);
@@ -3750,6 +3854,9 @@ public class MainWindow extends Application {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
                     if (matrix.toBooleanMatrix()[i][j]) {
+                        //squareButtonMatrix[i][j].setStyle("-fx-background-color: green");
+                        //squareButtonMatrix[i][j].setDisable(false);
+                        //setButtonAction(squareButtonMatrix[i][j], i, j);
                         squareMatrix[i][j].getSquareButton().setDisable(false);
                         setButtonAction(squareMatrix[i][j].getSquareButton(), i, j);
 
