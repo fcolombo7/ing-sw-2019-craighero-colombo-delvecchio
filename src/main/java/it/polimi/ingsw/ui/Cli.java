@@ -101,9 +101,10 @@ public class Cli implements AdrenalineUI{
     }
 
     private synchronized void printInterface(){
+        printKillsToGo();
         updateMap();
         printMap();
-        Logger.print(playersColor.get(me.getNickname()) + PLAYER + RESET + " POINTS: " + me.getScore() + "\n");
+        Logger.print(playersColor.get(me.getNickname()) + PLAYER + RESET + " POINTS: " + me.getScore() + "\"" + motto + "\"" + "\n");
         printMarks(me);
         printMyPlayerBoard();
         printAmmo(me);
@@ -111,6 +112,14 @@ public class Cli implements AdrenalineUI{
         Logger.print("Potenziamenti: " + this.powerups + "\n");
         printActionLog();
         Logger.print("\n\n");
+    }
+
+    private void printKillsToGo(){
+        if(this.frenzyMode)
+            Logger.print(RED_W + REVERSE + "FRENESIA");
+        else for(int i=0; i<this.board.getSkullNumber(); i++)
+                Logger.print(RED_W + SKULL + " ");
+        Logger.print(RESET + "\n");
     }
 
     private void printActionLog(){
@@ -250,8 +259,39 @@ public class Cli implements AdrenalineUI{
         Logger.print("Ammo: " + RED_W + SQUARE + " x " + redAmmo + RESET + " " + BLUE_W + SQUARE + " x " + blueAmmo + RESET + " " + YELLOW_W + SQUARE + " x " + yellowAmmo + RESET + "\n");
     }
 
+    private void playerInfoRequest(){
+        Logger.print("\n");
+        int counter=1;
+        String choice;
+        List<String> list = new ArrayList<>();
+        boolean rightChoice = false;
+        do {
+            for (SimplePlayer enemy : enemies) {
+                if (enemy.getNickname().equals(me.getNickname()))
+                    continue;
+                list.add(String.valueOf(counter));
+                Logger.print(counter++ + ". " + enemy.getNickname());
+            }
+            reader.cancel();
+            choice = reader.readLine();
+            if(correctInput(list, choice))
+                rightChoice=true;
+        }while (!rightChoice);
+        printPlayerInfo(enemies.get(Integer.parseInt(choice)-1));
+    }
+
+    private void printPlayerInfo(SimplePlayer player){
+        Logger.print(playersColor.get(player.getNickname()) + PLAYER + RESET + " POINTS: " + player.getScore() + "\"" + player.getMotto() + "\"" + "\n");
+        printMarks(player);
+        Logger.print(buildPlayerBoard(player).toString() + "\n");
+        printAmmo(player);
+        //TODO Weapons loaded and unloaded
+    }
+
     public StringBuilder buildPlayerBoard(SimplePlayer player){
         StringBuilder playerBoard = new StringBuilder();
+        if(playerTurnNumber == 1 && player.getNickname().equals(me.getNickname()))
+            playerBoard.append(FIRST_PLAYER + "\n");
         playerBoard.append(String.format("  |>>%s|>%s %n", HAND, GUN));
         if(player.getDamages().isEmpty())
             playerBoard.append("\u25CB \n");
@@ -591,7 +631,7 @@ public class Cli implements AdrenalineUI{
         return weapons.get(reader.nextInt() + 1);
     }*/
 
-    public Card choosingPowerup(){
+    private Card choosingPowerup(){
         int choice;
         boolean rightChoice = false;
         List<String> list = new ArrayList<>();
@@ -789,13 +829,13 @@ public class Cli implements AdrenalineUI{
             list.add(String.valueOf(i));
 
             choice = Integer.parseInt(reader.readLine()) - 1;
-            if(correctInput(list, String.valueOf(choice+1)))
+            if(choice == i-2)
+                playerInfoRequest();
+            else if(correctInput(list, String.valueOf(choice+1)))
                 rightChoice=true;
         }while (!rightChoice);
         if (choice == i - 1)
             serverConnection.closeTurn();
-        else if (choice == i - 2) ;
-            //TODO
         else serverConnection.selectAction(actions.get(choice));
     }
 
@@ -1084,20 +1124,23 @@ public class Cli implements AdrenalineUI{
         serverConnection.runAction(parseCoordinates(coordinates));
     }
 
-
-    void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
+    @Override
+    public void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
         onMatchUpdate(players, gameBoard, frenzy);
     }
 
-    void onRecoverPlayerAdvise(String nickname){
+    @Override
+    public void onRecoverPlayerAdvise(String nickname){
         actionLog.add(nickname + "si ha ripreso a giocare");
     }
 
-    void onFullOfPowerup(){
+    @Override
+    public void onFullOfPowerup(){
         Logger.print("Hai raggiunto il numero massimo di powerup\n");
     }
 
-    void onCanCounterAttack(){
+    @Override
+    public void onCanCounterAttack(){
         reader.cancel();
 
         String choice;
@@ -1114,28 +1157,37 @@ public class Cli implements AdrenalineUI{
         serverConnection.counterAttackAnswer(choice.equals("S"));
     }
 
-    void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup){
-
+    @Override
+    public void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup){
+        updatePlayer(currentPlayer, false);
+        updatePlayer(player, false);
+        actionLog.add(currentPlayer + " ha usato Granata Venom su " + player);
     }
 
-    void onCounterAttackTimeOut(){
+    @Override
+    public void onCounterAttackTimeOut(){
         Logger.print("E' scaduto il tempo utile per contrattaccare...\n");
     }
 
-    void handleFatalError(String cause, String message){
+    @Override
+    public void handleFatalError(String cause, String message){
         Logger.print("\n\n" + BOLD + RED_W +
                 "Fatal error occured:" + RESET + "\n" + cause + "\n" + message + "\n");
     }
 
-    void onDisconnectionAdvise(){
-
+    @Override
+    public void onDisconnectionAdvise(){
+        Logger.print("\n Sei stato disconnesso dalla partita...\n");
     }
 
-    void onGameEnd(List<SimplePlayer> players){
-
+    @Override
+    public void onGameEnd(List<SimplePlayer> players){
+        Logger.print("\n" + BOLD + "La partita è finita!" + RESET + "\n");
+        serverConnection.confirmEndGame();
     }
 
-    void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
+    @Override
+    public void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
         Logger.print("\n\n\n\n");
         Logger.print("________________________________________________________");
         Logger.print(REVERSE + BLUE_W + "LA PARTITA E' FINITA\n" + RESET);
@@ -1184,10 +1236,6 @@ public class Cli implements AdrenalineUI{
                 a=" ";
         }
          actionLog.add(player.getNickname() + a + weapon.getName());
-    }
-
-    private void updateActionLog(SimplePlayer player, Card powerup){
-        actionLog.add(player.getNickname() + " has used "+ powerup.getName());
     }
 
     private void updateActionLog(SimplePlayer player, String giver, int quantity, ActionsLog action){

@@ -84,7 +84,6 @@ public interface AdrenalineUI {
 
     void onRunRoutine(MatrixHelper matrix);
 
-    /* TODO: da aggiungere
     void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
 
     void onRecoverPlayerAdvise(String nickname);
@@ -93,7 +92,7 @@ public interface AdrenalineUI {
 
     void onCanCounterAttack();
 
-    void onCounterAttack(currentPlayer,player,powerup);
+    void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup);
 
     void onCounterAttackTimeOut();
 
@@ -104,5 +103,5 @@ public interface AdrenalineUI {
     void onGameEnd(List<SimplePlayer> players);
 
     void onLeaderboardReceived(List<String> nicknames, List<Integer> points);
-     */
+
 }
