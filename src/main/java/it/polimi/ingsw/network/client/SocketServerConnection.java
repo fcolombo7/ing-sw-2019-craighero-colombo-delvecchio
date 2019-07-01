@@ -53,7 +53,10 @@ public class SocketServerConnection extends ServerConnection {
             try {
                 while (true) {
                     String socketLine = socketIn.nextLine();
-                    receiverMap.get(socketLine).handle();
+                    if(socketLine.equals("PING"))
+                        receiverMap.get(socketLine).handle();
+                    else
+                        receiverMap.get(socketLine).handle();
                 }
 
             }catch(NoSuchElementException e) {
@@ -114,6 +117,11 @@ public class SocketServerConnection extends ServerConnection {
         receiverMap.put(Constants.RUN_ROUTINE_MESSAGE,this::runRoutine);
         receiverMap.put(Constants.GAME_END_MESSAGE,this::gameEnd);
         receiverMap.put(Constants.LEADERBOARD_MESSAGE,this::leaderboard);
+
+        receiverMap.put(Constants.FULL_OF_POWERUP,this::fullOfPowerup);
+        receiverMap.put(Constants.CAN_COUNTER_ATTACK,this::canCounterAttack);
+        receiverMap.put(Constants.COUNTER_ATTACK_COMPLETED,this::counterAttack);
+        receiverMap.put(Constants.COUNTER_ATTACK_TIMEOUT,this::counterAttackTimeout);
     }
 
     /*------ SERVER CONNECTION METHODS ------*/
@@ -310,7 +318,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             RunMessage message = gson.fromJson(line, RunMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.RUN_ROUTINE_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.RUN_ROUTINE_MESSAGE))
                 throw new IllegalArgumentException("NOT RUN MESSAGE");
             pool.submit(()->getUi().onRunRoutine(message.getMatrix()));
         } catch (Exception e) {
@@ -342,7 +350,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             AvailablePowerupsMessage message = gson.fromJson(line, AvailablePowerupsMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.AVAILABLE_POWERUPS_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.AVAILABLE_POWERUPS_MESSAGE))
                 throw new IllegalArgumentException("NOT AVAILABLE POWERUPS MESSAGE");
             pool.submit(()->getUi().onAvailablePowerups(message.getPowerups()));
         } catch (Exception e) {
@@ -390,7 +398,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             AvailableEffectsMessage message = gson.fromJson(line, AvailableEffectsMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.AVAILABLE_EFFECTS_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.AVAILABLE_EFFECTS_MESSAGE))
                 throw new IllegalArgumentException("NOT AVAILABLE EFFECTS MESSAGE");
             pool.submit(()->getUi().onAvailableEffects(message.getEffects()));
         } catch (Exception e) {
@@ -406,7 +414,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             UsableWeaponsMessage message = gson.fromJson(line, UsableWeaponsMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.USABLE_WEAPONS_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.USABLE_WEAPONS_MESSAGE))
                 throw new IllegalArgumentException("NOT USABLE WEAPON MESSAGE");
             pool.submit(()->getUi().onUsableWeapons(message.getUsableWeapons()));
         } catch (Exception e) {
@@ -422,7 +430,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             CanStopMessage message = gson.fromJson(line, CanStopMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.CAN_STOP_ROUTINE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_STOP_ROUTINE))
                 throw new IllegalArgumentException("NOT CAN STOP MESSAGE");
             pool.submit(()->getUi().onCanStopRoutine());
         } catch (Exception e) {
@@ -439,7 +447,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             CanUsePowerupMessage message = gson.fromJson(line, CanUsePowerupMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.CAN_USE_POWERUP))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_USE_POWERUP))
                 throw new IllegalArgumentException("NOT CAN USE POWERUP MESSAGE");
             pool.submit(()->getUi().onCanUsePowerup());
         } catch (Exception e) {
@@ -455,7 +463,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             SelectablePlayersMessage message = gson.fromJson(line, SelectablePlayersMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.SELECTABLE_PLAYERS_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.SELECTABLE_PLAYERS_MESSAGE))
                 throw new IllegalArgumentException("NOT SELECTABLE PLAYER MESSAGE");
             pool.submit(()->getUi().onSelectablePlayers(message.getSelectable(), message.getTarget()));
         } catch (Exception e) {
@@ -599,7 +607,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             ReloadableWeaponsMessage message = gson.fromJson(line, ReloadableWeaponsMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.RELOADABLE_WEAPONS_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.RELOADABLE_WEAPONS_MESSAGE))
                 throw new IllegalArgumentException("NOT RELOADABLE WEAPONS MESSAGE");
             pool.submit(()->getUi().onReloadableWeapons(message.getWeapons()));
         } catch (Exception e) {
@@ -647,7 +655,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             DiscardWeaponMessage message = gson.fromJson(line, DiscardWeaponMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.DISCARD_WEAPON_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.DISCARD_WEAPON_MESSAGE))
                 throw new IllegalArgumentException("NOT DISCARD WEAPON MESSAGE");
             pool.submit(()->getUi().onDiscardWeapon(message.getWeapons()));
         } catch (Exception e) {
@@ -663,7 +671,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             GrabbableWeaponsMessage message = gson.fromJson(line, GrabbableWeaponsMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.GRABBABLE_WEAPONS_MESSAGE))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.GRABBABLE_WEAPONS_MESSAGE))
                 throw new IllegalArgumentException("NOT GRABBABLE WEAPON MESSAGE");
             pool.submit(()->getUi().onGrabbableWeapons(message.getWeapons()));
         } catch (Exception e) {
@@ -680,7 +688,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             GrabbedPowerupMessage message = gson.fromJson(line, GrabbedPowerupMessage.class);
-            if (!message.getRequest().equalsIgnoreCase(Constants.GRABBED_POWERUP))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.GRABBED_POWERUP))
                 throw new IllegalArgumentException("NOT GRABBED POWERUP MESSAGE");
             pool.submit(()->getUi().onGrabbedPowerup(message.getPlayer(), message.getPowerup()));
         } catch (Exception e) {
@@ -834,6 +842,74 @@ public class SocketServerConnection extends ServerConnection {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("GAME END", e.getMessage());
+        }
+    }
+
+    private void counterAttackTimeout() {
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            CounterAttackTimeOut message = gson.fromJson(line, CounterAttackTimeOut.class);
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.COUNTER_ATTACK_TIMEOUT))
+                throw new IllegalArgumentException("NOT COUNTER ATTACK TIMEOUT");
+            //TODO
+            //pool.submit(()-> getUi().onCounterAttackTimeOut());
+        } catch (Exception e) {
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("COUNTER ATTACK TIMEOUT", e.getMessage());
+        }
+    }
+
+    private void counterAttack() {
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            CounterAttackMessage message = gson.fromJson(line, CounterAttackMessage.class);
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.COUNTER_ATTACK_COMPLETED))
+                throw new IllegalArgumentException("NOT COUNTER ATTACK MESSAGE");
+            //TODO
+            //pool.submit(()-> getUi().onCounterAttack(message.getCurrentPlayer(),message.getPlayer(),message.getPowerup()));
+        } catch (Exception e) {
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("COUNTER ATTACK MESSAGE", e.getMessage());
+        }
+    }
+
+    private void canCounterAttack() {
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            CanCounterAttackMessage message = gson.fromJson(line, CanCounterAttackMessage.class);
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_COUNTER_ATTACK))
+                throw new IllegalArgumentException("NOT CAN COUNTER ATTACK");
+            //TODO
+            //pool.submit(()-> getUi().onCanCounterAttack());
+        } catch (Exception e) {
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("CAN COUNTER ATTACK", e.getMessage());
+        }
+    }
+
+    private void fullOfPowerup() {
+        Gson gson = new Gson();
+        String line = socketIn.nextLine();
+        Logger.log(LOG_JSON + line);
+        try {
+            FullOfPowerupsMessage message = gson.fromJson(line, FullOfPowerupsMessage.class);
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_COUNTER_ATTACK))
+                throw new IllegalArgumentException("NOT FULL OF POWERUP MESSAGE");
+            //TODO
+            //pool.submit(()-> getUi().onFullOfPowerup());
+        } catch (Exception e) {
+            Logger.log(e.getMessage());
+            //HANDLE ERRORS HERE
+            handleInvalidReceived("FULL OF POWERUP MESSAGE", e.getMessage());
         }
     }
 

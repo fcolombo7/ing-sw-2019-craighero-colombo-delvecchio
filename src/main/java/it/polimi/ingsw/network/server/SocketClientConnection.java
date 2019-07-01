@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SocketClientConnection extends ClientConnection implements Runnable {
 
@@ -42,6 +44,8 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     private Map<String, MessageManager> messageHandler;
 
+    private ExecutorService pool;
+
     @FunctionalInterface
     private interface MessageManager {
         void exec();
@@ -53,6 +57,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         this.server = server;
         in = new Scanner(socket.getInputStream());
         out = new PrintStream(socket.getOutputStream());
+        pool= Executors.newFixedThreadPool(5);
         loadHandler();
     }
 
@@ -133,7 +138,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         try{
             PongAnswer answer=gson.fromJson(line, PongAnswer.class);
             if(!answer.getType().equalsIgnoreCase(Constants.PONG_ANSWER)) throw new IllegalArgumentException("NOT PONG ANSWER");
-            getRoom().isAlive(this);
+            pool.submit(()->getRoom().isAlive(this));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             handleInvalidReceived("PONG ANSWER",e.getMessage());
@@ -142,7 +147,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     private void closeRequest() {
-        closeConnection();
+        pool.submit(()->closeConnection());
     }
 
     @Override
@@ -211,7 +216,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             msg=((TurnRoutineMessage)message).getRoutineRequest();
         Logger.logServer("[Socket] "+msg+" sending to "+getNickname());
         try {
-            out.println(message.getRequest());
+            out.println(msg);
             out.println(gson.toJson(message));
             out.flush();
         }catch(Exception e){
@@ -430,7 +435,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().counterAttackAnswer(answer.getSender(),answer.counterAttack());
+            pool.submit(()->getRoom().getController().counterAttackAnswer(answer.getSender(),answer.counterAttack()));
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
@@ -448,7 +453,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this answer
             if(!checkStatus(GameStatus.CREATED)) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().roomPreferenceManager(answer.getSender(),answer.getRoomReference());
+            pool.submit(()->getRoom().getController().roomPreferenceManager(answer.getSender(),answer.getRoomReference()));
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
@@ -466,7 +471,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this answer
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().selectPowerup(answer.getPowerup());
+            pool.submit(()->getRoom().getController().selectPowerup(answer.getPowerup()));
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
@@ -484,7 +489,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().discardWeapon(answer.getWeapon());
+            pool.submit(()->getRoom().getController().discardWeapon(answer.getWeapon()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -502,7 +507,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().usePowerup(answer.wishUseIt());
+            pool.submit(()->getRoom().getController().usePowerup(answer.wishUseIt()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -520,7 +525,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().stopRoutine(answer.wishStop());
+            pool.submit(()->getRoom().getController().stopRoutine(answer.wishStop()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -538,7 +543,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().selectPlayers(answer.getSelected());
+            pool.submit(()->getRoom().getController().selectPlayers(answer.getSelected()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -556,7 +561,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().selectEffect(answer.getEffectName());
+            pool.submit(()->getRoom().getController().selectEffect(answer.getEffectName()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -574,7 +579,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().loadableWeapon(answer.getWeapon());
+            pool.submit(()->getRoom().getController().loadableWeapon(answer.getWeapon()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -592,7 +597,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().selectWeapon(answer.getWeapon());
+            pool.submit(()->getRoom().getController().selectWeapon(answer.getWeapon()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -610,7 +615,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().runAction(answer.getNewPosition());
+            pool.submit(()->getRoom().getController().runAction(answer.getNewPosition()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -628,7 +633,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().closeTurn(answer.getSender());
+            pool.submit(()->getRoom().getController().closeTurn(answer.getSender()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -646,7 +651,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().movePlayer(answer.getTarget(),answer.getNewPosition());
+            pool.submit(()->getRoom().getController().movePlayer(answer.getTarget(),answer.getNewPosition()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -664,7 +669,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().selectAction(answer.getSelection());
+            pool.submit(()->getRoom().getController().selectAction(answer.getSelection()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -682,7 +687,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.READY)||checkStatus(GameStatus.CLOSING_TURN))) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().respawnPlayer(answer.getSender(),answer.getPowerup());
+            pool.submit(()->getRoom().getController().respawnPlayer(answer.getSender(),answer.getPowerup()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
@@ -700,7 +705,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.END))) throw new IllegalStateException(ILLEGAL_STATE);
-            getRoom().getController().gameEndAck(answer.getSender());
+            pool.submit(()->getRoom().getController().gameEndAck(answer.getSender()));
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
