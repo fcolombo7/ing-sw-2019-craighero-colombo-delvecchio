@@ -204,12 +204,20 @@ class TestClient extends ClientConnection {
 
     @Override
     public void runCompleted(SimplePlayer player, int[] newPosition) {
-
+        collector.push("RUN_COMPLETED");
     }
 
     @Override
     public void runRoutine(MatrixHelper matrix) {
-
+        System.out.println("Run routine...");
+        for(int i=0;i<matrix.getRowLength();i++){
+            for(int j=0;j<matrix.getColLength();j++) {
+                if (matrix.toBooleanMatrix()[i][j]) {
+                    controller.runAction(new int[]{i, j});
+                    return;
+                }
+            }
+        }
     }
 
     @Override

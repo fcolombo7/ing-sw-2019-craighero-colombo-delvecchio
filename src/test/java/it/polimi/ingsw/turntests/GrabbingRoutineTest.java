@@ -52,7 +52,7 @@ public class GrabbingRoutineTest {
 
         turn.getInExecutionRoutine().handleAnswer(new RunAnswer(p1.getNickname(),p1.getPosition().getBoardIndexes()));
 
-        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.GRABBED_TILE_MESSAGE));
         if(collector.size()==2){
@@ -108,9 +108,7 @@ public class GrabbingRoutineTest {
 
         turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),selected));
 
-        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        assertThat(collector.pop().getRequest(), is(Constants.GRABBED_WEAPON_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
         String temp=p1.getBoard().getAmmo().size()+"";
         Logger.log(temp);
         Logger.log("Test finished");

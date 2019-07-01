@@ -177,7 +177,7 @@ public class Turn {
         if(routine.isInnerRoutine()&&inExecutionRoutines.peek()!=null)
             inExecutionRoutines.peek().onInnerRoutineCompleted(routine.getType());
         if(!routine.isInnerRoutine()&&inExecutionRoutines.peek()==null)
-            availableActions(routine.getType()!=TurnRoutineType.RELOAD);
+            availableActions(routine.getType()==TurnRoutineType.RELOAD);
     }
 
     /**

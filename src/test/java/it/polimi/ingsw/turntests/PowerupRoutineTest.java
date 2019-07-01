@@ -72,7 +72,7 @@ public class PowerupRoutineTest {
         assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
 
         turn.getCurEffect().handleMoveAnswer(turn,p1.getNickname(), new int[]{1,2});
-        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
         assertThat(collector.pop().getRequest(), is(Constants.DISCARDED_POWERUP_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MOVE_MESSAGE));
 

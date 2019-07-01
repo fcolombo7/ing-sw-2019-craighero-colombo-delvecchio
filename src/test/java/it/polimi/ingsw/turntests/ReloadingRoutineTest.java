@@ -72,7 +72,7 @@ public class ReloadingRoutineTest {
 
         turn.getInExecutionRoutine().handleAnswer(new LoadableWeaponSelectedAnswer(p1.getNickname(),new Card(weapon)));
 
-        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.RELOAD_COMPLETED));
         Logger.log("Test Finished");
     }

@@ -153,7 +153,7 @@ public class TestClientSocket {
                 System.out.println(action);
             }
             if(found) {
-                connection.selectAction("END");
+                connection.selectAction("RUN");
             }
         }
 

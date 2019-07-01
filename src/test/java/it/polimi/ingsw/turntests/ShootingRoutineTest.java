@@ -203,7 +203,7 @@ public class ShootingRoutineTest {
 
         assertEquals(1,p3.getBoard().getMarks().size());
 
-        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_MARK_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.PAY_EFFECT_MESSAGE));
