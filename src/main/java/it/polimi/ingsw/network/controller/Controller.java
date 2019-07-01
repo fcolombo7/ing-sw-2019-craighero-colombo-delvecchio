@@ -253,8 +253,10 @@ public class Controller{
     }
 
     private void handleDeads() {
+        boolean found=false;
         for(Player player:game.getPlayers()){
             if(player.getStatus()==PlayerStatus.DEAD){
+                found=true;
                 Timer t=new Timer();
                 timerMap.put(player.getNickname(),t);
                 t.schedule(new TimerTask() {
@@ -269,6 +271,8 @@ public class Controller{
                 game.respawnPlayerRequest(player,false);
             }
         }
+        if(!found)
+            handleNewTurn();
     }
 
     public void addDisconnected(String nickname){

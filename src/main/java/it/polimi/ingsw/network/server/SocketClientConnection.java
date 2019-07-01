@@ -633,7 +633,9 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
-            pool.submit(()->getRoom().getController().closeTurn(answer.getSender()));
+            pool.submit(()->{
+                getRoom().getController().closeTurn(answer.getSender());
+            });
         }catch (Exception e){
             Logger.logServer(e.getMessage());
             //HANDLE ERRORS HERE
