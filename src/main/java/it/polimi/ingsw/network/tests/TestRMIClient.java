@@ -197,6 +197,56 @@ public class TestRMIClient {
         public void onRunRoutine(MatrixHelper matrix) {
 
         }
+
+        @Override
+        public void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+
+        }
+
+        @Override
+        public void onRecoverPlayerAdvise(String nickname) {
+
+        }
+
+        @Override
+        public void onFullOfPowerup() {
+
+        }
+
+        @Override
+        public void onCanCounterAttack() {
+
+        }
+
+        @Override
+        public void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+
+        }
+
+        @Override
+        public void onCounterAttackTimeOut() {
+
+        }
+
+        @Override
+        public void handleFatalError(String cause, String message) {
+
+        }
+
+        @Override
+        public void onDisconnectionAdvise() {
+
+        }
+
+        @Override
+        public void onGameEnd(List<SimplePlayer> players) {
+
+        }
+
+        @Override
+        public void onLeaderboardReceived(List<String> nicknames, List<Integer> points) {
+
+        }
     }
 
     public static void main(String[] args){

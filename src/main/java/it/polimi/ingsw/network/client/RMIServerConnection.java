@@ -314,8 +314,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void recoverPlayer(String nickname) {
-        //TODO
-        //getUi().onRecoverPlayerAdvise(nickname);
+        getUi().onRecoverPlayerAdvise(nickname);
     }
 
     @Override
@@ -481,49 +480,41 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void wakeUpPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-        //TODO
-        //getUi().onPlayerWakeUp(nickname);
+        getUi().onPlayerWakeUp(players,gameBoard,frenzy);
     }
 
     @Override
     public void fullOfPowerup() {
-        //TODO
-        //getUi().onFullOfPowerup();
+        getUi().onFullOfPowerup();
     }
 
     @Override
     public void canCounterAttack() {
-        //TODO
-        //getUi().onCanCounterAttack();
+        getUi().onCanCounterAttack();
     }
 
     @Override
     public void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
-        //TODO
-        //getUi().onCounterAttack(currentPlayer,player,powerup);
+        getUi().onCounterAttack(currentPlayer,player,powerup);
     }
 
     @Override
     public void counterAttackTimeOut() {
-        //TODO
-        //getUi().onCounterAttackTimeOut();
+        getUi().onCounterAttackTimeOut();
     }
 
     @Override
     public void notifyDisconnection() {
-        //TODO
-        //getUi().onDisconnectionAdvise();
+        getUi().onDisconnectionAdvise();
     }
 
     @Override
     public void gameEnd(List<SimplePlayer> players) throws RemoteException {
-        //TODO
-        //getUi().onGameEnd(players);
+        getUi().onGameEnd(players);
     }
 
     @Override
     public void sendLeaderboard(List<String> nicknames, List<Integer> points) throws RemoteException {
-        //TODO
-        //getUi().onLeaderboardReceived(nicknames,points);
+        getUi().onLeaderboardReceived(nicknames,points);
     }
 }

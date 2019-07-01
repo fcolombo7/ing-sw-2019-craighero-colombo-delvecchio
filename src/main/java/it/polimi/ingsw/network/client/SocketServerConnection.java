@@ -303,8 +303,7 @@ public class SocketServerConnection extends ServerConnection {
             RecoveringPlayerMessage message = gson.fromJson(line, RecoveringPlayerMessage.class);
             if (!message.getRequest().equalsIgnoreCase(Constants.RECOVERING_PLAYER))
                 throw new IllegalArgumentException("NOT RECOVERING PLAYER MESSAGE");
-            //TODO
-            //pool.submit(()->getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy()));
+            pool.submit(()->getUi().onPlayerWakeUp(message.getPlayers(),message.getGameBoard(),message.isFrenzy()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -819,8 +818,7 @@ public class SocketServerConnection extends ServerConnection {
             LeaderboardMessage message = gson.fromJson(line, LeaderboardMessage.class);
             if (!message.getRequest().equalsIgnoreCase(Constants.LEADERBOARD_MESSAGE))
                 throw new IllegalArgumentException("NOT LEADERBOARD MESSAGE");
-            //TODO
-            //pool.submit(()-> getUi().onLeaderboardReceived(message.getNicknames(),message.getPoints()));
+            pool.submit(()-> getUi().onLeaderboardReceived(message.getNicknames(),message.getPoints()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -836,8 +834,7 @@ public class SocketServerConnection extends ServerConnection {
             GameEndMessage message = gson.fromJson(line, GameEndMessage.class);
             if (!message.getRequest().equalsIgnoreCase(Constants.GAME_END_MESSAGE))
                 throw new IllegalArgumentException("NOT GAME END MESSAGE");
-            //TODO
-            //pool.submit(()-> getUi().onGameEnd(message.getPlayers()));
+            pool.submit(()-> getUi().onGameEnd(message.getPlayers()));
             } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -853,8 +850,7 @@ public class SocketServerConnection extends ServerConnection {
             CounterAttackTimeOut message = gson.fromJson(line, CounterAttackTimeOut.class);
             if (!message.getRoutineRequest().equalsIgnoreCase(Constants.COUNTER_ATTACK_TIMEOUT))
                 throw new IllegalArgumentException("NOT COUNTER ATTACK TIMEOUT");
-            //TODO
-            //pool.submit(()-> getUi().onCounterAttackTimeOut());
+            pool.submit(()-> getUi().onCounterAttackTimeOut());
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -870,8 +866,7 @@ public class SocketServerConnection extends ServerConnection {
             CounterAttackMessage message = gson.fromJson(line, CounterAttackMessage.class);
             if (!message.getRoutineRequest().equalsIgnoreCase(Constants.COUNTER_ATTACK_COMPLETED))
                 throw new IllegalArgumentException("NOT COUNTER ATTACK MESSAGE");
-            //TODO
-            //pool.submit(()-> getUi().onCounterAttack(message.getCurrentPlayer(),message.getPlayer(),message.getPowerup()));
+            pool.submit(()-> getUi().onCounterAttack(message.getCurrentPlayer(),message.getPlayer(),message.getPowerup()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -887,8 +882,7 @@ public class SocketServerConnection extends ServerConnection {
             CanCounterAttackMessage message = gson.fromJson(line, CanCounterAttackMessage.class);
             if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_COUNTER_ATTACK))
                 throw new IllegalArgumentException("NOT CAN COUNTER ATTACK");
-            //TODO
-            //pool.submit(()-> getUi().onCanCounterAttack());
+            pool.submit(()-> getUi().onCanCounterAttack());
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -904,8 +898,7 @@ public class SocketServerConnection extends ServerConnection {
             FullOfPowerupsMessage message = gson.fromJson(line, FullOfPowerupsMessage.class);
             if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_COUNTER_ATTACK))
                 throw new IllegalArgumentException("NOT FULL OF POWERUP MESSAGE");
-            //TODO
-            //pool.submit(()-> getUi().onFullOfPowerup());
+            pool.submit(()-> getUi().onFullOfPowerup());
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -976,8 +969,7 @@ public class SocketServerConnection extends ServerConnection {
             try{
                 RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
                 if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
-                //TODO
-                //pool.submit(()->getUi().onRecoverPlayerAdvise(message.getPlayer()));
+                pool.submit(()->getUi().onRecoverPlayerAdvise(message.getPlayer()));
             }catch (Exception e){
                 Logger.log(e.getMessage());
                 //HANDLE ERRORS HERE
@@ -994,8 +986,7 @@ public class SocketServerConnection extends ServerConnection {
             DisconnectionMessage message = gson.fromJson(line, DisconnectionMessage.class);
             if (!message.getType().equalsIgnoreCase(Constants.DISCONNECTION))
                 throw new IllegalArgumentException("NOT DISCONNECTION MESSAGE");
-            //TODO
-            //pool.submit(()->getUi().onDisconnectionAdvise());
+            pool.submit(()->getUi().onDisconnectionAdvise());
             socketOut.close();
             socketIn.close();
             socket.close();
@@ -1026,11 +1017,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
-    //TODO
     private void handleInvalidReceived(String cause, String message) {
         String builder=("An error occurred while trying to execute '")+(cause)+("':\n")+(message);
         Logger.logErr(builder);
-        //pool.submit(()->getUi().handleFatalError(cause, message));
+        pool.submit(()->getUi().handleFatalError(cause, message));
         logout();
     }
 }

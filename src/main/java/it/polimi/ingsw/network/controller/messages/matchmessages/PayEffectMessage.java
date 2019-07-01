@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.controller.messages.matchmessages;
 
 import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.utils.Constants;

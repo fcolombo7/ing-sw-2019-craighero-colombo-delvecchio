@@ -55,7 +55,11 @@ public class SimpleBoard implements Serializable{
             }
             else{
                 AmmoSquare as=(AmmoSquare)gameBoard.getSquare(i,j);
-                if(as.canGrab()) board[i][j].setAmmoTile(as.popAmmoTile());
+                if(as.canGrab()) {
+                    AmmoTile tile=as.popAmmoTile();
+                    board[i][j].setAmmoTile(tile);
+                    as.setAmmoTile(tile);
+                }
             }
         }
     }

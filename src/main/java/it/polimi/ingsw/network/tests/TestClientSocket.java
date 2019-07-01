@@ -1,7 +1,9 @@
 package it.polimi.ingsw.network.tests;
 
+import com.sun.javafx.image.BytePixelSetter;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Powerup;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.network.client.RMIServerConnection;
 import it.polimi.ingsw.network.client.ServerConnection;
@@ -59,8 +61,6 @@ public class TestClientSocket {
         public void onFirstInRoomAdvise() {
             ex.submit(()->{
                 System.out.println("You are the first player in the room...");
-                consoleInput.cancel();
-                System.out.println(consoleInput.readLine());
             });
 
         }
@@ -108,17 +108,23 @@ public class TestClientSocket {
 
         @Override
         public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+            System.out.println(count+" GRABBED TILE\n"+grabbedTile.toString());
+            count++;
 
         }
 
         @Override
         public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+            System.out.println(count+" GRABBED POWERUP\n"+ powerup.toString());
+            count++;
 
         }
 
         @Override
         public void onGrabbableWeapons(List<Card> weapons) {
-
+            System.out.println(count+" GRABBABLE WEAPONS");
+            count++;
+            connection.selectWeapon(weapons.get(0));
         }
 
         @Override
@@ -128,17 +134,17 @@ public class TestClientSocket {
 
         @Override
         public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
+            System.out.println(count+" GRABBED WEAPON\n"+weapon.toString());
+            count++;
 
         }
 
         @Override
         public void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
-
         }
 
         @Override
         public void onReloadableWeapons(List<Card> weapons) {
-
         }
 
         @Override
@@ -147,14 +153,15 @@ public class TestClientSocket {
             count++;
             boolean found=false;
             for (String action : actions) {
-                if (action.equals("RUN")) {
+                if (action.equals("GRAB")) {
                     found=true;
                 }
                 System.out.println(action);
             }
             if(found) {
+                connection.selectAction("GRAB");
+            }else
                 connection.selectAction("RUN");
-            }
         }
 
         @Override
@@ -242,21 +249,75 @@ public class TestClientSocket {
 
         @Override
         public void onRunRoutine(MatrixHelper matrix) {
-            System.out.println("Run routine...");
+            System.out.println(count+" RUN ROUTINE");
+            System.out.println("Matrix is: \n"+matrix.toString());
+            count++;
             for(int i=0;i<matrix.getRowLength();i++){
                 for(int j=0;j<matrix.getColLength();j++) {
                     if (matrix.toBooleanMatrix()[i][j]) {
                         connection.runAction(new int[]{i, j});
+                        System.out.println("RUN HERE: "+i+"-"+j+"!");
                         return;
                     }
                 }
             }
+
+        }
+
+        @Override
+        public void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
+
+        }
+
+        @Override
+        public void onRecoverPlayerAdvise(String nickname) {
+
+        }
+
+        @Override
+        public void onFullOfPowerup() {
+
+        }
+
+        @Override
+        public void onCanCounterAttack() {
+
+        }
+
+        @Override
+        public void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+
+        }
+
+        @Override
+        public void onCounterAttackTimeOut() {
+
+        }
+
+        @Override
+        public void handleFatalError(String cause, String message) {
+
+        }
+
+        @Override
+        public void onDisconnectionAdvise() {
+
+        }
+
+        @Override
+        public void onGameEnd(List<SimplePlayer> players) {
+
+        }
+
+        @Override
+        public void onLeaderboardReceived(List<String> nicknames, List<Integer> points) {
+
         }
     }
 
     public static void main(String[] args){
         String nick;
-        Scanner stdin=new Scanner(System.in);
+        Scanner stdin = new Scanner(System.in);
         System.out.print("nick: ");
         nick=stdin.nextLine();
         try {
