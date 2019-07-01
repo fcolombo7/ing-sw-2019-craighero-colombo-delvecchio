@@ -24,16 +24,16 @@ import java.util.List;
 public class Server{
 
     /* CONFIG PARAMETERS */
-    private static String rmiServerName;
-    private static int rmiServerPort;
-    private static int socketServerPort;
-    private static int minPlayerNumber;
-    private static int maxPlayerNumber;
-    private static long waitingRoomTimer;
-    private static long keepAliveFrequency;
-    private static long keepAliveTimer;
-    private static long turnTimer;
-    private static long quickMoveTimer;
+    private static String rmiServerName=Constants.RMI_SERVER_NAME;
+    private static int rmiServerPort=Constants.RMI_PORT;
+    private static int socketServerPort=Constants.SOCKET_PORT;
+    private static int minPlayerNumber=Constants.ROOM_MIN_PLAYERS;
+    private static int maxPlayerNumber=Constants.ROOM_MAX_PLAYERS;
+    private static long waitingRoomTimer=Constants.WAITING_ROOM_TIMER;
+    private static long keepAliveFrequency=Constants.KEEP_ALIVE_FREQUENCY;
+    private static long keepAliveTimer=Constants.KEEP_ALIVE_WAITING_TIME;
+    private static long turnTimer=Constants.TURN_TIMER;
+    private static long quickMoveTimer=Constants.QUICK_MOVE_TIMER;
 
 
     /*OTHER ATTRIBUTES*/

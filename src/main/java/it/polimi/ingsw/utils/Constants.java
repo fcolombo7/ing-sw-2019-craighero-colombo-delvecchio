@@ -28,19 +28,19 @@ public class Constants {
     public static final String MSG_SERVER_CLOSE = "CLOSING CONNECTION";
 
     /* ROOM PARAMETERS */
-    /*
+
     public static final int ROOM_MIN_PLAYERS=2;
     public static final int ROOM_MAX_PLAYERS=3;
     public static final long WAITING_ROOM_TIMER = 30; //SEC
     public static final long KEEP_ALIVE_FREQUENCY=8;//SEC
     public static final long KEEP_ALIVE_WAITING_TIME=4;//SEC
-     */
+
 
     /* CONTROLLER PARAMETERS */
-    /*
+
     public static final long TURN_TIMER=120;//SEC
     public static final long QUICK_MOVE_TIMER=15;//SEC
-     */
+
 
     /*MODEL MESSAGES*/
     public static final String CREATION_MESSAGE="MATCH CREATED";

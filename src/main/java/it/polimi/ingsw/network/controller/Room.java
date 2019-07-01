@@ -6,7 +6,6 @@ import it.polimi.ingsw.network.server.ClientConnection;
 import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.network.view.RemoteView;
 import it.polimi.ingsw.network.view.View;
-import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.util.*;

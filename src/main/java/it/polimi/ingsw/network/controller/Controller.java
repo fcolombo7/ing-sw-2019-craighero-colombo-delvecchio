@@ -208,10 +208,8 @@ public class Controller{
                     @Override
                     public void run() {
                         Logger.logErr("TURN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
-                        room.forceDisconnection(game.getCurrentPlayer().getNickname());
                         timerMap.remove(game.getCurrentPlayer().getNickname());
-                        game.getCurrentTurn().forceClosing();
-                        closeTurn(game.getCurrentPlayer().getNickname());
+                        room.forceDisconnection(game.getCurrentPlayer().getNickname());
                     }
                 }, Server.getTurnTimer() * 1000);
                 game.createTurn();
@@ -251,7 +249,7 @@ public class Controller{
             if (max == null || e.getValue() > max.getValue())
                 max = e;
         }
-        return max==null?boardPreference.get(0):max.getValue();
+        return max==null?boardPreference.get(0):max.getKey();
     }
 
     private void handleDeads() {
@@ -284,9 +282,15 @@ public class Controller{
                         t.purge();
                     }
                     timerMap.clear();
-                    if(game.getStatus()==GameStatus.PLAYING_TURN)
+                    if(game.getStatus()==GameStatus.PLAYING_TURN) {
+                        game.getCurrentTurn().forceClosing();
                         closeTurn(game.getCurrentPlayer().getNickname());
+                    }
                     game.forceEndGame();
+                }else if(game.getStatus()==GameStatus.PLAYING_TURN&&game.getCurrentPlayer().getNickname().equals(nickname)){
+                    game.getCurrentTurn().forceClosing();
+                    closeTurn(game.getCurrentPlayer().getNickname());
+                    handleNewTurn();
                 }
                 return;
             }

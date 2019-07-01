@@ -145,11 +145,15 @@ public class TestClientSocket {
         public void onTurnActions(List<String> actions) {
             System.out.println(count+" TURN ACTIONS");
             count++;
+            boolean found=false;
             for (String action : actions) {
                 if (action.equals("RUN")) {
-                    connection.selectAction(action);
-                    break;
+                    found=true;
                 }
+                System.out.println(action);
+            }
+            if(found) {
+                connection.selectAction("RUN");
             }
         }
 
