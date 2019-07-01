@@ -242,7 +242,15 @@ public class TestClientSocket {
 
         @Override
         public void onRunRoutine(MatrixHelper matrix) {
-
+            System.out.println("Run routine...");
+            for(int i=0;i<matrix.getRowLength();i++){
+                for(int j=0;j<matrix.getColLength();j++) {
+                    if (matrix.toBooleanMatrix()[i][j]) {
+                        connection.runAction(new int[]{i, j});
+                        return;
+                    }
+                }
+            }
         }
     }
 

@@ -120,7 +120,7 @@ public class Controller{
             handleDeads();
             return;
         }
-        throw new IllegalStateException("INVALID PLAYER RECEIVED");
+        //throw new IllegalStateException("INVALID PLAYER RECEIVED");
     }
     
     public void selectAction(String action){
@@ -288,6 +288,10 @@ public class Controller{
                     }
                     game.forceEndGame();
                 }else if(game.getStatus()==GameStatus.PLAYING_TURN&&game.getCurrentPlayer().getNickname().equals(nickname)){
+                    Timer t=timerMap.get(game.getCurrentPlayer().getNickname());
+                    t.cancel();
+                    t.purge();
+                    timerMap.remove(game.getCurrentPlayer().getNickname());
                     game.getCurrentTurn().forceClosing();
                     closeTurn(game.getCurrentPlayer().getNickname());
                     handleNewTurn();

@@ -431,7 +431,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             CounterAttackAnswer answer=gson.fromJson(line, CounterAttackAnswer .class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)) throw new IllegalArgumentException("NOT COUNTER ATTACK ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)) throw new IllegalArgumentException("NOT COUNTER ATTACK ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -467,7 +467,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             SelectedPowerupAnswer answer=gson.fromJson(line, SelectedPowerupAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.POWERUP_ANSWER)) throw new IllegalArgumentException("NOT POWERUP ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.POWERUP_ANSWER)) throw new IllegalArgumentException("NOT POWERUP ANSWER");
 
             //check if can receive this answer
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -485,7 +485,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             DiscardedWeaponAnswer answer=gson.fromJson(line, DiscardedWeaponAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.DISCARDED_WEAPON_ANSWER)) throw new IllegalArgumentException("NOT DISCARDED WEAPON ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.DISCARDED_WEAPON_ANSWER)) throw new IllegalArgumentException("NOT DISCARDED WEAPON ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -503,7 +503,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             UsePowerupAnswer answer=gson.fromJson(line, UsePowerupAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)) throw new IllegalArgumentException("NOT USE POWERUP ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)) throw new IllegalArgumentException("NOT USE POWERUP ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -521,7 +521,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             StopRoutineAnswer answer=gson.fromJson(line, StopRoutineAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.STOP_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT STOP ROUTINE ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.STOP_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT STOP ROUTINE ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -539,7 +539,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             SelectedPlayersAnswer answer=gson.fromJson(line, SelectedPlayersAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.SELECTED_PLAYERS_ANSWER)) throw new IllegalArgumentException("NOT SELECTED PLAYERS ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.SELECTED_PLAYERS_ANSWER)) throw new IllegalArgumentException("NOT SELECTED PLAYERS ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -557,7 +557,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             EffectAnswer answer=gson.fromJson(line, EffectAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT SELECTED EFFECT ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT SELECTED EFFECT ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -575,7 +575,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             LoadableWeaponSelectedAnswer answer=gson.fromJson(line, LoadableWeaponSelectedAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -593,7 +593,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             WeaponAnswer answer=gson.fromJson(line, WeaponAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.WEAPON_ANSWER)) throw new IllegalArgumentException("NOT WEAPON ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.WEAPON_ANSWER)) throw new IllegalArgumentException("NOT WEAPON ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
@@ -611,7 +611,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             RunAnswer answer=gson.fromJson(line, RunAnswer.class);
-            if(!answer.getAnswer().equalsIgnoreCase(Constants.RUN_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT RUN ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.RUN_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT RUN ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
