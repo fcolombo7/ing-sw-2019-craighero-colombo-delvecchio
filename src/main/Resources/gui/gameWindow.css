@@ -40,3 +40,11 @@
     -fx-font-weight: bold;
     -fx-font-size: 5;
 }
+
+.mess{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 10;
+    -fx-font-weight: bold;
+
+}

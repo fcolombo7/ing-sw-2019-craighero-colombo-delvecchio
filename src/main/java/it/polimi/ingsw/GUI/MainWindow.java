@@ -600,6 +600,7 @@ public class MainWindow extends Application {
 
 
         mess = new Label();
+        //mess.getStyleClass().add("mess");
         setPosLabel(mess, 1030, 50);
         mess.setPrefWidth(180 * widthScaleFactor);
         mess.setPrefWidth(200 * heightScaleFactor);
@@ -698,7 +699,7 @@ public class MainWindow extends Application {
 
         shoot = new Button("Spara");
         grab = new Button("Raccogli");
-        move = new Button("Muovi");
+        move = new Button("Corri");
         loadWeapon = new Button("Ricarica");
         usePowerup = new Button("Potenziamento");
         end = new Button("Fine");
@@ -747,7 +748,7 @@ public class MainWindow extends Application {
         move.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                connection.selectAction("MOVE");
+                connection.selectAction("RUN");
                 move.setDisable(true);
                 grab.setDisable(true);
                 shoot.setDisable(true);
@@ -847,27 +848,27 @@ public class MainWindow extends Application {
 
         user1 = new Button();
         user1.setMinSize(8, 9);
-        configButton(user1, 8, 9, 123, 150);
+        configButton(user1, 8, 9, 200, 440);
         user1.setStyle("-fx-background-image: url('/gui/user1.png')");
 
         user2 = new Button();
         user2.setMinSize(8, 9);
-        configButton(user2, 8, 9, 138, 150);
+        configButton(user2, 8, 9, 215, 440);
         user2.setStyle("-fx-background-image: url('/gui/user2.png')");
 
         user3 = new Button();
         user3.setMinSize(8, 9);
-        configButton(user3, 8, 9, 153, 150);
+        configButton(user3, 8, 9, 230, 440);
         user3.setStyle("-fx-background-image: url('/gui/user3.png')");
 
         user4 = new Button();
         user4.setMinSize(8, 9);
-        configButton(user4, 8, 9, 168, 150);
+        configButton(user4, 8, 9, 245, 440);
         user4.setStyle("-fx-background-image: url('/gui/user4.png')");
 
         user5 = new Button();
         user5.setMinSize(8, 9);
-        configButton(user5, 8, 9, 183, 150);
+        configButton(user5, 8, 9, 260, 440);
         user5.setStyle("-fx-background-image: url('/gui/user5.png')");
 
 
@@ -1958,15 +1959,36 @@ public class MainWindow extends Application {
 
 
     private static void setMyPosition(int[] pos){
-        user1.setLayoutX(squareMatrix[pos[0]][pos[1]].getUs1()[0]);
-        user1.setLayoutY(squareMatrix[pos[0]][pos[1]].getUs1()[1]);
+
+        if(pos==null) return;
+        //mettere a posto
+        if(myTurn==1) {
+            user1.setLayoutX(squareMatrix[pos[0]][pos[1]].getUs1()[0]);
+            user1.setLayoutY(squareMatrix[pos[0]][pos[1]].getUs1()[1]);
+        }
+        if(myTurn==2) {
+            user2.setLayoutX(squareMatrix[pos[0]][pos[1]].getUs2()[0]);
+            user2.setLayoutY(squareMatrix[pos[0]][pos[1]].getUs2()[1]);
+        }
+        if(myTurn==3) {
+            user3.setLayoutX(squareMatrix[pos[0]][pos[1]].getUs3()[0]);
+            user3.setLayoutY(squareMatrix[pos[0]][pos[1]].getUs3()[1]);
+        }
+        if(myTurn==4) {
+            user4.setLayoutX(squareMatrix[pos[0]][pos[1]].getUs4()[0]);
+            user4.setLayoutY(squareMatrix[pos[0]][pos[1]].getUs4()[1]);
+        }
+        if(myTurn==5) {
+            user5.setLayoutX(squareMatrix[pos[0]][pos[1]].getUs5()[0]);
+            user5.setLayoutY(squareMatrix[pos[0]][pos[1]].getUs5()[1]);
+        }
 
     }
 
     private static void setMyMarks(List<String> myMarks){
         for(int i=0; i<5; i++){
             int t= Collections.frequency(myMarks, turnNicknameHashMap.get(i));
-            myMarksLabelHashMap.get(i).setText(String.valueOf(t));
+            myMarksLabelHashMap.get(i+1).setText(String.valueOf(t));
             //hashmap nickname-immagine goccia
         }
 
@@ -1974,7 +1996,7 @@ public class MainWindow extends Application {
 
     private static void setMyDamages(List<String> myDamages){
         for(int i=0; i<myDamages.size(); i++){
-            myDamagesImageViewHashMap.get(i).setImage(damagesHashMap.get(myDamages.get(i)));
+            myDamagesImageViewHashMap.get(i+1).setImage(damagesHashMap.get(myDamages.get(i)));
         }
 
     }
@@ -1983,7 +2005,7 @@ public class MainWindow extends Application {
         for(int i=0; i<myWeapons.size(); i++){
             //String idWeap=convertIdImg(myWeapons.get(i).getId());
             //Image myWeap=new Image(idWeap);
-            myWeaponHashMap.get(i).setImage(weaponsHashMap.get(myWeapons.get(i).getId()));
+            myWeaponHashMap.get(i+1).setImage(weaponsHashMap.get(myWeapons.get(i).getId()));
             myWeaponsPosition.put(myWeapons.get(i).getId(), i+1);
         }
 
@@ -2018,10 +2040,10 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
-            pu1.setImage(null);
-            pu2.setImage(null);
-            pu3.setImage(null);
-            pu4.setImage(null);
+            //pu1.setImage(null);
+            //pu2.setImage(null);
+            //pu3.setImage(null);
+            //pu4.setImage(null);
 
             for (int i = 0; i < myPowerups.size(); i++) {
                 String idPowerup = convertIdImg(myPowerups.get(i).getId());
@@ -2186,6 +2208,7 @@ public class MainWindow extends Application {
             myPowerupsButton.get(myPowerupsPosition.get(usPowerup)).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    myPowerupsHashMap.get(myPowerupsPosition.get(usPowerup)).setImage(null);
                     myp1.setDisable(true);
                     myp2.setDisable(true);
                     myp3.setDisable(true);
@@ -2208,7 +2231,7 @@ public class MainWindow extends Application {
     private static void setPosition(int[] pos, int us){
         int user=0;
         for(int j=0; j<numbEnemyNickname.size(); j++){
-            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us))){
+            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us+1))){
                 user=j+1;
             }
         }
@@ -2244,7 +2267,7 @@ public class MainWindow extends Application {
     private static void updateMarks(List<String> marks, int us){
         int user=0;
         for(int j=0; j<numbEnemyNickname.size(); j++){
-            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us))){
+            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us+1))){
                 user=j+1;
             }
         }
@@ -2296,7 +2319,7 @@ public class MainWindow extends Application {
 
     private static void updatePlayerVisibility(SimplePlayer player){
 
-        config(infoWindowPlayer.get(player.getNickname()), player);
+        //config(infoWindowPlayer.get(player.getNickname()), player);
 
 
     }
@@ -2411,23 +2434,23 @@ public class MainWindow extends Application {
 
         if(frenzy) switchBoards(players);
         for(int i=0; i<players.size(); i++){
-            if(i!=myTurn) {
+            if(i!=myTurn-1) {
 
                 //cambiare l'intero i passato alle funzioni, forse serve costruire nicknameNumbEnemyHashMap
-                setPosition(players.get(i).getPosition(), i);
+                if(players.get(i).getPosition()!=null) setPosition(players.get(i).getPosition(), i);
                 updateMarks(players.get(i).getMarks(), i);
                 updateDamages(players.get(i).getDamages(), i);
                 updateUnloadedWeapons(players.get(i), players.get(i).getNotLoadedIds(), i);
                 updateDeathCounter(players.get(i));
             }
         }
-        setMyPosition(players.get(myTurn).getPosition());
-        setMyMarks(players.get(myTurn).getMarks());
-        setMyDamages(players.get(myTurn).getDamages());
-        setMyWeapons(players.get(myTurn).getWeaponCards());
-        setMyUnloadedWeapons(players.get(myTurn).getNotLoadedIds());
-        setMyPowerups(players.get(myTurn).getPowerupCards());
-        setMyDeathCounter(players.get(myTurn));
+        if(players.get(myTurn-1).getPosition()!=null) setMyPosition(players.get(myTurn-1).getPosition());
+        setMyMarks(players.get(myTurn-1).getMarks());
+        setMyDamages(players.get(myTurn-1).getDamages());
+        setMyWeapons(players.get(myTurn-1).getWeaponCards());
+        setMyUnloadedWeapons(players.get(myTurn-1).getNotLoadedIds());
+        setMyPowerups(players.get(myTurn-1).getPowerupCards());
+        setMyDeathCounter(players.get(myTurn-1));
 
 
     }
@@ -3209,8 +3232,12 @@ public class MainWindow extends Application {
     }
 
     public static void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-        updateBoard(gameBoard);
-        updatePlayerBoards(players, frenzy);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            updateBoard(gameBoard);
+            updatePlayerBoards(players, frenzy);
+        });
     }
 
     public static void onRespwanRequest(List<Card> powerups) {
@@ -3331,7 +3358,7 @@ public class MainWindow extends Application {
                 if (actions.get(i).equalsIgnoreCase("shoot")) {
                     shoot.setDisable(false);
                 }
-                if (actions.get(i).equalsIgnoreCase("move")) {
+                if (actions.get(i).equalsIgnoreCase("run")) {
                     move.setDisable(false);
                 }
                 if (actions.get(i).equalsIgnoreCase("grab")) {
@@ -3352,8 +3379,12 @@ public class MainWindow extends Application {
     }
 
     public static void onTurnEnd() {
-        mess.setText("Fine Turno");
-        connection.closeTurn();
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            mess.setText("Fine Turno");
+            connection.closeTurn();
+        });
 
     }
 
@@ -3696,27 +3727,37 @@ public class MainWindow extends Application {
 
 
     public static void onRunCompleted(SimplePlayer player, int[] newPosition) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)) {
-            setMyPosition(newPosition);
-        }else{
-            mess.setText(player.getNickname() + " si è spostato");
-            setPosition(newPosition, nicknameTurnHashMap.get(player.getNickname()));
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                setMyPosition(newPosition);
+            } else {
+                mess.setText(player.getNickname() + " si è spostato");
+                setPosition(newPosition, nicknameTurnHashMap.get(player.getNickname()));
+            }
+        });
 
     }
 
 
     public static void onRunRoutine(MatrixHelper matrix) {
-        for(int i=0; i<3; i++){
-            for(int j=0; j<4; j++){
-                if(matrix.toBooleanMatrix()[i][j]) {
-                    squareMatrix[i][j].getSquareButton().setDisable(false);
-                    setButtonAction(squareMatrix[i][j].getSquareButton(), i, j);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
 
-                    //setta a true il bottone in quella posizione e nel bottone ServerConnection.runAction(i, j)
+            mess.setText("Scegli dove spostarti");
+
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (matrix.toBooleanMatrix()[i][j]) {
+                        squareMatrix[i][j].getSquareButton().setDisable(false);
+                        setButtonAction(squareMatrix[i][j].getSquareButton(), i, j);
+
+                        //setta a true il bottone in quella posizione e nel bottone ServerConnection.runAction(i, j)
+                    }
                 }
             }
-        }
+        });
 
     }
 

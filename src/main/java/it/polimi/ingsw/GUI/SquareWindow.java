@@ -5,11 +5,11 @@ import javafx.scene.control.Button;
 //square
 public class SquareWindow {
     private Button squareButton;
-    private int[] us1;
-    private int[] us2;
-    private int[] us3;
-    private int[] us4;
-    private int[] us5;
+    private double[] us1;
+    private double[] us2;
+    private double[] us3;
+    private double[] us4;
+    private double[] us5;
 
     private int[] pos;
 
@@ -31,11 +31,11 @@ public class SquareWindow {
         weapon3=new Button();
         ammo=new Button();
         pos=new int[]{i, j};
-        us1=new int[]{0, 0};
-        us2=new int[]{0, 0};
-        us3=new int[]{0, 0};
-        us4=new int[]{0, 0};
-        us5=new int[]{0, 0};
+        us1=new double[]{0, 0};
+        us2=new double[]{0, 0};
+        us3=new double[]{0, 0};
+        us4=new double[]{0, 0};
+        us5=new double[]{0, 0};
 
         widthScaleFactor=widthFactor;
         heightScaleFactor=heightFactor;
@@ -49,24 +49,24 @@ public class SquareWindow {
         return squareButton;
     }
 
-    public int[] getUs1() {
-        return new int[]{us1[0], us1[1]};
+    public double[] getUs1() {
+        return new double[]{us1[0], us1[1]};
     }
 
-    public int[] getUs2() {
-        return new int[]{us2[0], us2[1]};
+    public double[] getUs2() {
+        return new double[]{us2[0], us2[1]};
     }
 
-    public int[] getUs3(){
-        return new int[]{us3[0], us3[1]};
+    public double[] getUs3(){
+        return new double[]{us3[0], us3[1]};
     }
 
-    public int[] getUs4() {
-        return new int[]{us4[0], us4[1]};
+    public double[] getUs4() {
+        return new double[]{us4[0], us4[1]};
     }
 
-    public int[] getUs5(){
-        return new int[]{us5[0], us5[1]};
+    public double[] getUs5(){
+        return new double[]{us5[0], us5[1]};
     }
 
     public int[] getPos(){return pos;}
@@ -94,16 +94,16 @@ public class SquareWindow {
     private void configMap1(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 80, 83,111, 105);
-            us1[0]=123;
-            us1[1]=150;
-            us2[0]=138;
-            us2[1]=150;
-            us3[0]=153;
-            us3[1]=150;
-            us4[0]=168;
-            us4[1]=150;
-            us5[0]=183;
-            us5[1]=150;
+            us1[0]=123*widthScaleFactor;
+            us1[1]=150*heightScaleFactor;
+            us2[0]=138*widthScaleFactor;
+            us2[1]=150*heightScaleFactor;
+            us3[0]=153*widthScaleFactor;
+            us3[1]=150*heightScaleFactor;
+            us4[0]=168*widthScaleFactor;
+            us4[1]=150*heightScaleFactor;
+            us5[0]=183*widthScaleFactor;
+            us5[1]=150*heightScaleFactor;
             hasRespawnPoint=false;
             hasAmmo=true;
             configAmmoButton(ammo, 21, 21, 123, 115);
@@ -126,8 +126,8 @@ public class SquareWindow {
         }
         if(i==0&&j==2){
             configSquareButton(squareButton,  95, 80, 303, 108);
-            us1[0]=315;
-            us1[1]=142;
+            us1[0]=315*widthScaleFactor;
+            us1[1]=142*heightScaleFactor;
             us2[0]=327;
             us2[1]=142;
             us3[0]=339;
