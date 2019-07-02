@@ -2,8 +2,10 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
+import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.Cli;
 import it.polimi.ingsw.utils.Logger;
 import org.junit.Test;
@@ -75,6 +77,30 @@ public class TestCli {
     }
 
     @Test
+    public void testOnSelectablePlayer(){
+        Cli cli = new Cli(1);
+        List<List<String>> selectable = new ArrayList<>();
+        List<String> mini = new ArrayList<>();
+        List<String> mana = new ArrayList<>();
+        List<String> mono = new ArrayList<>();
+        List<String> mene = new ArrayList<>();
+        mini.add("AA");
+        mini.add("BB");
+        mini.add("CC");
+        selectable.add(mini);
+        mana.add("DD");
+        selectable.add(mana);
+        mono.add("BB");
+        mono.add("FF");
+        selectable.add(mono);
+        mene.add("EE");
+        selectable.add(mene);
+        Target t = new Target(TargetType.SQUARE, 1, 3, 1, 2, new ArrayList<>());
+        SimpleTarget target = new SimpleTarget(t);
+        cli.onSelectablePlayers(selectable, target);
+    }
+
+    @Test
     public void testBuildMap() throws IOException, SAXException, ParserConfigurationException {
         //for(int i=1; i<5; i++) {
             Node node = parsingXMLFile("src/main/Resources/boards/board" + "1" + ".xml");
@@ -121,13 +147,31 @@ public class TestCli {
     }
 
     public static void main (String[] args){
-        Cli cli = new Cli(2);
-        List<String> a = new ArrayList<>();
-        a.add("AA");
-        a.add("BB");
-        a.add("CC");
-        a.add("DD");
-        cli.onTurnActions(a);
+        Cli cli = new Cli(1);
+        List<List<String>> selectable = new ArrayList<>();
+        List<String> mini = new ArrayList<>();
+        List<String> mana = new ArrayList<>();
+        List<String> mono = new ArrayList<>();
+        List<String> mene = new ArrayList<>();
+        mini.add("AA");
+        mini.add("BB");
+        mini.add("CC");
+        mini.add("QQ");
+        mini.add("WW");
+        selectable.add(mini);
+        mana.add("DD");
+        selectable.add(mana);
+        mono.add("BB");
+        mono.add("FF");
+        selectable.add(mono);
+        mene.add("SS");
+        mene.add("AA");
+        mene.add("BB");
+        mene.add("EE");
+        selectable.add(mene);
+        Target t = new Target(TargetType.DIRECTION, 1, 3, 1, 2, new ArrayList<>());
+        SimpleTarget target = new SimpleTarget(t);
+        cli.onSelectablePlayers(selectable, target);
     }
 
     @Test
