@@ -520,6 +520,73 @@ public class MainWindow extends Application {
     private static Scene infoscene4;
 
 
+    private static ImageView mydeath1;
+    private static ImageView mydeath2;
+    private static ImageView mydeath3;
+    private static ImageView mydeath4;
+    private static ImageView mydeath5;
+    private static ImageView mydeath6;
+    private static ImageView mydeath1fr;
+    private static ImageView mydeath2fr;
+    private static ImageView mydeath3fr;
+    private static ImageView mydeath4fr;
+
+
+    private static ImageView en1death1;
+    private static ImageView en1death2;
+    private static ImageView en1death3;
+    private static ImageView en1death4;
+    private static ImageView en1death5;
+    private static ImageView en1death6;
+    private static ImageView en1death1fr;
+    private static ImageView en1death2fr;
+    private static ImageView en1death3fr;
+    private static ImageView en1death4fr;
+
+
+    private static ImageView en2death1;
+    private static ImageView en2death2;
+    private static ImageView en2death3;
+    private static ImageView en2death4;
+    private static ImageView en2death5;
+    private static ImageView en2death6;
+    private static ImageView en2death1fr;
+    private static ImageView en2death2fr;
+    private static ImageView en2death3fr;
+    private static ImageView en2death4fr;
+
+
+    private static ImageView en3death1;
+    private static ImageView en3death2;
+    private static ImageView en3death3;
+    private static ImageView en3death4;
+    private static ImageView en3death5;
+    private static ImageView en3death6;
+    private static ImageView en3death1fr;
+    private static ImageView en3death2fr;
+    private static ImageView en3death3fr;
+    private static ImageView en3death4fr;
+
+
+    private static ImageView en4death1;
+    private static ImageView en4death2;
+    private static ImageView en4death3;
+    private static ImageView en4death4;
+    private static ImageView en4death5;
+    private static ImageView en4death6;
+    private static ImageView en4death1fr;
+    private static ImageView en4death2fr;
+    private static ImageView en4death3fr;
+    private static ImageView en4death4fr;
+
+
+
+
+
+
+
+
+
     @Override
     public void start(Stage stage) throws  Exception {
 
@@ -568,6 +635,117 @@ public class MainWindow extends Application {
 
 
         stage.setTitle("ADRENALINA");
+
+
+        mydeath1=new ImageView();
+        mydeath2=new ImageView();
+        mydeath3=new ImageView();
+        mydeath4=new ImageView();
+        mydeath5=new ImageView();
+        mydeath6=new ImageView();
+        mydeath1fr=new ImageView();
+        mydeath2fr=new ImageView();
+        mydeath3fr=new ImageView();
+        mydeath4fr=new ImageView();
+        configImageView(mydeath1, 17, 17, 130, 596);
+        configImageView(mydeath2, 17, 17, 162, 596);
+        configImageView(mydeath3, 17, 17, 194, 596);
+        configImageView(mydeath4, 17, 17, 226, 596);
+        configImageView(mydeath5, 17, 17, 258, 596);
+        configImageView(mydeath6, 17, 17, 290, 596);
+        configImageView(mydeath1fr, 17, 17, 171, 596);
+        configImageView(mydeath2fr, 17, 17, 203, 596);
+        configImageView(mydeath3fr, 17, 17, 235, 596);
+        configImageView(mydeath4fr, 17, 17, 267, 596);
+
+        en1death1=new ImageView();
+        en1death2=new ImageView();
+        en1death3=new ImageView();
+        en1death4=new ImageView();
+        en1death5=new ImageView();
+        en1death6=new ImageView();
+        en1death1fr=new ImageView();
+        en1death2fr=new ImageView();
+        en1death3fr=new ImageView();
+        en1death4fr=new ImageView();
+        configImageView(en1death1, 8, 8, 696, 79);
+        configImageView(en1death2, 8, 8, 712, 79);
+        configImageView(en1death3, 8, 8, 728, 79);
+        configImageView(en1death4, 8, 8, 744, 79);
+        configImageView(en1death5, 8, 8, 760, 79);
+        configImageView(en1death6, 8, 8, 776, 79);
+        configImageView(en1death1fr, 8, 8, 718, 79);
+        configImageView(en1death2fr, 8, 8, 734, 79);
+        configImageView(en1death3fr, 8, 8, 750, 79);
+        configImageView(en1death4fr, 8, 8, 766, 79);
+
+        en2death1=new ImageView();
+        en2death2=new ImageView();
+        en2death3=new ImageView();
+        en2death4=new ImageView();
+        en2death5=new ImageView();
+        en2death6=new ImageView();
+        en2death1fr=new ImageView();
+        en2death2fr=new ImageView();
+        en2death3fr=new ImageView();
+        en2death4fr=new ImageView();
+        configImageView(en2death1, 8, 8, 696, 159);
+        configImageView(en2death2, 8, 8, 712, 159);
+        configImageView(en2death3, 8, 8, 728, 159);
+        configImageView(en2death4, 8, 8, 744, 159);
+        configImageView(en2death5, 8, 8, 760, 159);
+        configImageView(en2death6, 8, 8, 776, 159);
+        configImageView(en2death1fr, 8, 8, 718, 159);
+        configImageView(en2death2fr, 8, 8, 734, 159);
+        configImageView(en2death3fr, 8, 8, 750, 159);
+        configImageView(en2death4fr, 8, 8, 766, 159);
+
+        en3death1=new ImageView();
+        en3death2=new ImageView();
+        en3death3=new ImageView();
+        en3death4=new ImageView();
+        en3death5=new ImageView();
+        en3death6=new ImageView();
+        en3death1fr=new ImageView();
+        en3death2fr=new ImageView();
+        en3death3fr=new ImageView();
+        en3death4fr=new ImageView();
+        configImageView(en3death1, 8, 8, 696, 239);
+        configImageView(en3death2, 8, 8, 712, 239);
+        configImageView(en3death3, 8, 8, 728, 239);
+        configImageView(en3death4, 8, 8, 744, 239);
+        configImageView(en3death5, 8, 8, 760, 239);
+        configImageView(en3death6, 8, 8, 776, 239);
+        configImageView(en3death1fr, 8, 8, 718, 239);
+        configImageView(en3death2fr, 8, 8, 734, 239);
+        configImageView(en3death3fr, 8, 8, 750, 239);
+        configImageView(en3death4fr, 8, 8, 766, 239);
+
+        en4death1=new ImageView();
+        en4death2=new ImageView();
+        en4death3=new ImageView();
+        en4death4=new ImageView();
+        en4death5=new ImageView();
+        en4death6=new ImageView();
+        en4death1fr=new ImageView();
+        en4death2fr=new ImageView();
+        en4death3fr=new ImageView();
+        en4death4fr=new ImageView();
+        configImageView(en4death1, 8, 8, 696, 319);
+        configImageView(en4death2, 8, 8, 712, 319);
+        configImageView(en4death3, 8, 8, 728, 319);
+        configImageView(en4death4, 8, 8, 744, 319);
+        configImageView(en4death5, 8, 8, 760, 319);
+        configImageView(en4death6, 8, 8, 776, 319);
+        configImageView(en4death1fr, 8, 8, 718, 319);
+        configImageView(en4death2fr, 8, 8, 734, 319);
+        configImageView(en4death3fr, 8, 8, 750, 319);
+        configImageView(en4death4fr, 8, 8, 766, 319);
+
+
+
+
+
 
 
         //boolean mapp1=false;
@@ -1124,6 +1302,8 @@ public class MainWindow extends Application {
         gp.getChildren().addAll(fmarkdr, fmarkdr1, fmarkdr2, fmarkdr3, fmarkdr4, nfmarkdr, nfmarkdr2, nfmarkdr3, nfmarkdr4, nfmarkdr5, smarkdr, smarkdr1, smarkdr2, smarkdr3, smarkdr4, nsmarkdr, nsmarkdr2, nsmarkdr3, nsmarkdr4, nsmarkdr5, tmarkdr, tmarkdr1, tmarkdr2, tmarkdr3, tmarkdr4, ntmarkdr, ntmarkdr2, ntmarkdr3, ntmarkdr4, ntmarkdr5, fomarkdr, fomarkdr1, fomarkdr2, fomarkdr3, fomarkdr4, nfomarkdr, nfomarkdr2, nfomarkdr3, nfomarkdr4, nfomarkdr5, fimarkdr, fimarkdr1, fimarkdr2, fimarkdr3, fimarkdr4, nfimarkdr, nfimarkdr2, nfimarkdr3, nfimarkdr4, nfimarkdr5);
         gp.getChildren().addAll(firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, ss2dr, ts2dr, fs2dr, fis2dr, sis2dr, ses2dr, es2dr, ns2dr, tes2dr, els2dr, tws2dr, o3sdr, s3sdr, t3sdr, f3sdr, fi3sdr, si3sdr, se3sdr, e3sdr, n3sdr, te3sdr, el3sdr, tw3sdr, o4sdr, s4sdr, t4sdr, f4sdr, fi4sdr, si4sdr, se4sdr, e4sdr, n4sdr, te4sdr, el4sdr, tw4sdr);
         gp.getChildren().addAll(labPlayer1, labPlayer2, labPlayer3, labPlayer4);
+
+        gp.getChildren().addAll(mydeath1, mydeath2, mydeath3, mydeath4, mydeath5, mydeath6, mydeath1fr, mydeath2fr, mydeath3fr, mydeath4fr, en1death1, en1death2, en1death3, en1death4, en1death5, en1death6, en1death1fr, en1death2fr, en1death3fr, en1death4fr, en2death1, en2death2, en2death3, en2death4, en2death5, en2death6, en2death1fr, en2death2fr, en2death3fr, en2death4fr, en3death1, en3death2, en3death3, en3death4, en3death5, en3death6, en3death1fr, en3death2fr, en3death3fr, en3death4fr, en4death1, en4death2, en4death3, en4death4, en4death5, en4death6, en4death1fr, en4death2fr, en4death3fr, en4death4fr);
         /*if(numMap==1) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -2379,6 +2559,79 @@ public class MainWindow extends Application {
     }
 
     private static void setMyDeathCounter(SimplePlayer player){
+        mydeath1.setImage(null);
+        mydeath2.setImage(null);
+        mydeath3.setImage(null);
+        mydeath4.setImage(null);
+        mydeath5.setImage(null);
+        mydeath6.setImage(null);
+        mydeath1fr.setImage(null);
+        mydeath2fr.setImage(null);
+        mydeath3fr.setImage(null);
+        mydeath4fr.setImage(null);
+
+        if(player.isSwitched()){
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    mydeath1fr.setImage(skull1img);
+                    break;
+                case 2:
+                    mydeath1fr.setImage(skull1img);
+                    mydeath2fr.setImage(skull1img);
+                    break;
+                case 3:
+                    mydeath1fr.setImage(skull1img);
+                    mydeath2fr.setImage(skull1img);
+                    mydeath3fr.setImage(skull1img);
+                    break;
+                case 4:
+                    mydeath1fr.setImage(skull1img);
+                    mydeath2fr.setImage(skull1img);
+                    mydeath3fr.setImage(skull1img);
+                    mydeath4fr.setImage(skull1img);
+                    break;
+            }
+        }else{
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    mydeath1.setImage(skull1img);
+                    break;
+                case 2:
+                    mydeath1.setImage(skull1img);
+                    mydeath2.setImage(skull1img);
+                    break;
+                case 3:
+                    mydeath1.setImage(skull1img);
+                    mydeath2.setImage(skull1img);
+                    mydeath3.setImage(skull1img);
+                    break;
+                case 4:
+                    mydeath1.setImage(skull1img);
+                    mydeath2.setImage(skull1img);
+                    mydeath3.setImage(skull1img);
+                    mydeath4.setImage(skull1img);
+                    break;
+                case 5:
+                    mydeath1.setImage(skull1img);
+                    mydeath2.setImage(skull1img);
+                    mydeath3.setImage(skull1img);
+                    mydeath4.setImage(skull1img);
+                    mydeath5.setImage(skull1img);
+                    break;
+                case 6:
+                    mydeath1.setImage(skull1img);
+                    mydeath2.setImage(skull1img);
+                    mydeath3.setImage(skull1img);
+                    mydeath4.setImage(skull1img);
+                    mydeath5.setImage(skull1img);
+                    mydeath6.setImage(skull1img);
+                    break;
+            }
+        }
         //settare con lo switch e le imageview
     }
 
@@ -2605,9 +2858,310 @@ public class MainWindow extends Application {
 
     }
 
-    private static void updateDeathCounter(SimplePlayer player){
-        //faccio uno switch con player.getDeathCounter e devo creare delle ImageView che coprano i numeri
+    private static void updateDeathCounter1(SimplePlayer player){
+        en1death1.setImage(null);
+        en1death2.setImage(null);
+        en1death3.setImage(null);
+        en1death4.setImage(null);
+        en1death5.setImage(null);
+        en1death6.setImage(null);
+        en1death1fr.setImage(null);
+        en1death2fr.setImage(null);
+        en1death3fr.setImage(null);
+        en1death4fr.setImage(null);
+
+        if(player.isSwitched()){
+                switch (player.getDeathCounter()){
+                    case 0:
+                        break;
+                    case 1:
+                        en1death1fr.setImage(skull1img);
+                        break;
+                    case 2:
+                        en1death1fr.setImage(skull1img);
+                        en1death2fr.setImage(skull1img);
+                        break;
+                    case 3:
+                        en1death1fr.setImage(skull1img);
+                        en1death2fr.setImage(skull1img);
+                        en1death3fr.setImage(skull1img);
+                        break;
+                    case 4:
+                        en1death1fr.setImage(skull1img);
+                        en1death2fr.setImage(skull1img);
+                        en1death3fr.setImage(skull1img);
+                        en1death4fr.setImage(skull1img);
+                        break;
+                }
+            }else{
+                switch (player.getDeathCounter()){
+                    case 0:
+                        break;
+                    case 1:
+                        en1death1.setImage(skull1img);
+                        break;
+                    case 2:
+                        en1death1.setImage(skull1img);
+                        en1death2.setImage(skull1img);
+                        break;
+                    case 3:
+                        en1death1.setImage(skull1img);
+                        en1death2.setImage(skull1img);
+                        en1death3.setImage(skull1img);
+                        break;
+                    case 4:
+                        en1death1.setImage(skull1img);
+                        en1death2.setImage(skull1img);
+                        en1death3.setImage(skull1img);
+                        en1death4.setImage(skull1img);
+                        break;
+                    case 5:
+                        en1death1.setImage(skull1img);
+                        en1death2.setImage(skull1img);
+                        en1death3.setImage(skull1img);
+                        en1death4.setImage(skull1img);
+                        en1death5.setImage(skull1img);
+                        break;
+                    case 6:
+                        en1death1.setImage(skull1img);
+                        en1death2.setImage(skull1img);
+                        en1death3.setImage(skull1img);
+                        en1death4.setImage(skull1img);
+                        en1death5.setImage(skull1img);
+                        en1death6.setImage(skull1img);
+                        break;
+                }
+            }
     }
+
+    private static void updateDeathCounter2(SimplePlayer player){
+        en2death1.setImage(null);
+        en2death2.setImage(null);
+        en2death3.setImage(null);
+        en2death4.setImage(null);
+        en2death5.setImage(null);
+        en2death6.setImage(null);
+        en2death1fr.setImage(null);
+        en2death2fr.setImage(null);
+        en2death3fr.setImage(null);
+        en2death4fr.setImage(null);
+
+        if(player.isSwitched()){
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    en2death1fr.setImage(skull1img);
+                    break;
+                case 2:
+                    en2death1fr.setImage(skull1img);
+                    en2death2fr.setImage(skull1img);
+                    break;
+                case 3:
+                    en2death1fr.setImage(skull1img);
+                    en2death2fr.setImage(skull1img);
+                    en2death3fr.setImage(skull1img);
+                    break;
+                case 4:
+                    en2death1fr.setImage(skull1img);
+                    en2death2fr.setImage(skull1img);
+                    en2death3fr.setImage(skull1img);
+                    en2death4fr.setImage(skull1img);
+                    break;
+            }
+        }else{
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    en2death1.setImage(skull1img);
+                    break;
+                case 2:
+                    en2death1.setImage(skull1img);
+                    en2death2.setImage(skull1img);
+                    break;
+                case 3:
+                    en2death1.setImage(skull1img);
+                    en2death2.setImage(skull1img);
+                    en2death3.setImage(skull1img);
+                    break;
+                case 4:
+                    en2death1.setImage(skull1img);
+                    en2death2.setImage(skull1img);
+                    en2death3.setImage(skull1img);
+                    en2death4.setImage(skull1img);
+                    break;
+                case 5:
+                    en2death1.setImage(skull1img);
+                    en2death2.setImage(skull1img);
+                    en2death3.setImage(skull1img);
+                    en2death4.setImage(skull1img);
+                    en2death5.setImage(skull1img);
+                    break;
+                case 6:
+                    en2death1.setImage(skull1img);
+                    en2death2.setImage(skull1img);
+                    en2death3.setImage(skull1img);
+                    en2death4.setImage(skull1img);
+                    en2death5.setImage(skull1img);
+                    en2death6.setImage(skull1img);
+                    break;
+            }
+        }
+    }
+
+    private static void updateDeathCounter3(SimplePlayer player){
+        en3death1.setImage(null);
+        en3death2.setImage(null);
+        en3death3.setImage(null);
+        en3death4.setImage(null);
+        en3death5.setImage(null);
+        en3death6.setImage(null);
+        en3death1fr.setImage(null);
+        en3death2fr.setImage(null);
+        en3death3fr.setImage(null);
+        en3death4fr.setImage(null);
+
+        if(player.isSwitched()){
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    en3death1fr.setImage(skull1img);
+                    break;
+                case 2:
+                    en3death1fr.setImage(skull1img);
+                    en3death2fr.setImage(skull1img);
+                    break;
+                case 3:
+                    en3death1fr.setImage(skull1img);
+                    en3death2fr.setImage(skull1img);
+                    en3death3fr.setImage(skull1img);
+                    break;
+                case 4:
+                    en3death1fr.setImage(skull1img);
+                    en3death2fr.setImage(skull1img);
+                    en3death3fr.setImage(skull1img);
+                    en3death4fr.setImage(skull1img);
+                    break;
+            }
+        }else{
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    en3death1.setImage(skull1img);
+                    break;
+                case 2:
+                    en3death1.setImage(skull1img);
+                    en3death2.setImage(skull1img);
+                    break;
+                case 3:
+                    en3death1.setImage(skull1img);
+                    en3death2.setImage(skull1img);
+                    en3death3.setImage(skull1img);
+                    break;
+                case 4:
+                    en3death1.setImage(skull1img);
+                    en3death2.setImage(skull1img);
+                    en3death3.setImage(skull1img);
+                    en3death4.setImage(skull1img);
+                    break;
+                case 5:
+                    en3death1.setImage(skull1img);
+                    en3death2.setImage(skull1img);
+                    en3death3.setImage(skull1img);
+                    en3death4.setImage(skull1img);
+                    en3death5.setImage(skull1img);
+                    break;
+                case 6:
+                    en3death1.setImage(skull1img);
+                    en3death2.setImage(skull1img);
+                    en3death3.setImage(skull1img);
+                    en3death4.setImage(skull1img);
+                    en3death5.setImage(skull1img);
+                    en3death6.setImage(skull1img);
+                    break;
+            }
+        }
+    }
+
+    private static void updateDeathCounter4(SimplePlayer player){
+        en4death1.setImage(null);
+        en4death2.setImage(null);
+        en4death3.setImage(null);
+        en4death4.setImage(null);
+        en4death5.setImage(null);
+        en4death6.setImage(null);
+        en4death1fr.setImage(null);
+        en4death2fr.setImage(null);
+        en4death3fr.setImage(null);
+        en4death4fr.setImage(null);
+
+        if(player.isSwitched()){
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    en4death1fr.setImage(skull1img);
+                    break;
+                case 2:
+                    en4death1fr.setImage(skull1img);
+                    en4death2fr.setImage(skull1img);
+                    break;
+                case 3:
+                    en4death1fr.setImage(skull1img);
+                    en4death2fr.setImage(skull1img);
+                    en4death3fr.setImage(skull1img);
+                    break;
+                case 4:
+                    en4death1fr.setImage(skull1img);
+                    en4death2fr.setImage(skull1img);
+                    en4death3fr.setImage(skull1img);
+                    en4death4fr.setImage(skull1img);
+                    break;
+            }
+        }else{
+            switch (player.getDeathCounter()){
+                case 0:
+                    break;
+                case 1:
+                    en4death1.setImage(skull1img);
+                    break;
+                case 2:
+                    en4death1.setImage(skull1img);
+                    en4death2.setImage(skull1img);
+                    break;
+                case 3:
+                    en4death1.setImage(skull1img);
+                    en4death2.setImage(skull1img);
+                    en4death3.setImage(skull1img);
+                    break;
+                case 4:
+                    en4death1.setImage(skull1img);
+                    en4death2.setImage(skull1img);
+                    en4death3.setImage(skull1img);
+                    en4death4.setImage(skull1img);
+                    break;
+                case 5:
+                    en4death1.setImage(skull1img);
+                    en4death2.setImage(skull1img);
+                    en4death3.setImage(skull1img);
+                    en4death4.setImage(skull1img);
+                    en4death5.setImage(skull1img);
+                    break;
+                case 6:
+                    en4death1.setImage(skull1img);
+                    en4death2.setImage(skull1img);
+                    en4death3.setImage(skull1img);
+                    en4death4.setImage(skull1img);
+                    en4death5.setImage(skull1img);
+                    en4death6.setImage(skull1img);
+                    break;
+            }
+        }
+    }
+        //faccio uno switch con player.getDeathCounter e devo creare delle ImageView che coprano i numeri
 
     private static void switchBoards(List<SimplePlayer> players){
         for(int i=0; i<players.size(); i++){
@@ -2642,6 +3196,25 @@ public class MainWindow extends Application {
         }*/
         updateMarks(player.getMarks(), player.getNickname());
         updateDamages(player.getDamages(), nicknameTurnHashMap.get(player.getNickname()));
+        if(numbEnemyNickname.get(1).equalsIgnoreCase(player.getNickname())) {
+            updateDeathCounter1(player);
+        }
+        if(numPlayers==3){
+            if(numbEnemyNickname.get(1).equalsIgnoreCase(player.getNickname())) updateDeathCounter1(player);
+            if(numbEnemyNickname.get(2).equalsIgnoreCase(player.getNickname())) updateDeathCounter2(player);
+        }
+        if(numPlayers==4){
+            if(numbEnemyNickname.get(1).equalsIgnoreCase(player.getNickname())) updateDeathCounter1(player);
+            if(numbEnemyNickname.get(2).equalsIgnoreCase(player.getNickname())) updateDeathCounter2(player);
+            if(numbEnemyNickname.get(3).equalsIgnoreCase(player.getNickname())) updateDeathCounter3(player);
+        }
+        if(numPlayers==5){
+            if(numbEnemyNickname.get(1).equalsIgnoreCase(player.getNickname())) updateDeathCounter1(player);
+            if(numbEnemyNickname.get(2).equalsIgnoreCase(player.getNickname())) updateDeathCounter2(player);
+            if(numbEnemyNickname.get(3).equalsIgnoreCase(player.getNickname())) updateDeathCounter3(player);
+            if(numbEnemyNickname.get(4).equalsIgnoreCase(player.getNickname())) updateDeathCounter4(player);
+        }
+
     }
 
 
@@ -2786,7 +3359,25 @@ public class MainWindow extends Application {
                 updateMarks(players.get(i).getMarks(), players.get(i).getNickname() );
                 updateDamages(players.get(i).getDamages(), i+1);
                 updateUnloadedWeapons(players.get(i), players.get(i).getNotLoadedIds(), i);
-                updateDeathCounter(players.get(i));
+                if(numbEnemyNickname.get(1).equalsIgnoreCase(players.get(i).getNickname())) {
+                    updateDeathCounter1(players.get(i));
+                }
+                if(numPlayers==3){
+                    if(numbEnemyNickname.get(1).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter1(players.get(i));
+                    if(numbEnemyNickname.get(2).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter2(players.get(i));
+                }
+                if(numPlayers==4){
+                    if(numbEnemyNickname.get(1).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter1(players.get(i));
+                    if(numbEnemyNickname.get(2).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter2(players.get(i));
+                    if(numbEnemyNickname.get(3).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter3(players.get(i));
+                }
+                if(numPlayers==5){
+                    if(numbEnemyNickname.get(1).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter1(players.get(i));
+                    if(numbEnemyNickname.get(2).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter2(players.get(i));
+                    if(numbEnemyNickname.get(3).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter3(players.get(i));
+                    if(numbEnemyNickname.get(4).equalsIgnoreCase(players.get(i).getNickname())) updateDeathCounter4(players.get(i));
+                }
+
             }
         }
         if(players.get(myTurn-1).getPosition()!=null) setMyPosition(players.get(myTurn-1).getPosition());
@@ -3902,6 +4493,7 @@ public class MainWindow extends Application {
                 mess.setText("Hai ricevuto " + damageValue + "danni da \n" + player);
                 setMyMarks(selected.getMarks());
                 setMyDamages(selected.getDamages());
+                setMyDeathCounter(selected);
             }else {
                 if(player.equalsIgnoreCase(myNickname)){
                     mess.setText(damageValue+ " danni a \n" +selected.getNickname());
@@ -4286,16 +4878,24 @@ public class MainWindow extends Application {
     }
 
     public static void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
+        //controllo se arriva prima questo o quello dopo
         updateBoard(gameBoard);
         updatePlayerBoards(players, frenzy);
+        mess.setText("");
     }
 
     public static void onRecoverPlayerAdvise(String nickname){
-        mess.setText(nickname + "\n è tornato in partita");
+        if(nickname.equalsIgnoreCase(myNickname)) {
+            stage.close();
+            //MainWindow.stage.show();
+        }else{
+            mess.setText(nickname + "\n è tornato in partita");
+        }
+        //aggiornare qualcosa(info?)
     }
 
     public static void onFullOfPowerup(){
-        mess.setText("Hai già 3 potenziamenti");
+        mess.setText("Hai già 3 \npotenziamenti");
     }
 
     public static void onCanCounterAttack(){
@@ -4337,19 +4937,24 @@ public class MainWindow extends Application {
 
     public static void handleFatalError(String cause, String message){
         mess.setText(message+ "\n" + cause);
+        //messagebox consiglia fil
     }
 
     public static void onDisconnectionAdvise(){
-        mess.setText("Ti sei disconnesso");
+        mess.setText("Sei stato\n disconnesso");
+        stage.close();
+        LoginWindow.log(stage);
     }
 
     public static void onGameEnd(List<SimplePlayer> players){
-        mess.setText("La partita è terminata");
+        int yourPoints=players.get(myTurn-1).getScore();
+        mess.setText("La partita è\n terminata.\n Hai fatto " +yourPoints+ " punti");
+
         connection.confirmEndGame();
     }
 
     public static void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
-        mess.setText(nicknames.get(0) + " = " +points.get(0) + "\n" +nicknames.get(1) + " = " +points.get(1) + "\n" + nicknames.get(2) + " = " +points.get(2) + "\n");
+        //mess.setText(nicknames.get(0) + " = " +points.get(0) + "\n" +nicknames.get(1) + " = " +points.get(1) + "\n" + nicknames.get(2) + " = " +points.get(2) + "\n");
     }
 }
 
