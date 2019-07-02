@@ -632,6 +632,8 @@ public class MainWindow extends Application {
         myPowerup4Label = new Label();
         setPosLabel(myPowerup4Label, 910, 380);
 
+        initMyWeaponsLabel();
+
 
         mess = new Label();
         //mess.getStyleClass().add("mess");
@@ -652,24 +654,32 @@ public class MainWindow extends Application {
 
         yes = new Button("Si");
         setPosButton(yes, 1060, 270);
+        yes.getStyleClass().add("info");
         yes.setStyle("-fx-background-color: green");
+        //yes.setStyle("-fx-text-fill: white");
         yes.setDisable(true);
 
 
         no = new Button("No");
         setPosButton(no, 1120, 270);
+        no.getStyleClass().add("info");
         no.setStyle("-fx-background-color: red");
+        //no.setStyle("-fx-text-fill: white");
         no.setDisable(true);
 
 
         ok = new Button("Invia");
         setPosButton(ok, 1120, 310);
+        ok.getStyleClass().add("info");
         ok.setStyle("-fx-background-color: green");
+        //ok.setStyle("-fx-text-fill: white");
         ok.setDisable(true);
 
         okay = new Button("Ok");
         setPosButton(okay, 1060, 310);
+        okay.getStyleClass().add("info");
         okay.setStyle("-fx-background-color: blue");
+        //okay.setStyle("-fx-text-fill: white");
         okay.setDisable(true);
 
         setPosButton(eff1, 1030, 350);
@@ -735,27 +745,39 @@ public class MainWindow extends Application {
             inf2.setText(null);
             inf2.setDisable(true);
             inf2.setStyle(null);
+            inf2.setMinSize(0, 0);
+            inf2.setPrefSize(0, 0);
             inf3.setText(null);
             inf3.setDisable(true);
             inf3.setStyle(null);
+            inf3.setMinSize(0, 0);
+            inf3.setPrefSize(0, 0);
             inf4.setText(null);
             inf4.setDisable(true);
             inf4.setStyle(null);
+            inf4.setMinSize(0, 0);
+            inf4.setPrefSize(0, 0);
         }
 
         if(numPlayers==3){
             inf3.setText(null);
             inf3.setDisable(true);
             inf3.setStyle(null);
+            inf3.setMinSize(0, 0);
+            inf3.setPrefSize(0, 0);
             inf4.setText(null);
             inf4.setDisable(true);
             inf4.setStyle(null);
+            inf4.setMinSize(0, 0);
+            inf4.setPrefSize(0, 0);
         }
 
         if(numPlayers==4){
             inf4.setText(null);
             inf4.setDisable(true);
             inf4.setStyle(null);
+            inf4.setMinSize(0, 0);
+            inf4.setPrefSize(0, 0);
         }
 
         shoot = new Button("Spara");
@@ -931,6 +953,8 @@ public class MainWindow extends Application {
         user5.setMinSize(8, 9);
         configButton(user5, 8, 9, 260, 440);
         user5.setStyle("-fx-background-image: url('/gui/user5.png')");
+
+        initUserButtonHashMap();
 
 
         skull1img = new Image("/gui/redskull.jpg");
@@ -1179,6 +1203,7 @@ public class MainWindow extends Application {
         button.setLayoutX(x*widthScaleFactor);
         button.setLayoutY(y*heightScaleFactor);
         button.setStyle("-fx-background-color: transparent");
+        button.setDisable(true);
     }
 
     private static void configImg(ImageView img, double width, double x, double y){
@@ -1388,31 +1413,31 @@ public class MainWindow extends Application {
 
     private static void configMyMarks(){
 
-        fmarkdr=new ImageView();
+        fmarkdr=new ImageView(imDropYellow);
         configImg(fmarkdr, 15, 325, 485);
         nfmarkdr=new Label("0");
         nfmarkdr.getStyleClass().add("nbigmark");
         setPosLabel(nfmarkdr, 329, 488);
 
-        smarkdr=new ImageView();
+        smarkdr=new ImageView(imDropGrey);
         configImg(smarkdr, 15, 350, 485);
         nsmarkdr=new Label("0");
         nsmarkdr.getStyleClass().add("nbigmark");
         setPosLabel(nsmarkdr, 354, 488);
 
-        tmarkdr=new ImageView();
+        tmarkdr=new ImageView(imDropBlue);
         configImg(tmarkdr, 15, 375, 485);
         ntmarkdr=new Label("0");
         ntmarkdr.getStyleClass().add("nbigmark");
         setPosLabel(ntmarkdr, 379, 488);
 
-        fomarkdr=new ImageView();
+        fomarkdr=new ImageView(imDropGreen);
         configImg(fomarkdr, 15, 400, 485);
         nfomarkdr=new Label("0");
         nfomarkdr.getStyleClass().add("nbigmark");
         setPosLabel(nfomarkdr, 404, 488);
 
-        fimarkdr=new ImageView();
+        fimarkdr=new ImageView(imDropPurple);
         configImg(fimarkdr, 15, 425, 485);
         nfimarkdr=new Label("0");
         nfimarkdr.getStyleClass().add("nbigmark");
@@ -1449,31 +1474,31 @@ public class MainWindow extends Application {
 
     private static void configPl1Marks(){
 
-        fmarkdr1=new ImageView();
+        fmarkdr1=new ImageView(imDropYellow);
         configImg(fmarkdr1, 8, 792, 22);
         nfmarkdr2=new Label("0");
         nfmarkdr2.getStyleClass().add("nsmallmark");
         setPosLabel(nfmarkdr2, 794, 24);
 
-        smarkdr1=new ImageView();
+        smarkdr1=new ImageView(imDropGrey);
         configImg(smarkdr1, 8, 804, 22);
         nsmarkdr2=new Label("0");
         nsmarkdr2.getStyleClass().add("nsmallmark");
         setPosLabel(nsmarkdr2, 806, 24);
 
-        tmarkdr1=new ImageView();
+        tmarkdr1=new ImageView(imDropBlue);
         configImg(tmarkdr1, 8, 816, 22);
         ntmarkdr2=new Label("0");
         ntmarkdr2.getStyleClass().add("nsmallmark");
         setPosLabel(ntmarkdr2, 818, 24);
 
-        fomarkdr1=new ImageView();
+        fomarkdr1=new ImageView(imDropGreen);
         configImg(fomarkdr1, 8, 828, 22);
-        nfomarkdr2=new Label("2");
+        nfomarkdr2=new Label("0");
         nfomarkdr2.getStyleClass().add("nsmallmark");
         setPosLabel(nfomarkdr2, 830, 24);
 
-        fimarkdr1=new ImageView();
+        fimarkdr1=new ImageView(imDropPurple);
         configImg(fimarkdr1, 8, 840, 22);
         nfimarkdr2=new Label("0");
         nfimarkdr2.getStyleClass().add("nsmallmark");
@@ -1510,36 +1535,50 @@ public class MainWindow extends Application {
 
     private static void configPl2Marks(){
 
-        fmarkdr2=new ImageView();
+        fmarkdr2=new ImageView(imDropYellow);
         configImg(fmarkdr2, 8, 792, 102);
         //se meno giocatori togliere numero label
-        nfmarkdr3=new Label("2");
+        nfmarkdr3=new Label("0");
         nfmarkdr3.getStyleClass().add("nsmallmark");
         setPosLabel(nfmarkdr3, 794, 104);
 
-        smarkdr2=new ImageView();
+        smarkdr2=new ImageView(imDropGrey);
         configImg(smarkdr2, 8, 804, 102);
-        nsmarkdr3=new Label("2");
+        nsmarkdr3=new Label("0");
         nsmarkdr3.getStyleClass().add("nsmallmark");
         setPosLabel(nsmarkdr3, 806, 104);
 
-        tmarkdr2=new ImageView();
+        tmarkdr2=new ImageView(imDropBlue);
         configImg(tmarkdr2, 8, 816, 102);
-        ntmarkdr3=new Label("2");
+        ntmarkdr3=new Label("0");
         ntmarkdr3.getStyleClass().add("nsmallmark");
         setPosLabel(ntmarkdr3, 818, 104);
 
-        fomarkdr2=new ImageView();
+        fomarkdr2=new ImageView(imDropGreen);
         configImg(fomarkdr2, 8, 828, 102);
-        nfomarkdr3=new Label("2");
+        nfomarkdr3=new Label("0");
         nfomarkdr3.getStyleClass().add("nsmallmark");
         setPosLabel(nfomarkdr3, 830, 104);
 
-        fimarkdr2=new ImageView();
+        fimarkdr2=new ImageView(imDropPurple);
         configImg(fimarkdr2, 8, 840, 102);
         nfimarkdr3=new Label("0");
         nfimarkdr3.getStyleClass().add("nsmallmark");
         setPosLabel(nfimarkdr3, 842, 104);
+
+        if(numPlayers<3) {
+            fmarkdr2.setImage(null);
+            smarkdr2.setImage(null);
+            tmarkdr2.setImage(null);
+            fomarkdr2.setImage(null);
+            fimarkdr2.setImage(null);
+            nfmarkdr3.setText("");
+            nsmarkdr3.setText("");
+            ntmarkdr3.setText("");
+            nfomarkdr3.setText("");
+            nfimarkdr3.setText("");
+        }
+
     }
 
     private static void configPl2Damages(){
@@ -1572,35 +1611,48 @@ public class MainWindow extends Application {
 
     private static void configPl3Marks(){
 
-        fmarkdr3= new ImageView();
+        fmarkdr3= new ImageView(imDropYellow);
         configImg(fmarkdr3, 8, 792, 182);
-        nfmarkdr4=new Label("2");
+        nfmarkdr4=new Label("0");
         nfmarkdr4.getStyleClass().add("nsmallmark");
         setPosLabel(nfmarkdr4, 794, 184);
 
-        smarkdr3= new ImageView();
+        smarkdr3= new ImageView(imDropGrey);
         configImg(smarkdr3, 8, 804, 182);
-        nsmarkdr4=new Label("2");
+        nsmarkdr4=new Label("0");
         nsmarkdr4.getStyleClass().add("nsmallmark");
         setPosLabel(nsmarkdr4, 806, 184);
 
-        tmarkdr3=new ImageView();
+        tmarkdr3=new ImageView(imDropBlue);
         configImg(tmarkdr3, 8, 816, 182);
-        ntmarkdr4=new Label("2");
+        ntmarkdr4=new Label("0");
         ntmarkdr4.getStyleClass().add("nsmallmark");
         setPosLabel(ntmarkdr4, 818, 184);
 
-        fomarkdr3=new ImageView();
+        fomarkdr3=new ImageView(imDropGreen);
         configImg(fomarkdr3, 8, 828, 182);
-        nfomarkdr4=new Label("2");
+        nfomarkdr4=new Label("0");
         nfomarkdr4.getStyleClass().add("nsmallmark");
         setPosLabel(nfomarkdr4, 830,184);
 
-        fimarkdr3=new ImageView();
+        fimarkdr3=new ImageView(imDropPurple);
         configImg(fimarkdr3, 8, 840, 182);
         nfimarkdr4=new Label("0");
         nfimarkdr4.getStyleClass().add("nsmallmark");
         setPosLabel(nfimarkdr4, 842, 184);
+
+        if(numPlayers<4) {
+            fmarkdr3.setImage(null);
+            smarkdr3.setImage(null);
+            tmarkdr3.setImage(null);
+            fomarkdr3.setImage(null);
+            fimarkdr3.setImage(null);
+            nfmarkdr4.setText("");
+            nsmarkdr4.setText("");
+            ntmarkdr4.setText("");
+            nfomarkdr4.setText("");
+            nfimarkdr4.setText("");
+        }
     }
 
     private static void configPl3Damages(){
@@ -1633,35 +1685,48 @@ public class MainWindow extends Application {
 
     private static void configPl4Marks(){
 
-        fmarkdr4=new ImageView();
+        fmarkdr4=new ImageView(imDropYellow);
         configImg(fmarkdr4, 8, 792, 262);
         nfmarkdr5=new Label("2");
         nfmarkdr5.getStyleClass().add("nsmallmark");
         setPosLabel(nfmarkdr5, 794, 264);
 
-        smarkdr4=new ImageView();
+        smarkdr4=new ImageView(imDropGrey);
         configImg(smarkdr4, 8, 804, 262);
         nsmarkdr5=new Label("2");
         nsmarkdr5.getStyleClass().add("nsmallmark");
         setPosLabel(nsmarkdr5, 806, 264);
 
-        tmarkdr4=new ImageView();
+        tmarkdr4=new ImageView(imDropBlue);
         configImg(tmarkdr4, 8, 816, 262);
         ntmarkdr5=new Label("2");
         ntmarkdr5.getStyleClass().add("nsmallmark");
         setPosLabel(ntmarkdr5, 818, 264);
 
-        fomarkdr4=new ImageView();
+        fomarkdr4=new ImageView(imDropGreen);
         configImg(fomarkdr4, 8, 828, 262);
         nfomarkdr5=new Label("2");
         nfomarkdr5.getStyleClass().add("nsmallmark");
         setPosLabel(nfomarkdr5, 830, 264);
 
-        fimarkdr4=new ImageView();
+        fimarkdr4=new ImageView(imDropPurple);
         configImg(fimarkdr4, 8, 840, 262);
         nfimarkdr5=new Label("0");
         nfimarkdr5.getStyleClass().add("nsmallmark");
         setPosLabel(nfimarkdr5, 842, 264);
+
+        if(numPlayers<5) {
+            fmarkdr4.setImage(null);
+            smarkdr4.setImage(null);
+            tmarkdr4.setImage(null);
+            fomarkdr4.setImage(null);
+            fimarkdr4.setImage(null);
+            nfmarkdr5.setText("");
+            nsmarkdr5.setText("");
+            ntmarkdr5.setText("");
+            nfomarkdr5.setText("");
+            nfimarkdr5.setText("");
+        }
     }
 
     private static void configPl4Damages(){
@@ -1799,38 +1864,48 @@ public class MainWindow extends Application {
         a1=new Button();
         configTranspButton(a1, 57, 84, 317, 2);
         setActionWeapBoardButton(a1, weaponsHashMap.get(weapButtonId.get(a1)));
+        a1.setStyle("-fx-background-color: red");
 
         a2=new Button();
         configTranspButton(a2, 57, 84, 383, 2);
         setActionWeapBoardButton(a2, weaponsHashMap.get(weapButtonId.get(a2)));
+        a2.setStyle("-fx-background-color: red");
 
         a3=new Button();
         configTranspButton(a3, 57, 84, 449, 2);
         setActionWeapBoardButton(a3, weaponsHashMap.get(weapButtonId.get(a3)));
+        a3.setStyle("-fx-background-color: red");
 
         a4=new Button();
         configTranspButton(a4, 84, 57, 2, 166);
         setActionWeapBoardButton(a4, weaponsHashMap.get(weapButtonId.get(a4)));
+        a4.setStyle("-fx-background-color: red");
 
         a5=new Button();
         configTranspButton(a5, 84, 57, 2, 232);
         setActionWeapBoardButton(a5, weaponsHashMap.get(weapButtonId.get(a5)));
+        a5.setStyle("-fx-background-color: red");
 
         a6=new Button();
         configTranspButton(a6, 84, 57, 2, 298);
         setActionWeapBoardButton(a6, weaponsHashMap.get(weapButtonId.get(a6)));
+        a6.setStyle("-fx-background-color: red");
 
         a7=new Button();
         configTranspButton(a7, 84, 57, 516, 257);
         setActionWeapBoardButton(a7, weaponsHashMap.get(weapButtonId.get(a7)));
+        a7.setStyle("-fx-background-color: red");
 
         a8=new Button();
         configTranspButton(a8, 84, 57, 516, 323);
         setActionWeapBoardButton(a8, weaponsHashMap.get(weapButtonId.get(a8)));
+        a8.setStyle("-fx-background-color: red");
 
         a9=new Button();
         configTranspButton(a9, 84, 57, 516, 389);
         setActionWeapBoardButton(a9, weaponsHashMap.get(weapButtonId.get(a9)));
+        a9.setStyle("-fx-background-color: red");
+
     }
 
 
@@ -2127,9 +2202,9 @@ public class MainWindow extends Application {
 
     private static void setMyUnloadedWeapons(List<String> myUnloadedWeapons){
         for(int i=0; i<myUnloadedWeapons.size(); i++){
-            String idWeap=convertIdImg(myUnloadedWeapons.get(i));
-            int t=idWeaponPosition.get(idWeap);
-            myWeaponsLabel.get(t).setText("Unloaded");
+            //String idWeap=convertIdImg(myUnloadedWeapons.get(i));
+            //int t=idWeaponPosition.get(idWeap);
+            myWeaponsLabel.get(myWeaponsPosition.get(myUnloadedWeapons.get(i))).setText("Scarica");
             //in teoria le immagini sono tutte già settate da weapon
         }
     }
@@ -2208,7 +2283,7 @@ public class MainWindow extends Application {
     }
 
     private static void setClickWeapon(List<Card> weapons, String usWeapon){
-        myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Available");
+        myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Usabile");
         myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setDisable(false);
         myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -2216,6 +2291,7 @@ public class MainWindow extends Application {
                 myw1.setDisable(true);
                 myw2.setDisable(true);
                 myw3.setDisable(true);
+                myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Scarica");
                 String idSelWeapon=weapButtonId.get(myWeaponsButton.get(myWeaponsPosition.get(usWeapon)));
                 for(int i=0; i<weapons.size(); i++){
                     if(weapons.get(i).getId().equalsIgnoreCase(idSelWeapon)){
@@ -2228,7 +2304,7 @@ public class MainWindow extends Application {
     }
 
     private static void setClickWeaponToReload(List<Card> weapons, String usWeapon){
-        myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Available");
+        myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Scarica");
         myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setDisable(false);
         myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -2256,9 +2332,9 @@ public class MainWindow extends Application {
                 for(int i=1; i<10; i++){
                     boardWeaponsButton.get(i).setDisable(true);
                 }
-                String idSelWeapon=weapButtonId.get(boardWeaponsButton.get(idWeaponPosition.get(usWeapon)));
+                //String idSelWeapon=weapButtonId.get(boardWeaponsButton.get(idWeaponPosition.get(usWeapon)));
                 for(int i=0; i<weapons.size(); i++){
-                    if(weapons.get(i).getId().equalsIgnoreCase(idSelWeapon)){
+                    if(weapons.get(i).getId().equalsIgnoreCase(usWeapon)){
                         connection.selectWeapon(weapons.get(i));
                         break;
                     }
@@ -2268,9 +2344,9 @@ public class MainWindow extends Application {
     }
 
     private static void setMyAmmo(SimplePlayer player){
-        int redammos=Collections.frequency(player.getAmmos(), "red");
-        int blueammos=Collections.frequency(player.getAmmos(), "blue");
-        int yellowammos=Collections.frequency(player.getAmmos(), "yellow");
+        int redammos=Collections.frequency(player.getAmmos(), Color.RED);
+        int blueammos=Collections.frequency(player.getAmmos(), Color.BLUE);
+        int yellowammos=Collections.frequency(player.getAmmos(), Color.YELLOW);
         nr.setText(String.valueOf(redammos));
         nb.setText(String.valueOf(blueammos));
         ny.setText(String.valueOf(yellowammos));
@@ -2286,6 +2362,11 @@ public class MainWindow extends Application {
                 myp2.setDisable(true);
                 myp3.setDisable(true);
                 myp4.setDisable(true);
+                myPowerup1Label.setText(null);
+                myPowerup2Label.setText(null);
+                myPowerup3Label.setText(null);
+                myPowerup4Label.setText(null);
+                myPowerupsHashMap.get(myPowerupsPosition.get(usPoweup)).setImage(null);
                 String idSelPowerup=powButtonId.get(myPowerupsButton.get(myPowerupsPosition.get(usPoweup)));
                 for (int i=0; i<powerups.size(); i++){
                     if(powerups.get(i).getId().equalsIgnoreCase(idSelPowerup)){
@@ -2311,7 +2392,6 @@ public class MainWindow extends Application {
                     myp2.setDisable(true);
                     myp3.setDisable(true);
                     myp4.setDisable(true);
-                    mess.setText("ok");
                     String idSelPowerup = powButtonId.get(myPowerupsButton.get(myPowerupsPosition.get(usPowerup)));
                     for (int i = 0; i < powerups.size(); i++) {
                         if (powerups.get(i).getId().equalsIgnoreCase(idSelPowerup)) {
@@ -2326,59 +2406,67 @@ public class MainWindow extends Application {
 
 
 
-    private static void setPosition(int[] pos, int us){
-        int user=0;
+    private static void setPosition(int[] pos, int turnPl){
+        /*int user=0;
         for(int j=0; j<numbEnemyNickname.size(); j++){
-            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us+1))){
+            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us))){
                 user=j+1;
             }
-        }
-        switch (user) {
+        }*/
+        switch (turnPl) {
             case 1:
-                userButtonHashMap.get(user).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs1()[0]);
-                userButtonHashMap.get(user).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs1()[1]);
+                userButtonHashMap.get(turnPl).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs1()[0]);
+                userButtonHashMap.get(turnPl).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs1()[1]);
                 break;
 
             case 2:
-                userButtonHashMap.get(user).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs2()[0]);
-                userButtonHashMap.get(user).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs2()[1]);
+                userButtonHashMap.get(turnPl).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs2()[0]);
+                userButtonHashMap.get(turnPl).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs2()[1]);
                 break;
 
             case 3:
-                userButtonHashMap.get(user).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs3()[0]);
-                userButtonHashMap.get(user).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs3()[1]);
+                userButtonHashMap.get(turnPl).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs3()[0]);
+                userButtonHashMap.get(turnPl).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs3()[1]);
                 break;
 
             case 4:
-                userButtonHashMap.get(user).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs4()[0]);
-                userButtonHashMap.get(user).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs4()[1]);
+                userButtonHashMap.get(turnPl).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs4()[0]);
+                userButtonHashMap.get(turnPl).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs4()[1]);
                 break;
 
             case 5:
-                userButtonHashMap.get(user).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs5()[0]);
-                userButtonHashMap.get(user).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs5()[1]);
+                userButtonHashMap.get(turnPl).setLayoutX(squareMatrix[pos[0]][pos[1]].getUs5()[0]);
+                userButtonHashMap.get(turnPl).setLayoutY(squareMatrix[pos[0]][pos[1]].getUs5()[1]);
                 break;
         }
 
     }
 
-    private static void updateMarks(List<String> marks, int us){
-        int user=0;
-        for(int j=0; j<numbEnemyNickname.size(); j++){
-            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us+1))){
+    private static void updateMarks(List<String> marks, String nickEnemy){
+        /*int user=0;
+        for(int j=0; j<numPlayers-1; j++){
+            if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us))){
                 user=j+1;
             }
+        }*/
+        int numEnemy=0;
+        for(int i=0; i<numbEnemyNickname.size(); i++){
+            if(nickEnemy.equalsIgnoreCase(numbEnemyNickname.get(i+1))){
+                numEnemy=i+1;
+            }
         }
-        for(int i=0; i<5; i++) {
-            int t = Collections.frequency(marks, turnNicknameHashMap.get(i));
-            marksLabelHashMap.get(i+1+5*(user-1)).setText(String.valueOf(t));
+
+
+        for(int i=0; i<numPlayers; i++) {
+            int t = Collections.frequency(marks, turnNicknameHashMap.get(i+1));
+            marksLabelHashMap.get(i+1+5*(numEnemy-1)).setText(String.valueOf(t));
         }
 
     }
 
     private static void updateDamages(List<String> damages, int us){
         int user=0;
-        for(int j=0; j<numbEnemyNickname.size(); j++){
+        for(int j=0; j<numPlayers-1; j++){
             if(numbEnemyNickname.get(j+1).equalsIgnoreCase(turnNicknameHashMap.get(us))){
                 user=j+1;
             }
@@ -2423,7 +2511,13 @@ public class MainWindow extends Application {
     }
 
     private static void updatePlayerBoard(SimplePlayer player){
-        updateMarks(player.getMarks(), nicknameTurnHashMap.get(player.getNickname()));
+        /*int enemyNumb=0;
+        for(int i=0; i<numbEnemyNickname.size(); i++){
+            if(player.getNickname().equalsIgnoreCase(numbEnemyNickname.get(i+1))){
+                enemyNumb=i+1;
+            }
+        }*/
+        updateMarks(player.getMarks(), player.getNickname());
         updateDamages(player.getDamages(), nicknameTurnHashMap.get(player.getNickname()));
     }
 
@@ -2442,6 +2536,7 @@ public class MainWindow extends Application {
 
     private static void updateBoard(SimpleBoard gameBoard){
         idWeaponPosition.clear();
+        boardTileButtonHashMap.clear();
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                 if(squareMatrix[i][j]!=null&&gameBoard.getBoard()[i][j]!=null) {
@@ -2449,13 +2544,13 @@ public class MainWindow extends Application {
                         if (gameBoard.getBoard()[i][j].getAmmoTile() != null) {
                             String ammoT = convertIdImg(gameBoard.getBoard()[i][j].getAmmoTile().getId());
                             if (squareMatrix[i][j] != null) {
-                                squareMatrix[i][j].getAmmo().setStyle("-fx-background-color: blue ");
+                                squareMatrix[i][j].getAmmo().setStyle("-fx-background-image: "+ ammoT +" ");
                             }
                             boardTileButtonHashMap.put(gameBoard.getBoard()[i][j].getAmmoTile().getId(), squareMatrix[i][j].getAmmo());
-                        } else {
+                        } /*else {
                             squareMatrix[i][j].getAmmo().setStyle(null);
                             boardTileButtonHashMap.remove(gameBoard.getBoard()[i][j].getAmmoTile().getId());
-                        }
+                        }*/
                     } else {
                     /*String w1=convertIdImg(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId());
                     String w2=convertIdImg(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId());
@@ -2464,51 +2559,79 @@ public class MainWindow extends Application {
                     squareMatrix[i][j].getWeapon2().setStyle("-fx-image: w2");
                     squareMatrix[i][j].getWeapon3().setStyle("-fx-image: w3");*/
                         if (i == 0 && j == 2) {
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>0) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 1);
                                 boardWeapImVHashMap.get(1).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
+                            }else{
+                                //devo rimuovere da idWeaponPosition?
+                                boardWeapImVHashMap.get(1).setImage(null);
+                                boardWeapImVHashMap.get(2).setImage(null);
+                                boardWeapImVHashMap.get(3).setImage(null);
                             }
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>1) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 2);
                                 boardWeapImVHashMap.get(2).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
 
+                            }else{
+                                boardWeapImVHashMap.get(2).setImage(null);
+                                boardWeapImVHashMap.get(3).setImage(null);
                             }
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>2) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 3);
                                 boardWeapImVHashMap.get(3).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
 
+                            }else{
+                                boardWeapImVHashMap.get(3).setImage(null);
                             }
                         }
                         if (i == 1 && j == 0) {
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>0) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 4);
                                 boardWeapImVHashMap.get(4).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
+                            }else{
+                                boardWeapImVHashMap.get(4).setImage(null);
+                                boardWeapImVHashMap.get(5).setImage(null);
+                                boardWeapImVHashMap.get(6).setImage(null);
                             }
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>1) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 5);
                                 boardWeapImVHashMap.get(5).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
 
+                            }else{
+                                boardWeapImVHashMap.get(5).setImage(null);
+                                boardWeapImVHashMap.get(6).setImage(null);
                             }
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>2) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 6);
                                 boardWeapImVHashMap.get(6).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
 
+                            }else{
+                                boardWeapImVHashMap.get(6).setImage(null);
                             }
                         }
                         if (i == 2 && j == 3) {
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(0) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>0) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId(), 7);
                                 boardWeapImVHashMap.get(7).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(0).getId()));
+                            }else{
+                                boardWeapImVHashMap.get(7).setImage(null);
+                                boardWeapImVHashMap.get(8).setImage(null);
+                                boardWeapImVHashMap.get(9).setImage(null);
                             }
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(1) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>1) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId(), 8);
                                 boardWeapImVHashMap.get(8).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(1).getId()));
 
+                            }else{
+                                boardWeapImVHashMap.get(8).setImage(null);
+                                boardWeapImVHashMap.get(9).setImage(null);
                             }
-                            if (gameBoard.getBoard()[i][j].getWeaponCards().get(2) != null) {
+                            if (gameBoard.getBoard()[i][j].getWeaponCards().size()>2) {
                                 idWeaponPosition.put(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId(), 9);
                                 boardWeapImVHashMap.get(9).setImage(weaponsHashMap.get(gameBoard.getBoard()[i][j].getWeaponCards().get(2).getId()));
 
+                            }else{
+                                boardWeapImVHashMap.get(9).setImage(null);
                             }
                         }
                     }
@@ -2535,9 +2658,9 @@ public class MainWindow extends Application {
             if(i!=myTurn-1) {
 
                 //cambiare l'intero i passato alle funzioni, forse serve costruire nicknameNumbEnemyHashMap
-                if(players.get(i).getPosition()!=null) setPosition(players.get(i).getPosition(), i);
-                updateMarks(players.get(i).getMarks(), i);
-                updateDamages(players.get(i).getDamages(), i);
+                if(players.get(i).getPosition()!=null) setPosition(players.get(i).getPosition(), nicknameTurnHashMap.get(players.get(i).getNickname()));
+                updateMarks(players.get(i).getMarks(), players.get(i).getNickname() );
+                updateDamages(players.get(i).getDamages(), i+1);
                 updateUnloadedWeapons(players.get(i), players.get(i).getNotLoadedIds(), i);
                 updateDeathCounter(players.get(i));
             }
@@ -2559,7 +2682,7 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 disableAllSquareButtons();
                 int[] pos=new int[]{x, y};
-                mess.setText("Hai selezionato il quadrato in cui spostarti");
+                mess.setText("Hai selezionato\n il quadrato\n in cui spostarti");
                 connection.runAction(pos);
                 //spostare effettivamente il giocatore
             }
@@ -2889,10 +3012,17 @@ public class MainWindow extends Application {
     }
 
     private static void setOkayFunction(SimpleTarget target){
-        mess.setText("Seleziona i giocatori che vuoi colpire");
+        //mess.setText("Seleziona i giocatori che vuoi colpire");
         okay.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                user1.setDisable(true);
+                user2.setDisable(true);
+                user3.setDisable(true);
+                user4.setDisable(true);
+                user5.setDisable(true);
+                okay.setDisable(true);
+                mess.setText("Scegli chi colpire\n e premi Invia");
                 for(int i=0; i<tempPlSelected.size(); i++){
                     for(int j=0; j<tempPlSelected.get(i).size(); j++){
                         userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))).setDisable(false);
@@ -3097,6 +3227,12 @@ public class MainWindow extends Application {
         numPlayers=players.size();
         myTurn=playerTurnNumber;
 
+        imDropBlue=new Image("/gui/bluedrop.png");
+        imDropGreen= new Image("/gui/greendrop.png");
+        imDropGrey=new Image("/gui/greydrop.png");
+        imDropYellow=new Image("/gui/yellowdrop.png");
+        imDropPurple= new Image("/gui/purpledrop.png");
+
 
         configPlayerBoards();
         configMyWeap();
@@ -3136,11 +3272,7 @@ public class MainWindow extends Application {
         sprogFrenzyPlBImage=new Image("/gui/pl3fr.png");
         violetFrenzyPlBImage=new Image("/gui/pl4fr.png");
 
-        imDropBlue=new Image("/gui/bluedrop.png");
-        imDropGreen= new Image("/gui/greendrop.png");
-        imDropGrey=new Image("/gui/greydrop.png");
-        imDropYellow=new Image("/gui/yellowdrop.png");
-        imDropPurple= new Image("/gui/purpledrop.png");
+
 
         //settare le Image im1,.. im21
         im1=new Image("/gui/15.png");
@@ -3174,8 +3306,8 @@ public class MainWindow extends Application {
         initMyPowerupsImVHashMap();
         initMyWeaponHashMap();
         initBoardWeapImVHashMap();
-        initUserButtonHashMap();
-        initMyWeaponsLabel();
+        //initUserButtonHashMap();
+        //initMyWeaponsLabel();
         initBoardWeaponsButton();
         initMyWeaponsButton();
         initMyPowerupsButton();
@@ -3313,7 +3445,10 @@ public class MainWindow extends Application {
     }
 
     public static void onInvalidMessageReceived(String msg) {
-        mess.setText(msg);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText(msg);
+        });
 
     }
 
@@ -3338,9 +3473,10 @@ public class MainWindow extends Application {
     public static void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
-
             updateBoard(gameBoard);
             updatePlayerBoards(players, frenzy);
+            setMyAmmo(players.get(myTurn-1));
+            //mess.setText("Fine update");
         });
     }
 
@@ -3376,24 +3512,32 @@ public class MainWindow extends Application {
     }
 
     public static void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            mess.setText("Hai raccolto delle munizioni");
-            setMyAmmo(player);
-            deleteTile(grabbedTile);
-        }else {
-            mess.setText(player.getNickname() + " ha raccolto delle munizioni");
-            updatePlayerVisibility(player);
-            deleteTile(grabbedTile);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText("Hai raccolto \ndelle munizioni");
+                setMyAmmo(player);
+                setMyPowerups(player.getPowerupCards());
+                deleteTile(grabbedTile);
+            } else {
+                mess.setText(player.getNickname() + " ha raccolto \ndelle munizioni");
+                updatePlayerVisibility(player);
+                deleteTile(grabbedTile);
+            }
+        });
     }
 
     public static void onGrabbedPowerup(SimplePlayer player, Card powerup) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            mess.setText("Hai pescato un potenziamento");
-            setMyPowerups(player.getPowerupCards());
-        }else {
-            mess.setText(player.getNickname() + " ha pescato un potenziamento");
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText("Hai pescato un potenziamento");
+                setMyPowerups(player.getPowerupCards());
+            } else {
+                mess.setText(player.getNickname() + " ha pescato un potenziamento");
+            }
+        });
 
     }
 
@@ -3412,44 +3556,57 @@ public class MainWindow extends Application {
 
     public static void onDiscardWeapon(List<Card> weapons) {
         //forse è solo messaggio che uno ha scartato delle armi?
-        mess.setText("Seleziona l'arma che vuoi scartare");
-        for(int i=0; i<weapons.size(); i++){
-            String discardableWeap=weapons.get(i).getId();
-            setClickWeapon(weapons, discardableWeap);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText("Seleziona l'arma che vuoi scartare");
+            for (int i = 0; i < weapons.size(); i++) {
+                String discardableWeap = weapons.get(i).getId();
+                setClickWeapon(weapons, discardableWeap);
+            }
+        });
 
     }
 
     public static void onGrabbedWeapon(SimplePlayer player, Card weapon) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            mess.setText("Hai raccolto: " + weapon.getName());
-            setMyWeapons(player.getWeaponCards());
-            deleteWeapon(weapon);
-        }else {
-            mess.setText(player.getNickname() + " ha raccolto un'arma");
-            updatePlayerVisibility(player);
-            deleteWeapon(weapon);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText("Hai raccolto: \n" + weapon.getName());
+                setMyAmmo(player);
+                setMyWeapons(player.getWeaponCards());
+                deleteWeapon(weapon);
+            } else {
+                mess.setText(player.getNickname() + "\n ha raccolto un'arma");
+                updatePlayerVisibility(player);
+                deleteWeapon(weapon);
+            }
+        });
     }
 
     public static void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            setMyAmmo(player);
-            setMyPowerups(player.getPowerupCards());
-            setMyWeapons(player.getWeaponCards());
-            setMyUnloadedWeapons(player.getNotLoadedIds());
-        }
-        mess.setText(player.getNickname() + " ha ricaricato un'arma");
-        updatePlayerVisibility(player);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                setMyAmmo(player);
+                setMyPowerups(player.getPowerupCards());
+                setMyWeapons(player.getWeaponCards());
+                setMyUnloadedWeapons(player.getNotLoadedIds());
+            }
+            mess.setText(player.getNickname() + "\n ha ricaricato un'arma");
+            updatePlayerVisibility(player);
+        });
 
     }
 
     public static void onReloadableWeapons(List<Card> weapons) {
-        mess.setText("Seleziona l'arma da ricaricare");
-        for (int i=0; i<weapons.size(); i++){
-            String reloadableWeap=weapons.get(i).getId();
-            setClickWeaponToReload(weapons, reloadableWeap);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText("Seleziona l'arma \n da ricaricare");
+            for (int i = 0; i < weapons.size(); i++) {
+                String reloadableWeap = weapons.get(i).getId();
+                setClickWeaponToReload(weapons, reloadableWeap);
+            }
+        });
 
     }
 
@@ -3493,50 +3650,88 @@ public class MainWindow extends Application {
     }
 
     public static void onMoveAction(SimplePlayer player) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            setMyPosition(player.getPosition());
-        }else {
-            mess.setText(player.getNickname() + " si è mosso");
-            setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                setMyPosition(player.getPosition());
+            } else {
+                mess.setText(player.getNickname() + " si è mosso");
+                setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
+            }
+        });
 
     }
 
 
     public static void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
-        for(int i=0; i<3; i++){
-            for(int j=0; j<4; j++){
-                if(matrix.toBooleanMatrix()[i][j]){
-                    squareMatrix[i][j].getSquareButton().setDisable(false);
-                    setButtonActionWithTarget(squareMatrix[i][j].getSquareButton(), i, j, targetPlayer);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (matrix.toBooleanMatrix()[i][j]) {
+                        squareMatrix[i][j].getSquareButton().setDisable(false);
+                        setButtonActionWithTarget(squareMatrix[i][j].getSquareButton(), i, j, targetPlayer);
+                    }
                 }
             }
-        }
+        });
 
 
     }
 
 
     public static void onMarkAction(String player, SimplePlayer selected, int value) {
-        mess.setText(player+" ha fatto " +value+" marchi a "+selected.getNickname());
-        updatePlayerBoard(selected);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            if(selected.getNickname().equalsIgnoreCase(myNickname)){
+                mess.setText("Hai ricevuto " +value+ "marchi da \n" + player);
+                setMyMarks(selected.getMarks());
+                setMyDamages(selected.getDamages());
+            }else {
+                if(player.equalsIgnoreCase(myNickname)){
+                    mess.setText(value+ " marchi a \n" +selected.getNickname());
+                }else {
+                    mess.setText(player + " ha fatto \n" + value + " marchi a \n" + selected.getNickname());
+                }
+                updatePlayerBoard(selected);
+            }
+        });
 
     }
 
 
     public static void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
-        mess.setText(player+" ha fatto " + damageValue+ " danni a "+selected.getNickname());
-        updatePlayerBoard(selected);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            if(selected.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText("Hai ricevuto " + damageValue + "danni da \n" + player);
+                setMyMarks(selected.getMarks());
+                setMyDamages(selected.getDamages());
+            }else {
+                if(player.equalsIgnoreCase(myNickname)){
+                    mess.setText(damageValue+ " danni a \n" +selected.getNickname());
+                }else {
+                    mess.setText(player + " ha fatto \n" + damageValue + " danni a \n" + selected.getNickname());
+                }
+                updatePlayerBoard(selected);
+            }
+        });
     }
 
 
     public static void onDiscardedPowerup(SimplePlayer player, Card powerup) {
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            mess.setText("Hai scartato: " + powerup.getName());
-            setMyPowerups(player.getPowerupCards());
-        }else {
-            mess.setText(player + "ha scartato " + powerup.getName());
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText("Hai scartato: \n" + powerup.getName());
+                setMyPowerups(player.getPowerupCards());
+            } else {
+                mess.setText(player + "ha scartato \n" + powerup.getName());
+            }
+        });
 
     }
 
@@ -3548,241 +3743,259 @@ public class MainWindow extends Application {
             if (currentPlayer.equalsIgnoreCase(turnNicknameHashMap.get(myTurn))) {
                 mess.setText("Inizia il tuo turno!");
             } else {
-                mess.setText("Turno di: " + currentPlayer);
+                mess.setText("Turno di: \n" + currentPlayer);
             }
         });
     }
 
 
     public static void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            countTarget = 0;
+            countPlayerList1 = 0;
+            countPlayerList2 = 0;
+            countPlayerList3 = 0;
+            countPlayerList4 = 0;
+            mess.setText(selectable.toString() + "\n \n Seleziona le liste \n e premi ok");
+            if (selectable.size() == 1) {
+                eff1.setDisable(false);
+                eff1.setOnAction(null);
+            }
+            if (selectable.size() == 2) {
+                eff1.setDisable(false);
+                eff1.setOnAction(null);
+                eff2.setDisable(true);
+                eff2.setOnAction(null);
 
-        countTarget=0;
-        countPlayerList1=0;
-        countPlayerList2=0;
-        countPlayerList3=0;
-        countPlayerList4=0;
-        mess.setText(selectable.toString() + "\n \n Seleziona le liste e premi ok");
-        if(selectable.size()==1){
-            eff1.setDisable(false);
-            eff1.setOnAction(null);
-        }
-        if(selectable.size()==2){
-            eff1.setDisable(false);
-            eff1.setOnAction(null);
-            eff2.setDisable(true);
-            eff2.setOnAction(null);
+            }
+            if (selectable.size() == 3) {
+                eff1.setDisable(false);
+                eff1.setOnAction(null);
+                eff2.setDisable(true);
+                eff2.setOnAction(null);
+                eff3.setDisable(false);
+                eff3.setOnAction(null);
+            }
+            if (selectable.size() == 4) {
+                eff1.setDisable(false);
+                eff1.setOnAction(null);
+                eff2.setDisable(true);
+                eff2.setOnAction(null);
+                eff3.setDisable(false);
+                eff3.setOnAction(null);
+                eff4.setDisable(false);
+                eff4.setOnAction(null);
+            }
 
-        }
-        if(selectable.size()==3){
-            eff1.setDisable(false);
-            eff1.setOnAction(null);
-            eff2.setDisable(true);
-            eff2.setOnAction(null);
-            eff3.setDisable(false);
-            eff3.setOnAction(null);
-        }
-        if(selectable.size()==4){
-            eff1.setDisable(false);
-            eff1.setOnAction(null);
-            eff2.setDisable(true);
-            eff2.setOnAction(null);
-            eff3.setDisable(false);
-            eff3.setOnAction(null);
-            eff4.setDisable(false);
-            eff4.setOnAction(null);
-        }
+            set1Function(selectable, target);
+            set2Function(selectable, target);
+            set3Function(selectable, target);
+            set4Function(selectable, target);
+            setOkayFunction(target);
 
-        set1Function(selectable, target);
-        set2Function(selectable, target);
-        set3Function(selectable, target);
-        set4Function(selectable, target);
-        setOkayFunction(target);
+        });
 
 
     }
 
 
     public static void onCanUsePowerup() {
-        mess.setText("Vuoi usare un potenziamento?");
-        yes.setDisable(false);
-        no.setDisable(false);
-        yes.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                no.setOnAction(null);
-                yes.setOnAction(null);
-                no.setDisable(true);
-                yes.setDisable(true);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText("Vuoi usare \n un potenziamento?");
+            yes.setDisable(false);
+            no.setDisable(false);
+            yes.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    no.setOnAction(null);
+                    yes.setOnAction(null);
+                    no.setDisable(true);
+                    yes.setDisable(true);
 
-                connection.usePowerup(true);
-            }
-        });
-        no.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                yes.setOnAction(null);
-                no.setOnAction(null);
-                yes.setDisable(true);
-                no.setDisable(true);
-                connection.usePowerup(false);
-            }
+                    connection.usePowerup(true);
+                }
+            });
+            no.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    yes.setOnAction(null);
+                    no.setOnAction(null);
+                    yes.setDisable(true);
+                    no.setDisable(true);
+                    connection.usePowerup(false);
+                }
+            });
         });
     }
 
 
     public static void onCanStopRoutine() {
-        mess.setText("Vuoi fermarti qui?");
-        yes.setDisable(false);
-        no.setDisable(false);
-        yes.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                no.setOnAction(null);
-                yes.setOnAction(null);
-                no.setDisable(true);
-                yes.setDisable(true);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText("Vuoi fermarti qui?");
+            yes.setDisable(false);
+            no.setDisable(false);
+            yes.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    no.setOnAction(null);
+                    yes.setOnAction(null);
+                    no.setDisable(true);
+                    yes.setDisable(true);
 
-                connection.stopRoutine(true);
-            }
-        });
-        no.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                yes.setOnAction(null);
-                no.setOnAction(null);
-                yes.setDisable(true);
-                no.setDisable(true);
-                connection.stopRoutine(false);
-            }
+                    connection.stopRoutine(true);
+                }
+            });
+            no.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    yes.setOnAction(null);
+                    no.setOnAction(null);
+                    yes.setDisable(true);
+                    no.setDisable(true);
+                    connection.stopRoutine(false);
+                }
+            });
         });
     }
 
 
     public static void onUsableWeapons(List<Card> usableWeapons) {
-        mess.setText("Seleziona l'arma che vuoi usare");
-        for(int i=0; i<usableWeapons.size(); i++){
-            String usWeap=usableWeapons.get(i).getId();
-            setClickWeapon(usableWeapons, usWeap);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText("Seleziona l'arma \n che vuoi usare");
+            for (int i = 0; i < usableWeapons.size(); i++) {
+                String usWeap = usableWeapons.get(i).getId();
+                setClickWeapon(usableWeapons, usWeap);
+            }
+        });
 
 
     }
 
 
     public static void onAvailableEffects(List<String> effects) {
-        mess.setText(effects.toString());
-        switch (effects.size()){
-            case 1:
-                eff1.setDisable(false);
-                eff1.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff1.setDisable(true);
-                        connection.selectEffect(effects.get(1));
-                    }
-                });
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+                    mess.setText("Seleziona effetto \n" + effects.toString());
+                    switch (effects.size()) {
+                        case 1:
+                            eff1.setDisable(false);
+                            eff1.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff1.setDisable(true);
+                                    connection.selectEffect(effects.get(0));
+                                }
+                            });
+                            break;
 
-            case 2:
-                eff1.setDisable(false);
-                eff2.setDisable(false);
-                eff1.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff1.setDisable(true);
-                        eff2.setDisable(true);
-                        connection.selectEffect(effects.get(1));
-                    }
-                });
-                eff2.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff2.setDisable(true);
-                        eff1.setDisable(true);
-                        connection.selectEffect(effects.get(2));
-                    }
-                });
+                        case 2:
+                            eff1.setDisable(false);
+                            eff2.setDisable(false);
+                            eff1.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff1.setDisable(true);
+                                    eff2.setDisable(true);
+                                    connection.selectEffect(effects.get(0));
+                                }
+                            });
+                            eff2.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff2.setDisable(true);
+                                    eff1.setDisable(true);
+                                    connection.selectEffect(effects.get(1));
+                                }
+                            });
+                            break;
 
-            case 3:
-                eff1.setDisable(false);
-                eff2.setDisable(false);
-                eff3.setDisable(false);
-                eff1.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff1.setDisable(true);
-                        eff2.setDisable(true);
-                        eff3.setDisable(true);
-                        connection.selectEffect(effects.get(1));
-                    }
-                });
-                eff2.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff2.setDisable(true);
-                        eff1.setDisable(true);
-                        eff3.setDisable(true);
-                        connection.selectEffect(effects.get(2));
-                    }
-                });
-                eff3.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff2.setDisable(true);
-                        eff1.setDisable(true);
-                        eff3.setDisable(true);
-                        connection.selectEffect(effects.get(3));
-                    }
-                });
+                        case 3:
+                            eff1.setDisable(false);
+                            eff2.setDisable(false);
+                            eff3.setDisable(false);
+                            eff1.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff1.setDisable(true);
+                                    eff2.setDisable(true);
+                                    eff3.setDisable(true);
+                                    connection.selectEffect(effects.get(0));
+                                }
+                            });
+                            eff2.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff2.setDisable(true);
+                                    eff1.setDisable(true);
+                                    eff3.setDisable(true);
+                                    connection.selectEffect(effects.get(1));
+                                }
+                            });
+                            eff3.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff2.setDisable(true);
+                                    eff1.setDisable(true);
+                                    eff3.setDisable(true);
+                                    connection.selectEffect(effects.get(2));
+                                }
+                            });
+                            break;
 
-            case 4:
-                eff1.setDisable(false);
-                eff2.setDisable(false);
-                eff3.setDisable(false);
-                eff4.setDisable(false);
-                eff1.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff1.setDisable(true);
-                        eff2.setDisable(true);
-                        eff3.setDisable(true);
-                        eff4.setDisable(true);
-                        connection.selectEffect(effects.get(1));
-                    }
-                });
-                eff2.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff2.setDisable(true);
-                        eff1.setDisable(true);
-                        eff3.setDisable(true);
-                        eff4.setDisable(true);
-                        connection.selectEffect(effects.get(2));
-                    }
-                });
-                eff3.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff2.setDisable(true);
-                        eff1.setDisable(true);
-                        eff3.setDisable(true);
-                        eff4.setDisable(true);
-                        connection.selectEffect(effects.get(3));
-                    }
-                });
-                eff4.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        eff2.setDisable(true);
-                        eff1.setDisable(true);
-                        eff3.setDisable(true);
-                        eff4.setDisable(true);
-                        connection.selectEffect(effects.get(4));
-                    }
-                });
+                        case 4:
+                            eff1.setDisable(false);
+                            eff2.setDisable(false);
+                            eff3.setDisable(false);
+                            eff4.setDisable(false);
+                            eff1.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff1.setDisable(true);
+                                    eff2.setDisable(true);
+                                    eff3.setDisable(true);
+                                    eff4.setDisable(true);
+                                    connection.selectEffect(effects.get(0));
+                                }
+                            });
+                            eff2.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff2.setDisable(true);
+                                    eff1.setDisable(true);
+                                    eff3.setDisable(true);
+                                    eff4.setDisable(true);
+                                    connection.selectEffect(effects.get(1));
+                                }
+                            });
+                            eff3.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff2.setDisable(true);
+                                    eff1.setDisable(true);
+                                    eff3.setDisable(true);
+                                    eff4.setDisable(true);
+                                    connection.selectEffect(effects.get(2));
+                                }
+                            });
+                            eff4.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    eff2.setDisable(true);
+                                    eff1.setDisable(true);
+                                    eff3.setDisable(true);
+                                    eff4.setDisable(true);
+                                    connection.selectEffect(effects.get(3));
+                                }
+                            });
+                            break;
 
 
-
-        }
+                    }
+                });
 
 
         //stampa i nomi degli effetti e fanne selezionare uno. Quello selezionato chiama ServerConnection.seletEffect(nome effetto)
@@ -3791,29 +4004,39 @@ public class MainWindow extends Application {
 
 
     public static void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
-        mess.setText(player.getNickname() + " ha pagato un effetto");
-        if(player.getNickname().equalsIgnoreCase(myNickname)){
-            setMyAmmo(player);
-            setMyPowerups(player.getPowerupCards());
-        }else{
-            updatePlayerVisibility(player);
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+            mess.setText(player.getNickname() + " \n ha pagato un effetto");
+            if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                setMyAmmo(player);
+                setMyPowerups(player.getPowerupCards());
+            } else {
+                updatePlayerVisibility(player);
+            }
+        });
 
     }
 
 
     public static void onUsedCard(Card card) {
-        mess.setText("La carta " +card.getName()+ " è stata usata");
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            mess.setText("La carta " + card.getName() + " è stata usata");
+        });
 
     }
 
 
     public static void onAvailablePowerups(List<Card> powerups) {
-        mess.setText("Selezione il potenziamento che vuoi usare");
-        for(int i=0; i<powerups.size(); i++){
-            String usPowerup=powerups.get(i).getId();
-            setUsablePowerup(usPowerup);
-            setMyPowerupsAction(usPowerup, powerups);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            mess.setText("Selezione il potenziamento che vuoi usare");
+            for (int i = 0; i < powerups.size(); i++) {
+                String usPowerup = powerups.get(i).getId();
+                setUsablePowerup(usPowerup);
+                setMyPowerupsAction(usPowerup, powerups);
             /*Button tempButt=myPowerupsButton.get(myPowerupsPosition.get(usPowerup));
             tempButt.setDisable(false);
             tempButt.setOnAction(new EventHandler<ActionEvent>() {
@@ -3825,7 +4048,8 @@ public class MainWindow extends Application {
             });
 
             //chiama ServerConnection.selectPowerup(card powerup selezionato) */
-        }
+            }
+        });
 
     }
 
@@ -3923,11 +4147,12 @@ public class MainWindow extends Application {
     }
 
     public static void onDisconnectionAdvise(){
-        mess.setText("Un giocatore si è disconnesso");
+        mess.setText("Ti sei disconnesso");
     }
 
     public static void onGameEnd(List<SimplePlayer> players){
         mess.setText("La partita è terminata");
+        connection.confirmEndGame();
     }
 
     public static void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
