@@ -264,6 +264,7 @@ public class MainWindow extends Application {
 
 
 
+
     //creare label per marchi avversari
 
     private static ImageView wp1;
@@ -390,6 +391,22 @@ public class MainWindow extends Application {
     private static Image im20;
     private static Image im21;
 
+
+    private static Image impow1;
+    private static Image impow2;
+    private static Image impow3;
+    private static Image impow4;
+    private static Image impow5;
+    private static Image impow6;
+    private static Image impow7;
+    private static Image impow8;
+    private static Image impow9;
+    private static Image impow10;
+    private static Image impow11;
+    private static Image impow12;
+
+
+
     private static Image imDropBlue;
     private static Image imDropGrey;
     private static Image imDropGreen;
@@ -444,6 +461,8 @@ public class MainWindow extends Application {
 
     private static HashMap<String, Button> boardTileButtonHashMap= new HashMap<>();
 
+    private static HashMap<String, ImageView> boardTileImgVHashMap= new HashMap<>();
+
     private static HashMap<Integer, Button> userButtonHashMap= new HashMap<>();
 
     private static HashMap<String, Integer> idWeaponPosition=new HashMap<>();
@@ -457,6 +476,8 @@ public class MainWindow extends Application {
     private static HashMap<Integer, Button> myWeaponsButton= new HashMap<>();
 
     private static HashMap<String, Image> weaponsHashMap= new HashMap<>(); //stringa id e immagine già inizializzata
+
+    private static HashMap<String, Image> powerupsHashMap=new HashMap<>();
 
     private static HashMap<Integer, String> turnNicknameHashMap= new HashMap<>();
 
@@ -611,7 +632,7 @@ public class MainWindow extends Application {
         zoomedimg = new ImageView();
         configImageView(zoomedimg, 150, 253, 1030, 410);
         zoomedUser = new ImageView();
-        configImageView(zoomedUser, 129, 137, 1030, 410);
+        configImageView(zoomedUser, 129, 137, 1030, 440);
 
 
         //devo inizializzare tutte le hashmap
@@ -636,6 +657,7 @@ public class MainWindow extends Application {
 
 
         mess = new Label();
+        mess.setStyle("-fx-font-size: 15");
         //mess.getStyleClass().add("mess");
         setPosLabel(mess, 1030, 50);
         mess.setPrefWidth(180 * widthScaleFactor);
@@ -1081,7 +1103,7 @@ public class MainWindow extends Application {
         gp.getChildren().addAll(skull1, skull2, skull3, skull4, skull5, skull6, skull7, skull8, skull9, numbKill1, numbKill2, numbKill3, numbKill4, numbKill5, numbKill6, numbKill7, numbKill8, numbKill9, zoomedimg, zoomedUser);
         gp.getChildren().addAll(fmarkdr, fmarkdr1, fmarkdr2, fmarkdr3, fmarkdr4, nfmarkdr, nfmarkdr2, nfmarkdr3, nfmarkdr4, nfmarkdr5, smarkdr, smarkdr1, smarkdr2, smarkdr3, smarkdr4, nsmarkdr, nsmarkdr2, nsmarkdr3, nsmarkdr4, nsmarkdr5, tmarkdr, tmarkdr1, tmarkdr2, tmarkdr3, tmarkdr4, ntmarkdr, ntmarkdr2, ntmarkdr3, ntmarkdr4, ntmarkdr5, fomarkdr, fomarkdr1, fomarkdr2, fomarkdr3, fomarkdr4, nfomarkdr, nfomarkdr2, nfomarkdr3, nfomarkdr4, nfomarkdr5, fimarkdr, fimarkdr1, fimarkdr2, fimarkdr3, fimarkdr4, nfimarkdr, nfimarkdr2, nfimarkdr3, nfimarkdr4, nfimarkdr5);
         gp.getChildren().addAll(firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, ss2dr, ts2dr, fs2dr, fis2dr, sis2dr, ses2dr, es2dr, ns2dr, tes2dr, els2dr, tws2dr, o3sdr, s3sdr, t3sdr, f3sdr, fi3sdr, si3sdr, se3sdr, e3sdr, n3sdr, te3sdr, el3sdr, tw3sdr, o4sdr, s4sdr, t4sdr, f4sdr, fi4sdr, si4sdr, se4sdr, e4sdr, n4sdr, te4sdr, el4sdr, tw4sdr);
-
+        gp.getChildren().addAll(labPlayer1, labPlayer2, labPlayer3, labPlayer4);
         /*if(numMap==1) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -1159,9 +1181,9 @@ public class MainWindow extends Application {
             unlWeap3.setLayoutY(10*heightScaleFactor);
             ap.getChildren().add(unlWeap3);
         }
-        Label nyell=new Label(String.valueOf(Collections.frequency(player.getAmmos(), "yellow")) + " munizioni gialle");
-        Label nblue=new Label(String.valueOf(Collections.frequency(player.getAmmos(), "blue")) +" munizioni blu");
-        Label nred=new Label(String.valueOf(Collections.frequency(player.getAmmos(), "red")) +" munizioni rosse");
+        Label nyell=new Label(String.valueOf(Collections.frequency(player.getAmmos(), Color.YELLOW)) + " munizioni gialle");
+        Label nblue=new Label(String.valueOf(Collections.frequency(player.getAmmos(), Color.BLUE)) +" munizioni blu");
+        Label nred=new Label(String.valueOf(Collections.frequency(player.getAmmos(), Color.RED)) +" munizioni rosse");
         nyell.setLayoutX(10);
         nyell.setLayoutY(150);
         nblue.setLayoutX(10);
@@ -1353,9 +1375,9 @@ public class MainWindow extends Application {
         ram= new ImageView(rammo);
         configImgv(ram, 40, 920, 600);
 
-        ny=new Label("x 3");
-        nb=new Label("x 3");
-        nr= new Label("x 3");
+        ny=new Label("1");
+        nb=new Label("1");
+        nr= new Label("1");
     }
 
     private static void configPlayerBoards(){
@@ -1909,14 +1931,14 @@ public class MainWindow extends Application {
     }
 
 
-    private static void initMap1(AnchorPane ap){
+    private static void initMap2(AnchorPane ap){
 
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                 if(i==2&&j==0){
                     continue;
                 }else{
-                    squareMatrix[i][j]= new SquareWindow(i, j, 1, widthScaleFactor, heightScaleFactor);
+                    squareMatrix[i][j]= new SquareWindow(i, j, 2, widthScaleFactor, heightScaleFactor);
                     //squareButtonMatrix[i][j]=squareMatrix[i][j].getSquareButton();
                     ap.getChildren().add(squareMatrix[i][j].getSquareButton());
                     if(squareMatrix[i][j].hasAmmoPoint()) ap.getChildren().add(squareMatrix[i][j].getAmmo());
@@ -1963,13 +1985,13 @@ public class MainWindow extends Application {
 
     }
 
-    private static void initMap2(AnchorPane ap){
+    private static void initMap1(AnchorPane ap){
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                 if((i==2&&j==0)||(i==0&&j==3)){
                     continue;
                 }else{
-                    squareMatrix[i][j]= new SquareWindow(i, j, 2, widthScaleFactor, heightScaleFactor);
+                    squareMatrix[i][j]= new SquareWindow(i, j, 1, widthScaleFactor, heightScaleFactor);
                     //squareButtonMatrix[i][j]=squareMatrix[i][j].getSquareButton();
                     ap.getChildren().add(squareMatrix[i][j].getSquareButton());
                     if(squareMatrix[i][j].hasAmmoPoint()) ap.getChildren().add(squareMatrix[i][j].getAmmo());
@@ -2160,7 +2182,7 @@ public class MainWindow extends Application {
 
     private static void setMyMarks(List<String> myMarks){
         for(int i=0; i<5; i++){
-            int t= Collections.frequency(myMarks, turnNicknameHashMap.get(i));
+            int t= Collections.frequency(myMarks, turnNicknameHashMap.get(i+1));
             myMarksLabelHashMap.get(i+1).setText(String.valueOf(t));
             //hashmap nickname-immagine goccia
         }
@@ -2213,15 +2235,15 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
-            //pu1.setImage(null);
-            //pu2.setImage(null);
-            //pu3.setImage(null);
-            //pu4.setImage(null);
+            pu1.setImage(null);
+            pu2.setImage(null);
+            pu3.setImage(null);
+            pu4.setImage(null);
 
             for (int i = 0; i < myPowerups.size(); i++) {
-                String idPowerup = convertIdImg(myPowerups.get(i).getId());
-                Image myPowerup = new Image(idPowerup);
-                myPowerupsHashMap.get(i + 1).setImage(myPowerup);
+                //String idPowerup = convertIdImg(myPowerups.get(i).getId());
+                //Image myPowerup = new Image(idPowerup);
+                myPowerupsHashMap.get(i + 1).setImage(powerupsHashMap.get(myPowerups.get(i).getId()));
                 myPowerupsPosition.put(myPowerups.get(i).getId(), i + 1);
             }
 
@@ -2325,6 +2347,7 @@ public class MainWindow extends Application {
 
     private static void setClickGrabWeapon(List<Card> weapons, String usWeapon){
         boardWeaponsButton.get(idWeaponPosition.get(usWeapon)).setDisable(false);
+        setActionWeapBoardButton(boardWeaponsButton.get(idWeaponPosition.get(usWeapon)), weaponsHashMap.get(usWeapon) );
         boardWeaponsButton.get(idWeaponPosition.get(usWeapon)).setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -2493,9 +2516,9 @@ public class MainWindow extends Application {
     private static void switchBoards(List<SimplePlayer> players){
         for(int i=0; i<players.size(); i++){
             if(players.get(i).isSwitched()) {
-                plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+6));
-            }else {
                 plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+11));
+            }else {
+                plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+6));
             }
             //else devo solo girare la cosa a sinistra
         }
@@ -2524,7 +2547,7 @@ public class MainWindow extends Application {
 
     private static void deleteTile(AmmoTile grabbedTile){
         //finire
-        boardTileButtonHashMap.get(grabbedTile.getId()).setStyle(null);
+        boardTileImgVHashMap.get(grabbedTile.getId()).setImage(null);
     }
 
     private static void deleteWeapon(Card weapon){
@@ -2536,17 +2559,18 @@ public class MainWindow extends Application {
 
     private static void updateBoard(SimpleBoard gameBoard){
         idWeaponPosition.clear();
-        boardTileButtonHashMap.clear();
+        boardTileImgVHashMap.clear();
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                 if(squareMatrix[i][j]!=null&&gameBoard.getBoard()[i][j]!=null) {
                     if (!gameBoard.getBoard()[i][j].isSpawnPoint()) {
                         if (gameBoard.getBoard()[i][j].getAmmoTile() != null) {
-                            String ammoT = convertIdImg(gameBoard.getBoard()[i][j].getAmmoTile().getId());
+                            String file = convertIdImg(gameBoard.getBoard()[i][j].getAmmoTile().getId());
                             if (squareMatrix[i][j] != null) {
-                                squareMatrix[i][j].getAmmo().setStyle("-fx-background-image: "+ ammoT +" ");
+                                Image amm=new Image(file);
+                                squareMatrix[i][j].getAmmo().setImage(amm);
                             }
-                            boardTileButtonHashMap.put(gameBoard.getBoard()[i][j].getAmmoTile().getId(), squareMatrix[i][j].getAmmo());
+                            boardTileImgVHashMap.put(gameBoard.getBoard()[i][j].getAmmoTile().getId(), squareMatrix[i][j].getAmmo());
                         } /*else {
                             squareMatrix[i][j].getAmmo().setStyle(null);
                             boardTileButtonHashMap.remove(gameBoard.getBoard()[i][j].getAmmoTile().getId());
@@ -2808,11 +2832,11 @@ public class MainWindow extends Application {
         plBImageHashMap.put(3, bansheePlBImage);
         plBImageHashMap.put(4, sprogPlBImage);
         plBImageHashMap.put(5, violetPlBImage);
-        plBImageHashMap.put(6, dstructorFrenzyPlBImage);
-        plBImageHashMap.put(7, dozerFrenzyPlBImage);
-        plBImageHashMap.put(8, bansheeFrenzyPlBImage);
-        plBImageHashMap.put(9, sprogFrenzyPlBImage);
-        plBImageHashMap.put(10, violetFrenzyPlBImage);
+        plBImageHashMap.put(6, dstructorSemiFrPlBImage);
+        plBImageHashMap.put(7, dozerSemiFrPlBImage);
+        plBImageHashMap.put(8, bansheeSemiFrPlBImage);
+        plBImageHashMap.put(9, sprogSemiFrPlBImage);
+        plBImageHashMap.put(10, violetSemiFrPlBImage);
         plBImageHashMap.put(11, dstructorFrenzyPlBImage);
         plBImageHashMap.put(12, dozerFrenzyPlBImage);
         plBImageHashMap.put(13, bansheeFrenzyPlBImage);
@@ -2926,6 +2950,23 @@ public class MainWindow extends Application {
 
     }
 
+    private static void initPowerupsHashMap(){
+        powerupsHashMap.put("022", impow1);
+        powerupsHashMap.put("023", impow2);
+        powerupsHashMap.put("024", impow3);
+        powerupsHashMap.put("025", impow4);
+        powerupsHashMap.put("026", impow5);
+        powerupsHashMap.put("027", impow6);
+        powerupsHashMap.put("028", impow7);
+        powerupsHashMap.put("029", impow8);
+        powerupsHashMap.put("0210", impow9);
+        powerupsHashMap.put("0211", impow10);
+        powerupsHashMap.put("0212", impow11);
+        powerupsHashMap.put("0213", impow12);
+    }
+
+
+
 
     private static void set1Function(List<List<String>> selectablePl, SimpleTarget target){
         eff1.setOnAction(new EventHandler<ActionEvent>() {
@@ -3025,6 +3066,21 @@ public class MainWindow extends Application {
                 mess.setText("Scegli chi colpire\n e premi Invia");
                 for(int i=0; i<tempPlSelected.size(); i++){
                     for(int j=0; j<tempPlSelected.get(i).size(); j++){
+                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==1) {
+                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), dstructor);
+                        }
+                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==2) {
+                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), dozer);
+                        }
+                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==3) {
+                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), banshee);
+                        }
+                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==4) {
+                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), sprog);
+                        }
+                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==5) {
+                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), violet);
+                        }
                         userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))).setDisable(false);
                         setUsFunction(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), tempPlSelected.get(i).get(j), target);
                     }
@@ -3271,7 +3327,11 @@ public class MainWindow extends Application {
         bansheeFrenzyPlBImage=new Image("/gui/pl2fr.png");
         sprogFrenzyPlBImage=new Image("/gui/pl3fr.png");
         violetFrenzyPlBImage=new Image("/gui/pl4fr.png");
-
+        dstructorSemiFrPlBImage=new Image("/gui/playerBoardSemiFr.png");
+        dozerSemiFrPlBImage=new Image("/gui/pl1semifr.png");
+        bansheeSemiFrPlBImage=new Image("/gui/pl2semifr.png");
+        sprogSemiFrPlBImage=new Image("/gui/pl3semifr.png");
+        violetSemiFrPlBImage=new Image("/gui/pl4semifr.png");
 
 
         //settare le Image im1,.. im21
@@ -3297,6 +3357,19 @@ public class MainWindow extends Application {
         im20=new Image("/gui/34.png");
         im21=new Image("/gui/35.png");
 
+        impow1=new Image("/gui/022.png");
+        impow2=new Image("/gui/023.png");
+        impow3=new Image("/gui/024.png");
+        impow4=new Image("/gui/025.png");
+        impow5=new Image("/gui/026.png");
+        impow6=new Image("/gui/027.png");
+        impow7=new Image("/gui/028.png");
+        impow8=new Image("/gui/029.png");
+        impow9=new Image("/gui/0210.png");
+        impow10=new Image("/gui/0211.png");
+        impow11=new Image("/gui/0212.png");
+        impow12=new Image("/gui/0213.png");
+
 
         initDamageImVHashMap();
         initMyDamagesImVHashMap();
@@ -3313,6 +3386,7 @@ public class MainWindow extends Application {
         initMyPowerupsButton();
         initInfoWindowPlayerHashMap();
         initWeaponsHashMap();
+        initPowerupsHashMap();
 
 
         String myPlayB=plBhashmap.get(playerTurnNumber-1);
@@ -3400,6 +3474,11 @@ public class MainWindow extends Application {
         }
 
 
+        labPlayer1=new Label();
+        labPlayer2=new Label();
+        labPlayer3=new Label();
+        labPlayer4=new Label();
+
 
         int cur=0;
 
@@ -3407,20 +3486,32 @@ public class MainWindow extends Application {
             if(i!=playerTurnNumber){
                 switch (cur){
                     case 0:
-                        pla1=new Image(plBhashmap.get(i));
-                        labPlayer1=new Label(players.get(i-1).getNickname());
+                        //pla1=new Image(plBhashmap.get(i));
+                        labPlayer1.setText(players.get(i-1).getNickname());
+                        labPlayer1.getStyleClass().add("labelnick");
+                        labPlayer1.setLayoutX(655*widthScaleFactor);
+                        labPlayer1.setLayoutY(25*heightScaleFactor);
                         break;
                     case 1:
-                        pla2=new Image(plBhashmap.get(i));
-                        labPlayer2=new Label(players.get(i-1).getNickname());
+                        //pla2=new Image(plBhashmap.get(i));
+                        labPlayer2.setText(players.get(i-1).getNickname());
+                        labPlayer2.getStyleClass().add("labelnick");
+                        labPlayer2.setLayoutX(655*widthScaleFactor);
+                        labPlayer2.setLayoutY(105*heightScaleFactor);
                         break;
                     case 2:
-                        pla2=new Image(plBhashmap.get(i));
-                        labPlayer3=new Label(players.get(i-1).getNickname());
+                        //pla2=new Image(plBhashmap.get(i));
+                        labPlayer3.setText(players.get(i-1).getNickname());
+                        labPlayer3.getStyleClass().add("labelnick");
+                        labPlayer3.setLayoutX(655*widthScaleFactor);
+                        labPlayer3.setLayoutY(185*heightScaleFactor);
                         break;
                     case 3:
-                        pla3=new Image(plBhashmap.get(i-1));
-                        labPlayer4= new Label(players.get(i-1).getNickname());
+                        //pla3=new Image(plBhashmap.get(i-1));
+                        labPlayer4.setText(players.get(i-1).getNickname());
+                        labPlayer3.getStyleClass().add("labelnick");
+                        labPlayer4.setLayoutX(655*widthScaleFactor);
+                        labPlayer4.setLayoutY(265*heightScaleFactor);
                         break;
                 }
                 cur++;
@@ -3501,6 +3592,7 @@ public class MainWindow extends Application {
 
             if (player.getNickname().equalsIgnoreCase(myNickname)) {
                 mess.setText("Ti sei rigenerato");
+                //System.out.println(player.getPowerupCards().get(0).getId());
                 setMyPowerups(player.getPowerupCards());
                 setMyPosition(player.getPosition());
             } else {
@@ -3587,6 +3679,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
             if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                myWeaponsLabel.get(myWeaponsPosition.get(weapon.getId())).setText("");
                 setMyAmmo(player);
                 setMyPowerups(player.getPowerupCards());
                 setMyWeapons(player.getWeaponCards());
@@ -4022,7 +4115,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
-            mess.setText("La carta " + card.getName() + " è stata usata");
+            mess.setText("La carta " + card.getName() + "\n è stata usata");
         });
 
     }
@@ -4032,7 +4125,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
-            mess.setText("Selezione il potenziamento che vuoi usare");
+            mess.setText("Seleziona il potenziamento\n che vuoi usare");
             for (int i = 0; i < powerups.size(); i++) {
                 String usPowerup = powerups.get(i).getId();
                 setUsablePowerup(usPowerup);
@@ -4098,7 +4191,7 @@ public class MainWindow extends Application {
     }
 
     public static void onRecoverPlayerAdvise(String nickname){
-        mess.setText(nickname + " è tornato in partita");
+        mess.setText(nickname + "\n è tornato in partita");
     }
 
     public static void onFullOfPowerup(){
@@ -4106,7 +4199,7 @@ public class MainWindow extends Application {
     }
 
     public static void onCanCounterAttack(){
-        mess.setText("Vuoi usare una granata venom?");
+        mess.setText("Vuoi usare una\n granata venom?");
         yes.setDisable(false);
         no.setDisable(false);
         yes.setOnAction(new EventHandler<ActionEvent>() {
@@ -4156,7 +4249,7 @@ public class MainWindow extends Application {
     }
 
     public static void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
-        mess.setText(nicknames.get(0) + " = " +points.get(0) + "/n" +nicknames.get(1) + " = " +points.get(1) + "/n" + nicknames.get(2) + " = " +points.get(2) + "/n");
+        mess.setText(nicknames.get(0) + " = " +points.get(0) + "\n" +nicknames.get(1) + " = " +points.get(1) + "\n" + nicknames.get(2) + " = " +points.get(2) + "\n");
     }
 }
 

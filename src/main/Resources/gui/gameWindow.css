@@ -27,6 +27,13 @@
     -fx-font-size: 10;
 }
 
+.labelnick{
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 10;
+}
+
 .nbigmark{
     -fx-text-fill: black;
     -fx-background-color: transparent;

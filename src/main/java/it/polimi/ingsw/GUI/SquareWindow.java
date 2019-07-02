@@ -1,6 +1,8 @@
 package it.polimi.ingsw.GUI;
 
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+
 
 //square
 public class SquareWindow {
@@ -19,7 +21,7 @@ public class SquareWindow {
     private Button weapon3;
 
     private boolean hasAmmo;
-    private Button ammo;
+    private ImageView ammo;
 
     private double widthScaleFactor;
     private double heightScaleFactor;
@@ -29,7 +31,7 @@ public class SquareWindow {
         weapon1=new Button();
         weapon2=new Button();
         weapon3=new Button();
-        ammo=new Button();
+        ammo=new ImageView();
         pos=new int[]{i, j};
         us1=new double[]{0, 0};
         us2=new double[]{0, 0};
@@ -75,7 +77,7 @@ public class SquareWindow {
 
     public boolean hasAmmoPoint(){return hasAmmo;}
 
-    public Button getAmmo() {
+    public ImageView getAmmo() {
         return ammo;
     }
 
@@ -91,7 +93,7 @@ public class SquareWindow {
         return weapon3;
     }
 
-    private void configMap1(int i, int j){
+    private void configMap2(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 80, 83,111, 105);
             us1[0]=123*widthScaleFactor;
@@ -276,7 +278,7 @@ public class SquareWindow {
         }
     }
 
-    private void configMap2(int i, int j){
+    private void configMap1(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 80, 83,111, 105);
             us1[0]=119*widthScaleFactor;
@@ -845,14 +847,14 @@ public class SquareWindow {
         button.setDisable(true);
     }
 
-    private void configAmmoButton(Button button, double prefWidth, double prefHeight, double x, double y){
+    private void configAmmoButton(ImageView imgv, double prefWidth, double prefHeight, double x, double y){
         //button=new Button();
-        button.setPrefWidth(prefWidth*widthScaleFactor);
-        button.setPrefHeight(prefHeight*heightScaleFactor);
-        button.setLayoutX(x*widthScaleFactor);
-        button.setLayoutY(y*heightScaleFactor);
-        button.setStyle("-fx-background-color: transparent");
-        button.setDisable(true);
+        imgv.setFitWidth(prefWidth*widthScaleFactor);
+        imgv.setFitHeight(prefHeight*heightScaleFactor);
+        imgv.setX(x*widthScaleFactor);
+        imgv.setY(y*heightScaleFactor);
+        //button.setStyle("-fx-background-color: transparent");
+        //button.setDisable(true);
     }
 
 
