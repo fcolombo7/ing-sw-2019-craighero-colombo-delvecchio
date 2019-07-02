@@ -728,6 +728,8 @@ public class MainWindow extends Application {
         infostage3 = new AnchorPane();
         infostage4 = new AnchorPane();
 
+        initInfoWindowPlayerHashMap();
+
 
         inf1 = new Button("Info");
         inf2 = new Button("Info");
@@ -1161,21 +1163,21 @@ public class MainWindow extends Application {
 
     public static void config(AnchorPane ap, SimplePlayer player){
         if(player.getNotLoadedIds().size()>0) {
-            Image unWeap1 = MainWindow.weaponsHashMap.get(player.getNotLoadedIds().get(0));
+            Image unWeap1 = weaponsHashMap.get(player.getNotLoadedIds().get(0));
             ImageView unlWeap1 = new ImageView(unWeap1);
             unlWeap1.setLayoutX(10*widthScaleFactor);
             unlWeap1.setLayoutY(10*heightScaleFactor);
             ap.getChildren().add(unlWeap1);
         }
         if(player.getNotLoadedIds().size()>1) {
-            Image unWeap2 = MainWindow.weaponsHashMap.get(player.getNotLoadedIds().get(1));
+            Image unWeap2 = weaponsHashMap.get(player.getNotLoadedIds().get(1));
             ImageView unlWeap2 = new ImageView(unWeap2);
             unlWeap2.setLayoutX(100*widthScaleFactor);
             unlWeap2.setLayoutY(10*heightScaleFactor);
             ap.getChildren().add(unlWeap2);
         }
         if(player.getNotLoadedIds().size()>2) {
-            Image unWeap3 = MainWindow.weaponsHashMap.get(player.getNotLoadedIds().get(2));
+            Image unWeap3 = weaponsHashMap.get(player.getNotLoadedIds().get(2));
             ImageView unlWeap3 = new ImageView(unWeap3);
             unlWeap3.setLayoutX(190*widthScaleFactor);
             unlWeap3.setLayoutY(10*heightScaleFactor);
@@ -2528,7 +2530,7 @@ public class MainWindow extends Application {
 
     private static void updatePlayerVisibility(SimplePlayer player){
 
-        //config(infoWindowPlayer.get(player.getNickname()), player);
+        config(infoWindowPlayer.get(player.getNickname()), player);
 
 
     }
@@ -3384,7 +3386,7 @@ public class MainWindow extends Application {
         initBoardWeaponsButton();
         initMyWeaponsButton();
         initMyPowerupsButton();
-        initInfoWindowPlayerHashMap();
+        //initInfoWindowPlayerHashMap();
         initWeaponsHashMap();
         initPowerupsHashMap();
 
