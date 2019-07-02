@@ -4,9 +4,11 @@ import it.polimi.ingsw.model.exceptions.WeaponEffectException;
 import it.polimi.ingsw.model.exceptions.WeaponLoadException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.utils.MatrixHelper;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -267,6 +269,59 @@ public class TestWeapon {
             effects=weapon.getUsableEffects(true,new Turn(game));
             assertTrue(effects.isEmpty());
 
+        } catch (Exception e) {
+            fail("Unhandled exception has been thrown.");
+        }
+    }
+
+    @Test
+    public void WeaponEffectTest(){
+        try
+        {
+            Weapon weapon=new Weapon("weapon1","myWeapon","src/main/Resources/weapons/fucilealplasma.xml");
+            weapon.init();
+            Game game=new Game();
+            Player first=new Player("first","first_motto",true);
+            Player second=new Player("second","second_motto",false);
+            Player third=new Player("third","third_motto",false);
+            Player fourth=new Player("fourth","fourth_motto",false);
+
+            game.addPlayer(first);
+            game.addPlayer(second);
+            game.addPlayer(third);
+            game.addPlayer(fourth);
+
+            game.setGameBoard(1);
+            GameBoard board=game.getGameBoard();
+
+            weapon.initNavigation();
+            List<Color> ammo=new ArrayList<>();
+            ammo.add(Color.RED);
+            ammo.add(Color.RED);
+            ammo.add(Color.BLUE);
+            ammo.add(Color.BLUE);
+            ammo.add(Color.YELLOW);
+            ammo.add(Color.YELLOW);
+            first.getBoard().addAmmo(ammo);
+
+
+            first.setPosition(board.getSquare(1,0));
+            second.setPosition(board.getSquare(1,2));
+            third.setPosition(board.getSquare(1,1));
+            fourth.setPosition(board.getSquare(2,2));
+
+            List<Effect> effects=weapon.getUsableEffects(true,new Turn(game));
+            assertThat(effects.get(0).getRefId(),is(1));
+
+            effects.clear();
+            weapon.setNavigationNode(weapon.getEffect(1));
+            List<List<Player>> sel= weapon.getEffect(1).getShootablePlayers(new Turn(game));
+            assertThat(sel.get(0).size(),is(2));
+            weapon.initNavigation();
+            weapon.setNavigationNode(weapon.getEffect(3));
+            MatrixHelper matrixHelper=weapon.getEffect(3).getMovementMatrix(first, game.getPlayers(), new ArrayDeque<>(),game.getGameBoard());
+            System.out.println(matrixHelper.toString());
+            assertTrue(matrixHelper.toBooleanMatrix()[2][1]);
         } catch (Exception e) {
             fail("Unhandled exception has been thrown.");
         }

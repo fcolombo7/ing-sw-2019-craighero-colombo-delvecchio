@@ -151,6 +151,7 @@ public class TestClientSocket {
         public void onTurnActions(List<String> actions) {
             System.out.println(count+" TURN ACTIONS");
             count++;
+            /*
             boolean found=false;
             for (String action : actions) {
                 if (action.equals("GRAB")) {
@@ -161,7 +162,9 @@ public class TestClientSocket {
             if(found) {
                 connection.selectAction("GRAB");
             }else
-                connection.selectAction("RUN");
+                connection.selectAction("END");
+
+             */
         }
 
         @Override

@@ -30,6 +30,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     private String session;
     private RMIServerHandler stub;
     private ExecutorService pool;
+    private boolean disconnected=false;
 
     public RMIServerConnection(String hostname, int port, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
         super(hostname, port, ui);
@@ -99,25 +100,29 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void boardPreference(int value) {
-        pool.submit(()->{
-            try {
-                stub.boardPreference(session,value);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call boardPreference().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(() -> {
+                try {
+                    stub.boardPreference(session, value);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call boardPreference().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
     }
 
     @Override
     public void respawnPlayer(Card powerup) {
-        pool.submit(()->{
-            try {
-                stub.respawnPlayer(session,powerup);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call respawnPlayer().");
-                Logger.logErr(e.getMessage());
-        }});
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.respawnPlayer(session,powerup);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call respawnPlayer().");
+                    Logger.logErr(e.getMessage());
+                }});
+        }
     }
 
     @Override
@@ -133,36 +138,42 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void selectAction(String action) {
-        pool.submit(()->{
-            try {
-            stub.selectAction(session,action);
-        } catch (RemoteException e) {
-            Logger.logErr("RemoteException has been thrown when call selectAction().");
-            Logger.logErr(e.getMessage());
-        }});
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.selectAction(session,action);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call selectAction().");
+                    Logger.logErr(e.getMessage());
+                }});
+        }
     }
 
     @Override
     public void movePlayer(String target, int[] newPosition) {
-        pool.submit(()->{
-            try {
-            stub.movePlayer(session,target,newPosition);
-        } catch (RemoteException e) {
-            Logger.logErr("RemoteException has been thrown when call movePlayer().");
-            Logger.logErr(e.getMessage());
-        }});
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.movePlayer(session,target,newPosition);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call movePlayer().");
+                    Logger.logErr(e.getMessage());
+                }});
+        }
     }
 
     @Override
     public void discardWeapon(Card weapon) {
-        pool.submit(()->{
-            try {
-                stub.discardWeapon(session,weapon);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call discardWeapon().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.discardWeapon(session,weapon);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call discardWeapon().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
@@ -181,117 +192,135 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void loadableWeapon(Card weapon) {
-        pool.submit(()->{
-            try {
-                stub.loadableWeapon(session,weapon);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call loadableWeapon().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.loadableWeapon(session,weapon);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call loadableWeapon().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void runAction(int[] newPosition) {
-        pool.submit(()->{
-            try {
-                stub.runAction(session,newPosition);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call runAction().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.runAction(session,newPosition);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call runAction().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void selectPlayers(List<List<String>> selected) {
-        pool.submit(()->{
-            try {
-                stub.selectPlayers(session,selected);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call selectPlayers().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.selectPlayers(session,selected);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call selectPlayers().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void selectPowerup(Card powerup) {
-        pool.submit(()->{
-            try {
-                stub.selectPowerup(session,powerup);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call selectPowerup().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.selectPowerup(session,powerup);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call selectPowerup().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void stopRoutine(boolean stop) {
-        pool.submit(()->{
-            try {
-                stub.stopRoutine(session,stop);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call stopRoutine().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.stopRoutine(session,stop);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call stopRoutine().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void usePowerup(boolean use) {
-        pool.submit(()->{
-            try {
-                stub.usePowerup(session,use);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call usePowerup().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.usePowerup(session,use);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call usePowerup().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void selectWeapon(Card weapon) {
-        pool.submit(()->{
-            try {
-                stub.selectWeapon(session,weapon);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call selectWeapon().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.selectWeapon(session,weapon);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call selectWeapon().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
 
     }
 
     @Override
     public void counterAttackAnswer(boolean counterAttack) {
-        pool.submit(()->{
-            try {
-                stub.counterAttackAnswer(session,counterAttack);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call counterAttackAnswer().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.counterAttackAnswer(session,counterAttack);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call counterAttackAnswer().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
     }
 
     @Override
     public void confirmEndGame() {
-        pool.submit(()->{
-            try {
-                stub.confirmEndGame(session);
-            } catch (RemoteException e) {
-                Logger.logErr("RemoteException has been thrown when call confirmEndGame().");
-                Logger.logErr(e.getMessage());
-            }
-        });
+        if(!disconnected) {
+            pool.submit(()->{
+                try {
+                    stub.confirmEndGame(session);
+                } catch (RemoteException e) {
+                    Logger.logErr("RemoteException has been thrown when call confirmEndGame().");
+                    Logger.logErr(e.getMessage());
+                }
+            });
+        }
     }
 
     /*------ RMIClientHandler REMOTE METHODS [called on server] ------*/
@@ -299,22 +328,30 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     /*------ ROOM METHODS ------*/
     @Override
     public void joinPlayer(String nickname) {
-        getUi().onJoinRoomAdvise(nickname);
+        if(!disconnected) {
+            getUi().onJoinRoomAdvise(nickname);
+        }
     }
 
     @Override
     public void exitPlayer(String nickname) {
-        getUi().onExitRoomAdvise(nickname);
+        if(!disconnected) {
+            getUi().onExitRoomAdvise(nickname);
+        }
     }
 
     @Override
     public void firstInRoom() {
-        getUi().onFirstInRoomAdvise();
+        if(!disconnected) {
+            getUi().onFirstInRoomAdvise();
+        }
     }
 
     @Override
     public void recoverPlayer(String nickname) {
-        getUi().onRecoverPlayerAdvise(nickname);
+        if(!disconnected) {
+            getUi().onRecoverPlayerAdvise(nickname);
+        }
     }
 
     @Override
@@ -325,196 +362,275 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     /*------ MATCH METHODS ------*/
     @Override
     public void matchCreation(List<SimplePlayer> players, int playerTurnNumber) {
-        getUi().onMatchCreation(players,playerTurnNumber);
+        if(!disconnected) {
+            getUi().onMatchCreation(players,playerTurnNumber);
+        }
     }
 
     @Override
     public void invalidMessageReceived(String msg) {
-        getUi().onInvalidMessageReceived(msg);
+        if(!disconnected) {
+            getUi().onInvalidMessageReceived(msg);
+        }
     }
 
     @Override
     public void boardUpdate(SimpleBoard gameBoard) {
-        getUi().onBoardUpdate(gameBoard);
+        if(!disconnected) {
+            getUi().onBoardUpdate(gameBoard);
+        }
     }
 
     @Override
     public void matchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-        getUi().onMatchUpdate(players,gameBoard,frenzy);
+        if(!disconnected) {
+            getUi().onMatchUpdate(players,gameBoard,frenzy);
+        }
     }
 
     @Override
     public void respwanRequest(List<Card> powerups) {
-        getUi().onRespwanRequest(powerups);
+        if(!disconnected) {
+            getUi().onRespwanRequest(powerups);
+        }
     }
 
     @Override
     public void respwanCompleted(SimplePlayer player, Card discardedPowerup) {
-        getUi().onRespwanCompleted(player,discardedPowerup);
+        if(!disconnected) {
+            getUi().onRespwanCompleted(player,discardedPowerup);
+        }
     }
 
     @Override
     public void grabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
-        getUi().onGrabbedTile(player,grabbedTile);
+        if(!disconnected) {
+            getUi().onGrabbedTile(player,grabbedTile);
+        }
     }
 
     @Override
     public void grabbedPowerup(SimplePlayer player, Card powerup) {
-        getUi().onGrabbedPowerup(player,powerup);
+        if(!disconnected) {
+            getUi().onGrabbedPowerup(player,powerup);
+        }
     }
 
     @Override
     public void grabbableWeapons(List<Card> weapons) {
-        getUi().onGrabbableWeapons(weapons);
+        if(!disconnected) {
+            getUi().onGrabbableWeapons(weapons);
+        }
     }
 
     @Override
     public void discardWeapon(List<Card> weapons) {
-        getUi().onDiscardWeapon(weapons);
+        if(!disconnected) {
+            getUi().onDiscardWeapon(weapons);
+        }
     }
 
     @Override
     public void grabbedWeapon(SimplePlayer player, Card weapon) {
-        getUi().onGrabbedWeapon(player,weapon);
+        if(!disconnected) {
+            getUi().onGrabbedWeapon(player,weapon);
+        }
     }
 
     @Override
     public void reloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
-        getUi().onReloadedWeapon(player,weapon,discardedPowerups,totalCost);
+        if(!disconnected) {
+            getUi().onReloadedWeapon(player,weapon,discardedPowerups,totalCost);
+        }
     }
 
     @Override
     public void reloadableWeapons(List<Card> weapons) {
-        getUi().onReloadableWeapons(weapons);
+        if(!disconnected) {
+            getUi().onReloadableWeapons(weapons);
+        }
     }
 
     @Override
     public void turnCreation(String currentPlayer) {
-        getUi().onTurnCreation(currentPlayer);
+        if(!disconnected) {
+            getUi().onTurnCreation(currentPlayer);
+        }
     }
 
     @Override
     public void turnActions(List<String> actions) {
-        getUi().onTurnActions(actions);
+        if(!disconnected) {
+            getUi().onTurnActions(actions);
+        }
     }
 
     @Override
     public void turnEnd() {
-        getUi().onTurnEnd();
+        if(!disconnected) {
+            getUi().onTurnEnd();
+        }
     }
 
     @Override
     public void moveAction(SimplePlayer player) {
-        getUi().onMoveAction(player);
+        if(!disconnected) {
+            getUi().onMoveAction(player);
+        }
     }
 
     @Override
     public void moveRequest(MatrixHelper matrix, String targetPlayer) {
-        getUi().onMoveRequest(matrix,targetPlayer);
+        if(!disconnected) {
+            getUi().onMoveRequest(matrix,targetPlayer);
+        }
     }
 
     @Override
     public void markAction(String player, SimplePlayer target, int value) {
-        getUi().onMarkAction(player, target,value);
+        if(!disconnected) {
+            getUi().onMarkAction(player, target,value);
+        }
     }
 
     @Override
     public void damageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
-        getUi().onDamageAction(player,selected,damageValue,convertedMarks);
+        if(!disconnected) {
+            getUi().onDamageAction(player,selected,damageValue,convertedMarks);
+        }
     }
 
     @Override
     public void discardedPowerup(SimplePlayer player, Card powerup) {
-        getUi().onGrabbedPowerup(player,powerup);
+        if(!disconnected) {
+            getUi().onGrabbedPowerup(player,powerup);
+        }
     }
 
     @Override
     public void selectablePlayers(List<List<String>> selectable, SimpleTarget target) {
-        getUi().onSelectablePlayers(selectable,target);
+        if(!disconnected) {
+            getUi().onSelectablePlayers(selectable,target);
+        }
     }
 
     @Override
     public void canUsePowerup() {
-        getUi().onCanUsePowerup();
+        if(!disconnected) {
+            getUi().onCanUsePowerup();
+        }
     }
 
     @Override
     public void canStopRoutine() {
-        getUi().onCanStopRoutine();
+        if(!disconnected) {
+            getUi().onCanStopRoutine();
+        }
     }
 
     @Override
     public void usableWeapons(List<Card> usableWeapons) {
-        getUi().onUsableWeapons(usableWeapons);
+        if(!disconnected) {
+            getUi().onUsableWeapons(usableWeapons);
+        }
     }
 
     @Override
     public void availableEffects(List<String> effects) {
-        getUi().onAvailableEffects(effects);
+        if(!disconnected) {
+            getUi().onAvailableEffects(effects);
+        }
     }
 
     @Override
     public void payEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
-        getUi().onPayEffect(player,discardedPowerups,usedAmmo);
+        if(!disconnected) {
+            getUi().onPayEffect(player,discardedPowerups,usedAmmo);
+        }
     }
 
     @Override
     public void usedCard(Card card) {
-        getUi().onUsedCard(card);
+        if(!disconnected) {
+            getUi().onUsedCard(card);
+        }
     }
 
     @Override
     public void availablePowerups(List<Card> powerups) {
-        getUi().onAvailablePowerups(powerups);
+        if(!disconnected) {
+            getUi().onAvailablePowerups(powerups);
+        }
     }
 
     @Override
     public void runCompleted(SimplePlayer player, int[] newPosition) {
-        getUi().onRunCompleted(player,newPosition);
+        if(!disconnected) {
+            getUi().onRunCompleted(player,newPosition);
+        }
     }
 
     @Override
     public void runRoutine(MatrixHelper matrix) {
-        getUi().onRunRoutine(matrix);
+        if(!disconnected) {
+            getUi().onRunRoutine(matrix);
+        }
     }
 
     @Override
     public void wakeUpPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-        getUi().onPlayerWakeUp(players,gameBoard,frenzy);
+        if(!disconnected) {
+            getUi().onPlayerWakeUp(players,gameBoard,frenzy);
+        }
     }
 
     @Override
     public void fullOfPowerup() {
-        getUi().onFullOfPowerup();
+        if(!disconnected) {
+            getUi().onFullOfPowerup();
+        }
     }
 
     @Override
     public void canCounterAttack() {
-        getUi().onCanCounterAttack();
+        if(!disconnected) {
+            getUi().onCanCounterAttack();
+        }
     }
 
     @Override
     public void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
-        getUi().onCounterAttack(currentPlayer,player,powerup);
+        if(!disconnected) {
+            getUi().onCounterAttack(currentPlayer,player,powerup);
+        }
     }
 
     @Override
     public void counterAttackTimeOut() {
-        getUi().onCounterAttackTimeOut();
+        if(!disconnected) {
+            getUi().onCounterAttackTimeOut();
+        }
     }
 
     @Override
     public void notifyDisconnection() {
-        getUi().onDisconnectionAdvise();
+        if(!disconnected) {
+            disconnected=true;
+            getUi().onDisconnectionAdvise();
+        }
     }
 
     @Override
     public void gameEnd(List<SimplePlayer> players) throws RemoteException {
-        getUi().onGameEnd(players);
+        if(!disconnected) {
+            getUi().onGameEnd(players);
+        }
     }
 
     @Override
     public void sendLeaderboard(List<String> nicknames, List<Integer> points) throws RemoteException {
-        getUi().onLeaderboardReceived(nicknames,points);
+        if(!disconnected) {
+            getUi().onLeaderboardReceived(nicknames,points);
+        }
     }
 }

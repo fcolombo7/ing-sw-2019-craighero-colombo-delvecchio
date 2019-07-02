@@ -986,10 +986,10 @@ public class SocketServerConnection extends ServerConnection {
             DisconnectionMessage message = gson.fromJson(line, DisconnectionMessage.class);
             if (!message.getType().equalsIgnoreCase(Constants.DISCONNECTION))
                 throw new IllegalArgumentException("NOT DISCONNECTION MESSAGE");
-            pool.submit(()->getUi().onDisconnectionAdvise());
-            socketOut.close();
             socketIn.close();
+            socketOut.close();
             socket.close();
+            pool.submit(()->getUi().onDisconnectionAdvise());
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE

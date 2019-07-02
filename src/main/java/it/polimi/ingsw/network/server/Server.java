@@ -61,6 +61,7 @@ public class Server{
     }
 
     public synchronized int checkClientLogin(String nickname, ClientConnection client){
+        roomRefactor();
         Logger.logServer("Login request received from " + nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
             if(!disconnected.containsKey(nickname)){
@@ -77,6 +78,23 @@ public class Server{
         }else{
             Logger.logServer(nickname+" is already in.");
             return 0;
+        }
+    }
+
+    private void roomRefactor() {
+        List<Room> tRooms=new ArrayList<>(rooms);
+        for (Room r:tRooms) {
+            if(r.isClosed()){
+                List<ClientConnection> temp=new ArrayList<>(r.getPlayers());
+                for (ClientConnection cc:temp)
+                    deregisterConnection(cc);
+                List<String> keySet=new ArrayList<>(disconnected.keySet());
+                for(String key:keySet){
+                    if(disconnected.get(key)==r.getRoomNumber())
+                        disconnected.remove(key);
+                }
+                r.clearPlayers();
+            }
         }
     }
 
@@ -97,7 +115,6 @@ public class Server{
     public void disconnectConnection(ClientConnection client) {
         Logger.logServer("Disconnecting "+client.getNickname()+" from server");
         disconnected.put(client.getNickname(),client.getRoom().getRoomNumber());
-        //client.getRoom().disconnect(client);
         players.remove(client.getNickname());
     }
 

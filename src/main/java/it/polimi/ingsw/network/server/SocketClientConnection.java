@@ -128,6 +128,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             }
         }catch (Exception e){
             Logger.logErr("Cannot get a correct LoginMessage from the received Json string.");
+            e.printStackTrace();
         }
     }
 

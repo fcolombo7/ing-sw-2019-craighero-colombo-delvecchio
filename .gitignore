@@ -6,6 +6,9 @@
 !Deliverables/
 !src/
 
+main/Resources/META-INF
+*.MF
+log_*.txt
 .idea/
 
 # Created by https://www.gitignore.io/api/java,maven,macos,linux,windows,intellij

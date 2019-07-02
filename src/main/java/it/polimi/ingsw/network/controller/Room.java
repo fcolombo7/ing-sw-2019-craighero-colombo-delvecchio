@@ -22,6 +22,10 @@ public class Room {
 
     private boolean playing=false;
 
+    private boolean closed=false;
+
+    private boolean refactorable=false;
+
     private int roomNumber;
 
     private Timer timer=null;
@@ -54,7 +58,7 @@ public class Room {
     public void setRoomNumber(int number){ roomNumber=number;}
 
     public boolean canJoin(){
-        return !(playing||full);
+        return !(playing||full||closed);
     }
 
     public boolean isPlaying(){
@@ -249,8 +253,19 @@ public class Room {
         }
         full=true;
         playing=false;
-        List<ClientConnection> clientConnections=new ArrayList<>(players);
+        closed = true;
+        Logger.logServer("ROOM "+roomNumber+" IS CLOSED");
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public boolean canRefactor() {
+        return refactorable;
+    }
+
+    public void clearPlayers(){
         players.clear();
-        for(ClientConnection cc:clientConnections) cc.closeConnection();
     }
 }

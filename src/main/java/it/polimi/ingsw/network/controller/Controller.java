@@ -291,6 +291,16 @@ public class Controller{
                         closeTurn(game.getCurrentPlayer().getNickname());
                     }
                     game.forceEndGame();
+                    if(lastTimer==null){
+                        lastTimer=new Timer();
+                        lastTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                //TODO: need to be checked
+                                room.close();
+                            }
+                        },Server.getQuickMoveTimer()*1000);
+                    }
                 }else if(game.getStatus()==GameStatus.PLAYING_TURN&&game.getCurrentPlayer().getNickname().equals(nickname)){
                     Timer t=timerMap.get(game.getCurrentPlayer().getNickname());
                     t.cancel();
@@ -298,7 +308,6 @@ public class Controller{
                     timerMap.remove(game.getCurrentPlayer().getNickname());
                     game.getCurrentTurn().forceClosing();
                     closeTurn(game.getCurrentPlayer().getNickname());
-                    handleNewTurn();
                 }
                 return;
             }
