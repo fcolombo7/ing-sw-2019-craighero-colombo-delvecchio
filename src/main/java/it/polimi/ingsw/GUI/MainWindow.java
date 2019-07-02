@@ -514,6 +514,11 @@ public class MainWindow extends Application {
     private static AnchorPane infostage3;
     private static AnchorPane infostage4;
 
+    private static Scene infoscene1;
+    private static Scene infoscene2;
+    private static Scene infoscene3;
+    private static Scene infoscene4;
+
 
     @Override
     public void start(Stage stage) throws  Exception {
@@ -722,6 +727,9 @@ public class MainWindow extends Application {
         b9= new Button();
         b10= new Button(); */
 
+        infoStage=new Stage();
+        //infoStage.setFullScreen(true);
+        //infoStage.setMaximized(true);
 
         infostage1 = new AnchorPane();
         infostage2 = new AnchorPane();
@@ -739,29 +747,39 @@ public class MainWindow extends Application {
         inf2.getStyleClass().add("info");
         inf3.getStyleClass().add("info");
         inf4.getStyleClass().add("info");
+        infoscene1=new Scene(infostage1, 500*widthScaleFactor, 300*heightScaleFactor);
+        infoscene2=new Scene(infostage2, 500*widthScaleFactor, 300*heightScaleFactor);
+        infoscene3=new Scene(infostage3, 500*widthScaleFactor, 300*heightScaleFactor);
+        infoscene4=new Scene(infostage4, 500*widthScaleFactor, 300*heightScaleFactor);
+        infoscene1.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+        infoscene2.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+        infoscene3.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+        infoscene4.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+
+
         inf1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(1)));
+                setStageAp(1);
 
             }
         });
         inf2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(2)));
+                setStageAp(2);
             }
         });
         inf3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(3)));
+                setStageAp(3);
             }
         });
         inf4.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                setStageAp(infoWindowPlayer.get(numbEnemyNickname.get(4)));
+                setStageAp(4);
             }
         });
 
@@ -1161,48 +1179,124 @@ public class MainWindow extends Application {
 
 
 
-    public static void config(AnchorPane ap, SimplePlayer player){
+    public static void config(int numEnem, SimplePlayer player){
+        if(numEnem==1) {
+            infostage1.getChildren().clear();
+        }
+        if(numEnem==2) {
+            infostage2.getChildren().clear();
+        }
+        if(numEnem==3) {
+            infostage3.getChildren().clear();
+        }
+        if(numEnem==4) {
+            infostage4.getChildren().clear();
+        }
         if(player.getNotLoadedIds().size()>0) {
             Image unWeap1 = weaponsHashMap.get(player.getNotLoadedIds().get(0));
             ImageView unlWeap1 = new ImageView(unWeap1);
+            unlWeap1.setFitWidth(90*widthScaleFactor);
+            unlWeap1.setPreserveRatio(true);
             unlWeap1.setLayoutX(10*widthScaleFactor);
             unlWeap1.setLayoutY(10*heightScaleFactor);
-            ap.getChildren().add(unlWeap1);
+            if(numEnem==1) {
+                infostage1.getChildren().add(unlWeap1);
+            }
+            if(numEnem==2) {
+                infostage2.getChildren().add(unlWeap1);
+            }
+            if(numEnem==3) {
+                infostage3.getChildren().add(unlWeap1);
+            }
+            if(numEnem==4) {
+                infostage4.getChildren().add(unlWeap1);
+            }
+
         }
         if(player.getNotLoadedIds().size()>1) {
             Image unWeap2 = weaponsHashMap.get(player.getNotLoadedIds().get(1));
             ImageView unlWeap2 = new ImageView(unWeap2);
-            unlWeap2.setLayoutX(100*widthScaleFactor);
+            unlWeap2.setFitWidth(90*widthScaleFactor);
+            unlWeap2.setPreserveRatio(true);
+            unlWeap2.setLayoutX(120*widthScaleFactor);
             unlWeap2.setLayoutY(10*heightScaleFactor);
-            ap.getChildren().add(unlWeap2);
+            if(numEnem==1) {
+                infostage1.getChildren().add(unlWeap2);
+            }
+            if(numEnem==2) {
+                infostage2.getChildren().add(unlWeap2);
+            }
+            if(numEnem==3) {
+                infostage3.getChildren().add(unlWeap2);
+            }
+            if(numEnem==4) {
+                infostage4.getChildren().add(unlWeap2);
+            }
         }
         if(player.getNotLoadedIds().size()>2) {
             Image unWeap3 = weaponsHashMap.get(player.getNotLoadedIds().get(2));
             ImageView unlWeap3 = new ImageView(unWeap3);
-            unlWeap3.setLayoutX(190*widthScaleFactor);
+            unlWeap3.setFitWidth(90*widthScaleFactor);
+            unlWeap3.setPreserveRatio(true);
+            unlWeap3.setLayoutX(230*widthScaleFactor);
             unlWeap3.setLayoutY(10*heightScaleFactor);
-            ap.getChildren().add(unlWeap3);
+            if(numEnem==1) {
+                infostage1.getChildren().add(unlWeap3);
+            }
+            if(numEnem==2) {
+                infostage2.getChildren().add(unlWeap3);
+            }
+            if(numEnem==3) {
+                infostage3.getChildren().add(unlWeap3);
+            }
+            if(numEnem==4) {
+                infostage4.getChildren().add(unlWeap3);
+            }
         }
         Label nyell=new Label(String.valueOf(Collections.frequency(player.getAmmos(), Color.YELLOW)) + " munizioni gialle");
         Label nblue=new Label(String.valueOf(Collections.frequency(player.getAmmos(), Color.BLUE)) +" munizioni blu");
         Label nred=new Label(String.valueOf(Collections.frequency(player.getAmmos(), Color.RED)) +" munizioni rosse");
-        nyell.setLayoutX(10);
-        nyell.setLayoutY(150);
-        nblue.setLayoutX(10);
-        nblue.setLayoutY(180);
-        nred.setLayoutX(10);
-        nred.setLayoutY(210);
+        nyell.setLayoutX(10*widthScaleFactor);
+        nyell.setLayoutY(200*heightScaleFactor);
+        nblue.setLayoutX(10*widthScaleFactor);
+        nblue.setLayoutY(230*heightScaleFactor);
+        nred.setLayoutX(10*widthScaleFactor);
+        nred.setLayoutY(260*heightScaleFactor);
 
-        ap.getChildren().addAll(nyell, nblue, nred);
-
+        if(numEnem==1) {
+            infostage1.getChildren().addAll(nyell, nblue, nred);
+        }
+        if(numEnem==2) {
+            infostage2.getChildren().addAll(nyell, nblue, nred);
+        }
+        if(numEnem==3) {
+            infostage3.getChildren().addAll(nyell, nblue, nred);
+        }
+        if(numEnem==4) {
+            infostage4.getChildren().addAll(nyell, nblue, nred);
+        }
 
     }
 
-    public static void setStageAp(AnchorPane ap){
-        Scene scene=new Scene(ap, 500*widthScaleFactor, 300*heightScaleFactor);
+    public static void setStageAp(int numberEnemy){
 
-        infoStage.setScene(scene);
-        infoStage.initModality(Modality.WINDOW_MODAL);
+        if(numberEnemy==1){
+            infoStage.setScene(infoscene1);
+
+        }
+        if(numberEnemy==2){
+            infoStage.setScene(infoscene2);
+
+        }
+        if(numberEnemy==3){
+            infoStage.setScene(infoscene3);
+
+        }
+        if(numberEnemy==4){
+            infoStage.setScene(infoscene4);
+
+        }
+        //infoStage.initModality(Modality.WINDOW_MODAL);
         infoStage.show();
 
     }
@@ -2529,8 +2623,12 @@ public class MainWindow extends Application {
     }
 
     private static void updatePlayerVisibility(SimplePlayer player){
+        int numEn=0;
+        for(int i=0; i<numbEnemyNickname.size(); i++){
+            if(numbEnemyNickname.get(i+1).equalsIgnoreCase(player.getNickname())) numEn=i+1;
+        }
 
-        config(infoWindowPlayer.get(player.getNickname()), player);
+        config(numEn, player);
 
 
     }
