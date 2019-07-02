@@ -398,13 +398,11 @@ public class ShootingRoutineTest {
 
         assertEquals(4,p2.getBoard().getHealthBar().size());
 
+        assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
         assertThat(collector.pop().getRequest(), is(Constants.DISCARDED_POWERUP_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.EFFECT_DAMAGE_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.USED_CARD_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.PAY_EFFECT_MESSAGE));
-
-        turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(),true));
-
         Logger.log("Test Finished");
     }
 

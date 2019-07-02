@@ -576,7 +576,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         Logger.logServer(JSON_ANSWER+line);
         try{
             LoadableWeaponSelectedAnswer answer=gson.fromJson(line, LoadableWeaponSelectedAnswer.class);
-            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
+            if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.LOADABLE_WEAPON_SELECTED)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);

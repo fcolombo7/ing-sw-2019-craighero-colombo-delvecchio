@@ -25,7 +25,7 @@ public class TurnRoutineFactory {
                 if(canReload()) routine= new ReloadingRoutine(turn);
                 break;
             case POWERUP:
-                if(canPowerup()) routine= new PowerupRoutine(turn,turn.getStatus(),false);
+                if(canPowerup()) routine= new PowerupRoutine(turn,turn.getStatus(),turn.getInExecutionRoutine()!=null);
                 break;
             case RUN:
                 if(canRun()) routine=new RunningRoutine(turn, maxRunDistance());

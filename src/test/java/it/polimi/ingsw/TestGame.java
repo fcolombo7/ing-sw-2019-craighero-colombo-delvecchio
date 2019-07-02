@@ -239,7 +239,7 @@ public class TestGame {
 
         try {
             game.respawnPlayer(p1, game.drawPowerup());
-            assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
+            assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_COMPLETED_MESSAGE));
         }catch(Exception e){
             assertThat(e.getMessage(),is("MISSING POWERUP"));
         }
