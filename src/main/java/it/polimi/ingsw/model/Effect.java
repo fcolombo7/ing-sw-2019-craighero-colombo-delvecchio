@@ -705,7 +705,7 @@ public class Effect {
             if(!checkSelected(selectedNickname,turn)) throw new IllegalStateException("Game Error performing the effect "+this.getName());
             turn.resetLatsDamagedPlayers();
             List<List<Player>> selected = composeSelected(selectedNickname, turn);
-            List<Player> selectedPlayer=selectedToList(selected);
+            List<Player> selectedPlayers=selectedToList(selected);
             for(int i=0;i<actions.size();i++){
                 Action currAct=actions.get(i);
                 if(currAct.getActionType()==ActionType.MOVE){
@@ -722,7 +722,7 @@ public class Effect {
                     }
                     else{
                         turn.clearMovementMap();
-                        for(Player p:selectedPlayer){
+                        for(Player p:selectedPlayers){
                             int[] pos=p.getPosition().getBoardIndexes();
                             MatrixHelper matrix=turn.getGame().getGameBoard().getDistanceMatrix(pos[0],pos[1],currAct.getValue());
                             matrix=matrix.bitWiseAnd(turn.getShiftableMatrix());
@@ -733,7 +733,7 @@ public class Effect {
                         return;
                     }
                 }else if(currAct.getActionType()==ActionType.DAMAGE){
-                    for(Player p:selectedPlayer){
+                    for(Player p:selectedPlayers){
                         p.getBoard().addDamage(turn.getGame().getCurrentPlayer(),currAct.getValue());
                         turn.addSelectedPlayer(p);
                         turn.newLatsDamagedPlayers(p);
@@ -743,7 +743,7 @@ public class Effect {
                     }
                 }
                 else if(currAct.getActionType()==ActionType.MARK){
-                    for(Player p:selectedPlayer){
+                    for(Player p:selectedPlayers){
                         p.getBoard().addMarks(turn.getGame().getCurrentPlayer(),currAct.getValue());
                         turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(p), currAct.getValue()));
                     }
@@ -785,10 +785,33 @@ public class Effect {
             selectedPlayer.setPosition(turn.getGame().getGameBoard().getSquare(newPosition[0],newPosition[1]));
             turn.getGame().notify(new MoveMessage(new SimplePlayer(selectedPlayer)));
             Logger.logServer("Moving the selected player");
+            concludeWithLastActions(turn,selectedPlayer);
             handleExtra(turn);
         }else{
             Logger.logServer("Invalid newPosition received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"UNREACHABLE POSITION RECEIVED")));
+        }
+    }
+
+    /**
+     * This method is used to handle the last actions after the move response
+     * @param turn representing the current turn
+     * @param selectedPlayer representing the selected player
+     */
+    private void concludeWithLastActions(Turn turn, Player selectedPlayer) {
+        for(int i=0;i<actions.size();i++) {
+            Action currAct = actions.get(i);
+            if(currAct.getActionType()==ActionType.DAMAGE){
+                selectedPlayer.getBoard().addDamage(turn.getGame().getCurrentPlayer(),currAct.getValue());
+                turn.addSelectedPlayer(selectedPlayer);
+                turn.newLatsDamagedPlayers(selectedPlayer);
+                int count = selectedPlayer.getBoard().convertMarks(turn.getGame().getCurrentPlayer());
+                checkPlayerStatus(selectedPlayer);
+                turn.getGame().notify(new DamageMessage(turn.getGame().getCurrentPlayer().getNickname(),new SimplePlayer(selectedPlayer),currAct.getValue(),count));
+            }else if(currAct.getActionType()==ActionType.MARK){
+                selectedPlayer.getBoard().addMarks(turn.getGame().getCurrentPlayer(),currAct.getValue());
+                turn.getGame().notify(new MarkMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(selectedPlayer), currAct.getValue()));
+            }
         }
     }
 

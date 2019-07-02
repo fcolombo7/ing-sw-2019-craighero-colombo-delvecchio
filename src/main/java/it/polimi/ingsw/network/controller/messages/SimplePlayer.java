@@ -61,7 +61,7 @@ public class SimplePlayer implements Serializable {
         //powerup
         powerupCards=new ArrayList<>();
         for(Powerup powerup:player.getPowerups())
-            weaponCards.add(new Card(powerup));
+            powerupCards.add(new Card(powerup));
         //damages
         damages=new ArrayList<>();
         for (Player p:player.getBoard().getHealthBar()) damages.add(p.getNickname());

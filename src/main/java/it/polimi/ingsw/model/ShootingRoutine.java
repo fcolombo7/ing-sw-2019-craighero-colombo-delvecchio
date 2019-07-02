@@ -248,6 +248,7 @@ public class ShootingRoutine implements TurnRoutine {
     }
 
     private void closeShotRoutine() {
+        selWeapon.unload();
         turn.clearSelectedPlayers();
         turn.resetLatsDamagedPlayers();
         turn.endRoutine();

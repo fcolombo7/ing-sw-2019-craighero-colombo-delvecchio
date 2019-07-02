@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.model.enums.PlayerStatus;
+import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.turntests.DebugView;
 import it.polimi.ingsw.utils.Constants;
@@ -347,5 +348,28 @@ public class TestGame {
         turn.selectAction("END");
         game.endTurn();
         assertEquals(game.getStatus(), GameStatus.END);
+    }
+
+    @Test
+    public void TestSimplePlayer(){
+        Game game = new Game();
+        Player player= new Player("name","motto",true);
+        Player other2= new Player("name2","motto",true);
+        Player other1= new Player("name3","motto",true);
+        game.addPlayer(player);
+        game.addPlayer(other1);
+        game.addPlayer(other2);
+        game.setGameBoard(1);
+        Powerup powerup1= game.drawPowerup();
+        Powerup powerup2=game.drawPowerup();
+        Weapon weapon1= game.drawWeapon();
+        Weapon weapon2= game.drawWeapon();
+        weapon1.unload();
+        player.addPowerup(powerup1);
+        player.addPowerup(powerup2);
+        player.addWeapon(weapon1);
+        player.addWeapon(weapon2);
+        SimplePlayer simplePlayer= new SimplePlayer(player);
+        assertThat(simplePlayer.getPowerupCards().size(),is(2));
     }
 }
