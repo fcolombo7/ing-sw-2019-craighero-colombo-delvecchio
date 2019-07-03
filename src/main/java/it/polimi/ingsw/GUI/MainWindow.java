@@ -1166,6 +1166,9 @@ public class MainWindow extends Application {
         user1.setMinSize(8, 9);
         configButton(user1, 8, 9, 200, 440);
         user1.setStyle("-fx-background-image: url('/gui/user1.png')");
+        user1.setStyle("-fx-background-size: cover");
+        user1.setStyle("-fx-background-position: center");
+        user1.setStyle("-fx-background-repeat: no-repeat");
 
         user2 = new Button();
         user2.setMinSize(8, 9);

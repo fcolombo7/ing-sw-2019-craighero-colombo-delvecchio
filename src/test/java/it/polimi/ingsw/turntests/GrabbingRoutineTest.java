@@ -240,7 +240,7 @@ public class GrabbingRoutineTest {
 
         turn.getInExecutionRoutine().handleAnswer(new RunAnswer(p1.getNickname(),game.getGameBoard().getSquare(1,2).getBoardIndexes()));
 
-        assertThat(collector.pop().getRequest(), is(Constants.TURN_END_MESSAGE));
+        collector.pop();
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.GRABBED_TILE_MESSAGE));
 

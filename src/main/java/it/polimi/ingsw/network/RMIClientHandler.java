@@ -18,6 +18,7 @@ public interface RMIClientHandler extends Remote {
     void joinPlayer(String nickname) throws RemoteException;
     void exitPlayer(String nickname) throws RemoteException;
     void firstInRoom() throws RemoteException;
+    //TODO: ELIMINARE
     void recoverPlayer(String nickname) throws RemoteException;
     void keepAlive() throws RemoteException;
 

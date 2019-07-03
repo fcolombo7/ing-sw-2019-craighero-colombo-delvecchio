@@ -22,7 +22,7 @@
 			</actions>
 			<extras/>
 		</effect>
-		<effect ref_id="2" name="colpo focalizzato">
+		<effect ref_id="2" name="COLPO FOCALIZZATO">
 			<cost>Y</cost>
 			<target>
 				<type>PLAYER</type>

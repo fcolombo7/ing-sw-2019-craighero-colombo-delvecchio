@@ -110,7 +110,7 @@ public class RMIServer  implements RMIServerHandler{
     public void respawnPlayer(String session, Card powerup) throws RemoteException {
         String nick=rmiClients.get(session);
         if(nick!=null)
-            server.getClientConnection(nick).getRoom().getController().respawnPlayer(nick,powerup);
+            server.getClientConnection(nick).getRoom().getController().respawnPlayer(nick,powerup,false);
     }
 
     @Override

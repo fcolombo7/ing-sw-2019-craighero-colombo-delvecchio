@@ -9,6 +9,9 @@ import it.polimi.ingsw.network.view.View;
 import it.polimi.ingsw.utils.Logger;
 
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Room {
 
@@ -146,6 +149,7 @@ public class Room {
             @Override
             public void run() {
                 Logger.logErr("KEEP ALIVE: TIMER SCADUTO PER "+client.getNickname());
+                getController().cancelTimerAfterKeepAlive(client.getNickname());
                 handleDisconnection(client);
             }
         },Server.getKeepAliveTimer()*1000);
@@ -229,14 +233,21 @@ public class Room {
             model.register(pView);
             views.put(p.getNickname(),pView);
             controller.recoverPlayer(p);
-            for (ClientConnection cc:players) {
-                if(!cc.getNickname().equals(client.getNickname())) {
-                    cc.recoverAdvise(client.getNickname());
+            /*
+            ExecutorService ex= Executors.newSingleThreadExecutor();
+            ex.submit(()->{
+                for (ClientConnection cc:players) {
+                    if(!cc.getNickname().equals(client.getNickname())) {
+                        cc.recoverAdvise(client.getNickname());
+                    }
                 }
-            }
+            });
+             */
             setUpKeepAlive(client);
         }else throw new IllegalStateException("Player "+client.getNickname()+" is not disconnected.");
     }
+
+
 
     public void stopTimers(String sender) {
         for(ClientConnection cc:players){

@@ -131,6 +131,7 @@ public abstract class ClientConnection{
 
     public abstract void runRoutine(MatrixHelper matrix);
 
+    //TODO: ELIMINARE
     public abstract void recoverAdvise(String nickname);
 
     public abstract void canCounterAttack();

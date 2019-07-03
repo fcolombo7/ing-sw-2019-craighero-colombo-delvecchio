@@ -14,7 +14,7 @@ public class AvailableEffectsMessage extends TurnRoutineMessage {
         super(recipient,Constants.AVAILABLE_EFFECTS_MESSAGE);
         this.effects=new ArrayList<>();
         for(Effect effect:effects)
-            this.effects.add(effect.getName());
+            this.effects.add(effect.getName().toUpperCase());
     }
 
     public AvailableEffectsMessage(List<String> effects,String recipient) {

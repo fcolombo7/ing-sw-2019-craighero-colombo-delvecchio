@@ -74,7 +74,7 @@ class TestClient extends ClientConnection {
     @Override
     public void respwanRequest(List<Card> powerups,List<Color> colors) {
         collector.push("RESPAWN_REQUEST");
-        controller.respawnPlayer(getNickname(),powerups.get(0));
+        controller.respawnPlayer(getNickname(),powerups.get(0),false);
     }
 
     @Override

@@ -122,8 +122,14 @@ public class SocketClientConnection extends ClientConnection implements Runnable
                 setMotto(cMotto);
                 if(response==1)
                     server.joinAvailableRoom(this);
-                else
-                    server.joinRecoveredRoom(this);
+                else {
+                    try {
+                        server.joinRecoveredRoom(this);
+                        Logger.logAndPrint("OK JOIN RECOVER");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
         }catch (Exception e){
             Logger.logErr("Cannot get a correct LoginMessage from the received Json string.");
@@ -691,7 +697,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
             //check if can receive this message
             if(!(checkStatus(GameStatus.READY)||checkStatus(GameStatus.CLOSING_TURN))) throw new IllegalStateException(ILLEGAL_STATE);
-            pool.submit(()->getRoom().getController().respawnPlayer(answer.getSender(),answer.getPowerup()));
+            pool.submit(()->getRoom().getController().respawnPlayer(answer.getSender(),answer.getPowerup(),false));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE

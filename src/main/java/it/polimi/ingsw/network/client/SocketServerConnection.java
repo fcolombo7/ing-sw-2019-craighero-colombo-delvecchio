@@ -961,18 +961,22 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    //TODO: ELIMINARE
     private void recoverPlayer() {
         pool.submit(()->{
             Gson gson=new Gson();
             String line=socketIn.nextLine();
             Logger.log(LOG_JSON +line);
             try{
-                RecoverMessage message=gson.fromJson(line, RecoverMessage.class);
+                RecoverMessage message=null;
+                message=gson.fromJson(line, RecoverMessage.class);
                 if(!message.getType().equalsIgnoreCase(Constants.PLAYER_RECOVER)) throw new IllegalArgumentException("NOT RECOVER MESSAGE");
-                pool.submit(()->getUi().onRecoverPlayerAdvise(message.getPlayer()));
+                RecoverMessage finalMessage = message;
+                pool.submit(()->getUi().onRecoverPlayerAdvise(finalMessage.getPlayer()));
             }catch (Exception e){
                 Logger.log(e.getMessage());
                 //HANDLE ERRORS HERE
+                e.printStackTrace();
                 handleInvalidReceived("RECOVER PLAYER",e.getMessage());
             }
         });
