@@ -169,7 +169,7 @@ public class TestCli {
         mene.add("BB");
         mene.add("EE");
         selectable.add(mene);
-        Target t = new Target(TargetType.DIRECTION, 1, 3, 1, 2, new ArrayList<>());
+        Target t = new Target(TargetType.PLAYER, 1, 3, 1, 2, new ArrayList<>());
         SimpleTarget target = new SimpleTarget(t);
         cli.onSelectablePlayers(selectable, target);
     }

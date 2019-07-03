@@ -38,11 +38,10 @@ public class Cli implements AdrenalineUI{
     private String name;
     private String motto;
     private List<SimplePlayer> enemies = new ArrayList<>();
-    private int playerTurnNumber;
     private boolean frenzyMode;
     private StringBuilder myPBoard;
     private List<Card> powerups = new ArrayList<>();
-    private List<Weapon> weapons = new ArrayList<>();
+    private List<Card> weapons = new ArrayList<>();
     private LimitedQueue<String> actionLog = new LimitedQueue<>(10);
     private List<String> colors = new ArrayList<>();
     private List<int[]> offsets = new ArrayList<>();
@@ -118,6 +117,7 @@ public class Cli implements AdrenalineUI{
             for (Card weapon : square.getWeaponCards())
                 weaponsList.add(weapon.getName());
             Logger.print(weaponsList.toString() + "\n");
+            weaponsList.clear();
         }
         Logger.print("\n");
     }
@@ -166,6 +166,9 @@ public class Cli implements AdrenalineUI{
         lettersHead();
         for(List<List<StringBuilder>> row: mapList)
             appendRow(row, mapList.indexOf(row));
+        for(SimplePlayer simplePlayer: this.enemies)
+            updatePlayer(simplePlayer, true);
+        updatePlayer(me, true);
     }
 
     private void lettersHead(){
@@ -249,7 +252,6 @@ public class Cli implements AdrenalineUI{
         }
 
         mapList.get(coordinates[0]).get(coordinates[1]).get(offsetsEx[0]).insert(offsetsEx[1], " ").replace(offsetsEx[1], offsetsEx[1]+spaceFiller.length(), playerColor + PLAYER + RESET + parseColor(board.getBoard()[coordinates[0]][coordinates[1]].getRoomColor()));
-        updateMap();
     }
 
     public void printMarks(SimplePlayer player){
@@ -311,7 +313,6 @@ public class Cli implements AdrenalineUI{
         Logger.print(buildPlayerBoard(player).toString() + "\n");
         printAmmo(player);
         Logger.print("Powerup: " + player.getPowerupCards().size());
-
     }
 
     public StringBuilder buildPlayerBoard(SimplePlayer player){
@@ -687,7 +688,6 @@ public class Cli implements AdrenalineUI{
         }
         this.setSquareOffset(offsetsCreation);
         this.setPlayersColor(colorsCreation);
-        this.playerTurnNumber = playerTurnNumber;
         actionLog.add("Match iniziato!");
         chooseBoard();
     }
@@ -714,13 +714,11 @@ public class Cli implements AdrenalineUI{
             updateActionLog();
         }
         this.board=gameBoard;
-        me=players.get(0);
-        enemies.clear();
-        enemies.addAll(players.subList(1, players.size()-1));
+        for(SimplePlayer player: players)
+            updatePlayer(player, false);
         this.frenzyMode=frenzy;
         updateMap();
         this.myPBoard=buildPlayerBoard(me);
-        printInterface();
     }
 
     @Override
@@ -751,7 +749,7 @@ public class Cli implements AdrenalineUI{
     public synchronized void onGrabbedPowerup(SimplePlayer player, Card powerup,Color color) {
         if(me.getNickname().equals(player.getNickname()))
             this.powerups.add(powerup);
-        printActionLog();
+        updatePlayer(player, false);
     }
 
     @Override
@@ -782,11 +780,14 @@ public class Cli implements AdrenalineUI{
 
     @Override
     public synchronized void onGrabbedWeapon(SimplePlayer player, Card weapon) {
-        if(me.getNickname().equals(player.getNickname()))
-            this.weapons.add((Weapon)weapon);
+        if(me.getNickname().equals(player.getNickname())) {
+            this.weapons.add(weapon);
+            updatePlayer(me, false);
+        }
         else {
             for (SimplePlayer enemy : enemies) {
                 if (enemy.getNickname().equals(player.getNickname())) {
+                    updatePlayer(enemy, false);
                     updateActionLog(enemy, weapon, ActionsLog.GRAB);
                     break;
                 }
@@ -800,10 +801,12 @@ public class Cli implements AdrenalineUI{
         if(me.getNickname().equals(player.getNickname())) {
             me = player;
             this.powerups.removeAll(discardedPowerups);
+            updatePlayer(player, false);
         }
         for (SimplePlayer enemy : enemies) {
             if (enemy.getNickname().equals(player.getNickname())) {
                 this.enemies.set(this.enemies.indexOf(enemy), enemy);
+                updatePlayer(enemy, false);
                 updateActionLog(enemy, weapon, ActionsLog.LOAD);
                 break;
             }
@@ -887,6 +890,7 @@ public class Cli implements AdrenalineUI{
     public synchronized void onDiscardedPowerup(SimplePlayer player, Card powerup) {
         if(player.getNickname().equals(me.getNickname()))
             this.powerups.remove(powerup);
+        updatePlayer(player, false);
         updateActionLog(player, powerup, ActionsLog.DISCARD);
         printInterface();
     }
@@ -914,7 +918,7 @@ public class Cli implements AdrenalineUI{
                 choice = playerHandleChoice(target, list);
                 List<String> playerAnswer = new ArrayList<>();
                 for(Integer pick: choice)
-                    playerAnswer.add(selectable.get(0).get(pick));
+                    playerAnswer.add(selectable.get(0).get(pick-1));
                 answer.add(playerAnswer);
                 break;
             case ROOM:
@@ -923,7 +927,7 @@ public class Cli implements AdrenalineUI{
                     Logger.print(counter++ + ". " + set.toString() + "\n");
                 }
                 choice = roomHandlerChoice(list);
-                answer.add(selectable.get(choice.get(0)));
+                answer.add(selectable.get(choice.get(0)-1));
                 break;
             default:
                 if(target.getType()==TargetType.ME)
@@ -996,8 +1000,8 @@ public class Cli implements AdrenalineUI{
         boolean rightChoice = false;
         do {
             choice.clear();
-            Logger.print("[Minimo " + target.getMinPlayerIn() + " giocatori e massimo " + target.getMaxPlayerIn() + "]\n");
-            Logger.print( (target.getMaxPlayerIn()>0) ? Integer.toString(target.getMaxPlayerIn()) : "-" + "]\n");
+            Logger.print("[Minimo " + target.getMinPlayerIn() + " giocatori e massimo " + target.getMaxPlayerIn());
+            Logger.print( ((target.getMaxPlayerIn()>0) ? Integer.toString(target.getMaxPlayerIn()) : "-" )+ "]\n");
             choice=integerParsing();
             if(choice.size()>=target.getMinPlayerIn() && (choice.size()<=target.getMaxPlayerIn() || target.getMaxPlayerIn()==-1) && correctInput(list, choice))
                 rightChoice = true;
@@ -1034,8 +1038,8 @@ public class Cli implements AdrenalineUI{
         List<String> list = new ArrayList<>();
         do {
             Logger.print("Puoi usare un powerup in base alla situazione di gioco corrente, vuoi usufruirne?\n [S/N]");
-            list.add("S");
-            list.add("N");
+            list.add("S\n");
+            list.add("N\n");
 
             choice = reader.readLine();
             if(correctInput(list, choice))
@@ -1052,8 +1056,8 @@ public class Cli implements AdrenalineUI{
         List<String> list = new ArrayList<>();
         do {
             Logger.print("Puoi usare effetti opzionali della tua arma, vuoi usarli?\n [S/N]");
-            list.add("S");
-            list.add("N");
+            list.add("S\n");
+            list.add("N\n");
 
             choice = reader.readLine();
             if(correctInput(list, choice))
@@ -1133,7 +1137,7 @@ public class Cli implements AdrenalineUI{
 
     @Override
     public synchronized void onRecoverPlayerAdvise(String nickname){
-        actionLog.add(nickname + "si ha ripreso a giocare");
+        actionLog.add(nickname + "ha ripreso a giocare");
     }
 
     @Override
@@ -1149,7 +1153,7 @@ public class Cli implements AdrenalineUI{
         boolean righChoice=false;
         List<String> list = new ArrayList<>();
         do {
-            Logger.print("Puoi contrattaccare con una Granata Venom, vuoi usarla? [S/N]");
+            Logger.print("Puoi usufruire di un Granata Venom, vuoi usarlo? [S/N]");
             list.add("S");
             list.add("N");
             choice = reader.readLine();
@@ -1168,6 +1172,7 @@ public class Cli implements AdrenalineUI{
 
     @Override
     public synchronized void onCounterAttackTimeOut(){
+        reader.cancel();
         Logger.print("E' scaduto il tempo utile per contrattaccare...\n");
     }
 
@@ -1179,6 +1184,7 @@ public class Cli implements AdrenalineUI{
 
     @Override
     public synchronized void onDisconnectionAdvise(){
+        reader.cancel();
         Logger.print("\n Sei stato disconnesso dalla partita...\n");
     }
 
@@ -1303,13 +1309,13 @@ public class Cli implements AdrenalineUI{
     private void updatePlayer(SimplePlayer player, boolean updatePos){
         if(me.getNickname().equals(player.getNickname())){
             me=player;
-            if(updatePos)
+            if(updatePos && me.getPosition()!=null)
                 setPlayerPosition(me, player.getPosition());
         }
         else for(SimplePlayer enemy: enemies) {
             if (enemy.getNickname().equals(player.getNickname())) {
                 enemies.set(enemies.indexOf(enemy), player);
-                if(updatePos)
+                if(updatePos && player.getPosition()!=null)
                     setPlayerPosition(enemy, player.getPosition());
                 break;
             }
