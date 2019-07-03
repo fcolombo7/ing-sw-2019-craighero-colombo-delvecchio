@@ -427,6 +427,8 @@ public class MainWindow extends Application {
 
     private static String respawnPos;
 
+    private static boolean reconnection=false;
+
 
 
 
@@ -590,9 +592,7 @@ public class MainWindow extends Application {
     private static Scene finalScene;
 
 
-
-
-
+    private static int turnReconnection;
 
 
 
@@ -2247,47 +2247,47 @@ public class MainWindow extends Application {
         a1=new Button();
         configTranspButton(a1, 57, 84, 317, 2);
         setActionWeapBoardButton(a1, weaponsHashMap.get(weapButtonId.get(a1)));
-        a1.setStyle("-fx-background-color: red");
+        a1.setStyle("-fx-background-color: transparent");
 
         a2=new Button();
         configTranspButton(a2, 57, 84, 383, 2);
         setActionWeapBoardButton(a2, weaponsHashMap.get(weapButtonId.get(a2)));
-        a2.setStyle("-fx-background-color: red");
+        a2.setStyle("-fx-background-color: transparent");
 
         a3=new Button();
         configTranspButton(a3, 57, 84, 449, 2);
         setActionWeapBoardButton(a3, weaponsHashMap.get(weapButtonId.get(a3)));
-        a3.setStyle("-fx-background-color: red");
+        a3.setStyle("-fx-background-color: transparent");
 
         a4=new Button();
         configTranspButton(a4, 84, 57, 2, 166);
         setActionWeapBoardButton(a4, weaponsHashMap.get(weapButtonId.get(a4)));
-        a4.setStyle("-fx-background-color: red");
+        a4.setStyle("-fx-background-color: transparent");
 
         a5=new Button();
         configTranspButton(a5, 84, 57, 2, 232);
         setActionWeapBoardButton(a5, weaponsHashMap.get(weapButtonId.get(a5)));
-        a5.setStyle("-fx-background-color: red");
+        a5.setStyle("-fx-background-color: transparent");
 
         a6=new Button();
         configTranspButton(a6, 84, 57, 2, 298);
         setActionWeapBoardButton(a6, weaponsHashMap.get(weapButtonId.get(a6)));
-        a6.setStyle("-fx-background-color: red");
+        a6.setStyle("-fx-background-color: transparent");
 
         a7=new Button();
         configTranspButton(a7, 84, 57, 516, 257);
         setActionWeapBoardButton(a7, weaponsHashMap.get(weapButtonId.get(a7)));
-        a7.setStyle("-fx-background-color: red");
+        a7.setStyle("-fx-background-color: transparent");
 
         a8=new Button();
         configTranspButton(a8, 84, 57, 516, 323);
         setActionWeapBoardButton(a8, weaponsHashMap.get(weapButtonId.get(a8)));
-        a8.setStyle("-fx-background-color: red");
+        a8.setStyle("-fx-background-color: transparent");
 
         a9=new Button();
         configTranspButton(a9, 84, 57, 516, 389);
         setActionWeapBoardButton(a9, weaponsHashMap.get(weapButtonId.get(a9)));
-        a9.setStyle("-fx-background-color: red");
+        a9.setStyle("-fx-background-color: transparent");
 
     }
 
@@ -2747,6 +2747,9 @@ public class MainWindow extends Application {
                 myw1.setDisable(true);
                 myw2.setDisable(true);
                 myw3.setDisable(true);
+                for(int i=0; i<weapons.size(); i++) {
+                    myWeaponsLabel.get(myWeaponsPosition.get(weapons.get(i).getId())).setText("");
+                }
                 myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Scarica");
                 String idSelWeapon=weapButtonId.get(myWeaponsButton.get(myWeaponsPosition.get(usWeapon)));
                 for(int i=0; i<weapons.size(); i++){
@@ -4308,7 +4311,9 @@ public class MainWindow extends Application {
                 e.printStackTrace();
             }
         });
-        MapChoice.display(stage);
+        if(!reconnection) {
+            MapChoice.display(stage);
+        }
     }
 
     public static void onInvalidMessageReceived(String msg) {
@@ -4372,7 +4377,7 @@ public class MainWindow extends Application {
                 setMyPowerups(player.getPowerupCards());
                 setMyPosition(player.getPosition());
             } else {
-                mess.setText(player.getNickname() + "si è rigenerato");
+                mess.setText(player.getNickname() + "si è \nrigenerato");
                 setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
             }
         });
@@ -4400,10 +4405,10 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
             if (player.getNickname().equalsIgnoreCase(myNickname)) {
-                mess.setText("Hai pescato un potenziamento");
+                mess.setText("Hai pescato \nun potenziamento");
                 setMyPowerups(player.getPowerupCards());
             } else {
-                mess.setText(player.getNickname() + " ha pescato un potenziamento");
+                mess.setText(player.getNickname() + " ha pescato \nun potenziamento");
             }
         });
 
@@ -4413,7 +4418,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
-            mess.setText("Seleziona l'arma che vuoi raccogliere");
+            mess.setText("Seleziona l'arma \nche vuoi raccogliere");
             for (int i = 0; i < weapons.size(); i++) {
                 String grabbableWeapon = weapons.get(i).getId();
                 setClickGrabWeapon(weapons, grabbableWeapon);
@@ -4426,7 +4431,7 @@ public class MainWindow extends Application {
         //forse è solo messaggio che uno ha scartato delle armi?
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
-            mess.setText("Seleziona l'arma che vuoi scartare");
+            mess.setText("Seleziona l'arma \nche vuoi scartare");
             for (int i = 0; i < weapons.size(); i++) {
                 String discardableWeap = weapons.get(i).getId();
                 setClickWeapon(weapons, discardableWeap);
@@ -4627,7 +4632,19 @@ public class MainWindow extends Application {
             countPlayerList2 = 0;
             countPlayerList3 = 0;
             countPlayerList4 = 0;
-            mess.setText(selectable.toString() + "\n \n Seleziona le liste \n e premi ok");
+            int numLists=selectable.size();
+            if(numLists==1) {
+                mess.setText(selectable.toString() + "\n \n Seleziona le liste \n e premi ok");
+            }
+            if(numLists==2){
+                mess.setText(selectable.get(0).toString()+"\n"+selectable.get(1).toString() + "\n \n Seleziona le liste \n e premi ok");
+            }
+            if(numLists==3){
+                mess.setText(selectable.get(0).toString()+"\n"+selectable.get(1).toString() + "\n"+ selectable.get(2).toString() + "\n \n Seleziona le liste \n e premi ok");
+            }
+            if(numLists==4){
+                mess.setText(selectable.get(0).toString()+"\n"+selectable.get(1).toString() + "\n"+ selectable.get(2).toString() + "\n"+ selectable.get(3).toString() + "\n Seleziona le liste \n e premi ok");
+            }
             if (selectable.size() == 1) {
                 eff1.setDisable(false);
                 eff1.setOnAction(null);
@@ -4965,7 +4982,14 @@ public class MainWindow extends Application {
     public static void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
-
+            reconnection=true;
+            for(int i=0; i<players.size(); i++){
+                if (players.get(i).getNickname().equalsIgnoreCase(logNickname))
+                    turnReconnection=i+1;
+            }
+            onMatchCreation(players, turnReconnection);
+            stage.close();
+            initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
             //controllo se arriva prima questo o quello dopo
             updateBoard(gameBoard);
             updatePlayerBoards(players, frenzy);
@@ -5028,18 +5052,22 @@ public class MainWindow extends Application {
     }
 
     public static void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
-        if(currentPlayer.getNickname().equalsIgnoreCase(myNickname)){
-            mess.setText(player.getNickname()+" ti ha\n contrattaccto con una " +powerup.getName());
-            setMyMarks(currentPlayer.getMarks());
-            setMyDamages(currentPlayer.getDamages());
-        }else{
-            if(player.getNickname().equalsIgnoreCase(myNickname)){
-                mess.setText("Hai usato una " +powerup.getName());
-            }else {
-                mess.setText(player.getNickname()+ " ha usato una\n" +powerup.getName()+"\n contro " +currentPlayer.getNickname());
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            if (currentPlayer.getNickname().equalsIgnoreCase(myNickname)) {
+                mess.setText(player.getNickname() + " ti ha\n contrattaccato \ncon una " + powerup.getName());
+                setMyMarks(currentPlayer.getMarks());
+                setMyDamages(currentPlayer.getDamages());
+            } else {
+                if (player.getNickname().equalsIgnoreCase(myNickname)) {
+                    mess.setText("Hai usato una\n " + powerup.getName());
+                } else {
+                    mess.setText(player.getNickname() + " ha usato una\n" + powerup.getName() + "\n contro " + currentPlayer.getNickname());
+                }
+                updatePlayerBoard(currentPlayer);
             }
-            updatePlayerBoard(currentPlayer);
-        }
+        });
 
     }
 
@@ -5098,9 +5126,9 @@ public class MainWindow extends Application {
 
                     Label winLabel = new Label();
                     if (winner) {
-                        winLabel.setText("Hai vinto!");
+                        winLabel.setText("HAI VINTO!");
                     } else {
-                        winLabel.setText("Hai perso.");
+                        winLabel.setText("HAI PERSO");
                     }
                     winLabel.getStyleClass().add("winLabel");
                     winLabel.setPrefSize(300 * widthScaleFactor, 100 * heightScaleFactor);

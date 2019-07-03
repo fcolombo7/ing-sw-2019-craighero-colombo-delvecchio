@@ -181,6 +181,7 @@ public class LoginWindow {
         });
 
         stage.setResizable(false);
+        stage.setFullScreen(false);
         Scene scene=new Scene(grid, 700, 500);
         scene.getStylesheets().addAll(LoginWindow.class.getResource("/gui/login.css").toExternalForm());
         stage.setScene(scene);
