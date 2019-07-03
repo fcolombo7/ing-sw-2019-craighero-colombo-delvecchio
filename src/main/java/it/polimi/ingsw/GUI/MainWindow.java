@@ -1166,9 +1166,9 @@ public class MainWindow extends Application {
         user1.setMinSize(8, 9);
         configButton(user1, 8, 9, 200, 440);
         user1.setStyle("-fx-background-image: url('/gui/user1.png')");
-        user1.setStyle("-fx-background-size: cover");
-        user1.setStyle("-fx-background-position: center");
-        user1.setStyle("-fx-background-repeat: no-repeat");
+        //user1.setStyle("-fx-background-size: cover");
+        //user1.setStyle("-fx-background-position: center");
+        //user1.setStyle("-fx-background-repeat: no-repeat");
 
         user2 = new Button();
         user2.setMinSize(8, 9);
@@ -2506,6 +2506,7 @@ public class MainWindow extends Application {
             for(int j=0; j<4; j++){
                 if(squareMatrix[i][j]!=null) {
                     squareMatrix[i][j].getSquareButton().setDisable(true);
+                    squareMatrix[i][j].getSquareButton().setStyle("-fx-background-color: transparent");
                 }
             }
         }
@@ -2758,6 +2759,30 @@ public class MainWindow extends Application {
                 for(int i=0; i<weapons.size(); i++){
                     if(weapons.get(i).getId().equalsIgnoreCase(idSelWeapon)){
                         connection.selectWeapon(weapons.get(i));
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    private static void setClickWeaponToDiscard(List<Card> weapons, String usWeapon){
+        myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Scarta");
+        myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setDisable(false);
+        myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                myw1.setDisable(true);
+                myw2.setDisable(true);
+                myw3.setDisable(true);
+                for(int i=0; i<weapons.size(); i++) {
+                    myWeaponsLabel.get(myWeaponsPosition.get(weapons.get(i).getId())).setText("");
+                }
+                myWeaponHashMap.get(myWeaponsPosition.get(usWeapon)).setImage(null);
+                String idSelWeapon=weapButtonId.get(myWeaponsButton.get(myWeaponsPosition.get(usWeapon)));
+                for(int i=0; i<weapons.size(); i++){
+                    if(weapons.get(i).getId().equalsIgnoreCase(idSelWeapon)){
+                        connection.discardWeapon(weapons.get(i));
                         break;
                     }
                 }
@@ -3501,7 +3526,7 @@ public class MainWindow extends Application {
             public void handle(ActionEvent actionEvent) {
                 disableAllSquareButtons();
                 int[] pos=new int[]{x, y};
-                mess.setText("Hai selezionato il quadrato in cui spostare il giocatore");
+                mess.setText("Hai selezionato il\n quadrato in cui spostare\n il giocatore");
                 connection.movePlayer(target, pos);
                 //spostare effettivamente il giocatore
             }
@@ -3907,17 +3932,17 @@ public class MainWindow extends Application {
                     }
                 }
                 if(target.getMaxPlayerIn()!=-1&&countPlayerList2>=target.getMaxPlayerIn()){
-                    for(int x=0; x<tempPlSelected.get(0).size(); x++){
+                    for(int x=0; x<tempPlSelected.get(1).size(); x++){
                         userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(1).get(x))).setDisable(true);
                     }
                 }
                 if(target.getMaxPlayerIn()!=-1&&countPlayerList3>=target.getMaxPlayerIn()){
-                    for(int x=0; x<tempPlSelected.get(0).size(); x++){
+                    for(int x=0; x<tempPlSelected.get(2).size(); x++){
                         userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(2).get(x))).setDisable(true);
                     }
                 }
                 if(target.getMaxPlayerIn()!=-1&&countPlayerList4>=target.getMaxPlayerIn()){
-                    for(int x=0; x<tempPlSelected.get(0).size(); x++){
+                    for(int x=0; x<tempPlSelected.get(3).size(); x++){
                         userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(3).get(x))).setDisable(true);
                     }
                 }
@@ -4379,9 +4404,12 @@ public class MainWindow extends Application {
                 //System.out.println(player.getPowerupCards().get(0).getId());
                 setMyPowerups(player.getPowerupCards());
                 setMyPosition(player.getPosition());
+                setMyDamages(player.getDamages());
+                setMyMarks(player.getMarks());
             } else {
                 mess.setText(player.getNickname() + "si è \nrigenerato");
                 setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
+                updatePlayerBoard(player);
             }
         });
 
@@ -4437,7 +4465,7 @@ public class MainWindow extends Application {
             mess.setText("Seleziona l'arma \nche vuoi scartare");
             for (int i = 0; i < weapons.size(); i++) {
                 String discardableWeap = weapons.get(i).getId();
-                setClickWeapon(weapons, discardableWeap);
+                setClickWeaponToDiscard(weapons, discardableWeap);
             }
         });
 
@@ -4545,10 +4573,13 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
+            mess.setText("Scegli dove spostare \n il giocatore");
+
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
                     if (matrix.toBooleanMatrix()[i][j]) {
                         squareMatrix[i][j].getSquareButton().setDisable(false);
+                        squareMatrix[i][j].getSquareButton().setStyle("-fx-background-color: rgba(76,175,80,0.3)");
                         setButtonActionWithTarget(squareMatrix[i][j].getSquareButton(), i, j, targetPlayer);
                     }
                 }
@@ -4912,7 +4943,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
 
-            mess.setText("La carta " + card.getName() + "\n è stata usata");
+            mess.setText("La carta\n " + card.getName() + "\n è stata usata");
         });
 
     }
@@ -4972,6 +5003,7 @@ public class MainWindow extends Application {
                         //squareButtonMatrix[i][j].setDisable(false);
                         //setButtonAction(squareButtonMatrix[i][j], i, j);
                         squareMatrix[i][j].getSquareButton().setDisable(false);
+                        squareMatrix[i][j].getSquareButton().setStyle("-fx-background-color: rgba(76,175,80,0.3)");
                         setButtonAction(squareMatrix[i][j].getSquareButton(), i, j);
 
                         //setta a true il bottone in quella posizione e nel bottone ServerConnection.runAction(i, j)
@@ -4991,12 +5023,24 @@ public class MainWindow extends Application {
                     turnReconnection=i+1;
             }
             onMatchCreation(players, turnReconnection);
-            stage.close();
-            initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
+            //stage.close();
+            Platform.setImplicitExit(false);
+            Platform.runLater(()-> {
+                        initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
+                    });
+            init=true;
             //controllo se arriva prima questo o quello dopo
             updateBoard(gameBoard);
             updatePlayerBoards(players, frenzy);
-            mess.setText("");
+            mess.setText("Sei di nuovo\n in partita");
+            setMyAmmo(players.get(turnReconnection-1));
+            setMyPowerups(players.get(turnReconnection-1).getPowerupCards());
+            setMyWeapons(players.get(turnReconnection-1).getWeaponCards());
+            for(int i=0; i<players.size(); i++){
+                if(i!=turnReconnection-1) updatePlayerVisibility(players.get(i));
+
+            }
+
         });
     }
 
@@ -5065,6 +5109,7 @@ public class MainWindow extends Application {
             } else {
                 if (player.getNickname().equalsIgnoreCase(myNickname)) {
                     mess.setText("Hai usato una\n " + powerup.getName());
+                    setMyPowerups(player.getPowerupCards());
                 } else {
                     mess.setText(player.getNickname() + " ha usato una\n" + powerup.getName() + "\n contro " + currentPlayer.getNickname());
                 }
