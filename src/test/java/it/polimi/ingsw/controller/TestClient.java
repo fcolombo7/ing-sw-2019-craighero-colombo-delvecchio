@@ -72,13 +72,13 @@ class TestClient extends ClientConnection {
     }
 
     @Override
-    public void respwanRequest(List<Card> powerups) {
+    public void respwanRequest(List<Card> powerups,List<Color> colors) {
         collector.push("RESPAWN_REQUEST");
         controller.respawnPlayer(getNickname(),powerups.get(0));
     }
 
     @Override
-    public void respwanCompleted(SimplePlayer player, Card discardedPowerup) {
+    public void respwanCompleted(SimplePlayer player, Card discardedPowerup, Color color) {
         collector.push("RESPAWN_COMPLETED");
     }
 
@@ -88,7 +88,7 @@ class TestClient extends ClientConnection {
     }
 
     @Override
-    public void grabbedPowerup(SimplePlayer player, Card powerup) {
+    public void grabbedPowerup(SimplePlayer player, Card powerup, Color color) {
 
     }
 
@@ -198,7 +198,7 @@ class TestClient extends ClientConnection {
     }
 
     @Override
-    public void availablePowerups(List<Card> powerups) {
+    public void availablePowerups(List<Card> powerups, List<Color> colors) {
 
     }
 
