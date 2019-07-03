@@ -102,12 +102,36 @@ public class TurnRoutineFactory {
 
             for(int i=0;i<xLen;i++){
                 for(int j=0;j<yLen;j++)
-                    grabMat[i][j]= mat[i][j] && turn.getGame().getGameBoard().hasSquare(i, j) && turn.getGame().getGameBoard().getSquare(i, j).canGrab();
+                    grabMat[i][j]= mat[i][j] && turn.getGame().getGameBoard().hasSquare(i, j) && turn.getGame().getGameBoard().getSquare(i, j).canGrab()&&checkSpawnPoint(i,j);
             }
             whereToGrab=new MatrixHelper(grabMat);
             return !whereToGrab.bitWiseAnd(turn.getGame().getGameBoard().getGameboardMatrix()).equals(MatrixHelper.allFalseMatrix(xLen,yLen));
         }
         return false;
+    }
+
+    private boolean checkSpawnPoint(int i, int j) {
+        if(!turn.getGame().getGameBoard().isSpawnPoint(i,j))return true;
+        else{
+            List<Weapon> weapons=((WeaponSquare)turn.getGame().getGameBoard().getSquare(i,j)).getWeapons();
+            List<Color> allColor=turn.getGame().getCurrentPlayer().getBoard().getAmmo();
+            for (Powerup p:turn.getGame().getCurrentPlayer().getPowerups()) allColor.add(p.getColor());
+            for(Weapon w:weapons){
+                List<Color> tempColor=new ArrayList<>(allColor);
+                boolean ok=true;
+                for(int k=0;k<w.getAmmo().size();k++){
+                    if(k==0)continue;
+                    if(!tempColor.contains(w.getAmmo().get(k))){
+                        ok=false;
+                        break;
+                    }else
+                        tempColor.remove(w.getAmmo().get(k));
+                }
+                if(ok)
+                    return true;
+            }
+            return false;
+        }
     }
 
     private boolean canShoot(){

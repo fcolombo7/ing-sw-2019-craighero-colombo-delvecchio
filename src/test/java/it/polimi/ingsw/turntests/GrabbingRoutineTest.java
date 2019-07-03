@@ -1,6 +1,7 @@
 package it.polimi.ingsw.turntests;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.DiscardedWeaponAnswer;
 import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.RunAnswer;
@@ -17,6 +18,7 @@ import it.polimi.ingsw.utils.Logger;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -244,5 +246,42 @@ public class GrabbingRoutineTest {
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
         assertThat(collector.pop().getRequest(), is(Constants.GRABBED_TILE_MESSAGE));
 
+    }
+
+    @Test
+    public void CannotGrabAnythingTest(){
+        Game game=new Game();
+        Player p1=new Player("nickname1", "", true);
+        Player p2=new Player("nickname2", "", false);
+        Player p3=new Player("nickname3", "", false);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        ArrayDeque<MatchMessage> collector=new ArrayDeque<>();
+        DebugView view=new DebugView(p1,collector);
+        game.register(view);
+        game.setGameBoard(1);
+        p1.setPosition(game.getGameBoard().getSquare(1,0));
+        p2.setPosition(game.getGameBoard().getSquare(1,1));
+        p3.setPosition(game.getGameBoard().getSquare(1,1));
+        p1.setStatus(PlayerStatus.PLAYING);
+        p2.setStatus(PlayerStatus.WAITING);
+        p3.setStatus(PlayerStatus.WAITING);
+        assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
+
+        List<Color> colors=p1.getBoard().getAmmo();
+        for (Color c:colors) {
+            p1.getBoard().removeAmmo(c);
+        }
+        Turn turn= new Turn(game);
+        TurnActionsMessage msg=(TurnActionsMessage)collector.pop();
+        assertThat(msg.getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
+        boolean ok=false;
+        turn.selectAction("GRAB");
+
+        assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+        RunMessage message=(RunMessage)collector.pop();
+        assertThat(message.getRoutineRequest(), is(Constants.RUN_ROUTINE_MESSAGE));
+        Logger.log("Test finished");
     }
 }
