@@ -436,7 +436,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)) throw new IllegalArgumentException("NOT COUNTER ATTACK ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(true))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().counterAttackAnswer(answer.getSender(),answer.counterAttack()));
         }catch (Exception e){
             Logger.logErr(e.getMessage());
@@ -472,7 +472,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.POWERUP_ANSWER)) throw new IllegalArgumentException("NOT POWERUP ANSWER");
 
             //check if can receive this answer
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectPowerup(answer.getPowerup()));
         }catch (Exception e){
             Logger.logErr(e.getMessage());
@@ -490,7 +490,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.DISCARDED_WEAPON_ANSWER)) throw new IllegalArgumentException("NOT DISCARDED WEAPON ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().discardWeapon(answer.getWeapon()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -508,7 +508,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)) throw new IllegalArgumentException("NOT USE POWERUP ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().usePowerup(answer.wishUseIt()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -526,7 +526,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.STOP_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT STOP ROUTINE ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().stopRoutine(answer.wishStop()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -544,7 +544,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.SELECTED_PLAYERS_ANSWER)) throw new IllegalArgumentException("NOT SELECTED PLAYERS ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectPlayers(answer.getSelected()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -562,7 +562,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT SELECTED EFFECT ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectEffect(answer.getEffectName()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -580,7 +580,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.LOADABLE_WEAPON_SELECTED)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().loadableWeapon(answer.getWeapon()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -598,7 +598,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.WEAPON_ANSWER)) throw new IllegalArgumentException("NOT WEAPON ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectWeapon(answer.getWeapon()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -616,7 +616,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.RUN_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT RUN ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().runAction(answer.getNewPosition()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -634,7 +634,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getAnswer().equalsIgnoreCase(Constants.TURN_END_ANSWER)) throw new IllegalArgumentException("NOT TURN END ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->{
                 getRoom().getController().closeTurn(answer.getSender());
             });
@@ -654,7 +654,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_MOVE_ANSWER)) throw new IllegalArgumentException("NOT EFFECT MOVE ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().movePlayer(answer.getTarget(),answer.getNewPosition()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -672,7 +672,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getAnswer().equalsIgnoreCase(Constants.ACTION_SELECTED)) throw new IllegalArgumentException("NOT ACTION SELECTED ANSWER");
 
             //check if can receive this message
-            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
+            if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn(false))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectAction(answer.getSelection()));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
@@ -718,8 +718,8 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
     
     /*------- METHODS USED TO CHECK IF CAN RECEIVE A MESSAGE-------*/
-    private boolean checkTurn(){
-        return getRoom().getController().isPlaying(getNickname());
+    private boolean checkTurn(boolean counterAttackAnswer){
+        return counterAttackAnswer||getRoom().getController().isPlaying(getNickname());
     }
 
     private boolean checkStatus(GameStatus status){

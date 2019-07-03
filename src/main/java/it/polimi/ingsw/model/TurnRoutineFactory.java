@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.model.enums.TurnRoutineType;
 import it.polimi.ingsw.utils.MatrixHelper;
 
@@ -44,7 +45,15 @@ public class TurnRoutineFactory {
     private boolean canPowerup(){
         if(!turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus())) return false;
         for(Powerup p:turn.getGame().getCurrentPlayer().getPowerups()){
-            if(p.getTiming()==turn.getStatus()&&(p.getEffect().getCost().isEmpty()||haveAmmo(p.getEffect()))) return true;
+            if(p.getTiming()==turn.getStatus()&&(p.getEffect().getCost().isEmpty()||haveAmmo(p.getEffect()))&&!(p.getEffect().getTarget().getType()== TargetType.PLAYER&&!thereArePlayersSpawned())) return true;
+        }
+        return false;
+    }
+
+    private boolean thereArePlayersSpawned() {
+        for(Player p:turn.getGame().getPlayers()){
+            if(!p.getNickname().equals(turn.getGame().getCurrentPlayer().getNickname())&&p.getPosition()!=null)
+                return true;
         }
         return false;
     }
