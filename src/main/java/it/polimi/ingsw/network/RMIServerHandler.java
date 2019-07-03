@@ -21,7 +21,7 @@ public interface RMIServerHandler extends Remote {
     void selectEffect(String session, String effectName) throws RemoteException;
     void loadableWeapon(String session, Card weapon) throws RemoteException;
     void runAction(String session, int[] newPosition) throws RemoteException;
-    void selectPlayers(String session, List<List<String>> selected) throws RemoteException;
+    void selectPlayers(String session, String selected) throws RemoteException; //TODO
     void selectPowerup(String session, Card powerup) throws RemoteException;
     void stopRoutine(String session, boolean stop) throws RemoteException;
     void usePowerup(String session, boolean use) throws RemoteException;

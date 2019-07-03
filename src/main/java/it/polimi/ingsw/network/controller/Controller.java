@@ -303,9 +303,11 @@ public class Controller{
                     }
                 }else if(game.getStatus()==GameStatus.PLAYING_TURN&&game.getCurrentPlayer().getNickname().equals(nickname)){
                     Timer t=timerMap.get(game.getCurrentPlayer().getNickname());
-                    t.cancel();
-                    t.purge();
-                    timerMap.remove(game.getCurrentPlayer().getNickname());
+                    if(t!=null) {
+                        t.cancel();
+                        t.purge();
+                        timerMap.remove(game.getCurrentPlayer().getNickname());
+                    }
                     game.getCurrentTurn().forceClosing();
                     closeTurn(game.getCurrentPlayer().getNickname());
                 }

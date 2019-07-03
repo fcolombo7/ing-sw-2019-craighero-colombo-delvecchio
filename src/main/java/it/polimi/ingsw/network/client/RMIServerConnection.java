@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
@@ -22,6 +23,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -225,10 +227,13 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void selectPlayers(List<List<String>> selected) {
+        Gson gson= new Gson();
+        String string=gson.toJson(selected);
+        Logger.logAndPrint(string);
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
-                    stub.selectPlayers(session,selected);
+                    stub.selectPlayers(session,string);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call selectPlayers().");
                     Logger.logErr(e.getMessage());

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.network.RMIClientHandler;
 import it.polimi.ingsw.network.RMIServerHandler;
@@ -14,6 +15,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -160,11 +162,15 @@ public class RMIServer  implements RMIServerHandler{
             server.getClientConnection(nick).getRoom().getController().runAction(newPosition);
     }
 
+    //TODO
     @Override
-    public void selectPlayers(String session, List<List<String>> selected) throws RemoteException {
+    public void selectPlayers(String session, String selected) throws RemoteException {
+        Gson gson= new Gson();
+        Logger.logAndPrint(selected);
+        List<List<String>> sList=gson.fromJson(selected, ArrayList.class);
         String nick=rmiClients.get(session);
         if(nick!=null)
-            server.getClientConnection(nick).getRoom().getController().selectPlayers(selected);
+            server.getClientConnection(nick).getRoom().getController().selectPlayers(sList);
     }
 
     @Override
