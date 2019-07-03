@@ -55,3 +55,19 @@
     -fx-font-weight: bold;
 
 }
+
+.winLabel{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 30;
+    -fx-font-weight: bolder;
+
+}
+
+.plLabel{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+
+}

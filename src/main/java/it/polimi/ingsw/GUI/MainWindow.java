@@ -3,11 +3,13 @@ package it.polimi.ingsw.GUI;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.network.client.RMIServerConnection;
 import it.polimi.ingsw.network.client.ServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.GUIHandler;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -22,7 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.*;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,6 +60,8 @@ public class MainWindow extends Application {
     private static boolean minNumberList2=false;
     private static boolean minNumberList3=false;
     private static boolean minNumberList4=false;
+
+    private static boolean winner=false;
 
 
     private static ImageView map;
@@ -580,6 +585,11 @@ public class MainWindow extends Application {
     private static ImageView en4death4fr;
 
 
+    private static Stage finalstage;
+    private static AnchorPane finalPane;
+    private static Scene finalScene;
+
+
 
 
 
@@ -591,11 +601,11 @@ public class MainWindow extends Application {
     public void start(Stage stage) throws  Exception {
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        System.out.println(primaryScreenBounds.getWidth() + " - " +primaryScreenBounds.getHeight());
+        Logger.logAndPrint("SCREEN DIMENSION" +primaryScreenBounds.getWidth() + " - " +primaryScreenBounds.getHeight());
         double widthScaleFact=primaryScreenBounds.getWidth()/1200;
         double heightScaleFact=primaryScreenBounds.getHeight()/675;//PER MANTENERE LE PROPORZIONI DEL FULL HD NO 650 ma 675
-        System.out.println(primaryScreenBounds.getWidth()/primaryScreenBounds.getHeight() + " - " +1200.0/675.0);
-        System.out.println(widthScaleFact + " - " +heightScaleFact);
+        Logger.logAndPrint("CONVERSION" +primaryScreenBounds.getWidth()/primaryScreenBounds.getHeight() + " - " +1200.0/675.0);
+        Logger.logAndPrint("SCALE FACTOR" +widthScaleFact + " - " +heightScaleFact);
         widthScaleFactor=widthScaleFact;
         heightScaleFactor=heightScaleFact;
 
@@ -622,13 +632,16 @@ public class MainWindow extends Application {
     public static void onLoginCompleted() {
         stage.close();
         WaitingRoomWindow.create(stage);
-        /*
-        if(playerInRoom.isEmpty())
-            WaitingRoomWindow.getArea().appendText("You are the first in the room! \n");
-        for (String s:playerInRoom) {
-            WaitingRoomWindow.getArea().appendText(s+" is in the room...\n");
+        try {
+            RMIServerConnection r=(RMIServerConnection) connection;
+            if (playerInRoom.isEmpty())
+                WaitingRoomWindow.getArea().appendText("You are the first in the room! \n");
+            for (String s : playerInRoom) {
+                WaitingRoomWindow.getArea().appendText(s + " is in the room...\n");
+            }
+        }catch (Exception e){
+            Logger.logAndPrint("OK first player");
         }
-         */
     }
 
     public static void initGameWindow(int numMap, int skullNumber) {
@@ -1178,15 +1191,15 @@ public class MainWindow extends Application {
 
 
         skull1img = new Image("/gui/redskull.jpg");
-        skull1 = new ImageView(skull1img);
-        skull2 = new ImageView(skull1img);
-        skull3 = new ImageView(skull1img);
-        skull4 = new ImageView(skull1img);
-        skull5 = new ImageView(skull1img);
-        skull6 = new ImageView(skull1img);
-        skull7 = new ImageView(skull1img);
-        skull8 = new ImageView(skull1img);
-        skull9 = new ImageView(skull1img);
+        skull1 = new ImageView();
+        skull2 = new ImageView();
+        skull3 = new ImageView();
+        skull4 = new ImageView();
+        skull5 = new ImageView();
+        skull6 = new ImageView();
+        skull7 = new ImageView();
+        skull8 = new ImageView();
+        skull9 = new ImageView();
         configImageView(skull1, 18, 26, 47, 27);
         configImageView(skull2, 18, 26, 72, 27);
         configImageView(skull3, 18, 26, 97, 27);
@@ -1196,6 +1209,72 @@ public class MainWindow extends Application {
         configImageView(skull7, 18, 26, 197, 27);
         configImageView(skull8, 18, 26, 222, 27);
         configImageView(skull9, 18, 26, 247, 27);
+        switch (skullNumber){
+            case 1:
+                skull1.setImage(skull1img);
+                break;
+            case 2:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                break;
+            case 3:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                break;
+            case 4:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                skull4.setImage(skull1img);
+                break;
+            case 5:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                skull4.setImage(skull1img);
+                skull5.setImage(skull1img);
+                break;
+            case 6:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                skull4.setImage(skull1img);
+                skull5.setImage(skull1img);
+                skull6.setImage(skull1img);
+                break;
+            case 7:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                skull4.setImage(skull1img);
+                skull5.setImage(skull1img);
+                skull6.setImage(skull1img);
+                skull7.setImage(skull1img);
+                break;
+            case 8:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                skull4.setImage(skull1img);
+                skull5.setImage(skull1img);
+                skull6.setImage(skull1img);
+                skull7.setImage(skull1img);
+                skull8.setImage(skull1img);
+                break;
+            case 9:
+                skull1.setImage(skull1img);
+                skull2.setImage(skull1img);
+                skull3.setImage(skull1img);
+                skull4.setImage(skull1img);
+                skull5.setImage(skull1img);
+                skull6.setImage(skull1img);
+                skull7.setImage(skull1img);
+                skull8.setImage(skull1img);
+                skull9.setImage(skull1img);
+                break;
+
+        }
 
         numbKill1 = new Label();
         numbKill2 = new Label();
@@ -1220,6 +1299,12 @@ public class MainWindow extends Application {
         killshotTrack.add(skull2);
         killshotTrack.add(skull3);
         killshotTrack.add(skull4);
+        killshotTrack.add(skull5);
+        killshotTrack.add(skull6);
+        killshotTrack.add(skull7);
+        killshotTrack.add(skull8);
+        killshotTrack.add(skull9);
+
 
         overkillTrack.add(numbKill1);
         overkillTrack.add(numbKill2);
@@ -1342,13 +1427,13 @@ public class MainWindow extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setFullScreen(true);
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        /*stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {
                 Bye.byebye();
                 stage.close();
             }
-        });
+        });*/
 
         stage.show();
     }
@@ -4878,82 +4963,197 @@ public class MainWindow extends Application {
     }
 
     public static void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
-        //controllo se arriva prima questo o quello dopo
-        updateBoard(gameBoard);
-        updatePlayerBoards(players, frenzy);
-        mess.setText("");
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            //controllo se arriva prima questo o quello dopo
+            updateBoard(gameBoard);
+            updatePlayerBoards(players, frenzy);
+            mess.setText("");
+        });
     }
 
     public static void onRecoverPlayerAdvise(String nickname){
-        if(nickname.equalsIgnoreCase(myNickname)) {
-            stage.close();
-            //MainWindow.stage.show();
-        }else{
-            mess.setText(nickname + "\n è tornato in partita");
-        }
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+                    if (nickname.equalsIgnoreCase(myNickname)) {
+                        stage.close();
+                        //MainWindow.stage.show();
+                    } else {
+                        mess.setText(nickname + "\n è tornato in partita");
+                    }
+                });
         //aggiornare qualcosa(info?)
     }
 
     public static void onFullOfPowerup(){
-        mess.setText("Hai già 3 \npotenziamenti");
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            mess.setText("Hai già 3 \npotenziamenti");
+        });
+
     }
 
     public static void onCanCounterAttack(){
-        mess.setText("Vuoi usare una\n granata venom?");
-        yes.setDisable(false);
-        no.setDisable(false);
-        yes.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                no.setOnAction(null);
-                yes.setOnAction(null);
-                no.setDisable(true);
-                yes.setDisable(true);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
 
-                connection.counterAttackAnswer(true);
-            }
-        });
-        no.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                yes.setOnAction(null);
-                no.setOnAction(null);
-                yes.setDisable(true);
-                no.setDisable(true);
-                connection.counterAttackAnswer(false);
-            }
+            mess.setText("Vuoi usare una\n granata venom?");
+            yes.setDisable(false);
+            no.setDisable(false);
+            yes.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    no.setOnAction(null);
+                    yes.setOnAction(null);
+                    no.setDisable(true);
+                    yes.setDisable(true);
+
+                    connection.counterAttackAnswer(true);
+                }
+            });
+            no.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    yes.setOnAction(null);
+                    no.setOnAction(null);
+                    yes.setDisable(true);
+                    no.setDisable(true);
+                    connection.counterAttackAnswer(false);
+                }
+            });
         });
     }
 
-    /*public static void onCounterAttack(currentPlayer,player,powerup){
+    public static void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+        if(currentPlayer.getNickname().equalsIgnoreCase(myNickname)){
+            mess.setText(player.getNickname()+" ti ha\n contrattaccto con una " +powerup.getName());
+            setMyMarks(currentPlayer.getMarks());
+            setMyDamages(currentPlayer.getDamages());
+        }else{
+            if(player.getNickname().equalsIgnoreCase(myNickname)){
+                mess.setText("Hai usato una " +powerup.getName());
+            }else {
+                mess.setText(player.getNickname()+ " ha usato una\n" +powerup.getName()+"\n contro " +currentPlayer.getNickname());
+            }
+            updatePlayerBoard(currentPlayer);
+        }
 
-    }*/
+    }
 
     public static void onCounterAttackTimeOut(){
-        yes.setDisable(true);
-        no.setDisable(true);
-        mess.setText("Tempo scaduto!");
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            yes.setDisable(true);
+            no.setDisable(true);
+            mess.setText("Tempo scaduto!");
+        });
     }
 
     public static void handleFatalError(String cause, String message){
-        mess.setText(message+ "\n" + cause);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+                    mess.setText(message + "\n" + cause);
+                });
         //messagebox consiglia fil
     }
 
     public static void onDisconnectionAdvise(){
-        mess.setText("Sei stato\n disconnesso");
-        stage.close();
-        LoginWindow.log(stage);
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+            mess.setText("Sei stato\n disconnesso");
+            stage.close();
+            LoginWindow.log(stage);
+        });
     }
 
     public static void onGameEnd(List<SimplePlayer> players){
-        int yourPoints=players.get(myTurn-1).getScore();
-        mess.setText("La partita è\n terminata.\n Hai fatto " +yourPoints+ " punti");
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
 
-        connection.confirmEndGame();
+            numPlayers = players.size();
+            int yourPoints = players.get(myTurn - 1).getScore();
+            mess.setText("La partita è\n terminata.\n Hai fatto " + yourPoints + " punti");
+
+            connection.confirmEndGame();
+        });
     }
 
     public static void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
+        Platform.setImplicitExit(false);
+        Platform.runLater(()-> {
+
+                    stage.close();
+
+                    if (nicknames.get(0).equalsIgnoreCase(myNickname)) winner = true;
+
+                    finalstage = new Stage();
+
+                    finalPane = new AnchorPane();
+
+                    Label winLabel = new Label();
+                    if (winner) {
+                        winLabel.setText("Hai vinto!");
+                    } else {
+                        winLabel.setText("Hai perso.");
+                    }
+                    winLabel.getStyleClass().add("winLabel");
+                    winLabel.setPrefSize(300 * widthScaleFactor, 100 * heightScaleFactor);
+                    winLabel.setLayoutX(200 * widthScaleFactor);
+                    winLabel.setLayoutY(50 * heightScaleFactor);
+                    finalPane.getChildren().add(winLabel);
+
+                    Label firstPlayer = new Label("Vincitore: " + nicknames.get(0) + "  " + points.get(0) + " punti");
+                    firstPlayer.getStyleClass().add("plLabel");
+                    firstPlayer.setPrefSize(300 * widthScaleFactor, 50 * heightScaleFactor);
+                    firstPlayer.setLayoutX(50 * widthScaleFactor);
+                    firstPlayer.setLayoutY(200 * heightScaleFactor);
+                    finalPane.getChildren().add(firstPlayer);
+                    if (nicknames.size() > 1) {
+                        Label secPlayer = new Label("2. " + nicknames.get(1) + "  " + points.get(1) + " punti");
+                        secPlayer.getStyleClass().add("plLabel");
+                        secPlayer.setPrefSize(300 * widthScaleFactor, 50 * heightScaleFactor);
+                        secPlayer.setLayoutX(50 * widthScaleFactor);
+                        secPlayer.setLayoutY(250 * heightScaleFactor);
+                        finalPane.getChildren().add(secPlayer);
+                    }
+                    if (nicknames.size() > 2) {
+                        Label thirdPlayer = new Label("3. " + nicknames.get(2) + "  " + points.get(2) + " punti");
+                        thirdPlayer.getStyleClass().add("plLabel");
+                        thirdPlayer.setPrefSize(300 * widthScaleFactor, 50 * heightScaleFactor);
+                        thirdPlayer.setLayoutX(50 * widthScaleFactor);
+                        thirdPlayer.setLayoutY(300 * heightScaleFactor);
+                        finalPane.getChildren().add(thirdPlayer);
+                    }
+                    if (nicknames.size() > 3) {
+                        Label fourthPlayer = new Label("4. " + nicknames.get(3) + "  " + points.get(3) + " punti");
+                        fourthPlayer.getStyleClass().add("plLabel");
+                        fourthPlayer.setPrefSize(300 * widthScaleFactor, 50 * heightScaleFactor);
+                        fourthPlayer.setLayoutX(50 * widthScaleFactor);
+                        fourthPlayer.setLayoutY(350 * heightScaleFactor);
+                        finalPane.getChildren().add(fourthPlayer);
+                    }
+                    if (nicknames.size() > 4) {
+                        Label fifthPlayer = new Label("5. " + nicknames.get(4) + "  " + points.get(4) + " punti");
+                        fifthPlayer.getStyleClass().add("plLabel");
+                        fifthPlayer.setPrefSize(300 * widthScaleFactor, 50 * heightScaleFactor);
+                        fifthPlayer.setLayoutX(50 * widthScaleFactor);
+                        fifthPlayer.setLayoutY(400 * heightScaleFactor);
+                        finalPane.getChildren().add(fifthPlayer);
+                    }
+
+                    finalScene = new Scene(finalPane, 700 * widthScaleFactor, 500 * heightScaleFactor);
+                    finalScene.getStylesheets().addAll(MainWindow.class.getResource("/gui/gameWindow.css").toExternalForm());
+                    finalstage.setScene(finalScene);
+                    finalstage.show();
+                });
+
+
         //mess.setText(nicknames.get(0) + " = " +points.get(0) + "\n" +nicknames.get(1) + " = " +points.get(1) + "\n" + nicknames.get(2) + " = " +points.get(2) + "\n");
     }
 }

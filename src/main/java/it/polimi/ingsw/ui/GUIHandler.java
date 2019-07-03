@@ -181,51 +181,60 @@ public class GUIHandler implements AdrenalineUI {
 
     @Override
     public void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-
+        MainWindow.onPlayerWakeUp(players, gameBoard, frenzy);
     }
 
     @Override
     public void onRecoverPlayerAdvise(String nickname) {
+        MainWindow.onRecoverPlayerAdvise(nickname);
 
     }
 
     @Override
     public void onFullOfPowerup() {
+        MainWindow.onFullOfPowerup();
 
     }
 
     @Override
     public void onCanCounterAttack() {
+        MainWindow.onCanCounterAttack();
 
     }
 
     @Override
     public void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
+        MainWindow.onCounterAttack(currentPlayer, player, powerup);
 
     }
 
     @Override
     public void onCounterAttackTimeOut() {
+        MainWindow.onCounterAttackTimeOut();
 
     }
 
     @Override
     public void handleFatalError(String cause, String message) {
+        MainWindow.handleFatalError(cause, message);
 
     }
 
     @Override
     public void onDisconnectionAdvise() {
+        MainWindow.onDisconnectionAdvise();
 
     }
 
     @Override
     public void onGameEnd(List<SimplePlayer> players) {
+        MainWindow.onGameEnd(players);
 
     }
 
     @Override
     public void onLeaderboardReceived(List<String> nicknames, List<Integer> points) {
+        MainWindow.onLeaderboardReceived(nicknames, points);
 
     }
 }
