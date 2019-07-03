@@ -397,16 +397,16 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     }
 
     @Override
-    public void respwanRequest(List<Card> powerups) {
+    public void respwanRequest(List<Card> powerups,List<Color> colors) {
         if(!disconnected) {
-            getUi().onRespwanRequest(powerups);
+            getUi().onRespwanRequest(powerups,colors);
         }
     }
 
     @Override
-    public void respwanCompleted(SimplePlayer player, Card discardedPowerup) {
+    public void respwanCompleted(SimplePlayer player, Card discardedPowerup,Color color) {
         if(!disconnected) {
-            getUi().onRespwanCompleted(player,discardedPowerup);
+            getUi().onRespwanCompleted(player,discardedPowerup,color);
         }
     }
 
@@ -418,9 +418,9 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     }
 
     @Override
-    public void grabbedPowerup(SimplePlayer player, Card powerup) {
+    public void grabbedPowerup(SimplePlayer player, Card powerup, Color color) {
         if(!disconnected) {
-            getUi().onGrabbedPowerup(player,powerup);
+            getUi().onGrabbedPowerup(player,powerup,color);
         }
     }
 
@@ -511,7 +511,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void discardedPowerup(SimplePlayer player, Card powerup) {
         if(!disconnected) {
-            getUi().onGrabbedPowerup(player,powerup);
+            getUi().onDiscardedPowerup(player,powerup);
         }
     }
 
@@ -565,9 +565,9 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     }
 
     @Override
-    public void availablePowerups(List<Card> powerups) {
+    public void availablePowerups(List<Card> powerups,List<Color> colors) {
         if(!disconnected) {
-            getUi().onAvailablePowerups(powerups);
+            getUi().onAvailablePowerups(powerups,colors);
         }
     }
 

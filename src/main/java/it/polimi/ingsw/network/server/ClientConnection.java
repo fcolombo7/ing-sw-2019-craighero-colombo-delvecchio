@@ -75,13 +75,13 @@ public abstract class ClientConnection{
 
     public abstract void recoveringPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
 
-    public abstract void respwanRequest(List<Card> powerups);
+    public abstract void respwanRequest(List<Card> powerups,List<Color> colors);
 
-    public abstract void respwanCompleted(SimplePlayer player, Card discardedPowerup);
+    public abstract void respwanCompleted(SimplePlayer player, Card discardedPowerup, Color color);
 
     public abstract void grabbedTile(SimplePlayer player, AmmoTile grabbedTile);
 
-    public abstract void grabbedPowerup(SimplePlayer player, Card powerup);
+    public abstract void grabbedPowerup(SimplePlayer player, Card powerup, Color color);
 
     public abstract void grabbableWeapons(List<Card> weapons);
 
@@ -125,7 +125,7 @@ public abstract class ClientConnection{
 
     public abstract void usedCard(Card card);
 
-    public abstract void availablePowerups(List<Card> powerups);
+    public abstract void availablePowerups(List<Card> powerups, List<Color> colors);
 
     public abstract void runCompleted(SimplePlayer player, int[] newPosition);
 

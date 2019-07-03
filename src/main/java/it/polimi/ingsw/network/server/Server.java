@@ -29,6 +29,7 @@ public class Server{
     private static int socketServerPort=Constants.SOCKET_PORT;
     private static int minPlayerNumber=Constants.ROOM_MIN_PLAYERS;
     private static int maxPlayerNumber=Constants.ROOM_MAX_PLAYERS;
+    private static int skullNumber=Constants.DEFAULT_SKULL;
     private static long waitingRoomTimer=Constants.WAITING_ROOM_TIMER;
     private static long keepAliveFrequency=Constants.KEEP_ALIVE_FREQUENCY;
     private static long keepAliveTimer=Constants.KEEP_ALIVE_WAITING_TIME;
@@ -194,6 +195,7 @@ public class Server{
         setSocketServerPort(root.getElementsByTagName("socketServerPort"));
         setMinPlayerNumber(root.getElementsByTagName("minPlayerNumber"));
         setMaxPlayerNumber(root.getElementsByTagName("maxPlayerNumber"));
+        setSkullNumber(root.getElementsByTagName("skullNumber"));
         setWaitingRoomTimer(root.getElementsByTagName("waitingRoomTimer"));
         setKeepAliveFrequency(root.getElementsByTagName("keepAliveFrequency"));
         setKeepAliveTimer(root.getElementsByTagName("keepAliveTimer"));
@@ -201,6 +203,12 @@ public class Server{
         setQuickMoveTimer(root.getElementsByTagName("quickMoveTimer"));
 
         Logger.logAndPrint("Configuration completed.");
+    }
+
+    private static void setSkullNumber(NodeList nodeList) throws IOException {
+        Node node=getNode(nodeList);
+        if(node==null) throw new IOException("INVALID CONFIG.XML");
+        skullNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
     private static Node getNode(NodeList nodeList){
@@ -289,6 +297,10 @@ public class Server{
 
     public static int getMaxPlayerNumber() {
         return maxPlayerNumber;
+    }
+
+    public static int getSkullNumber(){
+        return skullNumber;
     }
 
     public static long getWaitingRoomTimer() {

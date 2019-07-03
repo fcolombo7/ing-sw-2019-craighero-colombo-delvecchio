@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.model.enums.TurnStatus;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
+import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Observable;
@@ -93,7 +94,7 @@ public class Game extends Observable<MatchMessage> {
     /**
      * This attribute contains the skulls number of the match.
      */
-    private int skullsNumber;
+    private int skullsNumber= Server.getSkullNumber();
 
     /**
      * This attribute is used to check if the game is, or is not, in frenzy mode.
@@ -135,7 +136,7 @@ public class Game extends Observable<MatchMessage> {
                         buildAmmoDeck(ammoTileDeck, cardNode);
                         break;
                     case "skull":
-                        setSkullsNumber(cardNode);
+                        setSkullsNumber();
                         break;
                         default: break;
                 }
@@ -184,10 +185,9 @@ public class Game extends Observable<MatchMessage> {
 
     /**
      * This method sets the skull number of the match
-     * @param node representing the node read from the XML file, which contains the skull number.
      */
-    private void setSkullsNumber(Node node){
-        skullsNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
+    private void setSkullsNumber(){
+        skullsNumber =Server.getSkullNumber();
     }
 
     /**
@@ -713,7 +713,10 @@ public class Game extends Observable<MatchMessage> {
         }
         player.addPowerup(new Powerup(drawPowerup()));
         drawnPowerups=new ArrayList<>(player.getPowerups());
-        MatchMessage message=new RespawnRequestMessage(player.getNickname(),drawnPowerups);
+        ArrayList<Color> colors=new ArrayList<>();
+        for(Powerup p:player.getPowerups())
+            colors.add(p.getColor());
+        MatchMessage message=new RespawnRequestMessage(player.getNickname(),drawnPowerups,colors);
         notify(message);
     }
 
@@ -737,7 +740,7 @@ public class Game extends Observable<MatchMessage> {
                         player.setPosition(square);
                 }
                 player.setStatus(player.getStatus()==PlayerStatus.FIRST_SPAWN?PlayerStatus.PLAYING:PlayerStatus.WAITING);
-                MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup);
+                MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup,powerup.getColor());
                 notify(message);
                 return;
             }

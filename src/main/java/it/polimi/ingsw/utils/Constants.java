@@ -37,7 +37,7 @@ public class Constants {
 
 
     /* CONTROLLER PARAMETERS */
-
+    public static final int DEFAULT_SKULL = 8;
     public static final long TURN_TIMER=120;//SEC
     public static final long QUICK_MOVE_TIMER=15;//SEC
 

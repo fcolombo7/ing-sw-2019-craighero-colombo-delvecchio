@@ -179,7 +179,7 @@ public class RemoteView extends View{
 
     private void availablePowerups(MatchMessage message) {
         AvailablePowerupsMessage msg=(AvailablePowerupsMessage)message;
-        clientConnection.availablePowerups(msg.getPowerups());
+        clientConnection.availablePowerups(msg.getPowerups(),msg.getColors());
     }
 
     private void runCompleted(MatchMessage message) {
@@ -199,7 +199,7 @@ public class RemoteView extends View{
 
     private void grabbedPowerup(MatchMessage message) {
         GrabbedPowerupMessage msg=(GrabbedPowerupMessage)message;
-        clientConnection.grabbedPowerup(msg.getPlayer(),msg.getPowerup());
+        clientConnection.grabbedPowerup(msg.getPlayer(),msg.getPowerup(),msg.getColor());
     }
 
     private void grabbableWeapons(MatchMessage message) {
@@ -263,12 +263,12 @@ public class RemoteView extends View{
 
     private void respwanRequest(MatchMessage message){
         RespawnRequestMessage msg=(RespawnRequestMessage)message;
-        clientConnection.respwanRequest(msg.getPowerups());
+        clientConnection.respwanRequest(msg.getPowerups(),msg.getColors());
     }
 
     private void respwanCompleted(MatchMessage message){
         RespawnMessage msg=(RespawnMessage)message;
-        clientConnection.respwanCompleted(msg.getPlayer(),msg.getDiscardedPowerup());
+        clientConnection.respwanCompleted(msg.getPlayer(),msg.getDiscardedPowerup(),msg.getPowerupColor());
     }
 
     @FunctionalInterface

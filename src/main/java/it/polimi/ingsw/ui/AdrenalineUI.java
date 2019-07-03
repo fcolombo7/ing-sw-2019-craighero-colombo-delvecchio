@@ -30,13 +30,13 @@ public interface AdrenalineUI {
 
     void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy);
 
-    void onRespwanRequest(List<Card> powerups);
+    void onRespwanRequest(List<Card> powerups, List<Color> colors);
 
-    void onRespwanCompleted(SimplePlayer player, Card discardedPowerup);
+    void onRespwanCompleted(SimplePlayer player, Card discardedPowerup, Color powerupColor);
 
     void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile);
 
-    void onGrabbedPowerup(SimplePlayer player, Card powerup);
+    void onGrabbedPowerup(SimplePlayer player, Card powerup, Color color);
 
     void onGrabbableWeapons(List<Card> weapons);
 
@@ -78,7 +78,7 @@ public interface AdrenalineUI {
 
     void onUsedCard(Card card);
 
-    void onAvailablePowerups(List<Card> powerups);
+    void onAvailablePowerups(List<Card> powerups, List<Color> colors);
 
     void onRunCompleted(SimplePlayer player, int[] newPosition);
 

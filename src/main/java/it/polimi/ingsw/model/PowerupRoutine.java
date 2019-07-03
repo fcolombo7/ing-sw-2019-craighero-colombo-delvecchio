@@ -34,13 +34,16 @@ public class PowerupRoutine implements TurnRoutine {
 
     private void sendPowerups(){
         List<Card> usablePowerups=new ArrayList<>();
+        ArrayList<Color> colors=new ArrayList<>();
         List<Player> other=turn.getGame().getPlayers();
         other.remove(turn.getGame().getCurrentPlayer());
         for (Powerup p:turn.getGame().getCurrentPlayer().getPowerups()) {
-            if(p.getTiming()==timing&&p.getEffect().canUse(turn)&&canPay(p))
+            if(p.getTiming()==timing&&p.getEffect().canUse(turn)&&canPay(p)) {
                 usablePowerups.add(new Card(p));
+                colors.add(p.getColor());
+            }
         }
-        turn.getGame().notify(new AvailablePowerupsMessage(turn.getGame().getCurrentPlayer().getNickname(),usablePowerups));
+        turn.getGame().notify(new AvailablePowerupsMessage(turn.getGame().getCurrentPlayer().getNickname(),usablePowerups,colors));
     }
 
     private boolean canPay(Powerup p) {

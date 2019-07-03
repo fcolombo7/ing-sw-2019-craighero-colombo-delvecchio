@@ -11,6 +11,7 @@ import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -250,11 +251,11 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
-    public void respwanRequest(List<Card> powerups) {
+    public void respwanRequest(List<Card> powerups, List<Color> colors) {
         Logger.logAndPrint("[RMI] RESPAWN REQUEST to "+getNickname());
         pool.submit(() -> {
             try {
-                clientStub.respwanRequest(powerups);
+                clientStub.respwanRequest(powerups,colors);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call respwanRequest().");
                 Logger.logErr(e.getMessage());
@@ -264,11 +265,11 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
-    public void respwanCompleted(SimplePlayer player, Card discardedPowerup) {
+    public void respwanCompleted(SimplePlayer player, Card discardedPowerup, Color color) {
         Logger.logAndPrint("[RMI] RESPAWN COMPLETED to "+getNickname());
         pool.submit(() -> {
             try {
-                clientStub.respwanCompleted(player,discardedPowerup);
+                clientStub.respwanCompleted(player,discardedPowerup,color);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call respwanCompleted().");
                 Logger.logErr(e.getMessage());
@@ -292,11 +293,11 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
-    public void grabbedPowerup(SimplePlayer player, Card powerup) {
+    public void grabbedPowerup(SimplePlayer player, Card powerup, Color color) {
         Logger.logAndPrint("[RMI] GRABBED POWERUP to "+getNickname());
         pool.submit(() -> {
             try {
-                clientStub.grabbedPowerup(player,powerup);
+                clientStub.grabbedPowerup(player,powerup,color);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call grabbedPowerup().");
                 Logger.logErr(e.getMessage());
@@ -600,11 +601,11 @@ public class RMIClientConnection extends ClientConnection{
     }
 
     @Override
-    public void availablePowerups(List<Card> powerups) {
+    public void availablePowerups(List<Card> powerups,List<Color> colors) {
         Logger.logAndPrint("[RMI] AVAILABLE POWERUPS to "+getNickname());
         pool.submit(() -> {
             try {
-                clientStub.availablePowerups(powerups);
+                clientStub.availablePowerups(powerups,colors);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call availablePowerups().");
                 Logger.logErr(e.getMessage());

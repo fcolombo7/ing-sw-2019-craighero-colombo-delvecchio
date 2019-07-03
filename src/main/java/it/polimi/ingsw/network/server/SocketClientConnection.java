@@ -252,13 +252,13 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     @Override
-    public void respwanRequest(List<Card> powerups) {
-        sendMatchMessage(new RespawnRequestMessage(getNickname(),powerups));
+    public void respwanRequest(List<Card> powerups,List<Color> colors) {
+        sendMatchMessage(new RespawnRequestMessage(getNickname(),powerups,colors));
     }
 
     @Override
-    public void respwanCompleted(SimplePlayer player, Card discardedPowerup) {
-        sendMatchMessage(new RespawnMessage(player,discardedPowerup));
+    public void respwanCompleted(SimplePlayer player, Card discardedPowerup,Color color) {
+        sendMatchMessage(new RespawnMessage(player,discardedPowerup,color));
     }
 
     @Override
@@ -267,8 +267,8 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     @Override
-    public void grabbedPowerup(SimplePlayer player, Card powerup) {
-        sendMatchMessage(new GrabbedPowerupMessage(getNickname(),player,powerup));
+    public void grabbedPowerup(SimplePlayer player, Card powerup,Color color) {
+        sendMatchMessage(new GrabbedPowerupMessage(getNickname(),player,powerup,color));
     }
 
     @Override
@@ -378,8 +378,8 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     @Override
-    public void availablePowerups(List<Card> powerups) {
-        sendMatchMessage(new AvailablePowerupsMessage(getNickname(),powerups));
+    public void availablePowerups(List<Card> powerups,List<Color> colors) {
+        sendMatchMessage(new AvailablePowerupsMessage(getNickname(),powerups,colors));
     }
 
     @Override

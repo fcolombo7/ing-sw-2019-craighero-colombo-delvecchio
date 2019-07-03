@@ -76,7 +76,7 @@ public class TestCli {
         cli.printMap();
     }
 
-    @Test
+
     public void testOnSelectablePlayer(){
         Cli cli = new Cli(1);
         List<List<String>> selectable = new ArrayList<>();

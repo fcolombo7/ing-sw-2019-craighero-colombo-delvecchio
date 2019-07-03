@@ -26,10 +26,10 @@ public interface RMIClientHandler extends Remote {
     void invalidMessageReceived(String msg) throws RemoteException;
     void boardUpdate(SimpleBoard gameBoard) throws RemoteException;
     void matchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard,boolean frenzy) throws RemoteException;
-    void respwanRequest(List<Card> powerups) throws RemoteException;
-    void respwanCompleted(SimplePlayer player, Card discardedPowerup) throws RemoteException;
+    void respwanRequest(List<Card> powerups,List<Color> colors) throws RemoteException;
+    void respwanCompleted(SimplePlayer player, Card discardedPowerup, Color color) throws RemoteException;
     void grabbedTile(SimplePlayer player, AmmoTile grabbedTile) throws RemoteException;
-    void grabbedPowerup(SimplePlayer player, Card powerup)throws RemoteException;
+    void grabbedPowerup(SimplePlayer player, Card powerup, Color color)throws RemoteException;
     void grabbableWeapons(List<Card> weapons)throws RemoteException;
     void discardWeapon(List<Card> weapons)throws RemoteException;
     void grabbedWeapon(SimplePlayer player, Card weapon)throws RemoteException;
@@ -50,7 +50,7 @@ public interface RMIClientHandler extends Remote {
     void availableEffects(List<String> effects) throws RemoteException;
     void payEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) throws RemoteException;
     void usedCard(Card card) throws RemoteException;
-    void availablePowerups(List<Card> powerups) throws RemoteException;
+    void availablePowerups(List<Card> powerups, List<Color> colors) throws RemoteException;
     void runCompleted(SimplePlayer player, int[] newPosition) throws RemoteException;
     void runRoutine(MatrixHelper matrix) throws RemoteException;
     void wakeUpPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) throws RemoteException;

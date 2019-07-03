@@ -45,12 +45,12 @@ public class GUIHandler implements AdrenalineUI {
     }
 
     @Override
-    public void onRespwanRequest(List<Card> powerups) {
+    public void onRespwanRequest(List<Card> powerups,List<Color> colors) {
         MainWindow.onRespwanRequest(powerups);
     }
 
     @Override
-    public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+    public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup,Color color) {
         MainWindow.onRespwanCompleted(player, discardedPowerup);
     }
 
@@ -60,7 +60,7 @@ public class GUIHandler implements AdrenalineUI {
     }
 
     @Override
-    public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+    public void onGrabbedPowerup(SimplePlayer player, Card powerup,Color color) {
         MainWindow.onGrabbedPowerup(player, powerup);
     }
 
@@ -165,7 +165,7 @@ public class GUIHandler implements AdrenalineUI {
     }
 
     @Override
-    public void onAvailablePowerups(List<Card> powerups) {
+    public void onAvailablePowerups(List<Card> powerups,List<Color> colors) {
         MainWindow.onAvailablePowerups(powerups);
     }
 

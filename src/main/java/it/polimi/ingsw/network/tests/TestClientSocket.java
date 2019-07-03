@@ -90,7 +90,7 @@ public class TestClientSocket {
         }
 
         @Override
-        public void onRespwanRequest(List<Card> powerups) {
+        public void onRespwanRequest(List<Card> powerups,List<Color> colors) {
             ex.submit(()->{
                 System.out.println(count+" SOCKET: RESPAWN REQUEST");
                 count++;
@@ -101,7 +101,7 @@ public class TestClientSocket {
         }
 
         @Override
-        public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+        public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup,Color color) {
             System.out.println(count+" SOCKET: RESPAWN COMPLETED");
             count++;
         }
@@ -114,7 +114,7 @@ public class TestClientSocket {
         }
 
         @Override
-        public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+        public void onGrabbedPowerup(SimplePlayer player, Card powerup,Color color) {
             System.out.println(count+" SOCKET: GRABBED POWERUP\n"+ powerup.toString());
             count++;
 
@@ -238,7 +238,7 @@ public class TestClientSocket {
         }
 
         @Override
-        public void onAvailablePowerups(List<Card> powerups) {
+        public void onAvailablePowerups(List<Card> powerups,List<Color> colors) {
 
         }
 

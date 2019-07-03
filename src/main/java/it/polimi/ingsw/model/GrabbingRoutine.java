@@ -132,7 +132,7 @@ public class GrabbingRoutine implements TurnRoutine {
                 grabbedPowerup=powerup;
                 if(turn.getGame().getCurrentPlayer().getPowerups().size()<3) {
                     turn.getGame().getCurrentPlayer().addPowerup(powerup);
-                    turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(turn.getGame().getCurrentPlayer()), powerup));
+                    turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(turn.getGame().getCurrentPlayer()), powerup,powerup.getColor()));
                 }
                 else{
                     turn.getGame().notify(new FullOfPowerupsMessage(turn.getGame().getCurrentPlayer().getNickname()));

@@ -351,7 +351,7 @@ public class SocketServerConnection extends ServerConnection {
             AvailablePowerupsMessage message = gson.fromJson(line, AvailablePowerupsMessage.class);
             if (!message.getRoutineRequest().equalsIgnoreCase(Constants.AVAILABLE_POWERUPS_MESSAGE))
                 throw new IllegalArgumentException("NOT AVAILABLE POWERUPS MESSAGE");
-            pool.submit(()->getUi().onAvailablePowerups(message.getPowerups()));
+            pool.submit(()->getUi().onAvailablePowerups(message.getPowerups(),message.getColors()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -689,7 +689,7 @@ public class SocketServerConnection extends ServerConnection {
             GrabbedPowerupMessage message = gson.fromJson(line, GrabbedPowerupMessage.class);
             if (!message.getRoutineRequest().equalsIgnoreCase(Constants.GRABBED_POWERUP))
                 throw new IllegalArgumentException("NOT GRABBED POWERUP MESSAGE");
-            pool.submit(()->getUi().onGrabbedPowerup(message.getPlayer(), message.getPowerup()));
+            pool.submit(()->getUi().onGrabbedPowerup(message.getPlayer(), message.getPowerup(),message.getColor()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -721,7 +721,7 @@ public class SocketServerConnection extends ServerConnection {
             RespawnMessage message = gson.fromJson(line, RespawnMessage.class);
             if (!message.getRequest().equalsIgnoreCase(Constants.RESPAWN_COMPLETED_MESSAGE))
                 throw new IllegalArgumentException("NOT RESPAWN MESSAGE");
-            pool.submit(()->getUi().onRespwanCompleted(message.getPlayer(), message.getDiscardedPowerup()));
+            pool.submit(()->getUi().onRespwanCompleted(message.getPlayer(), message.getDiscardedPowerup(),message.getPowerupColor()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
@@ -738,7 +738,7 @@ public class SocketServerConnection extends ServerConnection {
             RespawnRequestMessage message = gson.fromJson(line, RespawnRequestMessage.class);
             if (!message.getRequest().equalsIgnoreCase(Constants.RESPAWN_REQUEST_MESSAGE))
                 throw new IllegalArgumentException("NOT RESPAWN REQUEST MESSAGE");
-            pool.submit(() -> getUi().onRespwanRequest(message.getPowerups()));
+            pool.submit(() -> getUi().onRespwanRequest(message.getPowerups(),message.getColors()));
         } catch (Exception e) {
             Logger.log(e.getMessage());
             //HANDLE ERRORS HERE
