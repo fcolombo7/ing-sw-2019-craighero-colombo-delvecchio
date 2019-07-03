@@ -724,7 +724,7 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onRespwanRequest(List<Card> powerups) {
+    public synchronized void onRespwanRequest(List<Card> powerups,List<Color> colors) {
         reader.cancel();
         this.powerups.addAll(powerups);
         Logger.print("Scegli un powerup da scartare per resuscitare: \n");
@@ -734,7 +734,7 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
+    public synchronized void onRespwanCompleted(SimplePlayer player, Card discardedPowerup, Color color) {
         updatePlayer(player, true);
         updateActionLog(player, ActionsLog.SPAWN);
         printInterface();
@@ -748,7 +748,7 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+    public synchronized void onGrabbedPowerup(SimplePlayer player, Card powerup,Color color) {
         if(me.getNickname().equals(player.getNickname()))
             this.powerups.add(powerup);
         printActionLog();
@@ -1101,7 +1101,7 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onAvailablePowerups(List<Card> powerups) {
+    public synchronized void onAvailablePowerups(List<Card> powerups, List<Color> colors) {
         serverConnection.selectPowerup(availableCard(powerups, ActionsLog.USE_POWERUP));
     }
 
