@@ -66,7 +66,7 @@ public class Logger {
         print("LOGGER: "+filename);
     }
 
-    public static void logServer(String msg){
+    public static void logAndPrint(String msg){
         printToFile("LOG: "+msg);
         print("LOG: "+msg);
     }

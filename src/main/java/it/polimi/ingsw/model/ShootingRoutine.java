@@ -66,7 +66,7 @@ public class ShootingRoutine implements TurnRoutine {
             onCounterAttackAnswer((CounterAttackAnswer)answer);
         }
         else{
-            Logger.logServer("Invalid TurnRoutineMessage received");
+            Logger.logAndPrint("Invalid TurnRoutineMessage received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Received a "+answer.getRoutineAnswer()+" message.")));
         }
     }
@@ -92,7 +92,7 @@ public class ShootingRoutine implements TurnRoutine {
 
     private void onSelectedPlayersReceived(SelectedPlayersAnswer answer) {
         if(!turn.getCurEffect().checkSelected(answer.getSelected(),turn)){
-            Logger.logServer("[SHOOT ROUTINE]Invalid nicknames received");
+            Logger.logAndPrint("[SHOOT ROUTINE]Invalid nicknames received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"[SHOOT ROUTINE]Invalid nicknames received")));
             return;
         }
@@ -170,12 +170,12 @@ public class ShootingRoutine implements TurnRoutine {
                     }
                 }
                 else {
-                    Logger.logServer("Invalid weapon received: there are no available effects");
+                    Logger.logAndPrint("Invalid weapon received: there are no available effects");
                     turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Invalid weapon received: there are no available effects")));
                 }
             }
         }
-        Logger.logServer("Not existing weapon received");
+        Logger.logAndPrint("Not existing weapon received");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Not existing weapon received")));
     }
 
@@ -255,7 +255,7 @@ public class ShootingRoutine implements TurnRoutine {
     }
 
     private void logError(TurnRoutineType routineType) {
-        Logger.logServer(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
+        Logger.logAndPrint(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]")));
     }
 

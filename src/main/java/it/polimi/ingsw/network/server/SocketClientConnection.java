@@ -14,7 +14,6 @@ import it.polimi.ingsw.network.controller.messages.matchanswer.routineanswer.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.*;
 import it.polimi.ingsw.network.controller.messages.room.*;
-import it.polimi.ingsw.utils.ConsoleInput;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
@@ -65,7 +64,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     public void run() {
         while(true){
             String s=in.nextLine();
-            //Logger.logServer(s);
+            //Logger.logAndPrint(s);
             messageHandler.get(s).exec();
         }
     }
@@ -96,11 +95,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
     private void loginRequest() {
-        Logger.logServer("[Received a login request from socket]");
+        Logger.logAndPrint("[Received a login request from socket]");
         if(isOnline()){
             out.println(Constants.MSG_SERVER_ALREADY_LOGGED);
             out.flush();
-            Logger.logServer("Invalid request: client already logged in");
+            Logger.logAndPrint("Invalid request: client already logged in");
         }
         Gson gson=new Gson();
         String msg=in.nextLine();
@@ -141,7 +140,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!answer.getType().equalsIgnoreCase(Constants.PONG_ANSWER)) throw new IllegalArgumentException("NOT PONG ANSWER");
             pool.submit(()->getRoom().isAlive(this));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             handleInvalidReceived("PONG ANSWER",e.getMessage());
         }
 
@@ -172,9 +171,9 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     private void sendRoomMessage(RoomMessage message) {
         Gson gson= new Gson();
-        //Logger.logServer("[Socket] "+message.getType()+" sending to "+getNickname());
+        //Logger.logAndPrint("[Socket] "+message.getType()+" sending to "+getNickname());
         try {
-            //Logger.logServer(gson.toJson(message));
+            //Logger.logAndPrint(gson.toJson(message));
             out.println(message.getType());
             out.println(gson.toJson(message));
             out.flush();
@@ -215,7 +214,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         String msg=message.getRequest();
         if(msg.equals(Constants.TURN_ROUTINE_MESSAGE))
             msg=((TurnRoutineMessage)message).getRoutineRequest();
-        Logger.logServer("[Socket] "+msg+" sending to "+getNickname());
+        Logger.logAndPrint("[Socket] "+msg+" sending to "+getNickname());
         try {
             out.println(msg);
             out.println(gson.toJson(message));
@@ -233,6 +232,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     @Override
     public void invalidMessageReceived(String msg) {
+        Logger.logAndPrint(msg);
         sendMatchMessage(new InvalidAnswerMessage(getNickname(),msg));
     }
 
@@ -409,6 +409,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     @Override
     public void notifyDisconnetion() {
+        Logger.logAndPrint("[SOCKET] DISCONNECTION to "+getNickname());
         sendRoomMessage(new DisconnectionMessage());
     }
 
@@ -429,7 +430,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onCounterAttackAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             CounterAttackAnswer answer=gson.fromJson(line, CounterAttackAnswer .class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)) throw new IllegalArgumentException("NOT COUNTER ATTACK ANSWER");
@@ -447,7 +448,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onBoardPreferenceAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             BoardPreferenceAnswer answer=gson.fromJson(line, BoardPreferenceAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.BOARD_SETTING_ANSWER)) throw new IllegalArgumentException("NOT BOARD PREFERENCE");
@@ -465,7 +466,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onPowerupAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             SelectedPowerupAnswer answer=gson.fromJson(line, SelectedPowerupAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.POWERUP_ANSWER)) throw new IllegalArgumentException("NOT POWERUP ANSWER");
@@ -483,7 +484,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onDiscardWeaponAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             DiscardedWeaponAnswer answer=gson.fromJson(line, DiscardedWeaponAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.DISCARDED_WEAPON_ANSWER)) throw new IllegalArgumentException("NOT DISCARDED WEAPON ANSWER");
@@ -492,7 +493,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().discardWeapon(answer.getWeapon()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("DISCARD WEAPON ANSWER",e.getMessage());
         }
@@ -501,7 +502,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onUsePowerupAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             UsePowerupAnswer answer=gson.fromJson(line, UsePowerupAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)) throw new IllegalArgumentException("NOT USE POWERUP ANSWER");
@@ -510,7 +511,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().usePowerup(answer.wishUseIt()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("USE POWERUP ANSWER",e.getMessage());
         }
@@ -519,7 +520,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onStopRoutineAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             StopRoutineAnswer answer=gson.fromJson(line, StopRoutineAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.STOP_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT STOP ROUTINE ANSWER");
@@ -528,7 +529,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().stopRoutine(answer.wishStop()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("STOP ROUTINE ANSWER",e.getMessage());
         }
@@ -537,7 +538,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onSelectedPlayersAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             SelectedPlayersAnswer answer=gson.fromJson(line, SelectedPlayersAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.SELECTED_PLAYERS_ANSWER)) throw new IllegalArgumentException("NOT SELECTED PLAYERS ANSWER");
@@ -546,7 +547,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectPlayers(answer.getSelected()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("SELECTED PLAYER ANSWER",e.getMessage());
         }
@@ -555,7 +556,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onEffectAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             EffectAnswer answer=gson.fromJson(line, EffectAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT SELECTED EFFECT ANSWER");
@@ -564,7 +565,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectEffect(answer.getEffectName()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("EFFECT ANSWER",e.getMessage());
         }
@@ -573,7 +574,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onLoadableWeaponAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             LoadableWeaponSelectedAnswer answer=gson.fromJson(line, LoadableWeaponSelectedAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.LOADABLE_WEAPON_SELECTED)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
@@ -582,7 +583,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().loadableWeapon(answer.getWeapon()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("LOADABLE WEAPON ANSWER",e.getMessage());
         }
@@ -591,7 +592,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onWeaponAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             WeaponAnswer answer=gson.fromJson(line, WeaponAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.WEAPON_ANSWER)) throw new IllegalArgumentException("NOT WEAPON ANSWER");
@@ -600,7 +601,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectWeapon(answer.getWeapon()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("WEAPON ANSWER",e.getMessage());
         }
@@ -609,7 +610,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onRunRoutineAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             RunAnswer answer=gson.fromJson(line, RunAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.RUN_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT RUN ANSWER");
@@ -618,7 +619,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().runAction(answer.getNewPosition()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("ROUTINE ANSWER",e.getMessage());
         }
@@ -627,7 +628,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onTurnEndAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             TurnEndAnswer answer=gson.fromJson(line, TurnEndAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.TURN_END_ANSWER)) throw new IllegalArgumentException("NOT TURN END ANSWER");
@@ -638,7 +639,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
                 getRoom().getController().closeTurn(answer.getSender());
             });
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("TURN END ANSWER",e.getMessage());
         }
@@ -647,7 +648,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onEffectMoveAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             MoveAnswer answer=gson.fromJson(line, MoveAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_MOVE_ANSWER)) throw new IllegalArgumentException("NOT EFFECT MOVE ANSWER");
@@ -656,7 +657,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().movePlayer(answer.getTarget(),answer.getNewPosition()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("EFFECT MOVE ANSWER",e.getMessage());
         }
@@ -665,7 +666,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onActionSelectedAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             ActionSelectedAnswer answer=gson.fromJson(line, ActionSelectedAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.ACTION_SELECTED)) throw new IllegalArgumentException("NOT ACTION SELECTED ANSWER");
@@ -674,7 +675,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.PLAYING_TURN)&&checkTurn())) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().selectAction(answer.getSelection()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("ACTION SELECTED ANSWER",e.getMessage());
         }
@@ -683,7 +684,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onRespawnAnswer() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             RespawnAnswer answer=gson.fromJson(line, RespawnAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.RESPAWN_ANSWER)) throw new IllegalArgumentException("NOT RESPAWN ANSWER");
@@ -692,7 +693,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.READY)||checkStatus(GameStatus.CLOSING_TURN))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().respawnPlayer(answer.getSender(),answer.getPowerup()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("RESPAWN ANSWER",e.getMessage());
         }
@@ -701,7 +702,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     private void onGameEndAck() {
         Gson gson=new Gson();
         String line=in.nextLine();
-        Logger.logServer(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+line);
         try{
             ConfirmEndGameAnswer answer=gson.fromJson(line, ConfirmEndGameAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.CONFIRM_END_GAME)) throw new IllegalArgumentException("NOT END GAME CONFIRM ANSWER");
@@ -710,7 +711,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             if(!(checkStatus(GameStatus.END))) throw new IllegalStateException(ILLEGAL_STATE);
             pool.submit(()->getRoom().getController().gameEndAck(answer.getSender()));
         }catch (Exception e){
-            Logger.logServer(e.getMessage());
+            Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
             handleInvalidReceived("END GAME CONFIRM",e.getMessage());
         }

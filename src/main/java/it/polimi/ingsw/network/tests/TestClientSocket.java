@@ -67,7 +67,7 @@ public class TestClientSocket {
 
         @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
-            System.out.println(count+" MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            System.out.println(count+" SOCKET: MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
             count++;
             connection.boardPreference(1);
         }
@@ -79,20 +79,20 @@ public class TestClientSocket {
 
         @Override
         public void onBoardUpdate(SimpleBoard gameBoard) {
-            System.out.println(count+" BOARD UPDATE");
+            System.out.println(count+" SOCKET: BOARD UPDATE");
             count++;
         }
 
         @Override
         public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-            System.out.println(count+" MATCH UPDATE");
+            System.out.println(count+" SOCKET: MATCH UPDATE");
             count++;
         }
 
         @Override
         public void onRespwanRequest(List<Card> powerups) {
             ex.submit(()->{
-                System.out.println(count+" RESPAWN REQUEST");
+                System.out.println(count+" SOCKET: RESPAWN REQUEST");
                 count++;
                 consoleInput.cancel();
                 int val=Integer.parseInt(consoleInput.readLine());
@@ -102,27 +102,27 @@ public class TestClientSocket {
 
         @Override
         public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
-            System.out.println(count+" RESPAWN COMPLETED");
+            System.out.println(count+" SOCKET: RESPAWN COMPLETED");
             count++;
         }
 
         @Override
         public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
-            System.out.println(count+" GRABBED TILE\n"+grabbedTile.toString());
+            System.out.println(count+" SOCKET: GRABBED TILE\n"+grabbedTile.toString());
             count++;
 
         }
 
         @Override
         public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
-            System.out.println(count+" GRABBED POWERUP\n"+ powerup.toString());
+            System.out.println(count+" SOCKET: GRABBED POWERUP\n"+ powerup.toString());
             count++;
 
         }
 
         @Override
         public void onGrabbableWeapons(List<Card> weapons) {
-            System.out.println(count+" GRABBABLE WEAPONS");
+            System.out.println(count+" SOCKET: GRABBABLE WEAPONS");
             count++;
             connection.selectWeapon(weapons.get(0));
         }
@@ -134,7 +134,7 @@ public class TestClientSocket {
 
         @Override
         public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
-            System.out.println(count+" GRABBED WEAPON\n"+weapon.toString());
+            System.out.println(count+" SOCKET: GRABBED WEAPON\n"+weapon.toString());
             count++;
 
         }
@@ -149,9 +149,8 @@ public class TestClientSocket {
 
         @Override
         public void onTurnActions(List<String> actions) {
-            System.out.println(count+" TURN ACTIONS");
+            System.out.println(count+" SOCKET: TURN ACTIONS");
             count++;
-            /*
             boolean found=false;
             for (String action : actions) {
                 if (action.equals("GRAB")) {
@@ -163,13 +162,11 @@ public class TestClientSocket {
                 connection.selectAction("GRAB");
             }else
                 connection.selectAction("END");
-
-             */
         }
 
         @Override
         public void onTurnEnd() {
-            System.out.println(count+" TURN END");
+            System.out.println(count+" SOCKET: TURN END");
             count++;
             connection.closeTurn();
         }
@@ -201,7 +198,7 @@ public class TestClientSocket {
 
         @Override
         public void onTurnCreation(String currentPlayer) {
-            System.out.println(count+" TURN CREATION");
+            System.out.println(count+" SOCKET: TURN CREATION");
             count++;
         }
 
@@ -252,7 +249,7 @@ public class TestClientSocket {
 
         @Override
         public void onRunRoutine(MatrixHelper matrix) {
-            System.out.println(count+" RUN ROUTINE");
+            System.out.println(count+" SOCKET: RUN ROUTINE");
             System.out.println("Matrix is: \n"+matrix.toString());
             count++;
             for(int i=0;i<matrix.getRowLength();i++){

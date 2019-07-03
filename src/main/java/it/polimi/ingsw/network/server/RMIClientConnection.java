@@ -64,7 +64,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void recoverAdvise(String nickname) {
-        Logger.logServer("[RMI] RECOVER ADVISE to "+getNickname());
+        Logger.logAndPrint("[RMI] RECOVER ADVISE to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.recoverPlayer(nickname);
@@ -77,7 +77,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void canCounterAttack() {
-        Logger.logServer("[RMI] CAN COUNTER ATTACK to "+getNickname());
+        Logger.logAndPrint("[RMI] CAN COUNTER ATTACK to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.canCounterAttack();
@@ -90,7 +90,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void counterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
-        Logger.logServer("[RMI] COUNTER ATTACK to "+getNickname());
+        Logger.logAndPrint("[RMI] COUNTER ATTACK to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.counterAttack(currentPlayer,player,powerup);
@@ -103,7 +103,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void counterAttackTimeOut() {
-        Logger.logServer("[RMI] CAN COUNTER ATTACK TIMEOUT to "+getNickname());
+        Logger.logAndPrint("[RMI] CAN COUNTER ATTACK TIMEOUT to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.counterAttackTimeOut();
@@ -116,7 +116,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void notifyDisconnetion() {
-        Logger.logServer("[RMI] DISCONNECTION to "+getNickname());
+        Logger.logAndPrint("[RMI] DISCONNECTION to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.notifyDisconnection();
@@ -129,7 +129,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void gameEnd(List<SimplePlayer> players) {
-        Logger.logServer("[RMI] GAME END to "+getNickname());
+        Logger.logAndPrint("[RMI] GAME END to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.gameEnd(players);
@@ -142,7 +142,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void sendLeaderboard(List<String> nicknames, List<Integer> points) {
-        Logger.logServer("[RMI] SEND LEADERBOARD to "+getNickname());
+        Logger.logAndPrint("[RMI] SEND LEADERBOARD to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.sendLeaderboard(nicknames,points);
@@ -180,7 +180,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void matchCreation(List<SimplePlayer> players, int playerTurnNumber) {
-        Logger.logServer("[RMI] MATCH CREATION to "+getNickname());
+        Logger.logAndPrint("[RMI] MATCH CREATION to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.matchCreation(players,playerTurnNumber);
@@ -194,7 +194,8 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void invalidMessageReceived(String msg) {
-        Logger.logServer("[RMI] INVALID MESSAGE RECEIVED to "+getNickname());
+        Logger.logAndPrint("[RMI] INVALID MESSAGE RECEIVED to "+getNickname());
+        Logger.logAndPrint(msg);
         pool.submit(() -> {
             try {
                 clientStub.invalidMessageReceived(msg);
@@ -208,7 +209,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void boardUpdate(SimpleBoard gameBoard) {
-        Logger.logServer("[RMI] BOARD UPDATE to "+getNickname());
+        Logger.logAndPrint("[RMI] BOARD UPDATE to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.boardUpdate(gameBoard);
@@ -222,7 +223,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void matchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-        Logger.logServer("[RMI] MATCH UPDATE to "+getNickname());
+        Logger.logAndPrint("[RMI] MATCH UPDATE to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.matchUpdate(players,gameBoard,frenzy);
@@ -236,7 +237,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void recoveringPlayer(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-        Logger.logServer("[RMI] RECOVERING PLAYER to "+getNickname());
+        Logger.logAndPrint("[RMI] RECOVERING PLAYER to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.wakeUpPlayer(players,gameBoard,frenzy);
@@ -250,7 +251,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void respwanRequest(List<Card> powerups) {
-        Logger.logServer("[RMI] RESPAWN REQUEST to "+getNickname());
+        Logger.logAndPrint("[RMI] RESPAWN REQUEST to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.respwanRequest(powerups);
@@ -264,7 +265,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void respwanCompleted(SimplePlayer player, Card discardedPowerup) {
-        Logger.logServer("[RMI] RESPAWN COMPLETED to "+getNickname());
+        Logger.logAndPrint("[RMI] RESPAWN COMPLETED to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.respwanCompleted(player,discardedPowerup);
@@ -278,7 +279,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void grabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
-        Logger.logServer("[RMI] GRABBED TILE to "+getNickname());
+        Logger.logAndPrint("[RMI] GRABBED TILE to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.grabbedTile(player,grabbedTile);
@@ -292,7 +293,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void grabbedPowerup(SimplePlayer player, Card powerup) {
-        Logger.logServer("[RMI] GRABBED POWERUP to "+getNickname());
+        Logger.logAndPrint("[RMI] GRABBED POWERUP to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.grabbedPowerup(player,powerup);
@@ -306,7 +307,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void grabbableWeapons(List<Card> weapons) {
-        Logger.logServer("[RMI] GRABBABLE WEAPONS to "+getNickname());
+        Logger.logAndPrint("[RMI] GRABBABLE WEAPONS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.grabbableWeapons(weapons);
@@ -320,7 +321,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void discardWeapon(List<Card> weapons) {
-        Logger.logServer("[RMI] DISCARD WEAPON to "+getNickname());
+        Logger.logAndPrint("[RMI] DISCARD WEAPON to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.discardWeapon(weapons);
@@ -334,7 +335,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void grabbedWeapon(SimplePlayer player, Card weapon) {
-        Logger.logServer("[RMI] GRABBED WEAPON to "+getNickname());
+        Logger.logAndPrint("[RMI] GRABBED WEAPON to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.grabbedWeapon(player,weapon);
@@ -348,7 +349,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void reloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
-        Logger.logServer("[RMI] RELOADED WEAPON to "+getNickname());
+        Logger.logAndPrint("[RMI] RELOADED WEAPON to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.reloadedWeapon(player,weapon,discardedPowerups,totalCost);
@@ -362,7 +363,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void reloadableWeapons(List<Card> weapons) {
-        Logger.logServer("[RMI] RELOADABLE WEAPONS to "+getNickname());
+        Logger.logAndPrint("[RMI] RELOADABLE WEAPONS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.reloadableWeapons(weapons);
@@ -376,7 +377,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void turnActions(List<String> actions) {
-        Logger.logServer("[RMI] TURN ACTIONS to "+getNickname());
+        Logger.logAndPrint("[RMI] TURN ACTIONS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.turnActions(actions);
@@ -390,7 +391,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void turnEnd() {
-        Logger.logServer("[RMI] TURN END to "+getNickname());
+        Logger.logAndPrint("[RMI] TURN END to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.turnEnd();
@@ -404,7 +405,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void moveAction(SimplePlayer player) {
-        Logger.logServer("[RMI] MOVE ACTION to "+getNickname());
+        Logger.logAndPrint("[RMI] MOVE ACTION to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.moveAction(player);
@@ -418,7 +419,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void moveRequest(MatrixHelper matrix, String targetPlayer) {
-        Logger.logServer("[RMI] MOVE REQUEST to "+getNickname());
+        Logger.logAndPrint("[RMI] MOVE REQUEST to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.moveRequest(matrix,targetPlayer);
@@ -432,7 +433,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void markAction(String player, SimplePlayer selected, int value) {
-        Logger.logServer("[RMI] MARK ACTION to "+getNickname());
+        Logger.logAndPrint("[RMI] MARK ACTION to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.markAction(player,selected,value);
@@ -446,7 +447,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void damageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
-        Logger.logServer("[RMI] DAMAGE ACTION to "+getNickname());
+        Logger.logAndPrint("[RMI] DAMAGE ACTION to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.damageAction(player,selected,damageValue,convertedMarks);
@@ -460,7 +461,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void discardedPowerup(SimplePlayer player, Card powerup) {
-        Logger.logServer("[RMI] DISCARDED POWERUP to "+getNickname());
+        Logger.logAndPrint("[RMI] DISCARDED POWERUP to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.discardedPowerup(player,powerup);
@@ -474,7 +475,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void fullOfPowerup() {
-        Logger.logServer("[RMI] FULL OF POWERUP to "+getNickname());
+        Logger.logAndPrint("[RMI] FULL OF POWERUP to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.fullOfPowerup();
@@ -488,7 +489,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void turnCreation(String currentPlayer) {
-        Logger.logServer("[RMI] TURN CREATION to "+getNickname());
+        Logger.logAndPrint("[RMI] TURN CREATION to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.turnCreation(currentPlayer);
@@ -502,7 +503,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void selectablePlayers(List<List<String>> selectable, SimpleTarget target) {
-        Logger.logServer("[RMI] SELECTABLE PLAYERS to "+getNickname());
+        Logger.logAndPrint("[RMI] SELECTABLE PLAYERS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.selectablePlayers(selectable,target);
@@ -516,7 +517,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void canUsePowerup() {
-        Logger.logServer("[RMI] CAN USE POWERUP to "+getNickname());
+        Logger.logAndPrint("[RMI] CAN USE POWERUP to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.canUsePowerup();
@@ -530,7 +531,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void canStopRoutine() {
-        Logger.logServer("[RMI] CAN STOP ROUTINE to "+getNickname());
+        Logger.logAndPrint("[RMI] CAN STOP ROUTINE to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.canStopRoutine();
@@ -544,7 +545,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void usableWeapons(List<Card> usableWeapons) {
-        Logger.logServer("[RMI] USABLE WEAPONS to "+getNickname());
+        Logger.logAndPrint("[RMI] USABLE WEAPONS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.usableWeapons(usableWeapons);
@@ -558,7 +559,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void availableEffects(List<String> effects) {
-        Logger.logServer("[RMI] AVAILABLE EFFECTS to "+getNickname());
+        Logger.logAndPrint("[RMI] AVAILABLE EFFECTS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.availableEffects(effects);
@@ -572,7 +573,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void payEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
-        Logger.logServer("[RMI] PAY EFFECT to "+getNickname());
+        Logger.logAndPrint("[RMI] PAY EFFECT to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.payEffect(player,discardedPowerups,usedAmmo);
@@ -586,7 +587,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void usedCard(Card card) {
-        Logger.logServer("[RMI] USED CARD to "+getNickname());
+        Logger.logAndPrint("[RMI] USED CARD to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.usedCard(card);
@@ -600,7 +601,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void availablePowerups(List<Card> powerups) {
-        Logger.logServer("[RMI] AVAILABLE POWERUPS to "+getNickname());
+        Logger.logAndPrint("[RMI] AVAILABLE POWERUPS to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.availablePowerups(powerups);
@@ -614,7 +615,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void runCompleted(SimplePlayer player, int[] newPosition) {
-        Logger.logServer("[RMI] RUN COMPLETED to "+getNickname());
+        Logger.logAndPrint("[RMI] RUN COMPLETED to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.runCompleted(player,newPosition);
@@ -628,7 +629,7 @@ public class RMIClientConnection extends ClientConnection{
 
     @Override
     public void runRoutine(MatrixHelper matrix) {
-        Logger.logServer("[RMI] RUN ROUTINE to "+getNickname());
+        Logger.logAndPrint("[RMI] RUN ROUTINE to "+getNickname());
         pool.submit(() -> {
             try {
                 clientStub.runRoutine(matrix);

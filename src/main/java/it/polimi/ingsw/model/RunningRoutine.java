@@ -53,11 +53,11 @@ public class RunningRoutine implements TurnRoutine {
                 turn.getGame().notify(message);
                 turn.endRoutine();
             }else{
-                Logger.logServer("UNREACHABLE NEW POSITION");
+                Logger.logAndPrint("UNREACHABLE NEW POSITION");
                 turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"UNREACHABLE NEW POSITION")));
             }
         }else{
-            Logger.logServer("Invalid TurnRoutineMessage received");
+            Logger.logAndPrint("Invalid TurnRoutineMessage received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Received a "+answer.getRoutineAnswer()+" message.")));
         }
     }
@@ -74,7 +74,7 @@ public class RunningRoutine implements TurnRoutine {
 
     @Override
     public void onInnerRoutineCompleted(TurnRoutineType routineType) {
-        Logger.logServer("RunningRoutine can not start inner routine");
+        Logger.logAndPrint("RunningRoutine can not start inner routine");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"RunningRoutine can not start inner routine")));
     }
 
@@ -85,7 +85,7 @@ public class RunningRoutine implements TurnRoutine {
 
     @Override
     public void onEffectPerformed() {
-        Logger.logServer("RunningRoutine can not perform an effect");
+        Logger.logAndPrint("RunningRoutine can not perform an effect");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"RunningRoutine can not perform an effect")));
     }
 }

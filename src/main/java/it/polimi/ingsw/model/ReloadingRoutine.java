@@ -46,7 +46,7 @@ public class ReloadingRoutine implements TurnRoutine {
         if(answer.getRoutineAnswer().equalsIgnoreCase(Constants.LOADABLE_WEAPON_SELECTED))
             onLoadableWeaponReceived((LoadableWeaponSelectedAnswer)answer);
         else {
-            Logger.logServer("Invalid TurnRoutineMessage received");
+            Logger.logAndPrint("Invalid TurnRoutineMessage received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Received a "+answer.getRoutineAnswer()+" message.")));
         }
     }
@@ -68,7 +68,7 @@ public class ReloadingRoutine implements TurnRoutine {
                 return;
             }
         }
-        Logger.logServer("Invalid weapon received");
+        Logger.logAndPrint("Invalid weapon received");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Current player doesn't have the selected weapon")));
     }
 
@@ -78,7 +78,7 @@ public class ReloadingRoutine implements TurnRoutine {
             turn.getGame().notify(new WeaponReloadedMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),weapon,discardedPowerups,weapon.getAmmo()));
             turn.endRoutine();
         }else{
-            Logger.logServer("Invalid weapon received");
+            Logger.logAndPrint("Invalid weapon received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Cannot reload the selected weapon")));
         }
     }
@@ -95,7 +95,7 @@ public class ReloadingRoutine implements TurnRoutine {
 
     @Override
     public void onInnerRoutineCompleted(TurnRoutineType routineType) {
-        Logger.logServer("ReloadingRoutine can not start inner routine");
+        Logger.logAndPrint("ReloadingRoutine can not start inner routine");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"ReloadingRoutine can not start inner routine")));
     }
 
@@ -106,7 +106,7 @@ public class ReloadingRoutine implements TurnRoutine {
 
     @Override
     public void onEffectPerformed() {
-        Logger.logServer("ReloadingRoutine can not perform an effect");
+        Logger.logAndPrint("ReloadingRoutine can not perform an effect");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"ReloadingRoutine can not perform an effect")));
     }
 }

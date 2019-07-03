@@ -62,21 +62,21 @@ public class Server{
 
     public synchronized int checkClientLogin(String nickname, ClientConnection client){
         roomRefactor();
-        Logger.logServer("Login request received from " + nickname);
+        Logger.logAndPrint("Login request received from " + nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
             if(!disconnected.containsKey(nickname)){
                 players.put(nickname, client);
-                Logger.logServer(nickname+" is in.");
+                Logger.logAndPrint(nickname+" is in.");
                 return 1;
             }else {
                 Room room=rooms.get(disconnected.get(nickname));
                 players.put(nickname, client);
                 client.setRoom(room);
-                Logger.logServer(nickname+" is back in room "+ room.getRoomNumber()+".");
+                Logger.logAndPrint(nickname+" is back in room "+ room.getRoomNumber()+".");
                 return 2;
             }
         }else{
-            Logger.logServer(nickname+" is already in.");
+            Logger.logAndPrint(nickname+" is already in.");
             return 0;
         }
     }
@@ -99,7 +99,7 @@ public class Server{
     }
 
     public synchronized void deregisterConnection(ClientConnection client){
-        Logger.logServer("Deregistering "+client.getNickname()+" from server");
+        Logger.logAndPrint("Deregistering "+client.getNickname()+" from server");
         players.remove(client.getNickname());
         Room room=client.getRoom();
         if(room.remove(client)){
@@ -113,7 +113,7 @@ public class Server{
     }
 
     public void disconnectConnection(ClientConnection client) {
-        Logger.logServer("Disconnecting "+client.getNickname()+" from server");
+        Logger.logAndPrint("Disconnecting "+client.getNickname()+" from server");
         disconnected.put(client.getNickname(),client.getRoom().getRoomNumber());
         players.remove(client.getNickname());
     }
@@ -123,7 +123,7 @@ public class Server{
             joinRoom(client);
         } catch (JoinRoomException e) {
             addNewRoom(client);
-            Logger.logServer("New room has been created");
+            Logger.logAndPrint("New room has been created");
         }
     }
 
@@ -163,7 +163,7 @@ public class Server{
     private static void setUpConfiguration() throws ParserConfigurationException, IOException, SAXException, URISyntaxException {
         String path;
         String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
-        Logger.logServer(inExecutionFile);
+        Logger.logAndPrint(inExecutionFile);
         int last = 0;
         int last2=0;
         for (int i = 0; i < inExecutionFile.length(); i++) {
@@ -175,10 +175,10 @@ public class Server{
                 last2 = i;
         }
         if(last>last2){
-            Logger.logServer(inExecutionFile.substring(0, last + 1));
+            Logger.logAndPrint(inExecutionFile.substring(0, last + 1));
             path = inExecutionFile.substring(0, last + 1) + "config.xml";
         }else{
-            Logger.logServer(inExecutionFile.substring(0, last2 + 1));
+            Logger.logAndPrint(inExecutionFile.substring(0, last2 + 1));
             path = inExecutionFile.substring(0, last2 + 1) + "config.xml";
         }
 
@@ -200,7 +200,7 @@ public class Server{
         setTurnTimer(root.getElementsByTagName("turnTimer"));
         setQuickMoveTimer(root.getElementsByTagName("quickMoveTimer"));
 
-        Logger.logServer("Configuration completed.");
+        Logger.logAndPrint("Configuration completed.");
     }
 
     private static Node getNode(NodeList nodeList){
@@ -318,8 +318,8 @@ public class Server{
             Server server = new Server(hostname);
             server.startServer();
 
-            Logger.logServer(Server.getRmiServerName() + " started:");
-            Logger.logServer("(RMI: " + Server.getRmiServerPort()+ ", socket: " + Server.getSocketServerPort()+ ")");
+            Logger.logAndPrint(Server.getRmiServerName() + " started:");
+            Logger.logAndPrint("(RMI: " + Server.getRmiServerPort()+ ", socket: " + Server.getSocketServerPort()+ ")");
         } catch (ServerException e) {
             Logger.logErr(e.getMessage());
         } catch (IOException | URISyntaxException | ParserConfigurationException | SAXException e) {

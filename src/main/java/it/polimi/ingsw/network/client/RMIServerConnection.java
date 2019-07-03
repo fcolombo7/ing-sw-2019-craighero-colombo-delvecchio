@@ -29,7 +29,8 @@ import java.util.concurrent.Executors;
 public class RMIServerConnection extends ServerConnection implements RMIClientHandler {
     private String session;
     private RMIServerHandler stub;
-    private ExecutorService pool;
+    private ExecutorService sendingPool;
+    private ExecutorService receivingPool;
     private boolean disconnected=false;
 
     public RMIServerConnection(String hostname, int port, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
@@ -57,7 +58,9 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
         stub = (RMIServerHandler) Naming.lookup("rmi://"+ this.getHostname()+":"+this.getPort()+"/"+Constants.RMI_SERVER_NAME);
         Logger.log("STUB INITIALIZED");
-        pool=Executors.newFixedThreadPool(6);
+        sendingPool =Executors.newFixedThreadPool(5);
+        receivingPool =Executors.newFixedThreadPool(5);
+
     }
 
     public RMIServerConnection(String hostname, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
@@ -85,7 +88,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void logout() {
-        pool.submit(()->{
+        sendingPool.submit(()->{
             try {
                 if(stub.deregister(session))
                     Logger.log("Successfully closed RMI connection.");
@@ -101,7 +104,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void boardPreference(int value) {
         if(!disconnected) {
-            pool.submit(() -> {
+            sendingPool.submit(() -> {
                 try {
                     stub.boardPreference(session, value);
                 } catch (RemoteException e) {
@@ -115,7 +118,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void respawnPlayer(Card powerup) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.respawnPlayer(session,powerup);
                 } catch (RemoteException e) {
@@ -127,7 +130,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void closeTurn() {
-        pool.submit(()->{
+        sendingPool.submit(()->{
         try {
             stub.closeTurn(session);
         } catch (RemoteException e) {
@@ -139,7 +142,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void selectAction(String action) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.selectAction(session,action);
                 } catch (RemoteException e) {
@@ -152,7 +155,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void movePlayer(String target, int[] newPosition) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.movePlayer(session,target,newPosition);
                 } catch (RemoteException e) {
@@ -165,7 +168,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void discardWeapon(Card weapon) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.discardWeapon(session,weapon);
                 } catch (RemoteException e) {
@@ -179,7 +182,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     @Override
     public void selectEffect(String effectName) {
-        pool.submit(()->{
+        sendingPool.submit(()->{
             try {
                 stub.selectEffect(session,effectName);
             } catch (RemoteException e) {
@@ -193,7 +196,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void loadableWeapon(Card weapon) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.loadableWeapon(session,weapon);
                 } catch (RemoteException e) {
@@ -208,7 +211,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void runAction(int[] newPosition) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.runAction(session,newPosition);
                 } catch (RemoteException e) {
@@ -223,7 +226,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void selectPlayers(List<List<String>> selected) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.selectPlayers(session,selected);
                 } catch (RemoteException e) {
@@ -238,7 +241,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void selectPowerup(Card powerup) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.selectPowerup(session,powerup);
                 } catch (RemoteException e) {
@@ -253,7 +256,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void stopRoutine(boolean stop) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.stopRoutine(session,stop);
                 } catch (RemoteException e) {
@@ -268,7 +271,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void usePowerup(boolean use) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.usePowerup(session,use);
                 } catch (RemoteException e) {
@@ -283,7 +286,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void selectWeapon(Card weapon) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.selectWeapon(session,weapon);
                 } catch (RemoteException e) {
@@ -298,7 +301,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void counterAttackAnswer(boolean counterAttack) {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.counterAttackAnswer(session,counterAttack);
                 } catch (RemoteException e) {
@@ -312,7 +315,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void confirmEndGame() {
         if(!disconnected) {
-            pool.submit(()->{
+            sendingPool.submit(()->{
                 try {
                     stub.confirmEndGame(session);
                 } catch (RemoteException e) {
@@ -343,7 +346,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     @Override
     public void firstInRoom() {
         if(!disconnected) {
-            getUi().onFirstInRoomAdvise();
+            receivingPool.submit(()->getUi().onFirstInRoomAdvise());
         }
     }
 

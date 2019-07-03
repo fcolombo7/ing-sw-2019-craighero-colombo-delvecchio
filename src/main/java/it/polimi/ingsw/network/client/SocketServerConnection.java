@@ -896,7 +896,7 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log(LOG_JSON + line);
         try {
             FullOfPowerupsMessage message = gson.fromJson(line, FullOfPowerupsMessage.class);
-            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.CAN_COUNTER_ATTACK))
+            if (!message.getRoutineRequest().equalsIgnoreCase(Constants.FULL_OF_POWERUP))
                 throw new IllegalArgumentException("NOT FULL OF POWERUP MESSAGE");
             pool.submit(()-> getUi().onFullOfPowerup());
         } catch (Exception e) {

@@ -72,14 +72,14 @@ public class PowerupRoutine implements TurnRoutine {
             onSelectedPlayersReceived((SelectedPlayersAnswer)answer);
         }
         else {
-            Logger.logServer("Invalid TurnRoutineMessage received");
+            Logger.logAndPrint("Invalid TurnRoutineMessage received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(), "RECEIVED A " + answer.getRoutineAnswer() + " MESSAGE")));
         }
     }
 
     private void onSelectedPlayersReceived(SelectedPlayersAnswer answer) {
         if(!turn.getCurEffect().checkSelected(answer.getSelected(),turn)){
-            Logger.logServer("[POWERUP ROUTINE]Invalid nicknames received");
+            Logger.logAndPrint("[POWERUP ROUTINE]Invalid nicknames received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"[POWERUP ROUTINE]Invalid nicknames received")));
             return;
         }
@@ -113,12 +113,12 @@ public class PowerupRoutine implements TurnRoutine {
                     turn.getGame().notify(message);
                     return;
                 }else {
-                    Logger.logServer("Invalid powerup received");
+                    Logger.logAndPrint("Invalid powerup received");
                     turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Cannot use the selected powerup")));
                 }
             }
         }
-        Logger.logServer("Invalid powerup received");
+        Logger.logAndPrint("Invalid powerup received");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Current player doesn't have the selected powerup")));
 
     }
@@ -169,7 +169,7 @@ public class PowerupRoutine implements TurnRoutine {
 
     @Override
     public void onInnerRoutineCompleted(TurnRoutineType routineType) {
-        Logger.logServer("PowerupRoutine can not start inner routine");
+        Logger.logAndPrint("PowerupRoutine can not start inner routine");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"PowerupRoutine can not start inner routine")));
     }
 
@@ -181,7 +181,7 @@ public class PowerupRoutine implements TurnRoutine {
     @Override
     public void onEffectPerformed() {
         if(effect==null){
-            Logger.logServer("NO EFFECT PERFORMED");
+            Logger.logAndPrint("NO EFFECT PERFORMED");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"NO EFFECT PERFORMED")));
         }else {
             turn.getGame().getCurrentPlayer().popPowerup(selPowerup);

@@ -99,7 +99,7 @@ public class Turn {
             else
                 createRoutine(answer);
         }catch(IllegalArgumentException ex){
-            Logger.logServer("Invalid action received");
+            Logger.logAndPrint("Invalid action received");
             game.notify((new InvalidAnswerMessage(game.getCurrentPlayer().getNickname(),"Invalid action received")));
         }
     }

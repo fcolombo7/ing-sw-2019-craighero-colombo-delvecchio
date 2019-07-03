@@ -5,10 +5,12 @@ import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.network.client.RMIServerConnection;
 import it.polimi.ingsw.network.client.ServerConnection;
+import it.polimi.ingsw.network.client.SocketServerConnection;
 import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.utils.ConsoleInput;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.MatrixHelper;
 
@@ -17,34 +19,53 @@ import java.net.URISyntaxException;
 import java.rmi.NotBoundException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TestRMIClient {
     private static class DebugUI implements AdrenalineUI{
+        private static int count=0;
         private ServerConnection connection;
-        DebugUI(){
+        private boolean rmi;
+        DebugUI(boolean rmi){
+            this.rmi=rmi;
         }
+        Scanner stdin=new Scanner(System.in);
+        ConsoleInput consoleInput;
+        ExecutorService ex = Executors.newFixedThreadPool(5);
+
         public void setUpConnection() throws IOException, NotBoundException, URISyntaxException {
-            this.connection = new RMIServerConnection(Constants.RMI_HOSTNAME,this);
+            if(rmi)this.connection = new RMIServerConnection("localhost",this);
+            else this.connection=new SocketServerConnection(Constants.RMI_HOSTNAME,this);
+            consoleInput= new ConsoleInput();
         }
 
         @Override
         public void onJoinRoomAdvise(String nickname) {
-            System.out.println("User "+ nickname+" has join the room...");
+            ex.submit(()->{
+                System.out.println("User "+ nickname+" has join the room...");
+            });
         }
 
         @Override
         public void onExitRoomAdvise(String nickname) {
-            System.out.println("User "+ nickname+" has left the room...");
+            ex.submit(()->{
+                System.out.println("User "+ nickname+" has left the room...");
+            });
         }
 
         @Override
         public void onFirstInRoomAdvise() {
-            System.out.println("You are the first player in the room...");
+            ex.submit(()->{
+                System.out.println("You are the first player in the room...");
+            });
+
         }
 
         @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
-            System.out.println("MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            System.out.println(count+" RMI: MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            count++;
             connection.boardPreference(1);
         }
 
@@ -55,37 +76,52 @@ public class TestRMIClient {
 
         @Override
         public void onBoardUpdate(SimpleBoard gameBoard) {
-
+            System.out.println(count+" RMI: BOARD UPDATE");
+            count++;
         }
 
         @Override
         public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-
+            System.out.println(count+" RMI: MATCH UPDATE");
+            count++;
         }
 
         @Override
         public void onRespwanRequest(List<Card> powerups) {
-
+            ex.submit(()->{
+                System.out.println(count+" RMI: RESPAWN REQUEST");
+                count++;
+                consoleInput.cancel();
+                int val=Integer.parseInt(consoleInput.readLine());
+                connection.respawnPlayer(powerups.get(val));
+            });
         }
 
         @Override
         public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
-
+            System.out.println(count+" RMI: RESPAWN COMPLETED");
+            count++;
         }
 
         @Override
         public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
+            System.out.println(count+" RMI: GRABBED TILE\n"+grabbedTile.toString());
+            count++;
 
         }
 
         @Override
         public void onGrabbedPowerup(SimplePlayer player, Card powerup) {
+            System.out.println(count+" RMI: GRABBED POWERUP\n"+ powerup.toString());
+            count++;
 
         }
 
         @Override
         public void onGrabbableWeapons(List<Card> weapons) {
-
+            System.out.println(count+" RMI: GRABBABLE WEAPONS");
+            count++;
+            connection.selectWeapon(weapons.get(0));
         }
 
         @Override
@@ -95,27 +131,41 @@ public class TestRMIClient {
 
         @Override
         public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
+            System.out.println(count+" RMI: GRABBED WEAPON\n"+weapon.toString());
+            count++;
 
         }
 
         @Override
         public void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
-
         }
 
         @Override
         public void onReloadableWeapons(List<Card> weapons) {
-
         }
 
         @Override
         public void onTurnActions(List<String> actions) {
-
+            System.out.println(count+" RMI: TURN ACTIONS");
+            count++;
+            boolean found=false;
+            for (String action : actions) {
+                if (action.equals("GRAB")) {
+                    found=true;
+                }
+                System.out.println(action);
+            }
+            if(found) {
+                connection.selectAction("GRAB");
+            }else
+                connection.selectAction("END");
         }
 
         @Override
         public void onTurnEnd() {
-
+            System.out.println(count+" RMI: TURN END");
+            count++;
+            connection.closeTurn();
         }
 
         @Override
@@ -145,7 +195,8 @@ public class TestRMIClient {
 
         @Override
         public void onTurnCreation(String currentPlayer) {
-
+            System.out.println(count+" RMI: TURN CREATION");
+            count++;
         }
 
         @Override
@@ -195,6 +246,18 @@ public class TestRMIClient {
 
         @Override
         public void onRunRoutine(MatrixHelper matrix) {
+            System.out.println(count+" RMI: RUN ROUTINE");
+            System.out.println("Matrix is: \n"+matrix.toString());
+            count++;
+            for(int i=0;i<matrix.getRowLength();i++){
+                for(int j=0;j<matrix.getColLength();j++) {
+                    if (matrix.toBooleanMatrix()[i][j]) {
+                        connection.runAction(new int[]{i, j});
+                        System.out.println("RUN HERE: "+i+"-"+j+"!");
+                        return;
+                    }
+                }
+            }
 
         }
 
@@ -255,7 +318,7 @@ public class TestRMIClient {
         System.out.print("nick: ");
         nick=stdin.nextLine();
         try {
-            DebugUI ui1=new DebugUI();
+            DebugUI ui1=new DebugUI(true);
             ui1.setUpConnection();
             ui1.connection.login(nick,"MOTTO");
         } catch (IOException | NotBoundException e) {

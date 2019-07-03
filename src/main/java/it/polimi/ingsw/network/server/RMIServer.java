@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.network.RMIClientHandler;
 import it.polimi.ingsw.network.RMIServerHandler;
 import it.polimi.ingsw.network.client.Client;
-import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.File;
@@ -34,15 +33,15 @@ public class RMIServer  implements RMIServerHandler{
     
     public void start(int portNumber) throws ServerException {
         try{
-            Logger.logServer("Present Project Directory : "+ System.getProperty("user.dir"));
-            Logger.logServer("Composing codebase path: "+ "file://"+new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
+            Logger.logAndPrint("Present Project Directory : "+ System.getProperty("user.dir"));
+            Logger.logAndPrint("Composing codebase path: "+ "file://"+new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
             System.setProperty("java.rmi.server.hostname",hostname);
             System.setProperty("java.rmi.server.codebase","file://"+System.getProperty("user.dir")+"/target/classes");
             startRegistry(portNumber);
             RMIServerHandler stub = (RMIServerHandler) UnicastRemoteObject.exportObject(this, portNumber);
             String name="rmi//"+this.hostname+":"+portNumber+"/"+Server.getRmiServerName();
             Naming.rebind("//"+this.hostname+":"+portNumber+"/"+Server.getRmiServerName(),stub);
-            Logger.logServer("RMI server started. ["+name+"]");
+            Logger.logAndPrint("RMI server started. ["+name+"]");
         } catch (AccessException e) {
             throw new ServerException("RMI server not loaded (AccessException):\n"+e.getMessage());
         } catch (RemoteException e) {
@@ -67,7 +66,7 @@ public class RMIServer  implements RMIServerHandler{
 
     @Override
     public synchronized String login(String nickname, String motto, RMIClientHandler client) {
-        Logger.logServer("[Received a login request form RMI]");
+        Logger.logAndPrint("[Received a login request form RMI]");
         RMIClientConnection clientConnection = new RMIClientConnection(client,this);
         int response=server.checkClientLogin(nickname,clientConnection);
         if(response==1||response==2){

@@ -21,7 +21,7 @@ public class SocketServer {
     public void startServer(int port) throws ServerException {
         try {
             serverSocket = new ServerSocket(port);
-            Logger.logServer("Socket server started.");
+            Logger.logAndPrint("Socket server started.");
             new SocketManager(server).start();
         } catch (IOException e) {
             throw new ServerException("Error occurs while starting the socket server (IOException):\n" + e.getMessage());
@@ -42,7 +42,7 @@ public class SocketServer {
                     SocketClientConnection client= new SocketClientConnection(socket,server);
                     executor.submit(client);
                 } catch (IOException e) {
-                    Logger.logServer("Error occurs while accepting a socket connection:\n" + e.getMessage());
+                    Logger.logAndPrint("Error occurs while accepting a socket connection:\n" + e.getMessage());
                     break;
                 }
             }
