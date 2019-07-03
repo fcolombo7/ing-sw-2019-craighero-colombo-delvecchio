@@ -100,6 +100,7 @@ public class Cli implements AdrenalineUI{
         printKillsToGo();
         updateMap();
         printMap();
+        printWeaponsInMap();
         Logger.print(playersColor.get(me.getNickname()) + PLAYER + RESET + " POINTS: " + me.getScore() + "   \"" + motto + "\"" + "\n");
         printMarks(me);
         printMyPlayerBoard();
@@ -110,10 +111,24 @@ public class Cli implements AdrenalineUI{
         Logger.print("\n\n");
     }
 
+    private void printWeaponsInMap(){
+        List<String> weaponsList = new ArrayList<>();
+        for(SimpleSquare square: this.board.getSpawnPoints()) {
+            Logger.print(parseColor(square.getRoomColor()) + "ROOM: " + RESET);
+            for (Card weapon : square.getWeaponCards())
+                weaponsList.add(weapon.getName());
+            Logger.print(weaponsList.toString() + "\n");
+        }
+        Logger.print("\n");
+    }
+
     private String weaponString(SimplePlayer player){
         StringBuilder weaponsList = new StringBuilder();
-        for(Card weapon: player.getWeaponCards())
-            weaponsList.append(weapon.getName()).append(", ");
+        for(Card weapon: player.getWeaponCards()) {
+            if(player.getNotLoadedIds().contains(weapon.getId()))
+                weaponsList.append(REVERSE).append(weapon.getName()).append(", " + RESET);
+            else weaponsList.append(weapon.getName()).append(", ");
+        }
         return weaponsList.toString();
     }
 
@@ -295,12 +310,13 @@ public class Cli implements AdrenalineUI{
         printMarks(player);
         Logger.print(buildPlayerBoard(player).toString() + "\n");
         printAmmo(player);
-        //TODO Weapons loaded and unloaded
+        Logger.print("Powerup: " + player.getPowerupCards().size());
+
     }
 
     public StringBuilder buildPlayerBoard(SimplePlayer player){
         StringBuilder playerBoard = new StringBuilder();
-        if(playerTurnNumber == 1 && player.getNickname().equals(me.getNickname()))
+        if(player.isFirst())
             playerBoard.append(FIRST_PLAYER + "\n");
         playerBoard.append(String.format("  |>>%s|>%s %n", HAND, GUN));
         if(player.getDamages().isEmpty())
