@@ -3425,7 +3425,7 @@ public class MainWindow extends Application {
         }
 
         for(int i=0; i<gameBoard.getKillshotTrack().size(); i++){
-            Image img=new Image(convertIdImg(gameBoard.getKillshotTrack().get(i)));
+            Image img=damagesHashMap.get(gameBoard.getKillshotTrack().get(i));
             killshotTrack.get(i).setImage(img);
         }
         for(int i=0; i<gameBoard.getKillshotTrack().size(); i++){
