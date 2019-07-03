@@ -293,7 +293,7 @@ public class ShootingRoutine implements TurnRoutine {
                     turn.getGame().getCurrentPlayer().getBoard().addMarks(p,1);
                     for(Powerup powerup:p.getPowerups()){
                         if(powerup.getTiming()==TurnStatus.COUNTER_ATTACK){
-                            p.getPowerups().remove(powerup);
+                            p.popPowerup(powerup);
                             turn.getGame().notify(new CounterAttackMessage(new SimplePlayer(turn.getGame().getCurrentPlayer()),new SimplePlayer(p),new Card(powerup)));
                             break;
                         }
@@ -344,5 +344,16 @@ public class ShootingRoutine implements TurnRoutine {
         }
 
         handleCounterAttack();
+    }
+
+    public void cancelCounterAttackTimers(){
+        for(String key:counterAttackMap.keySet()){
+            Timer t=counterAttackMap.get(key);
+            if(t!=null){
+                t.cancel();
+                t.purge();
+            }
+        }
+        counterAttackMap.clear();
     }
 }

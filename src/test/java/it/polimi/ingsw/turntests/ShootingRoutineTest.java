@@ -606,6 +606,7 @@ public class ShootingRoutineTest {
         assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.COUNTER_ATTACK_COMPLETED));
 
         turn.getInExecutionRoutine().handleAnswer(new StopRoutineAnswer(p1.getNickname(),true));
+        assertThat(p2.getPowerups().size(),is(0));
 
         Logger.log("Test Finished");
     }
