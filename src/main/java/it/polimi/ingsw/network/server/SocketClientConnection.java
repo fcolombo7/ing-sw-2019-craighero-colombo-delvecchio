@@ -47,7 +47,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     @FunctionalInterface
     private interface MessageManager {
-        void exec();
+        void exec(String content);
     }
 
     public SocketClientConnection(Socket socket, Server server) throws IOException {
@@ -63,11 +63,16 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     @Override
     public void run() {
         while(true){
-            String s=in.nextLine();
-            //Logger.logAndPrint(s);
-            messageHandler.get(s).exec();
+            String socketLine = in.nextLine();
+            Logger.log(socketLine);
+            int pos=socketLine.indexOf('#');
+            String type=socketLine.substring(0,pos);
+            String content=socketLine.substring(pos+1);
+            Logger.log("RECEIVED STRING\n\ttype: "+type+"\n\tcontent: "+content);
+            messageHandler.get(type).exec(content);
         }
     }
+
 
     private void loadHandler() {
         if (messageHandler == null) {
@@ -94,7 +99,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }
     }
 
-    private void loginRequest() {
+    private void loginRequest(String content) {
         Logger.logAndPrint("[Received a login request from socket]");
         if(isOnline()){
             out.println(Constants.MSG_SERVER_ALREADY_LOGGED);
@@ -102,7 +107,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             Logger.logAndPrint("Invalid request: client already logged in");
         }
         Gson gson=new Gson();
-        String msg=in.nextLine();
+        String msg=content;
         try{
             LoginMessage loginMessage=gson.fromJson(msg, LoginMessage.class);
             String cNickname = loginMessage.getNickname();
@@ -138,21 +143,20 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
 
-    private void pongAnswer() {
+    private void pongAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
         try{
-            PongAnswer answer=gson.fromJson(line, PongAnswer.class);
+            PongAnswer answer=gson.fromJson(content, PongAnswer.class);
             if(!answer.getType().equalsIgnoreCase(Constants.PONG_ANSWER)) throw new IllegalArgumentException("NOT PONG ANSWER");
             pool.submit(()->getRoom().isAlive(this));
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
-            handleInvalidReceived("PONG ANSWER",e.getMessage());
+            handleInvalidReceived("PONG ANSWER",e.getMessage(),content);
         }
 
     }
 
-    private void closeRequest() {
+    private void closeRequest(String content) {
         pool.submit(()->closeConnection());
     }
 
@@ -180,8 +184,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         //Logger.logAndPrint("[Socket] "+message.getType()+" sending to "+getNickname());
         try {
             //Logger.logAndPrint(gson.toJson(message));
-            out.println(message.getType());
-            out.println(gson.toJson(message));
+            out.println(message.getType()+"#"+gson.toJson(message));
             out.flush();
         }catch(Exception e){
             Logger.logErr(e.getMessage());
@@ -222,8 +225,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
             msg=((TurnRoutineMessage)message).getRoutineRequest();
         Logger.logAndPrint("[Socket] "+msg+" sending to "+getNickname());
         try {
-            out.println(msg);
-            out.println(gson.toJson(message));
+            out.println(msg+"#"+gson.toJson(message));
             out.flush();
         }catch(Exception e){
             Logger.logErr(e.getMessage());
@@ -433,12 +435,11 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
 
     /*------ ANSWER HANDLER ------*/
-    private void onCounterAttackAnswer() {
+    private void onCounterAttackAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            CounterAttackAnswer answer=gson.fromJson(line, CounterAttackAnswer .class);
+            CounterAttackAnswer answer=gson.fromJson(content, CounterAttackAnswer .class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.COUNTER_ATTACK_ANSWER)) throw new IllegalArgumentException("NOT COUNTER ATTACK ANSWER");
 
             //check if can receive this message
@@ -447,16 +448,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("COUNTER ATTACK ANSWER",e.getMessage());
+            handleInvalidReceived("COUNTER ATTACK ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onBoardPreferenceAnswer() {
+    private void onBoardPreferenceAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            BoardPreferenceAnswer answer=gson.fromJson(line, BoardPreferenceAnswer.class);
+            BoardPreferenceAnswer answer=gson.fromJson(content, BoardPreferenceAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.BOARD_SETTING_ANSWER)) throw new IllegalArgumentException("NOT BOARD PREFERENCE");
 
             //check if can receive this answer
@@ -465,16 +465,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("BOARD PREFERENCE ANSWER",e.getMessage());
+            handleInvalidReceived("BOARD PREFERENCE ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onPowerupAnswer() {
+    private void onPowerupAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            SelectedPowerupAnswer answer=gson.fromJson(line, SelectedPowerupAnswer.class);
+            SelectedPowerupAnswer answer=gson.fromJson(content, SelectedPowerupAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.POWERUP_ANSWER)) throw new IllegalArgumentException("NOT POWERUP ANSWER");
 
             //check if can receive this answer
@@ -483,16 +482,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logErr(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("POWERUP ANSWER",e.getMessage());
+            handleInvalidReceived("POWERUP ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onDiscardWeaponAnswer() {
+    private void onDiscardWeaponAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            DiscardedWeaponAnswer answer=gson.fromJson(line, DiscardedWeaponAnswer.class);
+            DiscardedWeaponAnswer answer=gson.fromJson(content, DiscardedWeaponAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.DISCARDED_WEAPON_ANSWER)) throw new IllegalArgumentException("NOT DISCARDED WEAPON ANSWER");
 
             //check if can receive this message
@@ -501,16 +499,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("DISCARD WEAPON ANSWER",e.getMessage());
+            handleInvalidReceived("DISCARD WEAPON ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onUsePowerupAnswer() {
+    private void onUsePowerupAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            UsePowerupAnswer answer=gson.fromJson(line, UsePowerupAnswer.class);
+            UsePowerupAnswer answer=gson.fromJson(content, UsePowerupAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.USE_POWERUP_ANSWER)) throw new IllegalArgumentException("NOT USE POWERUP ANSWER");
 
             //check if can receive this message
@@ -519,16 +516,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("USE POWERUP ANSWER",e.getMessage());
+            handleInvalidReceived("USE POWERUP ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onStopRoutineAnswer() {
+    private void onStopRoutineAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            StopRoutineAnswer answer=gson.fromJson(line, StopRoutineAnswer.class);
+            StopRoutineAnswer answer=gson.fromJson(content, StopRoutineAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.STOP_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT STOP ROUTINE ANSWER");
 
             //check if can receive this message
@@ -537,16 +533,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("STOP ROUTINE ANSWER",e.getMessage());
+            handleInvalidReceived("STOP ROUTINE ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onSelectedPlayersAnswer() {
+    private void onSelectedPlayersAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            SelectedPlayersAnswer answer=gson.fromJson(line, SelectedPlayersAnswer.class);
+            SelectedPlayersAnswer answer=gson.fromJson(content, SelectedPlayersAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.SELECTED_PLAYERS_ANSWER)) throw new IllegalArgumentException("NOT SELECTED PLAYERS ANSWER");
 
             //check if can receive this message
@@ -555,16 +550,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("SELECTED PLAYER ANSWER",e.getMessage());
+            handleInvalidReceived("SELECTED PLAYER ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onEffectAnswer() {
+    private void onEffectAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            EffectAnswer answer=gson.fromJson(line, EffectAnswer.class);
+            EffectAnswer answer=gson.fromJson(content, EffectAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.EFFECT_ANSWER)) throw new IllegalArgumentException("NOT SELECTED EFFECT ANSWER");
 
             //check if can receive this message
@@ -573,16 +567,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("EFFECT ANSWER",e.getMessage());
+            handleInvalidReceived("EFFECT ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onLoadableWeaponAnswer() {
+    private void onLoadableWeaponAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            LoadableWeaponSelectedAnswer answer=gson.fromJson(line, LoadableWeaponSelectedAnswer.class);
+            LoadableWeaponSelectedAnswer answer=gson.fromJson(content, LoadableWeaponSelectedAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.LOADABLE_WEAPON_SELECTED)) throw new IllegalArgumentException("NOT LOADABLE WEAPON ANSWER");
 
             //check if can receive this message
@@ -591,16 +584,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("LOADABLE WEAPON ANSWER",e.getMessage());
+            handleInvalidReceived("LOADABLE WEAPON ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onWeaponAnswer() {
+    private void onWeaponAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            WeaponAnswer answer=gson.fromJson(line, WeaponAnswer.class);
+            WeaponAnswer answer=gson.fromJson(content, WeaponAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.WEAPON_ANSWER)) throw new IllegalArgumentException("NOT WEAPON ANSWER");
 
             //check if can receive this message
@@ -609,16 +601,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("WEAPON ANSWER",e.getMessage());
+            handleInvalidReceived("WEAPON ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onRunRoutineAnswer() {
+    private void onRunRoutineAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            RunAnswer answer=gson.fromJson(line, RunAnswer.class);
+            RunAnswer answer=gson.fromJson(content, RunAnswer.class);
             if(!answer.getRoutineAnswer().equalsIgnoreCase(Constants.RUN_ROUTINE_ANSWER)) throw new IllegalArgumentException("NOT RUN ANSWER");
 
             //check if can receive this message
@@ -627,16 +618,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("ROUTINE ANSWER",e.getMessage());
+            handleInvalidReceived("ROUTINE ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onTurnEndAnswer() {
+    private void onTurnEndAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            TurnEndAnswer answer=gson.fromJson(line, TurnEndAnswer.class);
+            TurnEndAnswer answer=gson.fromJson(content, TurnEndAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.TURN_END_ANSWER)) throw new IllegalArgumentException("NOT TURN END ANSWER");
 
             //check if can receive this message
@@ -647,16 +637,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("TURN END ANSWER",e.getMessage());
+            handleInvalidReceived("TURN END ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onEffectMoveAnswer() {
+    private void onEffectMoveAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            MoveAnswer answer=gson.fromJson(line, MoveAnswer.class);
+            MoveAnswer answer=gson.fromJson(content, MoveAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.EFFECT_MOVE_ANSWER)) throw new IllegalArgumentException("NOT EFFECT MOVE ANSWER");
 
             //check if can receive this message
@@ -665,16 +654,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("EFFECT MOVE ANSWER",e.getMessage());
+            handleInvalidReceived("EFFECT MOVE ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onActionSelectedAnswer() {
+    private void onActionSelectedAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            ActionSelectedAnswer answer=gson.fromJson(line, ActionSelectedAnswer.class);
+            ActionSelectedAnswer answer=gson.fromJson(content, ActionSelectedAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.ACTION_SELECTED)) throw new IllegalArgumentException("NOT ACTION SELECTED ANSWER");
 
             //check if can receive this message
@@ -683,16 +671,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("ACTION SELECTED ANSWER",e.getMessage());
+            handleInvalidReceived("ACTION SELECTED ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onRespawnAnswer() {
+    private void onRespawnAnswer(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            RespawnAnswer answer=gson.fromJson(line, RespawnAnswer.class);
+            RespawnAnswer answer=gson.fromJson(content, RespawnAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.RESPAWN_ANSWER)) throw new IllegalArgumentException("NOT RESPAWN ANSWER");
 
             //check if can receive this message
@@ -701,16 +688,15 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("RESPAWN ANSWER",e.getMessage());
+            handleInvalidReceived("RESPAWN ANSWER",e.getMessage(),content);
         }
     }
 
-    private void onGameEndAck() {
+    private void onGameEndAck(String content) {
         Gson gson=new Gson();
-        String line=in.nextLine();
-        Logger.logAndPrint(JSON_ANSWER+line);
+        Logger.logAndPrint(JSON_ANSWER+content);
         try{
-            ConfirmEndGameAnswer answer=gson.fromJson(line, ConfirmEndGameAnswer.class);
+            ConfirmEndGameAnswer answer=gson.fromJson(content, ConfirmEndGameAnswer.class);
             if(!answer.getAnswer().equalsIgnoreCase(Constants.CONFIRM_END_GAME)) throw new IllegalArgumentException("NOT END GAME CONFIRM ANSWER");
 
             //check if can receive this message
@@ -719,7 +705,7 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }catch (Exception e){
             Logger.logAndPrint(e.getMessage());
             //HANDLE ERRORS HERE
-            handleInvalidReceived("END GAME CONFIRM",e.getMessage());
+            handleInvalidReceived("END GAME CONFIRM",e.getMessage(),content);
         }
     }
     
@@ -732,9 +718,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         return (status==getRoom().getController().getGameStatus());
     }
     
-    private void handleInvalidReceived(String cause,String message) {
+    private void handleInvalidReceived(String cause,String message, String lastLine) {
         String builder=("An error occurred while trying to execute '")+(cause)+("':\n")+(message);
         Logger.logErr(builder);
+        Logger.logErr("LAST LINE READ: "+lastLine);
         getRoom().forceDisconnection(getNickname());
     }
 

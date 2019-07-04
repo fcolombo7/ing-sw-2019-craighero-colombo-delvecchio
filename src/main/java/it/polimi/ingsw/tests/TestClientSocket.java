@@ -248,8 +248,8 @@ public class TestClientSocket {
         @Override
         public void onRunRoutine(MatrixHelper matrix) {
             System.out.println(count+" SOCKET: RUN ROUTINE");
-            System.out.println("Matrix is: \n"+matrix.toString());
             count++;
+            System.out.println("Matrix is: \n"+matrix.toString());
             for(int i=0;i<matrix.getRowLength();i++){
                 for(int j=0;j<matrix.getColLength();j++) {
                     if (matrix.toBooleanMatrix()[i][j]) {
@@ -264,7 +264,8 @@ public class TestClientSocket {
 
         @Override
         public void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-
+            System.out.println(count+" SOCKET: WAKE UP!");
+            count++;
         }
 
         @Override
@@ -279,7 +280,9 @@ public class TestClientSocket {
 
         @Override
         public void onCanCounterAttack() {
-
+            System.out.println(count+" SOCKET: CAN COUNTER ATTACK");
+            count++;
+            connection.counterAttackAnswer(false);
         }
 
         @Override
@@ -299,17 +302,20 @@ public class TestClientSocket {
 
         @Override
         public void onDisconnectionAdvise() {
-
+            System.out.println(count+" SOCKET: DISCONNECTION ADVISE");
+            count++;
         }
 
         @Override
         public void onGameEnd(List<SimplePlayer> players) {
-
+            System.out.println(count+" SOCKET: GAME END");
+            count++;
         }
 
         @Override
         public void onLeaderboardReceived(List<String> nicknames, List<Integer> points) {
-
+            System.out.println(count+" SOCKET: LEADERBOARD RECEIVED");
+            count++;
         }
     }
 

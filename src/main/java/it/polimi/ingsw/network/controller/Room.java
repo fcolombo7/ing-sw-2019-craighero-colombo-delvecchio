@@ -149,7 +149,8 @@ public class Room {
             @Override
             public void run() {
                 Logger.logErr("KEEP ALIVE: TIMER SCADUTO PER "+client.getNickname());
-                getController().cancelTimerAfterKeepAlive(client.getNickname());
+                if(playing)
+                    getController().cancelTimerAfterKeepAlive(client.getNickname());
                 handleDisconnection(client);
             }
         },Server.getKeepAliveTimer()*1000);

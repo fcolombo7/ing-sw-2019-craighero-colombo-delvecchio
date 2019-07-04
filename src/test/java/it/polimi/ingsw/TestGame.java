@@ -217,41 +217,6 @@ public class TestGame {
     }
 
     @Test
-    public void RespawnPlayerErrorTest(){
-        Game game= new Game();
-        Player p1= new Player("p1","",true);
-        ArrayDeque<MatchMessage> collector=new ArrayDeque<>();
-
-        DebugView view= new DebugView(p1,collector);
-        game.addPlayer(p1);
-        game.register(view);
-        game.setGameBoard(1);
-        assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-
-        game.respawnPlayerRequest(p1,true);
-        assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_REQUEST_MESSAGE));
-        p1.setStatus(PlayerStatus.WAITING);
-
-        game.respawnPlayer(p1,p1.getPowerups().get(0));
-
-        assertThat(collector.pop().getRequest(), is(Constants.INVALID_ANSWER));
-        p1.setStatus(PlayerStatus.FIRST_SPAWN);
-
-        try {
-            game.respawnPlayer(p1, game.drawPowerup());
-            assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_COMPLETED_MESSAGE));
-        }catch(Exception e){
-            assertThat(e.getMessage(),is("MISSING POWERUP"));
-        }
-
-        game.respawnPlayer(p1,p1.getPowerups().get(0));
-        assertThat(collector.pop().getRequest(), is(Constants.RESPAWN_COMPLETED_MESSAGE));
-
-        assertTrue(p1.getPowerups().size()<2);
-        assertNotNull(p1.getPosition());
-    }
-
-    @Test
     public void CashDamagesTest(){
         Game game= new Game();
         Player p1=new Player("nickname1", "", true);

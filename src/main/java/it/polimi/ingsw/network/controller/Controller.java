@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.controller;
 
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.ShootingRoutine;
 import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.model.exceptions.MatchConfigurationException;
@@ -95,6 +96,12 @@ public class Controller{
                                     room.forceDisconnection(p.getNickname());
                                     executionMap.remove(t);
                                     timerMap.remove(p.getNickname());
+                                    try{
+                                        ((ShootingRoutine)game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
+                                        Logger.logAndPrint("Counter attack canceled in the shooting routine .");
+                                    }catch(Exception e){
+                                        Logger.logAndPrint("No shooting routine in execution.");
+                                    }
                                     game.getCurrentTurn().forceClosing();
                                     closeTurn(p.getNickname());
                                 }
@@ -120,13 +127,15 @@ public class Controller{
             t.purge();
             timerMap.remove(sender);
             executionMap.remove(t);
+            Logger.logAndPrint("CLOSE TURN OF A NON DISCONNECTED PLAYER");
         }
         if (game.getCurrentPlayer().getNickname().equals(sender)) {
+            Logger.logAndPrint("CLOSE TURN OF THE CURRENT PLAYER ("+sender+")");
             game.endTurn();
             handleDeads();
-            return;
+        }else{
+            Logger.logAndPrint("CLOSE TURN: WHAT THE FUCK IS GOING ON HERE? ("+sender+")");
         }
-        //throw new IllegalStateException("INVALID PLAYER RECEIVED");
     }
     
     public void selectAction(String action){
@@ -300,6 +309,12 @@ public class Controller{
                     }
                     timerMap.clear();
                     if(game.getStatus()==GameStatus.PLAYING_TURN) {
+                        try{
+                            ((ShootingRoutine)game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
+                            Logger.logAndPrint("Counter attack canceled in the shooting routine .");
+                        }catch(Exception e){
+                            Logger.logAndPrint("No shooting routine in execution.");
+                        }
                         game.getCurrentTurn().forceClosing();
                         closeTurn(game.getCurrentPlayer().getNickname());
                     }
@@ -320,6 +335,12 @@ public class Controller{
                         t.purge();
                         executionMap.remove(t);
                         timerMap.remove(game.getCurrentPlayer().getNickname());
+                    }
+                    try{
+                        ((ShootingRoutine)game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
+                        Logger.logAndPrint("Counter attack canceled in the shooting routine .");
+                    }catch(Exception e){
+                        Logger.logAndPrint("No shooting routine in execution.");
                     }
                     game.getCurrentTurn().forceClosing();
                     closeTurn(game.getCurrentPlayer().getNickname());
