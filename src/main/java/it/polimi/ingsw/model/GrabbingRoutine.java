@@ -23,7 +23,6 @@ public class GrabbingRoutine implements TurnRoutine {
     private Turn turn;
     private MatrixHelper grabMatrix;
     private Weapon grabbedWeapon;
-    private Powerup grabbedPowerup;
     private List<Weapon> inSquareWeapons;
 
     GrabbingRoutine(Turn turn, MatrixHelper grabMatrix){
@@ -103,7 +102,17 @@ public class GrabbingRoutine implements TurnRoutine {
         List<Color> cost=new ArrayList<>(grabbedWeapon.getAmmo());
         cost.remove(0);
         for(Color color:cost){
-            turn.getGame().getCurrentPlayer().getBoard().removeAmmo(color);
+            if(turn.getGame().getCurrentPlayer().getBoard().getAmmo().contains(color)) {
+                turn.getGame().getCurrentPlayer().getBoard().removeAmmo(color);
+            }
+            else{
+                for(Powerup p:turn.getGame().getCurrentPlayer().getPowerups()) {
+                    if(p.getColor().equals(color)) {
+                        turn.getGame().getCurrentPlayer().popPowerup(p);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -129,7 +138,6 @@ public class GrabbingRoutine implements TurnRoutine {
                 ammo.add(grabbedTile.getAmmo(2));
             else{
                 Powerup powerup=turn.getGame().drawPowerup();
-                grabbedPowerup=powerup;
                 if(turn.getGame().getCurrentPlayer().getPowerups().size()<3) {
                     turn.getGame().getCurrentPlayer().addPowerup(powerup);
                     turn.getGame().notify(new GrabbedPowerupMessage(turn.getGame().getCurrentPlayer().getNickname(), new SimplePlayer(turn.getGame().getCurrentPlayer()), powerup,powerup.getColor()));
@@ -150,6 +158,8 @@ public class GrabbingRoutine implements TurnRoutine {
         cost.remove(0);
 
         List<Color> playerAmmo=new ArrayList<>(turn.getGame().getCurrentPlayer().getBoard().getAmmo());
+        for(Powerup p:turn.getGame().getCurrentPlayer().getPowerups())
+            playerAmmo.add(p.getColor());
         for(Color color:cost){
             boolean removed=false;
             for(Color single:playerAmmo){

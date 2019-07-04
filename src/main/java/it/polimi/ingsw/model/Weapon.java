@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model;
 
+import com.sun.source.tree.Tree;
+import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.model.exceptions.CardNotInitializedException;
 import it.polimi.ingsw.model.exceptions.WeaponEffectException;
 import it.polimi.ingsw.model.exceptions.WeaponLoadException;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.utils.Logger;
+import it.polimi.ingsw.utils.MatrixHelper;
 import it.polimi.ingsw.utils.TreeNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -420,21 +423,56 @@ public class Weapon extends Card{
             boolean val=haveAmmo(ammo,eCost);
             if(val){
                 boolean usable=getEffect(node.getValue()).canUse(turn);
-                if(usable){
-                    List<TreeNode<Integer>> children=node.getChildren();
-                    boolean end=false;
-                    for (TreeNode<Integer> child: children) {
-                        if(child.getValue()==-1) {
+                if(usable) {
+                    checkIfMe(node,turn,eCost,availableEffects);
+                    List<TreeNode<Integer>> children = node.getChildren();
+                    boolean end = false;
+                    for (TreeNode<Integer> child : children) {
+                        if (child.getValue() == -1) {
                             end = true;
                             break;
                         }
                     }
-                    if(end||!iterateEffects(children, updateAmmo(ammo,eCost),turn).isEmpty())
-                        availableEffects.add(getEffect(node.getValue()));
+                    if ((end || !iterateEffects(children, updateAmmo(ammo, eCost), turn).isEmpty())&&!availableEffects.contains(getEffect(node.getValue())))
+                            availableEffects.add(getEffect(node.getValue()));
                 }
             }
         }
         return availableEffects;
+    }
+
+    /**
+     * This method is used to chek if the target of the node is ME
+     * @param node representing the current node
+     * @param turn representing the current turn
+     * @param eCost representing the cost of the effect
+     * @param availableEffects representing the available effects
+     */
+    private void checkIfMe(TreeNode<Integer> node, Turn turn, List<Color> eCost, List<Effect> availableEffects) {
+        if (this.getEffect(node.getValue()).getTarget().getType() == TargetType.ME) {
+            List<TreeNode<Integer>> children = getUsableChildren(node.getChildren());
+            boolean[][] mat=getEffect(node.getValue()).getMovementMatrix(turn.getGame().getCurrentPlayer(),turn.getGame().getPlayers(),turn.getSelectedPlayers(),turn.getGame().getGameBoard()).toBooleanMatrix();
+            for(int i=0;i<mat.length;i++){
+                for(int j=0;j<mat[0].length;j++){
+                    if(mat[i][j]){
+                        Square pos=turn.getGame().getCurrentPlayer().getPosition();
+                        turn.getGame().getCurrentPlayer().setPosition(turn.getGame().getGameBoard().getSquare(i,j));
+                        if(!iterateEffects(children,updateAmmo(ammo, eCost), turn).isEmpty()&&!availableEffects.contains(getEffect(node.getValue())))
+                            availableEffects.add(getEffect(node.getValue()));
+                        turn.getGame().getCurrentPlayer().setPosition(pos);
+                    }
+                }
+            }
+        }
+    }
+
+    private List<TreeNode<Integer>> getUsableChildren(List<TreeNode<Integer>> children){
+        List<TreeNode<Integer>> ret=new ArrayList<>(children);
+        for(TreeNode<Integer> t:children){
+            if(t.getValue()==-1)
+                ret.remove(t);
+        }
+        return ret;
     }
 
     /**TODO: NEED TO BE TESTED
