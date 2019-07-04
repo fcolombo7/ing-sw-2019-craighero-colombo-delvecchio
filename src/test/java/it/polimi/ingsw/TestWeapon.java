@@ -179,7 +179,7 @@ public class TestWeapon {
     public void TestEffectOrder1(){
         try
         {
-            Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/vulcanizzatore.xml");
+            Weapon weapon=new Weapon("weapon1","vulcanizzatore","src/main/Resources/weapons/vulcanizzatore.xml");
             weapon.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);

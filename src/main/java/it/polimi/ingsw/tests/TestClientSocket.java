@@ -310,12 +310,14 @@ public class TestClientSocket {
         public void onGameEnd(List<SimplePlayer> players) {
             System.out.println(count+" SOCKET: GAME END");
             count++;
+            connection.confirmEndGame();
         }
 
         @Override
         public void onLeaderboardReceived(List<String> nicknames, List<Integer> points) {
             System.out.println(count+" SOCKET: LEADERBOARD RECEIVED");
             count++;
+            System.out.println(nicknames.toString());
         }
     }
 

@@ -23,11 +23,14 @@ public class RemoteView extends View{
 
     @Override
     protected void show(MatchMessage message) {
-        Logger.log("Sending a "+message.getRequest()+" to "+getPlayer().getNickname());
-        if(message.getRequest().equalsIgnoreCase(Constants.TURN_ROUTINE_MESSAGE))
-            senderMap.get(((TurnRoutineMessage)message).getRoutineRequest()).send(message);
-        else
+        if(message.getRequest().equalsIgnoreCase(Constants.TURN_ROUTINE_MESSAGE)) {
+            Logger.log("Sending a "+((TurnRoutineMessage) message).getRoutineRequest()+" to "+getPlayer().getNickname());
+            senderMap.get(((TurnRoutineMessage) message).getRoutineRequest()).send(message);
+        }
+        else {
+            Logger.log("Sending a "+message.getRequest()+" to "+getPlayer().getNickname());
             senderMap.get(message.getRequest()).send(message);
+        }
     }
 
     @Override

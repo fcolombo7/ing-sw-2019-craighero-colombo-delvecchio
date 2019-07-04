@@ -23,7 +23,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -108,6 +107,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(() -> {
                 try {
+                    Logger.log("[RMI] Sending the board preference");
                     stub.boardPreference(session, value);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call boardPreference().");
@@ -122,6 +122,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the player respawn");
                     stub.respawnPlayer(session,powerup);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call respawnPlayer().");
@@ -134,6 +135,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     public void closeTurn() {
         sendingPool.submit(()->{
         try {
+            Logger.log("[RMI] Sending the close turn");
             stub.closeTurn(session);
         } catch (RemoteException e) {
             Logger.logErr("RemoteException has been thrown when call closeTurn().");
@@ -146,6 +148,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the turn action");
                     stub.selectAction(session,action);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call selectAction().");
@@ -159,6 +162,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the player move answer");
                     stub.movePlayer(session,target,newPosition);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call movePlayer().");
@@ -172,6 +176,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the discard powerup answer");
                     stub.discardWeapon(session,weapon);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call discardWeapon().");
@@ -186,6 +191,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     public void selectEffect(String effectName) {
         sendingPool.submit(()->{
             try {
+                Logger.log("[RMI] Sending the select effect answer");
                 stub.selectEffect(session,effectName);
             } catch (RemoteException e) {
                 Logger.logErr("RemoteException has been thrown when call selectEffect().");
@@ -200,6 +206,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the loadable weapon answer");
                     stub.loadableWeapon(session,weapon);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call loadableWeapon().");
@@ -215,6 +222,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the run answer");
                     stub.runAction(session,newPosition);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call runAction().");
@@ -229,10 +237,10 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     public void selectPlayers(List<List<String>> selected) {
         Gson gson= new Gson();
         String string=gson.toJson(selected);
-        Logger.logAndPrint(string);
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the select player answer");
                     stub.selectPlayers(session,string);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call selectPlayers().");
@@ -263,6 +271,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the stop routine answer");
                     stub.stopRoutine(session,stop);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call stopRoutine().");
@@ -278,6 +287,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the use powerup answer");
                     stub.usePowerup(session,use);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call usePowerup().");
@@ -293,6 +303,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the select weapon answer");
                     stub.selectWeapon(session,weapon);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call selectWeapon().");
@@ -308,6 +319,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the counter attack answer");
                     stub.counterAttackAnswer(session,counterAttack);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call counterAttackAnswer().");
@@ -322,6 +334,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
         if(!disconnected) {
             sendingPool.submit(()->{
                 try {
+                    Logger.log("[RMI] Sending the confirm end game answer");
                     stub.confirmEndGame(session);
                 } catch (RemoteException e) {
                     Logger.logErr("RemoteException has been thrown when call confirmEndGame().");

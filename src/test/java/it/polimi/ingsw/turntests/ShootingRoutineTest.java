@@ -703,4 +703,79 @@ public class ShootingRoutineTest {
 
         Logger.log("Test Finished");
     }
+    @Test
+    public void TestCannoneVortex(){
+        try
+        {
+            Weapon weapon=new Weapon("weapon1","cannone vortex","src/main/Resources/weapons/cannonevortex.xml");
+            weapon.init();
+            Game game=new Game();
+            Player p1=new Player("nickname1", "", true);
+            Player p2=new Player("nickname2", "", false);
+            Player p3=new Player("nickname3", "", false);
+            Player p4=new Player("nickname4", "", false);
+
+            game.addPlayer(p1);
+            game.addPlayer(p2);
+            game.addPlayer(p3);
+            game.addPlayer(p4);
+
+            ArrayDeque<MatchMessage> collector=new ArrayDeque<>();
+            DebugView view=new DebugView(p1,collector);
+
+            game.register(view);
+
+            game.setGameBoard(1);
+            GameBoard board=game.getGameBoard();
+            List<Color> ammo=new ArrayList<>();
+            ammo.add(Color.RED);
+            ammo.add(Color.RED);
+            ammo.add(Color.BLUE);
+            ammo.add(Color.BLUE);
+            p1.getBoard().addAmmo(ammo);
+
+            p1.addWeapon(weapon);
+            p1.setPosition(board.getSquare(1,2));
+            p2.setPosition(board.getSquare(2,3));
+            p3.setPosition(board.getSquare(1,2));
+            p4.setPosition(board.getSquare(0,0));
+            p1.setStatus(PlayerStatus.PLAYING);
+            p2.setStatus(PlayerStatus.WAITING);
+            p3.setStatus(PlayerStatus.WAITING);
+            p4.setStatus(PlayerStatus.WAITING);
+            assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
+
+            Turn turn= new Turn(game);
+
+            assertThat(collector.pop().getRequest(), is(Constants.TURN_AVAILABLE_ACTIONS));
+
+            turn.selectAction("SHOOT");
+
+            assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+            assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.USABLE_WEAPONS_MESSAGE));
+
+            turn.getInExecutionRoutine().handleAnswer(new WeaponAnswer(p1.getNickname(),new Card(weapon)));
+
+            assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+            AvailableEffectsMessage msg= (AvailableEffectsMessage)collector.pop();
+            assertThat(msg.getRoutineRequest(), is(Constants.AVAILABLE_EFFECTS_MESSAGE));
+
+            Logger.logAndPrint("RECEIVED EFFECTS\n"+msg.getEffects().toString());
+
+            turn.getInExecutionRoutine().handleAnswer(new EffectAnswer(p1.getNickname(),"BASE"));
+
+            assertThat(collector.peek().getRequest(), is(Constants.TURN_ROUTINE_MESSAGE));
+            assertThat(((TurnRoutineMessage)collector.pop()).getRoutineRequest(), is(Constants.SELECTABLE_PLAYERS_MESSAGE));
+            List<String> list=new ArrayList<>();
+            list.add(p2.getNickname());
+            List<List<String>> selected=new ArrayList<>();
+            selected.add(list);
+
+            turn.getInExecutionRoutine().handleAnswer(new SelectedPlayersAnswer(p1.getNickname(),selected));
+
+            Logger.log("Test Finished");
+        } catch (Exception e) {
+            fail("Unhandled Exception has been thrown.");
+        }
+    }
 }
