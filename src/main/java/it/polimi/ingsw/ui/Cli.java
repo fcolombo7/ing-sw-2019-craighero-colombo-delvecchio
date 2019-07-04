@@ -1064,7 +1064,7 @@ public class Cli implements AdrenalineUI{
             if(correctInput(list, choice))
                 rightChoice = true;
         }while (!rightChoice);
-        serverConnection.usePowerup(choice.equals("S"));
+        serverConnection.stopRoutine(choice.equals("S"));
     }
 
     @Override
