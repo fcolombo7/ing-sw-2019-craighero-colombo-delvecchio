@@ -644,6 +644,12 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * This method is called to initialize the game window
+     * @param numMap represents the chosen map
+     * @param skullNumber represents the number of the skull of the current game
+     */
+
     public static void initGameWindow(int numMap, int skullNumber) {
 
 
@@ -758,18 +764,6 @@ public class MainWindow extends Application {
 
 
 
-
-
-
-        //boolean mapp1=false;
-        //boolean mapp2=true;
-        //boolean mapp3=false;
-        //boolean mapp4=false;
-        //if(urlmap.contains("/gui/map1.png")) mapp1=true;
-        //if(urlmap.contains("/gui/map2.png")) mapp2=true;
-        //if(urlmap.contains("/gui/map3.png")) mapp3=true;
-        //if(urlmap.contains("/gui/map4.png")) mapp4=true;
-
         AnchorPane gp = new AnchorPane();
 
         if (numMap == 1) {
@@ -801,25 +795,6 @@ public class MainWindow extends Application {
             initMap4(gp);
         }
 
-        //map = new ImageView(image);
-        //map.setImage(image);
-
-        /*if (numMap == 1) {
-            //image = new Image("/gui/map1.png");
-            initMap1(gp);
-        }
-        if (numMap == 2) {
-            //image = new Image("/gui/map2.png");
-            initMap2(gp);
-        }
-        if (numMap == 3) {
-            //image = new Image("/gui/map3.png");
-            initMap3(gp);
-        }
-        if (numMap == 4) {
-            //image = new Image("/gui/map4.png");
-            initMap4(gp);
-        }*/
 
 
         //playerBoard= new Image("/gui/pl4fr.png");
@@ -905,18 +880,6 @@ public class MainWindow extends Application {
         setPosButton(eff3, 1110, 350);
         setPosButton(eff4, 1150, 350);
 
-
-
-        /*b1= new Button();
-        b2=new Button();
-        b3=new Button();
-        b4=new Button();
-        b5= new Button();
-        b6= new Button();
-        b7= new Button();
-        b8= new Button();
-        b9= new Button();
-        b10= new Button(); */
 
         infoStage=new Stage();
         //infoStage.setFullScreen(true);
@@ -1124,44 +1087,6 @@ public class MainWindow extends Application {
 
 
 
-        /*Button deck=new Button();
-        deck.setPrefWidth(58*widthScaleFactor);
-        deck.setPrefHeight(97*heightScaleFactor);
-        deck.setStyle("-fx-background-color: transparent");
-        deck.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Rules.showRules();
-            }
-        });  */
-
-
-        //infoStage= new Stage();
-
-
-
-
-
-
-
-
-        /*ammsq1= new Button();
-        ammsq2= new Button();
-        ammsq3= new Button();
-        ammsq4= new Button();
-        ammsq5= new Button();
-        ammsq6= new Button();
-        ammsq7= new Button(); */
-
-        //gp.getChildren().add(map);
-
-        //if(mapp2) initMap2(gp);
-
-
-        //gp.getChildren().addAll(map, plB, fmarkdr, nfmarkdr, smarkdr, nsmarkdr, tmarkdr, ntmarkdr, fomarkdr, nfomarkdr, fimarkdr, nfimarkdr, firstdr, secdr, thirddr, fdr, fidr, sdr, sedr, edr, ndr, tdr, eldr, twdr, pl1, pl2, pl3, pl4, fmarkdr1, nfmarkdr1, smarkdr1, nsmarkdr1, tmarkdr1, ntmarkdr1, fomarkdr1, nfomarkdr1, fimarkdr1, nfimarkdr1, fmarkdr2, nfmarkdr2, smarkdr2, nsmarkdr2, tmarkdr2, ntmarkdr2, fomarkdr2, nfomarkdr2, fimarkdr2, nfimarkdr2, fmarkdr3, nfmarkdr3, smarkdr3, nsmarkdr3, tmarkdr3, ntmarkdr3, fomarkdr3, nfomarkdr3, fimarkdr3, nfimarkdr3, fmarkdr4, nfmarkdr4, smarkdr4, nsmarkdr4, tmarkdr4, ntmarkdr4, fomarkdr4, nfomarkdr4, fimarkdr4, nfimarkdr4, osdr, ssdr, tsdr, fsdr, fisdr, sisdr, sesdr, esdr, nsdr, tesdr, elsdr, twsdr, os2dr, o3sdr, o4sdr, ss2dr, s3sdr, s4sdr, ts2dr, t3sdr, t4sdr, fs2dr, f3sdr, f4sdr, fi2sdr, fi3sdr, fi4sdr, si2sdr, si3sdr, si4sdr, se2sdr, se3sdr, se4sdr, e2sdr, e3sdr, e4sdr, n2sdr, n3sdr, n4sdr, te2sdr, te3sdr, te4sdr, el2sdr, el3sdr, el4sdr, tw2sdr, tw3sdr, tw4sdr, dw, dp, yam, bam, ram, nb, ny, nr, pu1, pu2, pu3, pu4, myp1, myp2, myp3, myp4, shoot, grab, move, loadWeapon, wp1, wp2, wp3, myw1, myw2, myw3, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, wa1, wa2, wa3, wa4, wa5, wa6, wa7, wa8, wa9, a1, a2, a3, a4, a5, a6, a7, a8, a9, deck, inf1, inf2, inf3, inf4, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7);
-        //aggiungere per mappe con piu cose di map2 e aggiungere users
-
-
         user1 = new Button();
         user1.setMinSize(8, 9);
         configButton(user1, 8, 9, 200, 440);
@@ -1319,33 +1244,7 @@ public class MainWindow extends Application {
         overkillTrack.add(numbKill8);
         overkillTrack.add(numbKill9);
 
-            /*configPlayerBoards();
-            configMyWeap();
-            configMyPowerups();
-            configMyAmmo();
-            configMyDamages();
-            configMyMarks();
-            configPl1Damages();
-            configPl1Marks();
-            configPl2Damages();
-            configPl2Marks();
-            configPl3Damages();
-            configPl3Marks();
-            configPl4Damages();
-            configPl4Marks();
-            configWeapBoardImg();
-            configWeapBoardButtons();
-            configUserButtons(); */
 
-
-        /*a1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                wp1.setImage(wea1);
-                wa1.setImage(null);
-                myw1.setStyle("-fx-border-color: transparent");
-            }
-        });*/
 
         setPosButton(shoot, 5, 670);
         setPosButton(grab, 125, 670);
@@ -1392,37 +1291,7 @@ public class MainWindow extends Application {
         gp.getChildren().addAll(labPlayer1, labPlayer2, labPlayer3, labPlayer4);
 
         gp.getChildren().addAll(mydeath1, mydeath2, mydeath3, mydeath4, mydeath5, mydeath6, mydeath1fr, mydeath2fr, mydeath3fr, mydeath4fr, en1death1, en1death2, en1death3, en1death4, en1death5, en1death6, en1death1fr, en1death2fr, en1death3fr, en1death4fr, en2death1, en2death2, en2death3, en2death4, en2death5, en2death6, en2death1fr, en2death2fr, en2death3fr, en2death4fr, en3death1, en3death2, en3death3, en3death4, en3death5, en3death6, en3death1fr, en3death2fr, en3death3fr, en3death4fr, en4death1, en4death2, en4death3, en4death4, en4death5, en4death6, en4death1fr, en4death2fr, en4death3fr, en4death4fr);
-        /*if(numMap==1) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    if (!(i == 2 && j == 0)) gp.getChildren().add(squareButtonMatrix[i][j]);
-                }
-            }
-        }
 
-        if(numMap==2) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    if (!((i == 2 && j == 0)||(i==0&&j==3))) gp.getChildren().add(squareButtonMatrix[i][j]);
-                }
-            }
-        }
-
-        if(numMap==3) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    gp.getChildren().add(squareButtonMatrix[i][j]);
-                }
-            }
-        }
-
-        if(numMap==4) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    if (!(i == 0 && j == 3)) gp.getChildren().add(squareButtonMatrix[i][j]);
-                }
-            }
-        }*/
         //, ammsq1, ammsq2, ammsq3, ammsq4, ammsq5, ammsq6, ammsq7, ammsq8
 
         Scene scene = new Scene(gp, 1200 * widthScaleFactor, 675 * heightScaleFactor);
@@ -1445,7 +1314,11 @@ public class MainWindow extends Application {
         launch(args);
     }
 
-
+    /**
+     * This method configs the info stages
+     * @param numEnem represents which enemy is the player for me
+     * @param player represents infos of that player
+     */
 
     public static void config(int numEnem, SimplePlayer player){
         if(numEnem==1) {
@@ -1546,6 +1419,11 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method sets the pane of the players
+     * @param numberEnemy represents which enemy is the player for me
+     */
+
     public static void setStageAp(int numberEnemy){
 
         if(numberEnemy==1){
@@ -1570,12 +1448,26 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method sets the position of a button
+     * @param button represents the button
+     * @param x represents the x coordinate
+     * @param y represents the y coordinate
+     */
 
     private static void setPosButton(Button button, double x, double y){
         button.setLayoutX(x*widthScaleFactor);
         button.setLayoutY(y*heightScaleFactor);
     }
 
+    /**
+     * This method configs a button
+     * @param button is the button
+     * @param prefWidth represents the width to set
+     * @param prefHeight represents the height to set
+     * @param x represents the x coordinate
+     * @param y represents the y coordinate
+     */
     private static void configButton(Button button, double prefWidth, double prefHeight, double x, double y){
         button.setPrefWidth(prefWidth*widthScaleFactor);
         button.setPrefHeight(prefHeight*heightScaleFactor);
@@ -1583,6 +1475,14 @@ public class MainWindow extends Application {
         button.setLayoutY(y*heightScaleFactor);
     }
 
+    /**
+     * This method configs a transparent button
+     * @param button is the button
+     * @param prefWidth represents the width to set
+     * @param prefHeight represents the height to set
+     * @param x represents the x coordinate
+     * @param y represents the y coordinate
+     */
     private static void configTranspButton(Button button, double prefWidth, double prefHeight, double x, double y){
         button.setPrefWidth(prefWidth*widthScaleFactor);
         button.setPrefHeight(prefHeight*heightScaleFactor);
@@ -1591,6 +1491,7 @@ public class MainWindow extends Application {
         button.setStyle("-fx-background-color: transparent");
         button.setDisable(true);
     }
+
 
     private static void configImg(ImageView img, double width, double x, double y){
         img.setFitWidth(width*widthScaleFactor);
@@ -1619,51 +1520,6 @@ public class MainWindow extends Application {
     }
 
 
-    /*private static Stage zoomWeapp(Image weap){
-        AnchorPane weapshow = new AnchorPane();
-        ImageView bigweap = new ImageView(weap);
-        bigweap.setFitWidth(150*widthScaleFactor);
-        bigweap.setFitHeight(253*heightScaleFactor);
-        weapshow.getChildren().add(bigweap);
-        Scene wshowscene = new Scene(weapshow, 150*widthScaleFactor, 253*heightScaleFactor);
-        Stage wshowstage = new Stage();
-        wshowstage.setResizable(false);
-        wshowstage.initStyle(StageStyle.UNDECORATED);
-        wshowstage.setScene(wshowscene);
-        wshowstage.setX(1030*widthScaleFactor);
-        wshowstage.setY(390*heightScaleFactor);
-
-        wshowstage.show();
-        return wshowstage;
-    }
-
-    private static Stage zoomUser(Image us){
-        AnchorPane usershow = new AnchorPane();
-        ImageView bigUser = new ImageView(us);
-        bigUser.setFitWidth(129*widthScaleFactor);
-        bigUser.setFitHeight(137*heightScaleFactor);
-        usershow.getChildren().add(bigUser);
-        Scene showscene = new Scene(usershow, 129*widthScaleFactor, 137*heightScaleFactor);
-        Stage showstage = new Stage();
-        showstage.setResizable(false);
-        showstage.initStyle(StageStyle.UNDECORATED);
-        showstage.setScene(showscene);
-        showstage.setX(1050*widthScaleFactor);
-        showstage.setY(400*heightScaleFactor);
-
-        showstage.show();
-        return showstage;
-    }*/
-
-    /*private static void setMyWeapAction(Button myw){
-        myw.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                myw.setStyle("-fx-background-color: grey");
-
-            }
-        });
-    }*/
 
 
     private static void configMyWeap(){
@@ -2555,6 +2411,9 @@ public class MainWindow extends Application {
     }
 
     private static void setMyDamages(List<String> myDamages){
+        for(int j=0; j<12; j++){
+            myDamagesImageViewHashMap.get(j+1).setImage(null);
+        }
         for(int i=0; i<myDamages.size(); i++){
             myDamagesImageViewHashMap.get(i+1).setImage(damagesHashMap.get(myDamages.get(i)));
         }
@@ -3864,32 +3723,54 @@ public class MainWindow extends Application {
         okay.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                user1.setDisable(true);
-                user2.setDisable(true);
-                user3.setDisable(true);
-                user4.setDisable(true);
-                user5.setDisable(true);
-                okay.setDisable(true);
-                mess.setText("Scegli chi colpire\n e premi Invia");
-                for(int i=0; i<tempPlSelected.size(); i++){
-                    for(int j=0; j<tempPlSelected.get(i).size(); j++){
-                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==1) {
-                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), dstructor);
+                if(target.getMaxPlayerIn()==-1){
+                    user1.setDisable(true);
+                    user2.setDisable(true);
+                    user3.setDisable(true);
+                    user4.setDisable(true);
+                    user5.setDisable(true);
+                    okay.setDisable(true);
+                    plSelected=tempPlSelected;
+                    connection.selectPlayers(plSelected);
+                    countTarget=0;
+                    countPlayerList1=0;
+                    countPlayerList2=0;
+                    countPlayerList3=0;
+                    countPlayerList4=0;
+                    list0.clear();
+                    list1.clear();
+                    list2.clear();
+                    list3.clear();
+                    plSelected.clear();
+                    tempPlSelected.clear();
+                }else {
+                    user1.setDisable(true);
+                    user2.setDisable(true);
+                    user3.setDisable(true);
+                    user4.setDisable(true);
+                    user5.setDisable(true);
+                    okay.setDisable(true);
+                    mess.setText("Scegli chi colpire\n e premi Invia");
+                    for (int i = 0; i < tempPlSelected.size(); i++) {
+                        for (int j = 0; j < tempPlSelected.get(i).size(); j++) {
+                            if (nicknameTurnHashMap.get(tempPlSelected.get(i).get(j)) == 1) {
+                                setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), dstructor);
+                            }
+                            if (nicknameTurnHashMap.get(tempPlSelected.get(i).get(j)) == 2) {
+                                setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), dozer);
+                            }
+                            if (nicknameTurnHashMap.get(tempPlSelected.get(i).get(j)) == 3) {
+                                setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), banshee);
+                            }
+                            if (nicknameTurnHashMap.get(tempPlSelected.get(i).get(j)) == 4) {
+                                setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), sprog);
+                            }
+                            if (nicknameTurnHashMap.get(tempPlSelected.get(i).get(j)) == 5) {
+                                setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), violet);
+                            }
+                            userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))).setDisable(false);
+                            setUsFunction(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), tempPlSelected.get(i).get(j), target);
                         }
-                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==2) {
-                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), dozer);
-                        }
-                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==3) {
-                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), banshee);
-                        }
-                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==4) {
-                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), sprog);
-                        }
-                        if(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))==5) {
-                            setActionUserButton(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), violet);
-                        }
-                        userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))).setDisable(false);
-                        setUsFunction(userButtonHashMap.get(nicknameTurnHashMap.get(tempPlSelected.get(i).get(j))), tempPlSelected.get(i).get(j), target);
                     }
                 }
 
@@ -4406,6 +4287,7 @@ public class MainWindow extends Application {
                 setMyPosition(player.getPosition());
                 setMyDamages(player.getDamages());
                 setMyMarks(player.getMarks());
+                setMyDeathCounter(player);
             } else {
                 mess.setText(player.getNickname() + "si è \nrigenerato");
                 setPosition(player.getPosition(), nicknameTurnHashMap.get(player.getNickname()));
@@ -4707,6 +4589,17 @@ public class MainWindow extends Application {
                 eff3.setOnAction(null);
                 eff4.setDisable(false);
                 eff4.setOnAction(null);
+            }
+
+            if(target.getMaxNumber()==-1){
+                mess.setText("Schiaccia ok");
+                tempPlSelected=selectable;
+                eff1.setDisable(true);
+                eff2.setDisable(true);
+                eff3.setDisable(true);
+                eff4.setDisable(true);
+                okay.setDisable(false);
+
             }
 
             set1Function(selectable, target);
