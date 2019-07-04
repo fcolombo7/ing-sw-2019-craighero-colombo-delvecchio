@@ -1084,36 +1084,26 @@ public class MainWindow extends Application {
         dp.setFitWidth(44 * widthScaleFactor);
         dp.setFitHeight(63 * heightScaleFactor);
 
-
-
-
         user1 = new Button();
-        user1.setMinSize(8, 9);
-        configButton(user1, 8, 9, 200, 440);
-        user1.setStyle("-fx-background-image: url('/gui/user1.png')");
-        //user1.setStyle("-fx-background-size: cover");
-        //user1.setStyle("-fx-background-position: center");
-        //user1.setStyle("-fx-background-repeat: no-repeat");
+        user1.setMinSize(9, 10);
+        configButton(user1, 9, 10, 200, 440,1);
+
 
         user2 = new Button();
-        user2.setMinSize(8, 9);
-        configButton(user2, 8, 9, 215, 440);
-        user2.setStyle("-fx-background-image: url('/gui/user2.png')");
+        user2.setMinSize(9, 10);
+        configButton(user2, 9, 10, 215, 440,2);
 
         user3 = new Button();
-        user3.setMinSize(8, 9);
-        configButton(user3, 8, 9, 230, 440);
-        user3.setStyle("-fx-background-image: url('/gui/user3.png')");
+        user3.setMinSize(9, 10);
+        configButton(user3, 9, 10, 230, 440,3);
 
         user4 = new Button();
-        user4.setMinSize(8, 9);
-        configButton(user4, 8, 9, 245, 440);
-        user4.setStyle("-fx-background-image: url('/gui/user4.png')");
+        user4.setMinSize(9, 10);
+        configButton(user4, 9, 10, 245, 440,4);
 
         user5 = new Button();
-        user5.setMinSize(8, 9);
-        configButton(user5, 8, 9, 260, 440);
-        user5.setStyle("-fx-background-image: url('/gui/user5.png')");
+        user5.setMinSize(9, 10);
+        configButton(user5, 9, 10, 260, 440,5);
 
         initUserButtonHashMap();
 
@@ -1454,7 +1444,6 @@ public class MainWindow extends Application {
      * @param x represents the x coordinate
      * @param y represents the y coordinate
      */
-
     private static void setPosButton(Button button, double x, double y){
         button.setLayoutX(x*widthScaleFactor);
         button.setLayoutY(y*heightScaleFactor);
@@ -1467,12 +1456,17 @@ public class MainWindow extends Application {
      * @param prefHeight represents the height to set
      * @param x represents the x coordinate
      * @param y represents the y coordinate
+     * @param playerNumber represents the number of the player
      */
-    private static void configButton(Button button, double prefWidth, double prefHeight, double x, double y){
-        button.setPrefWidth(prefWidth*widthScaleFactor);
-        button.setPrefHeight(prefHeight*heightScaleFactor);
-        button.setLayoutX(x*widthScaleFactor);
-        button.setLayoutY(y*heightScaleFactor);
+    private static void configButton(Button button, double prefWidth, double prefHeight, double x, double y, int playerNumber) {
+        button.setPrefWidth(prefWidth * widthScaleFactor);
+        button.setPrefHeight(prefHeight * heightScaleFactor);
+        button.setLayoutX(x * widthScaleFactor);
+        button.setLayoutY(y * heightScaleFactor);
+        ImageView imageView = new ImageView(new Image(MainWindow.class.getResourceAsStream("/gui/user" + playerNumber + ".png")));
+        imageView.setFitHeight(prefHeight * heightScaleFactor);
+        imageView.setFitWidth(prefWidth * widthScaleFactor);
+        button.setGraphic(imageView);
     }
 
     /**
