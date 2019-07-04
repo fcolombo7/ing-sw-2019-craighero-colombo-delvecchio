@@ -123,10 +123,12 @@ public class Controller{
     public void closeTurn(String sender){
         if(!isDisconnected(sender)){
             Timer t=timerMap.get(sender);
-            t.cancel();
-            t.purge();
+            if (t!=null) {
+                t.cancel();
+                t.purge();
+                executionMap.remove(t);
+            }
             timerMap.remove(sender);
-            executionMap.remove(t);
             Logger.logAndPrint("CLOSE TURN OF A NON DISCONNECTED PLAYER");
         }
         if (game.getCurrentPlayer().getNickname().equals(sender)) {
