@@ -252,7 +252,7 @@ public class Effect {
         boolean [][]mat=new boolean[rowLength][colLength];
         for(int i=0;i<rowLength;i++){
             for(int j=0;j<colLength;j++)
-                mat[i][i]=val==(i==lastPos[0]&&j==lastPos[1]);
+                mat[i][j]=val==(i==lastPos[0]&&j==lastPos[1]);
         }
         return matrix.bitWiseAnd(new MatrixHelper(mat));
     }

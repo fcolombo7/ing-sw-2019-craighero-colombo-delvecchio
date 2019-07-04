@@ -739,7 +739,7 @@ public class Game extends Observable<MatchMessage> {
                     if(powerup.getColor().name().equalsIgnoreCase(square.getRoomColor().name()))
                         player.setPosition(square);
                 }
-                player.setStatus(player.getStatus()==PlayerStatus.FIRST_SPAWN?PlayerStatus.PLAYING:PlayerStatus.WAITING);
+                player.setStatus(PlayerStatus.PLAYING);
                 MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup,powerup.getColor());
                 notify(message);
                 return;

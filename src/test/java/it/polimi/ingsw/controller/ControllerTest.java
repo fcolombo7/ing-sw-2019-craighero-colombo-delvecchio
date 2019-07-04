@@ -252,9 +252,9 @@ public class ControllerTest {
         game.addPlayer(p1);
         game.addPlayer(p2);
         game.addPlayer(p3);
-        p3.getBoard().addDamage(p1,5);
-        p3.getBoard().addDamage(p2,6);
-        p3.setStatus(PlayerStatus.ALMOST_DEAD);
+        p2.getBoard().addDamage(p1,5);
+        p2.getBoard().addDamage(p3,6);
+        p2.setStatus(PlayerStatus.ALMOST_DEAD);
         controller.start();
         controller.roomPreferenceManager("nickname1",1);
         controller.roomPreferenceManager("nickname2",2);
@@ -263,6 +263,5 @@ public class ControllerTest {
         controller.closeTurn("nickname1");
         assertNotNull(p1.getPosition());
         assertNotNull(p2.getPosition());
-        assertNotNull(p3.getPosition());
     }
 }
