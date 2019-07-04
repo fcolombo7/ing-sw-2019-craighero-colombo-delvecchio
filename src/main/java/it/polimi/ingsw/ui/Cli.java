@@ -47,14 +47,6 @@ public class Cli implements AdrenalineUI{
     private List<int[]> offsets = new ArrayList<>();
     private ConsoleInput reader = new ConsoleInput();
 
-    public Cli(int a){
-    }
-
-    public Cli(SimpleBoard board){
-        this.board = board;
-        buildMap();
-    }
-
     public Cli(String hostname) throws IOException, NotBoundException, URISyntaxException {
         colors.add(RED_W);
         colors.add(BLUE_W);
@@ -142,7 +134,9 @@ public class Cli implements AdrenalineUI{
     private void printKillsToGo(){
         if(this.frenzyMode)
             Logger.print(RED_W + REVERSE + "FRENESIA");
-        else for(int i=0; i<this.board.getSkullNumber(); i++)
+        for(int i=0; i<this.board.getKillshotTrack().size(); i++)
+            Logger.print(playersColor.get(this.board.getKillshotTrack().get(i)) + DROPLET + (this.board.getOverkillTrack().get(i)? "x2" : " ") + RESET);
+        for(int i=this.board.getSkullNumber(); i>this.board.getKillshotTrack().size(); i--)
                 Logger.print(RED_W + SKULL + " ");
         Logger.print(RESET + "\n");
     }
@@ -157,7 +151,7 @@ public class Cli implements AdrenalineUI{
         Logger.print(myPBoard.toString() + "\n");
     }
 
-    public void printMap(){
+    private void printMap(){
         System.out.println(map.toString());
     }
 
@@ -215,11 +209,11 @@ public class Cli implements AdrenalineUI{
         }while (!flag);
     }
 
-    public void setPlayersColor(Map<String, String> playersColor) {
+    private void setPlayersColor(Map<String, String> playersColor) {
         this.playersColor = playersColor;
     }
 
-    public void setSquareOffset(Map<String, int[]> squareOffset) {
+    private void setSquareOffset(Map<String, int[]> squareOffset) {
         this.squareOffset = squareOffset;
     }
 
@@ -236,7 +230,7 @@ public class Cli implements AdrenalineUI{
         return coordinates;
     }
 
-    public void setPlayerPosition(SimplePlayer player, int[] coordinates){
+    private void setPlayerPosition(SimplePlayer player, int[] coordinates){
 
         String playerColor = playersColor.get(player.getNickname());
         int[] offsetsEx = squareOffset.get(playerColor);
@@ -254,7 +248,7 @@ public class Cli implements AdrenalineUI{
         mapList.get(coordinates[0]).get(coordinates[1]).get(offsetsEx[0]).insert(offsetsEx[1], " ").replace(offsetsEx[1], offsetsEx[1]+spaceFiller.length(), playerColor + PLAYER + RESET + parseColor(board.getBoard()[coordinates[0]][coordinates[1]].getRoomColor()));
     }
 
-    public void printMarks(SimplePlayer player){
+    private void printMarks(SimplePlayer player){
         StringBuilder marks = new StringBuilder("Marks: ");
         for(String mark : player.getMarks()){
             marks.append(playersColor.get(mark)).append(MARK).append(RESET);
@@ -262,7 +256,7 @@ public class Cli implements AdrenalineUI{
         Logger.print(marks.toString());
     }
 
-    public void printAmmo(SimplePlayer player){
+    private void printAmmo(SimplePlayer player){
         int redAmmo = 0;
         int blueAmmo = 0;
         int yellowAmmo = 0;
@@ -315,10 +309,10 @@ public class Cli implements AdrenalineUI{
         Logger.print("Powerup: " + player.getPowerupCards().size());
     }
 
-    public StringBuilder buildPlayerBoard(SimplePlayer player){
+    private StringBuilder buildPlayerBoard(SimplePlayer player){
         StringBuilder playerBoard = new StringBuilder();
         if(player.isFirst())
-            playerBoard.append(FIRST_PLAYER + "\n");
+            playerBoard.append(FIRST + "\n");
         playerBoard.append(String.format("  |>>%s|>%s %n", HAND, GUN));
         if(player.getDamages().isEmpty())
             playerBoard.append("\u25CB \n");
@@ -346,16 +340,20 @@ public class Cli implements AdrenalineUI{
 
 
     private String parseDamages(SimplePlayer player){
-        StringBuilder damages = new StringBuilder();
-        for(String droplet : player.getDamages()){
-            damages.append(playersColor.get(droplet)).append(DAMAGE).append(RESET);
-        }
-        damages.insert(20, " ");
-        damages.insert(51, " ");
-        damages.insert(102, " ");
-        damages.insert(113, " ");
-        damages.append("\n");
-        return damages.toString();
+            StringBuilder damages = new StringBuilder();
+            for (String droplet : player.getDamages()) {
+                damages.append(playersColor.get(droplet)).append(DAMAGE).append(RESET);
+            }
+            if(damages.length()>20)
+                damages.insert(20, " ");
+            if(damages.length()>51)
+                damages.insert(51, " ");
+            if(damages.length()>102)
+                damages.insert(102, " ");
+            if(damages.length()>113)
+                damages.insert(113, " ");
+            damages.append("\n");
+            return damages.toString();
     }
 
     private void buildMap(){
@@ -638,20 +636,20 @@ public class Cli implements AdrenalineUI{
         return col;
     }
 
-    private Card choosingPowerup(){
+    private Card choosingPowerup(List<Card> pow, List<Color> colors){
         int choice;
         boolean rightChoice = false;
         List<String> list = new ArrayList<>();
         do {
-            for (Card powerup : powerups) {
-                Logger.print((powerups.indexOf(powerup) + 1) + ". " + powerup.getName() + "\n");
-                list.add(String.valueOf(powerups.indexOf(powerup) + 1));
+            for (Card powerup : pow) {
+                Logger.print((pow.indexOf(powerup) + 1) + ". " + parseColor(colors.get(pow.indexOf(powerup))) + powerup.getName() + RESET + "\n");
+                list.add(String.valueOf(pow.indexOf(powerup) + 1));
             }
             choice = Integer.parseInt(reader.readLine()) - 1;
             if(correctInput(list, String.valueOf(choice+1)))
                 rightChoice=true;
         }while (!rightChoice);
-        return powerups.get(choice);
+        return pow.get(choice);
     }
 
     @Override
@@ -701,9 +699,12 @@ public class Cli implements AdrenalineUI{
 
     @Override
     public synchronized void onBoardUpdate(SimpleBoard gameBoard) {
+        if(this.board==null){
+            this.board=gameBoard;
+            buildMap();
+            printMap();
+        }
         this.board=gameBoard;
-        buildMap();
-        printMap();
     }
 
     @Override
@@ -722,11 +723,11 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onRespwanRequest(List<Card> powerups,List<Color> colors) {
+    public synchronized void onRespwanRequest(List<Card> powerups, List<Color> colors) {
         reader.cancel();
         this.powerups.addAll(powerups);
         Logger.print("Scegli un powerup da scartare per resuscitare: \n");
-        Card powerup = choosingPowerup();
+        Card powerup = choosingPowerup(powerups, colors);
         this.powerups.remove(powerup);
         serverConnection.respawnPlayer(powerup);
     }
@@ -1038,8 +1039,8 @@ public class Cli implements AdrenalineUI{
         List<String> list = new ArrayList<>();
         do {
             Logger.print("Puoi usare un powerup in base alla situazione di gioco corrente, vuoi usufruirne?\n [S/N]");
-            list.add("S\n");
-            list.add("N\n");
+            list.add("S");
+            list.add("N");
 
             choice = reader.readLine();
             if(correctInput(list, choice))
@@ -1056,8 +1057,8 @@ public class Cli implements AdrenalineUI{
         List<String> list = new ArrayList<>();
         do {
             Logger.print("Puoi usare effetti opzionali della tua arma, vuoi usarli?\n [S/N]");
-            list.add("S\n");
-            list.add("N\n");
+            list.add("S");
+            list.add("N");
 
             choice = reader.readLine();
             if(correctInput(list, choice))
@@ -1365,7 +1366,7 @@ public class Cli implements AdrenalineUI{
                 return squareList;
     }
 
-    public class LimitedQueue<E> extends LinkedList<E> {
+    private class LimitedQueue<E> extends LinkedList<E> {
 
         private int limit;
 
