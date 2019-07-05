@@ -57,10 +57,8 @@ public class GameBoard {
     public GameBoard(Node map, int skullNumber, int sourceReference){
         this.spawnPoints=new ArrayList<>(Color.values().length);
         NamedNodeMap attributes=map.getAttributes();
-        rowLength=Integer.parseInt(attributes.getNamedItem("rowLength").getNodeValue());
-        colLength=Integer.parseInt(attributes.getNamedItem("colLength").getNodeValue());
-        if(rowLength<=0) throw new IllegalArgumentException("Invalid attribute: rowLength must be >0.");
-        if(colLength<=0) throw new IllegalArgumentException("Invalid attribute: colLength must be >0.");
+        rowLength=3;
+        colLength=4;
 
         this.map=new Square[rowLength][colLength];
         NodeList nodeList=map.getChildNodes();

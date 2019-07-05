@@ -2,12 +2,14 @@ package it.polimi.ingsw.utils;
 
 public class Constants {
     /*CONFIGURATION RESOURCES*/
-    public static final String GAME_CONFIG_FILEPATH="src/main/Resources/config.xml";
-    public static final String BOARD_FOLDER = "src/main/Resources/boards";
-    public static final String BOARD1_FILEPATH="src/main/Resources/boards/board1.xml";
-    public static final String BOARD2_FILEPATH="src/main/Resources/boards/board2.xml";
-    public static final String BOARD3_FILEPATH="src/main/Resources/boards/board3.xml";
-    public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
+    public static final boolean BUILDING_JAR = true;
+
+    //public static final String GAME_CONFIG_FILEPATH="src/main/Resources/config.xml";
+    //public static final String BOARD_FOLDER = "src/main/Resources/boards";
+    //public static final String BOARD1_FILEPATH="src/main/Resources/boards/board1.xml";
+    //public static final String BOARD2_FILEPATH="src/main/Resources/boards/board2.xml";
+    //public static final String BOARD3_FILEPATH="src/main/Resources/boards/board3.xml";
+    //public static final String BOARD4_FILEPATH="src/main/Resources/boards/board4.xml";
 
     /* NETWORKING PARAMETERS */
     //TODO:DEVONO ESSERE RIMOSSI!!!

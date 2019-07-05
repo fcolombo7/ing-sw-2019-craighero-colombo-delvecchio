@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-<!--Board 4: good for any players-->
-<!DOCTYPE board SYSTEM "board_schema.dtd">
 <board>
     <row>
         <square>

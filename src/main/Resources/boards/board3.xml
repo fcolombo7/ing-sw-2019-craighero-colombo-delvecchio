@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-<!--Board 3: good for 4 or 5 players-->
-<!DOCTYPE board SYSTEM "board_schema.dtd">
 <board>
     <row>
         <square>

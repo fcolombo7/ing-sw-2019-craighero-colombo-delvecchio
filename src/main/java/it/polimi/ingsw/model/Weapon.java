@@ -123,7 +123,7 @@ public class Weapon extends Card{
             }
         });
         */
-            Document document = builder.parse(new File(getInitXML()));
+            Document document = builder.parse(this.getClass().getResourceAsStream(getInitXML()));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();

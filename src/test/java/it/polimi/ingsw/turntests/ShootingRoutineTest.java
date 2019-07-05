@@ -52,7 +52,7 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/distruttore.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/distruttore.xml"));
         p1.addWeapon(weapon);
         ArrayList<Powerup> pList=new ArrayList<>();
         for(Powerup power: p1.getPowerups()){
@@ -139,7 +139,7 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/raggiotraente.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/raggiotraente.xml"));
         p1.addWeapon(weapon);
         ArrayList<Powerup> pList=new ArrayList<>();
         for(Powerup power: p1.getPowerups()){
@@ -223,7 +223,7 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/distruttore.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/distruttore.xml"));
         p1.addWeapon(weapon);
 
         Logger.log("DROWN WEAPON");
@@ -327,7 +327,7 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/distruttore.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/distruttore.xml"));
         p1.addWeapon(weapon);
         ArrayList<Powerup> pList=new ArrayList<>();
         for(Powerup power: p1.getPowerups()){
@@ -335,7 +335,7 @@ public class ShootingRoutineTest {
         }
         for(Powerup p:pList)
             p1.popPowerup(p);
-        Powerup powerup=new Powerup(new Card("idp","name","src/main/Resources/powerups/mirinor.xml"));
+        Powerup powerup=new Powerup(new Card("idp","name","/powerups/mirinor.xml"));
         p1.addPowerup(powerup);
 
         Logger.log("DROWN WEAPON");
@@ -438,7 +438,7 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/distruttore.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/distruttore.xml"));
         p1.addWeapon(weapon);
         weapon.unload();
 
@@ -546,8 +546,8 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/distruttore.xml"));
-        Powerup powerup=new Powerup(new Card("id","granata venom","src/main/Resources/powerups/granatavenomb.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/distruttore.xml"));
+        Powerup powerup=new Powerup(new Card("id","granata venom","/powerups/granatavenomb.xml"));
         p1.addWeapon(weapon);
         ArrayList<Powerup> pList=new ArrayList<>();
         for(Powerup power: p1.getPowerups()){
@@ -643,7 +643,7 @@ public class ShootingRoutineTest {
         p2.setStatus(PlayerStatus.WAITING);
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
-        Weapon weapon=new Weapon(new Card("id","nome","src/main/Resources/weapons/spadafotonica.xml"));
+        Weapon weapon=new Weapon(new Card("id","nome","/weapons/spadafotonica.xml"));
         p1.addWeapon(weapon);
         ArrayList<Powerup> pList=new ArrayList<>();
         for(Powerup power: p1.getPowerups()){
@@ -707,7 +707,7 @@ public class ShootingRoutineTest {
     public void TestCannoneVortex(){
         try
         {
-            Weapon weapon=new Weapon("weapon1","cannone vortex","src/main/Resources/weapons/cannonevortex.xml");
+            Weapon weapon=new Weapon("weapon1","cannone vortex","/weapons/cannonevortex.xml");
             weapon.init();
             Game game=new Game();
             Player p1=new Player("nickname1", "", true);

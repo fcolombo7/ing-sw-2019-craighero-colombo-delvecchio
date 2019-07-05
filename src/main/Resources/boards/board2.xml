@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <!--Board 2: good for any number of players-->
-<!DOCTYPE board SYSTEM "board_schema.dtd">
 <board>
     <row>
         <square>

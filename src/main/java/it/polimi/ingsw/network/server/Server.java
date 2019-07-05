@@ -16,7 +16,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,7 +164,7 @@ public class Server{
     private static void setUpConfiguration() throws ParserConfigurationException, IOException, SAXException, URISyntaxException {
         String path;
         String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
-        Logger.logAndPrint(inExecutionFile);
+        //Logger.logAndPrint(inExecutionFile);
         int last = 0;
         int last2=0;
         for (int i = 0; i < inExecutionFile.length(); i++) {
@@ -176,10 +176,8 @@ public class Server{
                 last2 = i;
         }
         if(last>last2){
-            Logger.logAndPrint(inExecutionFile.substring(0, last + 1));
             path = inExecutionFile.substring(0, last + 1) + "config.xml";
         }else{
-            Logger.logAndPrint(inExecutionFile.substring(0, last2 + 1));
             path = inExecutionFile.substring(0, last2 + 1) + "config.xml";
         }
 
@@ -323,10 +321,20 @@ public class Server{
         return quickMoveTimer;
     }
 
+    private static String setHostname() throws SocketException, UnknownHostException {
+        String ip="";
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            ip = socket.getLocalAddress().getHostAddress();
+        }
+        Logger.logAndPrint("SERVER IP: "+ip);
+        return ip;
+    }
+
     public static void main(String[] args) {
         try {
             setUpConfiguration();
-            String hostname=Constants.RMI_HOSTNAME;
+            String hostname=setHostname();
             Server server = new Server(hostname);
             server.startServer();
 
