@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GUI;
+package it.polimi.ingsw.ui.GUI;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -1309,7 +1309,7 @@ public class MainWindow extends Application {
      * @param player represents infos of that player
      */
 
-    public static void config(int numEnem, SimplePlayer player){
+    private static void config(int numEnem, SimplePlayer player){
         if(numEnem==1) {
             infostage1.getChildren().clear();
         }
@@ -1413,7 +1413,7 @@ public class MainWindow extends Application {
      * @param numberEnemy represents which enemy is the player for me
      */
 
-    public static void setStageAp(int numberEnemy){
+    private static void setStageAp(int numberEnemy){
 
         if(numberEnemy==1){
             infoStage.setScene(infoscene1);
@@ -3738,12 +3738,22 @@ public class MainWindow extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 if(target.getMaxPlayerIn()==-1){
+                    ok.setDisable(true);
                     user1.setDisable(true);
+                    user1.setOnAction(null);
                     user2.setDisable(true);
+                    user2.setOnAction(null);
                     user3.setDisable(true);
+                    user3.setOnAction(null);
                     user4.setDisable(true);
+                    user4.setOnAction(null);
                     user5.setDisable(true);
+                    user5.setOnAction(null);
                     okay.setDisable(true);
+                    minNumberList1=false;
+                    minNumberList2=false;
+                    minNumberList3=false;
+                    minNumberList4=false;
                     plSelected=tempPlSelected;
                     connection.selectPlayers(plSelected);
                     countTarget=0;
@@ -3878,6 +3888,7 @@ public class MainWindow extends Application {
         ok.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                plSelected.clear();
                 ok.setDisable(true);
                 user1.setDisable(true);
                 user1.setOnAction(null);
