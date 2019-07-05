@@ -1,9 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.AmmoTile;
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.network.controller.Controller;
@@ -20,6 +17,7 @@ import it.polimi.ingsw.utils.MatrixHelper;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -263,5 +261,53 @@ public class ControllerTest {
         controller.closeTurn("nickname1");
         assertNotNull(p1.getPosition());
         assertNotNull(p2.getPosition());
+    }
+
+    @Test
+    public void TestLeadeBoard(){
+        ArrayDeque<String> collector1=new ArrayDeque<>();
+        ArrayDeque<String> collector2=new ArrayDeque<>();
+        ArrayDeque<String> collector3=new ArrayDeque<>();
+        TestClient cl1,cl2,cl3;
+        cl1=new TestClient(collector1);
+        cl2=new TestClient(collector2);
+        cl3=new TestClient(collector3);
+        RemoteView rView1,rView2,rView3;
+        Room room= new Room(new TestClient(new ArrayDeque<>()));
+        Game game= new Game();
+        Controller controller =new Controller(game,room);
+
+        Player p1=new Player("nickname1", "", true);
+        Player p2=new Player("nickname2", "", false);
+        Player p3=new Player("nickname3", "", false);
+        cl1.setNickname("nickname1");
+        cl2.setNickname("nickname2");
+        cl3.setNickname("nickname3");
+        rView1= new RemoteView(p1,cl1);
+        rView2= new RemoteView(p2,cl2);
+        rView3= new RemoteView(p3,cl3);
+        game.register(rView1);
+        game.register(rView2);
+        game.register(rView3);
+        cl1.setCollector(controller);
+        cl2.setCollector(controller);
+        cl3.setCollector(controller);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        p2.getBoard().addDamage(p1,5);
+        p2.getBoard().addDamage(p3,6);
+        p2.setStatus(PlayerStatus.ALMOST_DEAD);
+        controller.start();
+
+        controller.roomPreferenceManager("nickname1",1);
+        controller.roomPreferenceManager("nickname2",2);
+        controller.roomPreferenceManager("nickname3",2);
+        game.getCurrentTurn().forceClosing();
+        controller.closeTurn("nickname1");
+
+        game.sendLeaderBoard(p1.getNickname(),new ArrayList<>());
+        assertThat(collector1.pop(),is("LEADERBOARD"));
+        Logger.log("FINISHED");
     }
 }

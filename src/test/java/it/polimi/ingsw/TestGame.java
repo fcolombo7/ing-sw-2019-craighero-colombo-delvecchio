@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.MatchMessage;
 import it.polimi.ingsw.turntests.DebugView;
 import it.polimi.ingsw.utils.Constants;
+import it.polimi.ingsw.utils.Logger;
 import org.junit.Test;
 
 import java.util.ArrayDeque;

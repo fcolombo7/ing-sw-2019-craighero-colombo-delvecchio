@@ -252,6 +252,6 @@ class TestClient extends ClientConnection {
 
     @Override
     public void sendLeaderboard(List<String> nicknames, List<Integer> points) {
-
+        collector.push("LEADERBOARD");
     }
 }

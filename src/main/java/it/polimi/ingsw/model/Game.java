@@ -772,7 +772,7 @@ public class Game extends Observable<MatchMessage> {
         for(Player player: map.keySet()){
             int value=map.get(player);
             int i=0;
-            while(i<points.size()&&points.get(i)<value)i++;
+            while(i<points.size()&&points.get(i)>value)i++;
             points.add(i,value);
             nicknames.add(i, player.getNickname());
         }
