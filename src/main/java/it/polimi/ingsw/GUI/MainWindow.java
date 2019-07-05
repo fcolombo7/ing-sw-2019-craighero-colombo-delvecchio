@@ -798,8 +798,7 @@ public class MainWindow extends Application {
 
 
         //playerBoard= new Image("/gui/pl4fr.png");
-        plB = new ImageView(playerBoard);
-        configImgv(plB, 600, 0, 480);
+
         zoomedimg = new ImageView();
         configImageView(zoomedimg, 150, 253, 1030, 410);
         zoomedUser = new ImageView();
@@ -1597,6 +1596,7 @@ public class MainWindow extends Application {
     private static void configPlayerBoards(){
 
         if(myTurn==1){
+            playerBoard=new Image("/gui/playerBoard.png");
             pla1= new Image("/gui/pl1.png");
             pla2= new Image("/gui/pl2.png");
             pla3= new Image("/gui/pl3.png");
@@ -1605,6 +1605,7 @@ public class MainWindow extends Application {
         }
         if(myTurn==2){
             pla1= new Image("/gui/playerBoard.png");
+            playerBoard=new Image("/gui/pl1.png");
             pla2= new Image("/gui/pl2.png");
             pla3= new Image("/gui/pl3.png");
             pla4= new Image("/gui/pl4.png");
@@ -1613,6 +1614,7 @@ public class MainWindow extends Application {
         if(myTurn==3){
             pla1= new Image("/gui/playerBoard.png");
             pla2= new Image("/gui/pl1.png");
+            playerBoard=new Image("/gui/pl2.png");
             pla3= new Image("/gui/pl3.png");
             pla4= new Image("/gui/pl4.png");
 
@@ -1621,6 +1623,7 @@ public class MainWindow extends Application {
             pla1= new Image("/gui/playerBoard.png");
             pla2= new Image("/gui/pl1.png");
             pla3= new Image("/gui/pl2.png");
+            playerBoard=new Image("/gui/pl3.png");
             pla4= new Image("/gui/pl4.png");
 
         }
@@ -1629,8 +1632,12 @@ public class MainWindow extends Application {
             pla2= new Image("/gui/pl1.png");
             pla3= new Image("/gui/pl2.png");
             pla4= new Image("/gui/pl3.png");
+            playerBoard=new Image("/gui/pl4");
 
         }
+
+        plB = new ImageView(playerBoard);
+        configImgv(plB, 600, 0, 480);
 
 
         //pla1= new Image("/gui/pl1.png");
@@ -2797,6 +2804,10 @@ public class MainWindow extends Application {
             }
         }
 
+        for(int i=0; i<numPlayers; i++) {
+            marksLabelHashMap.get(i+1+5*(numEnemy-1)).setText("0");
+        }
+
 
         for(int i=0; i<numPlayers; i++) {
             int t = Collections.frequency(marks, turnNicknameHashMap.get(i+1));
@@ -2812,6 +2823,11 @@ public class MainWindow extends Application {
                 user=j+1;
             }
         }
+        for(int i=0; i<12; i++){
+            //il primo deve essere i+12*numbavversario
+            damageImageViewHashMap.get(i+1+12*(user-1)).setImage(null);
+        }
+
         for(int i=0; i<damages.size(); i++){
             //il primo deve essere i+12*numbavversario
             damageImageViewHashMap.get(i+1+12*(user-1)).setImage(damagesHashMap.get(damages.get(i)));
@@ -3135,6 +3151,10 @@ public class MainWindow extends Application {
     private static void switchBoards(List<SimplePlayer> players){
         for(int i=0; i<players.size(); i++){
             if(players.get(i).isSwitched()) {
+                System.out.println(i);
+                System.out.println(myTurn);
+                //mettere debug qui
+                plBHashMap.get(i+1).setImage(null);
                 plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+11));
             }else {
                 plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+6));
@@ -4071,8 +4091,10 @@ public class MainWindow extends Application {
         initPowerupsHashMap();
 
 
-        String myPlayB=plBhashmap.get(playerTurnNumber-1);
-        playerBoard= new Image(myPlayB);
+        //mettere a posto con degli if
+
+        //String myPlayB=plBhashmap.get(playerTurnNumber-1);
+        //playerBoard= new Image(myPlayB);
         myTurn=playerTurnNumber;
         myNickname=players.get(myTurn-1).getNickname();
         for(int i=0; i<players.size(); i++){
@@ -4120,10 +4142,11 @@ public class MainWindow extends Application {
             damagesHashMap.put(players.get(4).getNickname(), imDropPurple);
         }
 
-
+        System.out.println(myTurn);
         plBHashMap.put(myTurn, plB);
         switch (myTurn){
             case 1:
+                plBHashMap.put(1, plB);
                 plBHashMap.put(2, pl1);
                 plBHashMap.put(3, pl2);
                 plBHashMap.put(4, pl3);
@@ -4131,6 +4154,7 @@ public class MainWindow extends Application {
                 break;
             case 2:
                 plBHashMap.put(1, pl1);
+                plBHashMap.put(2, plB);
                 plBHashMap.put(3, pl2);
                 plBHashMap.put(4, pl3);
                 plBHashMap.put(5, pl4);
@@ -4138,6 +4162,7 @@ public class MainWindow extends Application {
             case 3:
                 plBHashMap.put(1, pl1);
                 plBHashMap.put(2, pl2);
+                plBHashMap.put(3, plB);
                 plBHashMap.put(4, pl3);
                 plBHashMap.put(5, pl4);
                 break;
@@ -4145,6 +4170,7 @@ public class MainWindow extends Application {
                 plBHashMap.put(1, pl1);
                 plBHashMap.put(2, pl2);
                 plBHashMap.put(3, pl3);
+                plBHashMap.put(4, plB);
                 plBHashMap.put(5, pl4);
                 break;
             case 5:
@@ -4152,8 +4178,11 @@ public class MainWindow extends Application {
                 plBHashMap.put(2, pl2);
                 plBHashMap.put(3, pl3);
                 plBHashMap.put(4, pl4);
+                plBHashMap.put(5, plB);
                 break;
         }
+
+
 
 
         labPlayer1=new Label();
@@ -4251,6 +4280,7 @@ public class MainWindow extends Application {
             updateBoard(gameBoard);
             updatePlayerBoards(players, frenzy);
             setMyAmmo(players.get(myTurn-1));
+            System.out.println("fine match update");
             //mess.setText("Fine update");
         });
     }
