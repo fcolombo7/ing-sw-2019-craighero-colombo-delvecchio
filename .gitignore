@@ -5,6 +5,8 @@
 !Resources/
 !Deliverables/
 !src/
+!Deliverables/AM53-SERVER.jar
+!Deliverables/AM53-UI.jar
 
 main/Resources/META-INF
 *.MF
@@ -107,7 +109,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
+
 *.war
 *.nar
 *.ear

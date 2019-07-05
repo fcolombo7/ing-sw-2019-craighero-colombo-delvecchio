@@ -166,11 +166,11 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>AM53-SERVER</finalName>
+                    <finalName>AM53-UI</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>it.polimi.ingsw.network.server.Server</mainClass>
+                            <mainClass>it.polimi.ingsw.ui.gui.Client</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

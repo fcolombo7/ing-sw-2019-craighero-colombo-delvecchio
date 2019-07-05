@@ -24,6 +24,7 @@ public class Client {
         }
         SOCKET_PORT=Integer.parseInt(args[3]);
         RMI_PORT=Integer.parseInt(args[2]);
+        Logger.logAndPrint("RMI: "+RMI_PORT+"\nSocket: "+SOCKET_PORT);
         if ((args[0].equalsIgnoreCase("CLI") || args[0].equalsIgnoreCase("gui")) && !args[1].equalsIgnoreCase("")) {
             System.out.println("Starting " + args[0] + "...");
             if (args[0].equalsIgnoreCase("CLI")) {
