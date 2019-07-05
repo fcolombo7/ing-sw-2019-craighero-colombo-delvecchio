@@ -27,22 +27,49 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class represents the connection interface with the client using socket
+ */
 public class SocketClientConnection extends ClientConnection implements Runnable {
 
+    /**
+     * This attribute represents a constant for the illegal game status
+     */
     private static final String ILLEGAL_STATE="ILLEGAL GAME STATUS";
-    
+
+    /**
+     * This attribute represents represents a constant for the json answers
+     */
     private static final String JSON_ANSWER="[JSON ANSWER] ";
 
+    /**
+     * This attribute represents the socket linked to the connection
+     */
     private Socket socket;
 
+    /**
+     * This attribute represents the server linked to the connection
+     */
     private Server server;
 
+    /**
+     * This attribute represents the scanner of the input
+     */
     private Scanner in;
 
+    /**
+     * This attribute represents the printer
+     */
     private PrintStream out;
 
+    /**
+     * This attribute represents the map that links message to actions
+     */
     private Map<String, MessageManager> messageHandler;
 
+    /**
+     * This attribute represents the executor service that handle the threads connection
+     */
     private ExecutorService pool;
 
     @FunctionalInterface
@@ -50,6 +77,12 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         void exec(String content);
     }
 
+    /**
+     * This constructor sets up the socket connection
+     * @param socket represents the socket linked to the connection
+     * @param server represents the server linked to the connection
+     * @throws IOException when an error occurs
+     */
     public SocketClientConnection(Socket socket, Server server) throws IOException {
         super();
         this.socket = socket;
@@ -74,6 +107,9 @@ public class SocketClientConnection extends ClientConnection implements Runnable
     }
 
 
+    /**
+     * This method creates the map that lins the messages to its action
+     */
     private void loadHandler() {
         if (messageHandler == null) {
             messageHandler = new HashMap<>();
@@ -99,6 +135,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }
     }
 
+    /**
+     * This method handle the login requests
+     * @param content represents the content of the request
+     */
     private void loginRequest(String content) {
         Logger.logAndPrint("[Received a login request from socket]");
         if(isOnline()){
@@ -142,7 +182,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
         }
     }
 
-
+    /**
+     * This method handle the answer needed to keep alive the connection
+     * @param content represents the content of the message
+     */
     private void pongAnswer(String content) {
         Gson gson=new Gson();
         try{
@@ -156,6 +199,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     }
 
+    /**
+     * This method close a request of login
+     * @param content represents the content of the request
+     */
     private void closeRequest(String content) {
         pool.submit(()->closeConnection());
     }
@@ -179,6 +226,10 @@ public class SocketClientConnection extends ClientConnection implements Runnable
 
     /*------ ROOM MESSAGES ------ */
 
+    /**
+     * This method send message relates to the waiting room
+     * @param message represents the message sent
+     */
     private void sendRoomMessage(RoomMessage message) {
         Gson gson= new Gson();
         //Logger.logAndPrint("[Socket] "+message.getType()+" sending to "+getNickname());

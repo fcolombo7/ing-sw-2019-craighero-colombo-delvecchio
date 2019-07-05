@@ -16,12 +16,36 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class represents the connection interface with the client using RMI
+ */
 public class RMIClientConnection extends ClientConnection{
+
+    /**
+     * This attribute represents teh server linked to the connection
+     */
     private RMIServer server;
+
+    /**
+     * This attribute represents the stub sent to the client
+     */
     private RMIClientHandler clientStub;
+
+    /**
+     * This attribute represents the session name
+     */
     private String session;
+
+    /**
+     * This attribute represents the executor service that handle threads connection
+     */
     private ExecutorService pool;
 
+    /**
+     * This constructor sets up parameters for the RMI connection
+     * @param clientStub represents the stub of the client
+     * @param server represents the server linked to the connection
+     */
     public RMIClientConnection(RMIClientHandler clientStub,RMIServer server){
         super();
         this.clientStub=clientStub;
