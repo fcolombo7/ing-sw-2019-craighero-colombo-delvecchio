@@ -23,3 +23,19 @@
 [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)
 [![GREEN](https://placehold.it/15/44bb44/44bb44)](#)
 -->
+
+####HOW TO RUN:
+######Server
+Open the terminal and run `java -jar AM53-SERVER.jar`. 
+<br>In the same directory of the server jar file must be placed the configuration file `config.xml`. <br>Note that if you run the jar server without the configuration file the output will be 
+<br>`ERR: CONFIG.XML - ~~/pathToJar/config.xml (No such file or directory)`
+
+######Client
+The Client jar works with arguments. So if you want to run it, you must write in terminal `CLI|GUI hostname rmiPort socketPort`.
+<br>Remember that: <br>`hostname` must be the server ip address;
+<br>`rmiPort` and `socketPort` must be the same used to configure the server;
+<br><br>GUI example:
+<br>`java -jar AM53-UI.jar GUI 192.168.1.133 12346 12345`
+<br><br>CLI example:
+<br>`java -jar AM53-UI.jar CLI 192.168.1.133 12346 12345`
+<br><br>The examples refer to the configuration of the current `config.xml`
