@@ -18,11 +18,9 @@ public class ConsoleInputReadTask implements Callable<String> {
                 }
                 input = br.readLine();
             } catch (InterruptedException e) {
-                System.out.println("ConsoleInputReadTask() cancelled");
                 return null;
             }
         } while ("".equals(input));
-        System.out.println("Input ok");
         return input;
     }
 }

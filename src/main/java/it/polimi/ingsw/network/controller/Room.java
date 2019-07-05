@@ -15,34 +15,80 @@ import java.util.concurrent.Executors;
 
 public class Room {
 
+    /**
+     * This attribute represents the minimum players allowed in the match
+     */
     private static final int MIN_PLAYERS = Server.getMinPlayerNumber();
 
+    /**
+     * This attribute represents the maximum players allowed in the match
+     */
     private static final int MAX_PLAYERS = Server.getMaxPlayerNumber();
 
+    /**
+     * This attribute represents the players in the room
+     */
     private List<ClientConnection> players;
 
+    /**
+     * This attribute represents if the room is full
+     */
     private boolean full=false;
 
+    /**
+     * This attribute represents if the room has already started a game
+     */
     private boolean playing=false;
 
+    /**
+     * This attribute represents if the room is closed
+     */
     private boolean closed=false;
 
+    /**
+     * This attribute represents if the room is refactorable
+     */
     private boolean refactorable=false;
 
+    /**
+     * This attribute represents the room id
+     */
     private int roomNumber;
 
+    /**
+     * This attribute represents the timer of the room
+     */
     private Timer timer=null;
 
+    /**
+     * This attribute represents the waiting timers of the clients
+     */
     private Map<String, Timer> waitingTimers =null;
 
+    /**
+     * This attribute represents the timers of the keepAlive calls
+     */
     private Map<String, Timer> keepingAliveTimers =null;
 
+    /**
+     * This attribute represents the views of each client
+     */
     private Map<String, View> views;
 
+    /**
+     * This attribute represents the controller linked to the room
+     */
     private Controller controller;
 
+    /**
+     * This attribute represents the model linked to the room
+     */
     private Game model;
 
+    /**
+     * This constructor create a room with the first client inside
+     * @param client represents the first client entering thr room
+     */
     public Room(ClientConnection client) {
         players = new ArrayList<>();
         players.add(client);
@@ -60,6 +106,10 @@ public class Room {
 
     public void setRoomNumber(int number){ roomNumber=number;}
 
+    /**
+     * This method check if it is possible to join the room
+     * @return a boolean representing if the room can be joined
+     */
     public boolean canJoin(){
         return !(playing||full||closed);
     }
@@ -72,6 +122,11 @@ public class Room {
         return players;
     }
 
+    /**
+     * This method check if a join room request is possible and then add the client requesting
+     * @param client represents the client requesting to join
+     * @throws JoinRoomException when is not possible to join the room
+     */
     public synchronized void joinRequest(ClientConnection client) throws JoinRoomException{
         if (!(playing||full)) {
             for (ClientConnection cc:players) {
@@ -93,6 +148,11 @@ public class Room {
         }
     }
 
+    /**
+     * This method remove a client form the room
+     * @param client represents the client to be removed
+     * @return if the room is empty
+     */
     public synchronized boolean remove(ClientConnection client){
         if(!players.contains(client)) throw new IllegalStateException("Removing player which not exits");
         //REMOVING TIMERS
@@ -108,6 +168,10 @@ public class Room {
         return players.isEmpty();
     }
 
+    /**
+     * This method starts the countdown for the room closing
+     * @param time represents the timer length to start
+     */
     private void startCountDown(long time) {
         resetCountDown();
         timer = new Timer();
@@ -119,6 +183,9 @@ public class Room {
         }, time * 1000);
     }
 
+    /**
+     * This method reset countdown
+     */
     private void resetCountDown() {
         if (timer != null) {
             timer.cancel();
@@ -132,6 +199,10 @@ public class Room {
         return controller;
     }
 
+    /**
+     * This methods sets the timer for the keepAlive method
+     * @param client represents the connection to set
+     */
     private void setUpKeepAlive(ClientConnection client) {
         Timer t = new Timer();
         t.schedule(new TimerTask() {
@@ -143,6 +214,10 @@ public class Room {
         keepingAliveTimers.put(client.getNickname(), t);
     }
 
+    /**
+     * This method keep the client alive and check if it is possible
+     * @param client represents the client to check
+     */
     private void keepClientAlive(ClientConnection client){
         Timer t=new Timer();
         t.schedule(new TimerTask() {
@@ -158,6 +233,10 @@ public class Room {
         client.keepAlive();
     }
 
+    /**
+     * This method let the client to be alive
+     * @param client represents the client alive
+     */
     public synchronized void isAlive(ClientConnection client){
         //Logger.logAndPrint("["+client.getNickname()+" IS ALIVE]");
         if(waitingTimers !=null){
@@ -170,6 +249,10 @@ public class Room {
         }
     }
 
+    /**
+     * This method handle the disconnection of a client
+     * @param client represents the client disconnecting
+     */
     private void handleDisconnection(ClientConnection client) {
         resetClientTimers(client);
         if(playing) {
@@ -181,6 +264,10 @@ public class Room {
         client.closeConnection();
     }
 
+    /**
+     * This method force a client diconnection
+     * @param nickname represents the nickname of the client to disconnect
+     */
     public void forceDisconnection(String nickname) {
         for(ClientConnection cc: players){
             if(cc.getNickname().equals(nickname)) {
@@ -190,6 +277,10 @@ public class Room {
         }
     }
 
+    /**
+     * This method reset the timer of the client
+     * @param client represents the client resetting
+     */
     private void resetClientTimers(ClientConnection client){
         Timer t= keepingAliveTimers.get(client.getNickname());
         if(t!=null){
@@ -205,6 +296,9 @@ public class Room {
         }
     }
 
+    /**
+     * This method sets up and create a new match
+     */
     private void startMatch() {
         model= new Game();
         controller= new Controller(model,this);
@@ -226,6 +320,10 @@ public class Room {
         controller.start();
     }
 
+    /**
+     * This method recovers a client disconnected
+     * @param client represents the client recovering
+     */
     public void recoverClient(ClientConnection client) {
         if(controller.isDisconnected(client.getNickname())){
             Player p=controller.getPlayerToRecover(client.getNickname());
@@ -249,7 +347,10 @@ public class Room {
     }
 
 
-
+    /**
+     * This method stops the timers of a client
+     * @param sender represents the nickname of the client to stop
+     */
     public void stopTimers(String sender) {
         for(ClientConnection cc:players){
             if(cc.getNickname().equals(sender)) {
@@ -259,6 +360,9 @@ public class Room {
         }
     }
 
+    /**
+     * This method close the room
+     */
     public void close() {
         for(ClientConnection cc:players){
             resetClientTimers(cc);
@@ -277,6 +381,9 @@ public class Room {
         return refactorable;
     }
 
+    /**
+     * This method clear the player of the room
+     */
     public void clearPlayers(){
         players.clear();
     }

@@ -16,12 +16,12 @@ public class Logger {
 
     private static String filename="none";
 
-    public static void print(String msg){
-        System.out.println(msg);
+    public static void cmd(String msg){
+        System.out.print(msg);
     }
 
-    public static void flush(){
-        System.out.flush();
+    public static void print(String msg){
+        System.out.println(msg);
     }
 
     public static void log(String msg){

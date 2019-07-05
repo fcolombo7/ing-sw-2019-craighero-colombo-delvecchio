@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class represents the server of the game
+ */
 public class Server{
 
     /* CONFIG PARAMETERS */
@@ -48,7 +51,11 @@ public class Server{
 
     private HashMap<String, Integer> disconnected;
 
-    public Server(String hostname) {
+    /**
+     * This constructor initialize properly the server
+     * @param hostname represents the identifier of the host
+     */
+    private Server(String hostname) {
         players=new HashMap<>();
         disconnected=new HashMap<>();
         rooms=new ArrayList<>();
@@ -56,12 +63,22 @@ public class Server{
         socketServer=new SocketServer(this);
     }
 
-    public void startServer() throws ServerException {
+    /**
+     * This method starts RMI and socket type servers
+     * @throws ServerException when a server error occurs
+     */
+    private void startServer() throws ServerException {
         rmiServer.start(Server.getRmiServerPort());
         socketServer.startServer(Server.getSocketServerPort());
     }
 
-    public synchronized int checkClientLogin(String nickname, ClientConnection client){
+    /**
+     * This method check if the client logs properly and create a connection with it
+     * @param nickname represents the client nickname
+     * @param client represents the type of the connection of the client
+     * @return an integer representing the action made by the server
+     */
+    synchronized int checkClientLogin(String nickname, ClientConnection client){
         roomRefactor();
         Logger.logAndPrint("Login request received from " + nickname);
         if(nickname.length()>0&&!players.containsKey(nickname)){
@@ -82,6 +99,9 @@ public class Server{
         }
     }
 
+    /**
+     * This method clear the room and disconnects its player
+     */
     private void roomRefactor() {
         List<Room> tRooms=new ArrayList<>(rooms);
         for (Room r:tRooms) {
@@ -99,7 +119,11 @@ public class Server{
         }
     }
 
-    public synchronized void deregisterConnection(ClientConnection client){
+    /**
+     * Thus method deregister connection of a client
+     * @param client represents the client disconnecting
+     */
+    synchronized void deregisterConnection(ClientConnection client){
         Logger.logAndPrint("Deregistering "+client.getNickname()+" from server");
         players.remove(client.getNickname());
         Room room=client.getRoom();
@@ -113,13 +137,21 @@ public class Server{
         }
     }
 
-    public void disconnectConnection(ClientConnection client) {
+    /**
+     * This method disconnect a client from the server
+     * @param client represents the client disconnecting
+     */
+    void disconnectConnection(ClientConnection client) {
         Logger.logAndPrint("Disconnecting "+client.getNickname()+" from server");
         disconnected.put(client.getNickname(),client.getRoom().getRoomNumber());
         players.remove(client.getNickname());
     }
 
-    public synchronized void joinAvailableRoom(ClientConnection client){
+    /**
+     * This method join a client in the room and create e new one in case of need
+     * @param client represents the client joining
+     */
+    synchronized void joinAvailableRoom(ClientConnection client){
         try {
             joinRoom(client);
         } catch (JoinRoomException e) {
@@ -128,12 +160,21 @@ public class Server{
         }
     }
 
-    public void joinRecoveredRoom(ClientConnection client) {
+    /**
+     * This method recover a connection of a client in the room
+     * @param client represents the client recovering connection
+     */
+    void joinRecoveredRoom(ClientConnection client) {
         Room room=rooms.get(disconnected.get(client.getNickname()));
         disconnected.remove(client.getNickname());
         room.recoverClient(client);
     }
 
+    /**
+     * This method adds a client to a room
+     * @param client represents the client to be add
+     * @throws JoinRoomException when the room is full or already exists a client with the same nickname
+     */
     private void joinRoom(ClientConnection client) throws JoinRoomException {
         if(rooms.isEmpty()) throw  new JoinRoomException("No room created");
         Room lastRoom=rooms.get(rooms.size() - 1);
@@ -145,6 +186,10 @@ public class Server{
         client.setRoom(lastRoom);
     }
 
+    /**
+     * This method create a new room
+     * @param client represents the client added in the new room
+     */
     private synchronized void addNewRoom(ClientConnection client) {
         Room room = new Room(client);
         rooms.add(room);
@@ -152,7 +197,12 @@ public class Server{
         client.setRoom(room);
     }
 
-    public ClientConnection getClientConnection(String nickname){
+    /**
+     * This method return the connection linked to a certain nickname
+     * @param nickname represents the nickname inked to the connection we are looking for
+     * @return the connection linked to the nickname given
+     */
+    ClientConnection getClientConnection(String nickname){
         for (String key:players.keySet()) {
             if(key.equalsIgnoreCase(nickname)){
                 return players.get(nickname);
@@ -161,6 +211,13 @@ public class Server{
         throw new IllegalArgumentException("No player connected with nickname "+nickname);
     }
 
+    /**
+     * This method sets up the parameters useful for the server configuration
+     * @throws ParserConfigurationException when an error occurs in parsing file
+     * @throws IOException when an error occurs in parsing file
+     * @throws SAXException when an error occurs in parsing file
+     * @throws URISyntaxException when an error occurs in URI look up
+     */
     private static void setUpConfiguration() throws ParserConfigurationException, IOException, SAXException, URISyntaxException {
         String path;
         String inExecutionFile = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
@@ -205,12 +262,22 @@ public class Server{
         Logger.logAndPrint("Configuration completed.");
     }
 
+    /**
+     * This method set the number of kills to frenzy mode
+     * @param nodeList represents the node of the parsed file tree
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setSkullNumber(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         skullNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method return next non-empty node
+     * @param nodeList represents the node of the parsed file tree
+     * @return the next TEXT_NODE
+     */
     private static Node getNode(NodeList nodeList){
         int count=0;
         while(count<nodeList.getLength()){
@@ -219,75 +286,125 @@ public class Server{
         return null;
     }
 
+    /**
+     * This method sets the timer for the quick action of the game
+     * @param nodeList represents the node containing the timer
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setQuickMoveTimer(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         quickMoveTimer=Long.parseLong(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method sets the timer of the turn
+     * @param nodeList represents the node containing the timer
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setTurnTimer(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         turnTimer=Long.parseLong(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the timeout length for the keepAlive method
+     * @param nodeList represents the node containing the timer
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setKeepAliveTimer(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         keepAliveTimer=Long.parseLong(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the time for the keepAlive method call frequency
+     * @param nodeList represents the node containing the timer
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setKeepAliveFrequency(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         keepAliveFrequency=Long.parseLong(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the time for the waiting room
+     * @param nodeList represents the node containing the timer
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setWaitingRoomTimer(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         waitingRoomTimer=Long.parseLong(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the max number of the waiting room capability
+     * @param nodeList represents the node containing the number
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setMaxPlayerNumber(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         maxPlayerNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the min number of the waiting room capability
+     * @param nodeList represents the node containing the number
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setMinPlayerNumber(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         minPlayerNumber =Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the port number for the socket connection
+     * @param nodeList represents the node containing the port
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setSocketServerPort(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         socketServerPort=Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the port number for the RMI connection
+     * @param nodeList represents the node containing the port
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setRMIServerPort(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         rmiServerPort=Integer.parseInt(node.getFirstChild().getNodeValue());
     }
 
+    /**
+     * This method set the name number for the RMI connection
+     * @param nodeList represents the node containing the name
+     * @throws IOException when an error occurs in parsing file
+     */
     private static void setRMIServerName(NodeList nodeList) throws IOException {
         Node node=getNode(nodeList);
         if(node==null) throw new IOException("INVALID CONFIG.XML");
         rmiServerName=node.getFirstChild().getNodeValue();
     }
 
-    public static String getRmiServerName() {
+    static String getRmiServerName() {
         return rmiServerName;
     }
 
-    public static int getRmiServerPort() {
+    private static int getRmiServerPort() {
         return rmiServerPort;
     }
 
-    public static int getSocketServerPort() {
+    private static int getSocketServerPort() {
         return socketServerPort;
     }
 

@@ -135,9 +135,9 @@ public class Cli implements AdrenalineUI{
         if(this.frenzyMode)
             Logger.print(RED_W + REVERSE + "FRENESIA");
         for(int i=0; i<this.board.getKillshotTrack().size(); i++)
-            Logger.print(playersColor.get(this.board.getKillshotTrack().get(i)) + DROPLET + (this.board.getOverkillTrack().get(i)? "x2" : " ") + RESET);
+            Logger.cmd(playersColor.get(this.board.getKillshotTrack().get(i)) + DROPLET + (this.board.getOverkillTrack().get(i)? "x2 " : " ") + RESET);
         for(int i=this.board.getSkullNumber(); i>this.board.getKillshotTrack().size(); i--)
-                Logger.print(RED_W + SKULL + " ");
+                Logger.cmd(RED_W + SKULL + " ");
         Logger.print(RESET + "\n");
     }
 
@@ -311,22 +311,36 @@ public class Cli implements AdrenalineUI{
 
     private StringBuilder buildPlayerBoard(SimplePlayer player){
         StringBuilder playerBoard = new StringBuilder();
-        if(player.isFirst())
-            playerBoard.append(FIRST + "\n");
-        playerBoard.append(String.format("  |>>%s|>%s %n", HAND, GUN));
-        if(player.getDamages().isEmpty())
-            playerBoard.append("\u25CB \n");
-        else playerBoard.append(parseDamages(player));
-        playerBoard.append(String.format("%-13s%s%s%n", DROPLET, SKULL, OVERKILL));
-        playerBoard.append("\n");
-        playerBoard.append(deathAndPoints(player));
-
+        if(this.frenzyMode) {
+            if(player.isFirst())
+                playerBoard.append(FIRST + "\n");
+            if(player.getDamages().isEmpty())
+                playerBoard.append("\u25CB \n");
+            else playerBoard.append(parseDamages(player));
+            playerBoard.append(String.format("%-13s%s%n", SKULL, OVERKILL));
+            playerBoard.append("\n");
+            playerBoard.append(deathAndPoints(player));
+        }
+        else {
+            if (player.isFirst())
+                playerBoard.append(FIRST + "\n");
+            playerBoard.append(String.format("  |>>%s|>%s %n", HAND, GUN));
+            if (player.getDamages().isEmpty())
+                playerBoard.append("\u25CB \n");
+            else playerBoard.append(parseDamages(player));
+            playerBoard.append(String.format("%-13s%s%s%n", DROPLET, SKULL, OVERKILL));
+            playerBoard.append("\n");
+            playerBoard.append(deathAndPoints(player));
+        }
         return playerBoard;
     }
 
     private String deathAndPoints(SimplePlayer player){
         StringBuilder deaths = new StringBuilder();
-        int[] points = new int[]{8, 6, 4, 2, 1, 1};
+        int[] points;
+        if(this.frenzyMode)
+            points = new int[]{5, 1, 1, 1};
+        else points = new int[]{8, 6, 4, 2, 1, 1};
         for(int i=0; i<player.getDeathCounter(); i++)
             deaths.append(RED_W + CROSS + " ");
         deaths.append(BOLD);
@@ -846,7 +860,7 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onTurnEnd() {
+    public void onTurnEnd() {
         reader.cancel();
         serverConnection.closeTurn();
         Logger.print("Waiting for your turn...");
@@ -1064,7 +1078,7 @@ public class Cli implements AdrenalineUI{
             if(correctInput(list, choice))
                 rightChoice = true;
         }while (!rightChoice);
-        serverConnection.stopRoutine(choice.equals("S"));
+        serverConnection.stopRoutine(!choice.equals("S"));
     }
 
     @Override
@@ -1107,7 +1121,9 @@ public class Cli implements AdrenalineUI{
 
     @Override
     public synchronized void onAvailablePowerups(List<Card> powerups, List<Color> colors) {
-        serverConnection.selectPowerup(availableCard(powerups, ActionsLog.USE_POWERUP));
+        Card pow = availableCard(powerups, ActionsLog.USE_POWERUP);
+        this.powerups.remove(pow);
+        serverConnection.selectPowerup(pow);
     }
 
     @Override
@@ -1184,20 +1200,20 @@ public class Cli implements AdrenalineUI{
     }
 
     @Override
-    public synchronized void onDisconnectionAdvise(){
+    public void onDisconnectionAdvise(){
         reader.cancel();
         Logger.print("\n Sei stato disconnesso dalla partita...\n");
     }
 
     @Override
-    public synchronized void onGameEnd(List<SimplePlayer> players){
+    public void onGameEnd(List<SimplePlayer> players){
         reader.cancel();
         Logger.print("\n" + BOLD + "La partita è finita!" + RESET + "\n");
         serverConnection.confirmEndGame();
     }
 
     @Override
-    public synchronized void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
+    public void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
         Logger.print("\n\n\n\n");
         Logger.print("________________________________________________________");
         Logger.print(REVERSE + BLUE_W + BOLD + "LA PARTITA E' FINITA\n" + RESET);
