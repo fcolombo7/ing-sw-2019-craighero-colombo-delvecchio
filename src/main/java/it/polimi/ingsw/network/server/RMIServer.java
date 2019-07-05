@@ -20,19 +20,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * This class represents the rmi server
+ */
 public class RMIServer  implements RMIServerHandler{
 
+    /**
+     * This attribute represents the server
+     */
     private Server server;
+    /**
+     * This attribute represents the hostname
+     */
     private String hostname;
+    /**
+     * This attribute represents an hashmap that associates the session to the client nickname
+     */
     private HashMap<String,String> rmiClients;
 
+    /**
+     * this constructor initializes the rmi server
+     * @param server represents the server
+     * @param hostname represents the hostname
+     */
     public RMIServer(Server server, String hostname){
         this.server=server;
         this.hostname=hostname;
         rmiClients=new HashMap<>();
     }
-    
+
+
     public void start(int portNumber) throws ServerException {
         try{
             Logger.logAndPrint("Present Project Directory : "+ System.getProperty("user.dir"));
@@ -55,6 +72,11 @@ public class RMIServer  implements RMIServerHandler{
         }
     }
 
+    /**
+     * This method starts the registry for rmi connection
+     * @param portNumber represents the rmi port number
+     * @throws RemoteException represents the exception thrown when the registry were not created
+     */
     private void startRegistry(int portNumber) throws RemoteException {
         try{
             LocateRegistry.getRegistry(portNumber);

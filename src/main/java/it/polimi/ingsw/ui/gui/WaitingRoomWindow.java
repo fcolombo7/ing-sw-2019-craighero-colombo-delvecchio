@@ -9,9 +9,16 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.stage.Stage;
 
+/**
+ * This class is the window for the waiting room
+ */
 public class WaitingRoomWindow {
     private static TextArea area;
 
+    /**
+     * This method creates the window for the waiting room
+     * @param stage is the stage for the window
+     */
     public static void create(Stage stage){
         stage.setMinHeight(500);
         stage.setMinWidth(600);

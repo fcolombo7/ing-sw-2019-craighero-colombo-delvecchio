@@ -33,7 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
-//mainWind
+/**
+ * This class represents the main window to play
+ */
 public class MainWindow extends Application {
 
     /* NETWORKING ATTRIBUTES */
@@ -44,7 +46,9 @@ public class MainWindow extends Application {
     private static List<String> playerInRoom;
 
 
-
+    /**
+     * This attribute is used in the selectable player routine
+     */
     private static int countTarget;
     private static int countPlayerList1;
     private static int countPlayerList2;
@@ -67,19 +71,56 @@ public class MainWindow extends Application {
     private static ImageView map;
 
     private static boolean init = false;
+
+    /**
+     * This attribute represents the button of the first user of the match
+     */
     private static Button user1;
+    /**
+     * This attribute represents the button of the second user of the match
+     */
     private static Button user2;
+    /**
+     * This attribute represents the button of the third user of the match
+     */
     private static Button user3;
+    /**
+     * This attribute represents the button of the fourth user of the match
+     */
     private static Button user4;
+    /**
+     * This attribute represents the button of the fifth user of the match
+     */
     private static Button user5;
 
+    /**
+     * This attribute represents the button to shoot
+     */
     private static Button shoot;
+    /**
+     * This attribute represents the button to grab
+     */
     private static Button grab;
+    /**
+     * This attribute represents the button to move
+     */
     private static Button move;
+    /**
+     * This attribute represents the button to load a weapon
+     */
     private static Button loadWeapon;
+    /**
+     * This attribute represents the button to use a powerup
+     */
     private static Button usePowerup;
+    /**
+     * This attribute represents the button to end the turn
+     */
     private static Button end;
 
+    /**
+     * This attribute represents the playerboard image
+     */
     private static Image playerBoard;
     private static Image pla1;
     private static Image pla2;
@@ -91,66 +132,103 @@ public class MainWindow extends Application {
     private static Button inf3;
     private static Button inf4;
 
+    /**
+     * This attribute represents the label for the yellow ammos of the player
+     */
     private static Label ny;
+
+    /**
+     * This attribute represents the label for the blue ammos of the player
+     */
     private static Label nb;
+    /**
+     * This attribute represents the label for the red ammos of the player
+     */
     private static Label nr;
 
-    /*private static Button b1;
-    private static Button b2;
-    private static Button b3;
-    private static Button b4;
-    private static Button b5;
-    private static Button b6;
-    private static Button b7;
-    private static Button b8;
-    private static Button b9;
-    private static Button b10;
-    private static Button b11;
-    private static Button b12; */
 
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a1;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a2;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a3;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a4;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a5;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a6;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a7;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a8;
+    /**
+     * This attribute represents the button for one of the weapons on the board
+     */
     private static Button a9;
 
 
 
-    /*private static Button ammsq1;
-    private static Button ammsq2;
-    private static Button ammsq3;
-    private static Button ammsq4;
-    private static Button ammsq5;
-    private static Button ammsq6;
-    private static Button ammsq7;
-    private static Button ammsq8;
-    private static Button ammsq9; */
 
-
-    /*private static Image wea1;
-    private static Image wea2;
-    private static Image wea3;
-    private static Image wea4;
-    private static Image wea5;
-    private static Image wea6;
-    private static Image wea7;
-    private static Image wea8;
-    private static Image wea9;*/
-
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa1;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa2;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa3;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa4;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa5;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa6;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa7;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa8;
+    /**
+     * This attribute represents the ImageView for one of the weapons on the board
+     */
     private static ImageView wa9;
 
+    //labels for the marks on the playerboards
+
+    /**
+     * This attribute represents the label for the mark of the yellow player on the player's playerboard
+     */
     private static Label nfmarkdr;
     private static Label nsmarkdr;
     private static Label ntmarkdr;
@@ -177,19 +255,59 @@ public class MainWindow extends Application {
     private static Label nfomarkdr5;
     private static Label nfimarkdr5;
 
+
+    //ImageViews for the damages on the player's playerboard
+
+    /**
+     * This attribute represents the ImageView for the first damage on the player's playerboard
+     */
     private static ImageView firstdr;
+    /**
+     * This attribute represents the ImageView for the second damage on the player's playerboard
+     */
     private static ImageView secdr;
+    /**
+     * This attribute represents the ImageView for the third damage on the player's playerboard
+     */
     private static ImageView thirddr;
+    /**
+     * This attribute represents the ImageView for the fourth damage on the player's playerboard
+     */
     private static ImageView fdr;
+    /**
+     * This attribute represents the ImageView for the fifth damage on the player's playerboard
+     */
     private static ImageView fidr;
+    /**
+     * This attribute represents the ImageView for the damage 6 on the player's playerboard
+     */
     private static ImageView sdr;
+    /**
+     * This attribute represents the ImageView for the damage 7 on the player's playerboard
+     */
     private static ImageView sedr;
+    /**
+     * This attribute represents the ImageView for the damage 8 on the player's playerboard
+     */
     private static ImageView edr;
+    /**
+     * This attribute represents the ImageView for the damage 9 on the player's playerboard
+     */
     private static ImageView ndr;
+    /**
+     * This attribute represents the ImageView for the damage 10 on the player's playerboard
+     */
     private static ImageView tdr;
+    /**
+     * This attribute represents the ImageView for the damage 11 on the player's playerboard
+     */
     private static ImageView eldr;
+    /**
+     * This attribute represents the ImageView for the damage 12 on the player's playerboard
+     */
     private static ImageView twdr;
 
+    //ImageViews for the damages of the first enemy of the player
     private static ImageView osdr;
     private static ImageView ssdr;
     private static ImageView tsdr;
@@ -202,6 +320,8 @@ public class MainWindow extends Application {
     private static ImageView tesdr;
     private static ImageView elsdr;
     private static ImageView twsdr;
+
+    //ImageViews for the damages of the second enemy of the player
     private static ImageView os2dr;
     private static ImageView ss2dr;
     private static ImageView ts2dr;
@@ -214,6 +334,8 @@ public class MainWindow extends Application {
     private static ImageView tes2dr;
     private static ImageView els2dr;
     private static ImageView tws2dr;
+
+    //ImageViews for the damages of the third enemy of the player
     private static ImageView o3sdr;
     private static ImageView s3sdr;
     private static ImageView t3sdr;
@@ -226,6 +348,8 @@ public class MainWindow extends Application {
     private static ImageView te3sdr;
     private static ImageView el3sdr;
     private static ImageView tw3sdr;
+
+    //ImageViews for the damages of the fifth enemy of the player
     private static ImageView o4sdr;
     private static ImageView s4sdr;
     private static ImageView t4sdr;
@@ -239,26 +363,35 @@ public class MainWindow extends Application {
     private static ImageView el4sdr;
     private static ImageView tw4sdr;
 
+    //ImageViews for the marks of the player
     private static ImageView fmarkdr;
     private static ImageView smarkdr;
     private static ImageView tmarkdr;
     private static ImageView fomarkdr;
     private static ImageView fimarkdr;
+
+    //ImageViews for the marks of the first enemy of the player
     private static ImageView fmarkdr1;
     private static ImageView smarkdr1;
     private static ImageView tmarkdr1;
     private static ImageView fomarkdr1;
     private static ImageView fimarkdr1;
+
+    //ImageViews for the marks of the second enemy of the player
     private static ImageView fmarkdr2;
     private static ImageView smarkdr2;
     private static ImageView tmarkdr2;
     private static ImageView fomarkdr2;
     private static ImageView fimarkdr2;
+
+    //ImageViews for the marks of the third enemy of the player
     private static ImageView fmarkdr3;
     private static ImageView smarkdr3;
     private static ImageView tmarkdr3;
     private static ImageView fomarkdr3;
     private static ImageView fimarkdr3;
+
+    //ImageViews for the marks of the fifth enemy of the player
     private static ImageView fmarkdr4;
     private static ImageView smarkdr4;
     private static ImageView tmarkdr4;
@@ -266,27 +399,65 @@ public class MainWindow extends Application {
     private static ImageView fimarkdr4;
 
 
-
-
-
-
-    //creare label per marchi avversari
-
+    /**
+     * This attribute represents the ImageView of the weapon 1 of the player
+     */
     private static ImageView wp1;
+    /**
+     * This attribute represents the button of the weapon 1 of the player
+     */
     private static Button myw1;
+    /**
+     * This attribute represents the ImageView of the weapon 2 of the player
+     */
     private static ImageView wp2;
+    /**
+     * This attribute represents the button of the weapon 1 of the player
+     */
     private static Button myw2;
+    /**
+     * This attribute represents the ImageView of the weapon 3 of the player
+     */
     private static ImageView wp3;
+    /**
+     * This attribute represents the button of the weapon 1 of the player
+     */
     private static Button myw3;
+    /**
+     * This attribute represents the ImageView of the powerup 1 of the player
+     */
     private static ImageView pu1;
+    /**
+     * This attribute represents the button of the powerup 1 of the player
+     */
     private static Button myp1;
+    /**
+     * This attribute represents the ImageView of the powerup 2 of the player
+     */
     private static ImageView pu2;
+    /**
+     * This attribute represents the button of the powerup 2 of the player
+     */
     private static Button myp2;
+    /**
+     * This attribute represents the ImageView of the powerup 3 of the player
+     */
     private static ImageView pu3;
+    /**
+     * This attribute represents the button of the powerup 3 of the player
+     */
     private static Button myp3;
+    /**
+     * This attribute represents the ImageView of the powerup 4 of the player
+     */
     private static ImageView pu4;
+    /**
+     * This attribute represents the button of the powerup 4 of the player
+     */
     private static Button myp4;
 
+
+    //images of all the possible playerboards
     private static Image dstructorPlBImage;
     private static Image sprogPlBImage;
     private static Image dozerPlBImage;
@@ -304,6 +475,7 @@ public class MainWindow extends Application {
     private static Image violetSemiFrPlBImage;
 
 
+    //images and imageviews of the ammos of the player
     private static Image yammo;
     private static ImageView yam;
     private static Image bammo;
@@ -311,12 +483,16 @@ public class MainWindow extends Application {
     private static Image rammo;
     private static ImageView ram;
 
+
+    /**
+     * This attribute represents the ImageView of the playerboard of the player
+     */
     private static ImageView plB;
     private static ImageView pl1;
     private static ImageView pl2;
     private static ImageView pl3;
     private static ImageView pl4;
-    private static Label labPlayer1;  //sarebbero nickname vicino a playerboards
+    private static Label labPlayer1;
     private static Label labPlayer2;
     private static Label labPlayer3;
     private static Label labPlayer4;
@@ -329,13 +505,18 @@ public class MainWindow extends Application {
     private static Image sprog;
     private static Image violet;
 
-
+    /**
+     * This attribute represents the label in which are written the messages during the match
+     */
     private static Label mess;
     private static Button yes;
     private static Button no;
     private static Button ok;
     private static Button okay;
 
+    /**
+     * This attribute represents the label of the first weapon of the player that says if the weapon is loaded/unloaded, usable,..
+     */
     private static Label myWeap1Label;
     private static Label myWeap2Label;
     private static Label myWeap3Label;
@@ -374,6 +555,12 @@ public class MainWindow extends Application {
 
     private static int myTurn;
 
+
+    //images of the weapon cards
+
+    /**
+     * This attribute represents the image of a weapon of the game
+     */
     private static Image im1;
     private static Image im2;
     private static Image im3;
@@ -397,6 +584,7 @@ public class MainWindow extends Application {
     private static Image im21;
 
 
+    //images of the powerup cards
     private static Image impow1;
     private static Image impow2;
     private static Image impow3;
@@ -412,6 +600,7 @@ public class MainWindow extends Application {
 
 
 
+    //images of the drops corresponding to the players
     private static Image imDropBlue;
     private static Image imDropGrey;
     private static Image imDropGreen;
@@ -433,85 +622,168 @@ public class MainWindow extends Application {
 
 
 
-    public static SquareWindow[][] squareMatrix= new SquareWindow[3][4];
+    private static SquareWindow[][] squareMatrix= new SquareWindow[3][4];
 
     public static Button[][] squareButtonMatrix=new Button[3][4];
 
-    //private static List<String> myPowerups;
-    //private static List<String> avEffects;
-    //private static List<String> avWeapons;
+
 
     public static double widthScaleFactor;
     public static double heightScaleFactor;
 
+    /**
+     * This attribute represents the hashmap that associates a number to a string that represents the relative path of a platerboard image
+     */
     private static HashMap<Integer, String> plBhashmap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the nickname of a player to the image of the corresponding drop
+     */
     private static HashMap<String, Image> damagesHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the imageview of the corresponding damage on the playerboards of the enemies
+     */
     private static HashMap<Integer, ImageView> damageImageViewHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the imageview of the corresponding damage on the player playerboard
+     */
     private static HashMap<Integer, ImageView> myDamagesImageViewHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the label of the corresponding marks on the player playerboard
+     */
     private static HashMap<Integer, Label> myMarksLabelHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the label of the corresponding mark on the playerboards of the enemies
+     */
     private static HashMap<Integer, Label> marksLabelHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the turn number to the imageview of the corresponding playerboard
+     */
     private static HashMap<Integer, ImageView> plBHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to a playerboard image
+     */
     private static HashMap<Integer, Image> plBImageHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the corresponding imageview of the powerup of the player
+     */
     private static HashMap<Integer, ImageView> myPowerupsHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the corresponding imageview of the weapon of the player
+     */
     private static HashMap<Integer, ImageView> myWeaponHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the corresponding imageview of the weapon on the board
+     */
     private static HashMap<Integer, ImageView> boardWeapImVHashMap= new HashMap<>();
 
     private static HashMap<String, Button> boardTileButtonHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the id of an ammo tile to the imageview on the board in which is the tile
+     */
     private static HashMap<String, ImageView> boardTileImgVHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the turn number to the user button
+     */
     private static HashMap<Integer, Button> userButtonHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the id of a weapon to a position number on the board in which the weapon is
+     */
     private static HashMap<String, Integer> idWeaponPosition=new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a number to the label of the corresponding weapon of the player
+     */
     private static HashMap<Integer, Label> myWeaponsLabel= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the id of a weapon to the corresponding position number between the player's weapons
+     */
     private static HashMap<String, Integer> myWeaponsPosition= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a position number to the corresponding button on the board
+     */
     private static HashMap<Integer, Button> boardWeaponsButton= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a position number to the corresponding button between the player's weapons
+     */
     private static HashMap<Integer, Button> myWeaponsButton= new HashMap<>();
 
-    private static HashMap<String, Image> weaponsHashMap= new HashMap<>(); //stringa id e immagine già inizializzata
+    /**
+     * This attribute represents the hashmap that associates the id of a weapon to the corresponding image
+     */
+    private static HashMap<String, Image> weaponsHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the id of a powerup to the corresponding image
+     */
     private static HashMap<String, Image> powerupsHashMap=new HashMap<>();
 
+    /**
+     * This attribyte represents the hashmap that associates the turn number of a player to his nickname
+     */
     private static HashMap<Integer, String> turnNicknameHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the nickname of a player to his turn number
+     */
     private static HashMap<String, Integer> nicknameTurnHashMap= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the id of a powerup to the corresponding label on the player's powerup
+     */
     private static HashMap<String, Label> powerupAvailableLabel= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the id of a powerup to the position number between the player's powerup
+     */
     private static HashMap<String, Integer> myPowerupsPosition= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a position number to the corresponding button of the player's powerups
+     */
     private static HashMap<Integer, Button> myPowerupsButton= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the nickname of a player yo the corresponding anchorpane
+     */
     private static HashMap<String, AnchorPane> infoWindowPlayer= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates the number of the player's enemy to the nickname of the player's enemy
+     */
     private static HashMap<Integer, String> numbEnemyNickname= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a button to the id of the weapon under that button
+     */
     private static HashMap<Button, String> weapButtonId= new HashMap<>();
 
+    /**
+     * This attribute represents the hashmap that associates a button to the id of the powerup under that button
+     */
     private static HashMap<Button, String> powButtonId= new HashMap<>();
 
     private static String myNickname;
 
     private static int numPlayers;
 
-    //private static Stage zoomedImage;
 
-    //protected static String urlmap;
-    protected static Image image;
+    private static Image image;
     private static Stage stage;
 
     private static Stage infoStage;
@@ -527,6 +799,7 @@ public class MainWindow extends Application {
     private static Scene infoscene4;
 
 
+    //ImageViews for the death counter of the player
     private static ImageView mydeath1;
     private static ImageView mydeath2;
     private static ImageView mydeath3;
@@ -538,7 +811,7 @@ public class MainWindow extends Application {
     private static ImageView mydeath3fr;
     private static ImageView mydeath4fr;
 
-
+    //ImageViews for the death counter of the first enemy of the player
     private static ImageView en1death1;
     private static ImageView en1death2;
     private static ImageView en1death3;
@@ -550,7 +823,7 @@ public class MainWindow extends Application {
     private static ImageView en1death3fr;
     private static ImageView en1death4fr;
 
-
+    //ImageViews for the death counter of the second enemy of the player
     private static ImageView en2death1;
     private static ImageView en2death2;
     private static ImageView en2death3;
@@ -562,7 +835,7 @@ public class MainWindow extends Application {
     private static ImageView en2death3fr;
     private static ImageView en2death4fr;
 
-
+    //ImageViews for the death counter of the third enemy of the player
     private static ImageView en3death1;
     private static ImageView en3death2;
     private static ImageView en3death3;
@@ -574,7 +847,7 @@ public class MainWindow extends Application {
     private static ImageView en3death3fr;
     private static ImageView en3death4fr;
 
-
+    //ImageViews for the death counter of the fourth enemy of the player
     private static ImageView en4death1;
     private static ImageView en4death2;
     private static ImageView en4death3;
@@ -620,7 +893,6 @@ public class MainWindow extends Application {
         LoginWindow.log(stage);
 
 
-        //initGameWindow();
 
 
     }
@@ -797,7 +1069,6 @@ public class MainWindow extends Application {
 
 
 
-        //playerBoard= new Image("/gui/pl4fr.png");
 
         zoomedimg = new ImageView();
         configImageView(zoomedimg, 150, 253, 1030, 410);
@@ -805,7 +1076,6 @@ public class MainWindow extends Application {
         configImageView(zoomedUser, 129, 137, 1030, 440);
 
 
-        //devo inizializzare tutte le hashmap
 
 
         myWeap1Label = new Label();
@@ -826,13 +1096,6 @@ public class MainWindow extends Application {
         initMyWeaponsLabel();
 
 
-        /* mess = new Label();
-        mess.setStyle("-fx-font-size: 15");
-        //mess.getStyleClass().add("mess");
-        setPosLabel(mess, 1020, 50);
-        mess.setPrefWidth(180 * widthScaleFactor);
-        mess.setPrefWidth(200 * heightScaleFactor);
-        mess.setTextAlignment(TextAlignment.CENTER);*/
 
         eff1 = new Button("1");
         eff2 = new Button("2");
@@ -881,8 +1144,7 @@ public class MainWindow extends Application {
 
 
         infoStage=new Stage();
-        //infoStage.setFullScreen(true);
-        //infoStage.setMaximized(true);
+
 
         infostage1 = new AnchorPane();
         infostage2 = new AnchorPane();
@@ -1203,15 +1465,7 @@ public class MainWindow extends Application {
         numbKill8 = new Label();
         numbKill9 = new Label();
 
-        //setPosLabel(numbKill1, 50, 30);
-        //setPosLabel(numbKill2, 75, 30);
-        //setPosLabel(numbKill3, 100, 30);
-        //setPosLabel(numbKill4, 125, 30);
-        //setPosLabel(numbKill5, 150, 30);
-        //setPosLabel(numbKill6, 175, 30);
-        //setPosLabel(numbKill7, 200, 30);
-        //setPosLabel(numbKill8, 225, 30);
-        //setPosLabel(numbKill9, 250, 30);
+
         killshotTrack.add(skull1);
         killshotTrack.add(skull2);
         killshotTrack.add(skull3);
@@ -1298,6 +1552,7 @@ public class MainWindow extends Application {
 
         stage.show();
     }
+
 
     public static void main(String args[]){
         launch(args);
@@ -1513,8 +1768,9 @@ public class MainWindow extends Application {
     }
 
 
-
-
+    /**
+     * This method configs the ImagevViews of my weapons
+     */
     private static void configMyWeap(){
 
         wp1= new ImageView();
@@ -1540,16 +1796,11 @@ public class MainWindow extends Application {
 
     }
 
-    /*private static void setMyPowAction(Button myp){
-        myp.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                myp.setStyle("-fx-background-color: grey");
 
-            }
-        });
-    }*/
 
+    /**
+     * This method configs the ImageViews of my powerups
+     */
     private static void configMyPowerups(){
         //powerup1= new Image("/gui/granatavenom.png");
         pu1= new ImageView();
@@ -1577,6 +1828,9 @@ public class MainWindow extends Application {
         myp4.setDisable(true);
     }
 
+    /**
+     * This method configs the ImageViews of my ammos
+     */
     private static void configMyAmmo(){
         yammo= new Image("/gui/yammo.png");
         yam= new ImageView(yammo);
@@ -1593,6 +1847,9 @@ public class MainWindow extends Application {
         nr= new Label("1");
     }
 
+    /**
+     * This method configs the images and the ImageViews of the playerboards
+     */
     private static void configPlayerBoards(){
 
         if(myTurn==1){
@@ -1654,6 +1911,9 @@ public class MainWindow extends Application {
         configImgv(pl4, 304, 630, 260);
     }
 
+    /**
+     * This method configs the ImageViews and the Labels of the player's marks
+     */
     private static void configMyMarks(){
 
         fmarkdr=new ImageView(imDropYellow);
@@ -1687,6 +1947,9 @@ public class MainWindow extends Application {
         setPosLabel(nfimarkdr, 429, 488);
     }
 
+    /**
+     * This method configs the ImageViews of the player's damages
+     */
     private static void configMyDamages(){
 
         secdr=new ImageView();
@@ -1715,6 +1978,9 @@ public class MainWindow extends Application {
         configImg(twdr, 19, 431, 542);
     }
 
+    /**
+     * This method configs the ImageViews and the labels of the first enemy's marks
+     */
     private static void configPl1Marks(){
 
         fmarkdr1=new ImageView(imDropYellow);
@@ -1748,6 +2014,9 @@ public class MainWindow extends Application {
         setPosLabel(nfimarkdr2, 842, 24);
     }
 
+    /**
+     * This method configs the ImageViews of the first enemy's damages
+     */
     private static void configPl1Damages(){
 
         osdr=new ImageView();
@@ -1776,6 +2045,9 @@ public class MainWindow extends Application {
         configImg(twsdr, 11, 845, 49);
     }
 
+    /**
+     * This method configs the ImageViews and the labels of the second enemy's marks
+     */
     private static void configPl2Marks(){
 
         fmarkdr2=new ImageView(imDropYellow);
@@ -1824,6 +2096,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method configs the ImageViews of the second enemy's damages
+     */
     private static void configPl2Damages(){
 
         os2dr=new ImageView();
@@ -1852,6 +2127,9 @@ public class MainWindow extends Application {
         configImg(tws2dr, 11, 845, 129);
     }
 
+    /**
+     * This method configs the ImageViews and the labels of the third enemy's marks
+     */
     private static void configPl3Marks(){
 
         fmarkdr3= new ImageView(imDropYellow);
@@ -1898,6 +2176,9 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * This method configs the ImageViews of the third enemy's damages
+     */
     private static void configPl3Damages(){
 
         o3sdr=new ImageView();
@@ -1926,6 +2207,9 @@ public class MainWindow extends Application {
         configImg(tw3sdr, 11, 845, 209);
     }
 
+    /**
+     * This method configs the ImageViews and the labels of the fourth enemy's marks
+     */
     private static void configPl4Marks(){
 
         fmarkdr4=new ImageView(imDropYellow);
@@ -1972,6 +2256,9 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * This method configs the ImageViews of the fourth enemy's damages
+     */
     private static void configPl4Damages(){
 
         o4sdr=new ImageView();
@@ -2000,6 +2287,11 @@ public class MainWindow extends Application {
         configImg(tw4sdr, 11, 845, 289);
     }
 
+    /**
+     * This method sets the action of the user button when entered and exited
+     * @param user represents the user button
+     * @param img represents the image to show when entered
+     */
     private static void setActionUserButton(Button user, Image img){
         user.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -2016,6 +2308,9 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method configs the user buttons
+     */
     private static void configUserButtons(){
 
         user1=new Button();
@@ -2041,6 +2336,9 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method configs the ImageViews of the weapons on the board
+     */
     private static void configWeapBoardImg(){
         //wea1=new Image("/gui/cannonevortex.png");
         wa1=new ImageView(im1);
@@ -2085,6 +2383,11 @@ public class MainWindow extends Application {
         wa9.setRotate(90);
     }
 
+    /**
+     * This method sets the action of the button of the weapons on the board when entered or exited
+     * @param a represents the button of the weapon on the board
+     * @param img represents the image to show
+     */
     private static void setActionWeapBoardButton(Button a, Image img){
 
         a.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -2103,6 +2406,9 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method configs the buttons of the weapons on the board
+     */
     private static void configWeapBoardButtons(){
         a1=new Button();
         configTranspButton(a1, 57, 84, 317, 2);
@@ -2152,6 +2458,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method initializes the second map
+     * @param ap represents the AnchorPane for the map
+     */
     private static void initMap2(AnchorPane ap){
 
         for(int i=0; i<3; i++){
@@ -2168,44 +2478,14 @@ public class MainWindow extends Application {
                 }
             }
         }
-        /*configTranspButton(b1, 80, 83,111, 105);
-        configTranspButton(b2, 97, 83, 201, 106);
-        configTranspButton(b3, 95, 80, 303, 108);
-        configTranspButton(b4, 68, 65, 419, 125);
-        configTranspButton(b5, 82, 84, 113, 201);
-        configTranspButton(b6, 94, 86, 202, 211);
-        configTranspButton(b7, 77, 99, 322, 201);
-        configTranspButton(b8, 78, 91, 408, 204);
-        configTranspButton(b9, 98, 86, 197, 314);
-        configTranspButton(b10, 82, 83, 314, 311);
-        b11=new Button();
-        configTranspButton(b11,84, 90, 405, 301); */
 
-        /*configButton(ammsq1, 21, 21, 123, 115);
-        ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq2, 21, 21, 216, 160);
-        ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        configButton(ammsq3, 21, 21, 461, 160);
-        ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        configButton(ammsq4, 21, 21, 207, 237);
-        ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        configButton(ammsq5, 21, 21, 324, 268);
-        ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        configButton(ammsq6, 21, 21, 414, 268);
-        ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        configButton(ammsq7, 21, 21, 209, 354);
-        ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        ammsq8= new Button();
-        configButton(ammsq8, 21, 21, 329, 354);
-        ammsq8.setStyle("-fx-background-image: url('/gui/ammsq1.png') "); */
 
     }
 
+    /**
+     * This method initializes the first map
+     * @param ap represents the AnchorPane for the map
+     */
     private static void initMap1(AnchorPane ap){
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
@@ -2222,34 +2502,14 @@ public class MainWindow extends Application {
             }
         }
 
-        /*configTranspButton(b1, 85, 83,  110, 106);
-        configTranspButton(b2, 97, 84, 202, 106);
-        configTranspButton(b3, 93, 81, 304, 106);
-        configTranspButton(b4, 85, 95, 110, 202);
-        configTranspButton(b5, 87, 90, 203, 206);
-        configTranspButton(b6, 100, 91,300, 205);
-        configTranspButton(b7, 67, 90, 420, 205);
-        configTranspButton(b8, 98, 82, 198, 314);
-        configTranspButton(b9, 97, 79, 304, 313);
-        configTranspButton(b10, 72, 93, 418, 299);
 
-        configButton(ammsq1, 21, 21, 123, 115);
-        ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq2, 21, 21, 216, 160);
-        ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq3, 21, 21, 207, 237);
-        ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq4, 21, 21, 324, 250);
-        ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq5, 21, 21, 461, 249);
-        ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq6, 21, 21, 209, 354);
-        ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq7, 21, 21, 313, 354);
-        ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') "); */
 
     }
 
+    /**
+     * This method initializes the third map
+     * @param ap represents the AnchorPane for the map
+     */
     private static void initMap3(AnchorPane ap){
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
@@ -2262,49 +2522,15 @@ public class MainWindow extends Application {
             }
         }
 
-        /*configTranspButton(b1, 71, 94, 110, 105);
-        configTranspButton(b2, 96, 82, 202, 106);
-        configTranspButton(b3, 95, 79,304, 109);
-        configTranspButton(b4, 73, 79,419, 108);
-        configTranspButton(b5, 68, 96, 113, 202);
-        configTranspButton(b6, 90, 92, 204, 205);
-        configTranspButton(b7, 84, 94, 315, 205);
-        configTranspButton(b8, 77, 90, 409, 205);
-        configTranspButton(b9, 84, 79,  112, 313);
-        configTranspButton(b10, 92, 84,  201, 312);
-        b11=new Button();
-        configTranspButton(b11, 82, 84, 313, 308);
-        b12= new Button();
-        configTranspButton(b12, 84, 91, 405, 300);
 
-        configButton(ammsq1, 21,21, 126, 164);
-        ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq2, 21, 21, 215, 112);
-        ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq3, 21, 21, 461, 160);
-        ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq4, 21, 21, 208, 240);
-        ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq5, 21, 21, 324, 268);
-        ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq6, 21, 21, 414, 268);
-        ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq7, 21, 21, 126, 354);
-        ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        ammsq8= new Button();
-        configButton(ammsq8, 21, 21, 209, 354);
-        ammsq8.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        ammsq9= new Button();
-        configButton(ammsq9, 21, 21, 329, 354);
-        ammsq9.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        ap.getChildren().add(b12);
-        ap.getChildren().add(ammsq8);
-        ap.getChildren().add(ammsq9); */
 
 
     }
 
+    /**
+     * This method initializes the fourth map
+     * @param ap represents the AnchorPane for the map
+     */
     private static void initMap4(AnchorPane ap){
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
@@ -2320,43 +2546,13 @@ public class MainWindow extends Application {
             }
         }
 
-        /*configTranspButton(b1, 71, 94, 111, 104);
-        configTranspButton(b2, 97, 82, 202, 106);
-        configTranspButton(b3, 93, 80, 304, 108);
-        configTranspButton(b4, 68, 91,112, 203);
-        configTranspButton(b5, 87, 91, 204, 205);
-        configTranspButton(b6, 99, 84, 301, 204);
-        configTranspButton(b7, 67, 90, 421, 205);
-        configTranspButton(b8, 81, 82, 114, 314);
-        configTranspButton(b9, 95, 82, 202, 313);
-        configTranspButton(b10, 92, 79, 305, 312);
-        b11=new Button();
-        configTranspButton(b11, 71, 90, 419, 301);
 
-        configButton(ammsq1, 21, 21, 126, 164);
-        ammsq1.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq2, 21, 21, 215, 112);
-        ammsq2.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq3, 21, 21, 207, 240);
-        ammsq3.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq4, 21, 21, 324, 250);
-        ammsq4.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq5, 21, 21, 461, 249);
-        ammsq5.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq6, 21, 21, 126, 354);
-        ammsq6.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        configButton(ammsq7, 21, 21, 209, 354);
-        ammsq7.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-        ammsq8= new Button();
-        configButton(ammsq8, 21, 21, 313, 354);
-        ammsq8.setStyle("-fx-background-image: url('/gui/ammsq1.png') ");
-
-        ap.getChildren().add(b11);
-        ap.getChildren().add(ammsq8);*/
     }
 
 
-
+    /**
+     * This method disables all the buttons of the squares on the map
+     */
     private static void disableAllSquareButtons(){
         //devo farlo solo per i bottoni realmente esistenti e dipende da mappa scelta
         for(int i=0; i<3; i++){
@@ -2369,12 +2565,21 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * This method converts an id string in the relative path for the image
+     * @param idcard represents the id
+     * @return a string representing the relative path of the image
+     */
     private static String convertIdImg(String idcard){
         String idImg="/gui/"+idcard+".png";
         return idImg;
     }
 
 
+    /**
+     * This method set the position of the user button of the player
+     * @param pos
+     */
     private static void setMyPosition(int[] pos){
 
         if(pos==null) return;
@@ -2402,6 +2607,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method sets the marks of the player
+     * @param myMarks represents the players who marked the current player
+     */
     private static void setMyMarks(List<String> myMarks){
         for(int i=0; i<5; i++){
             int t= Collections.frequency(myMarks, turnNicknameHashMap.get(i+1));
@@ -2411,6 +2620,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method sets the damages of the player
+     * @param myDamages represents the players who damaged the current player
+     */
     private static void setMyDamages(List<String> myDamages){
         for(int j=0; j<12; j++){
             myDamagesImageViewHashMap.get(j+1).setImage(null);
@@ -2421,6 +2634,11 @@ public class MainWindow extends Application {
 
     }
 
+
+    /**
+     * This method sets player's weapons
+     * @param myWeapons represents the weapon cards of the player
+     */
     private static void setMyWeapons(List<Card> myWeapons){
         for(int i=0; i<myWeapons.size(); i++){
             //String idWeap=convertIdImg(myWeapons.get(i).getId());
@@ -2447,15 +2665,21 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method sets player's unloaded weapons
+     * @param myUnloadedWeapons represents the unloaded weapons of the player
+     */
     private static void setMyUnloadedWeapons(List<String> myUnloadedWeapons){
         for(int i=0; i<myUnloadedWeapons.size(); i++){
-            //String idWeap=convertIdImg(myUnloadedWeapons.get(i));
-            //int t=idWeaponPosition.get(idWeap);
+
             myWeaponsLabel.get(myWeaponsPosition.get(myUnloadedWeapons.get(i))).setText("Scarica");
-            //in teoria le immagini sono tutte già settate da weapon
         }
     }
 
+    /**
+     * This methos sets the powerups of the player
+     * @param myPowerups represents the powerups of the player
+     */
     private static void setMyPowerups(List<Card> myPowerups) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -2466,8 +2690,7 @@ public class MainWindow extends Application {
             pu4.setImage(null);
 
             for (int i = 0; i < myPowerups.size(); i++) {
-                //String idPowerup = convertIdImg(myPowerups.get(i).getId());
-                //Image myPowerup = new Image(idPowerup);
+
                 myPowerupsHashMap.get(i + 1).setImage(powerupsHashMap.get(myPowerups.get(i).getId()));
                 myPowerupsPosition.put(myPowerups.get(i).getId(), i + 1);
             }
@@ -2507,6 +2730,10 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method sets the death counter of the player
+     * @param player represents the current player
+     */
     private static void setMyDeathCounter(SimplePlayer player){
         mydeath1.setImage(null);
         mydeath2.setImage(null);
@@ -2584,24 +2811,20 @@ public class MainWindow extends Application {
         //settare con lo switch e le imageview
     }
 
+    /**
+     * This method sets the text of the usable powerups to "Usabile"
+     * @param usPowerup
+     */
     private static void setUsablePowerup(String usPowerup){
         powerupAvailableLabel.get(usPowerup).setText("Usabile");
-        /*Button tempButt= myPowerupsButton.get(myPowerupsPosition.get(usPowerup));
-        tempButt.setDisable(false);
-        tempButt.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                tempButt.setDisable(true);
-                myp1.setDisable(true);
-                myp2.setDisable(true);
-                myp3.setDisable(true);
-                myp4.setDisable(true);
-                //inviorisposta
-            }
-        });*/
-        //hashmap id bottone e settare click bottone con invio risposta
+
     }
 
+    /**
+     * This method sets the action of the player's weapon's button
+     * @param weapons represents the weapons of the player
+     * @param usWeapon represents the weapon that can be used
+     */
     private static void setClickWeapon(List<Card> weapons, String usWeapon){
         myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Usabile");
         myWeaponsButton.get(myWeaponsPosition.get(usWeapon)).setDisable(false);
@@ -2625,6 +2848,7 @@ public class MainWindow extends Application {
             }
         });
     }
+
 
     private static void setClickWeaponToDiscard(List<Card> weapons, String usWeapon){
         myWeaponsLabel.get(myWeaponsPosition.get(usWeapon)).setText("Scarta");
@@ -2824,12 +3048,10 @@ public class MainWindow extends Application {
             }
         }
         for(int i=0; i<12; i++){
-            //il primo deve essere i+12*numbavversario
             damageImageViewHashMap.get(i+1+12*(user-1)).setImage(null);
         }
 
         for(int i=0; i<damages.size(); i++){
-            //il primo deve essere i+12*numbavversario
             damageImageViewHashMap.get(i+1+12*(user-1)).setImage(damagesHashMap.get(damages.get(i)));
         }
 
@@ -2838,7 +3060,6 @@ public class MainWindow extends Application {
     private static void updateUnloadedWeapons(SimplePlayer player, List<String> unloadedWeapons, int us){
 
         updatePlayerVisibility(player);
-                //settare nell'imageview di infopoint l'image weaponsHashMap.get(unloadedWeapons.get(i));
 
 
     }
@@ -3146,8 +3367,11 @@ public class MainWindow extends Application {
             }
         }
     }
-        //faccio uno switch con player.getDeathCounter e devo creare delle ImageView che coprano i numeri
 
+    /**
+     * This method changes the images of the playerboards when they are in frenzy mode
+     * @param players represents the players in the game
+     */
     private static void switchBoards(List<SimplePlayer> players){
         for(int i=0; i<players.size(); i++){
             if(players.get(i).isSwitched()) {
@@ -3159,12 +3383,15 @@ public class MainWindow extends Application {
             }else {
                 plBHashMap.get(i+1).setImage(plBImageHashMap.get(i+6));
             }
-            //else devo solo girare la cosa a sinistra
         }
 
 
     }
 
+    /**
+     * This method updates what the player can see of another player
+     * @param player represents the player whose visibility is updated
+     */
     private static void updatePlayerVisibility(SimplePlayer player){
         int numEn=0;
         for(int i=0; i<numbEnemyNickname.size(); i++){
@@ -3176,6 +3403,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method update the playerboard of a player
+     * @param player represents the player whose playerboard is updated
+     */
     private static void updatePlayerBoard(SimplePlayer player){
         /*int enemyNumb=0;
         for(int i=0; i<numbEnemyNickname.size(); i++){
@@ -3207,11 +3438,19 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method deletes an ammo tile from the board
+     * @param grabbedTile represents the ammo tile to delete
+     */
     private static void deleteTile(AmmoTile grabbedTile){
         //finire
         boardTileImgVHashMap.get(grabbedTile.getId()).setImage(null);
     }
 
+    /**
+     * This method deletes a weapon from the board
+     * @param weapon represents the weapon to delete from the board
+     */
     private static void deleteWeapon(Card weapon){
         //finire
         boardWeapImVHashMap.get(idWeaponPosition.get(weapon.getId())).setImage(null);
@@ -3219,6 +3458,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method updates the game board
+     * @param gameBoard represents the game board
+     */
     private static void updateBoard(SimpleBoard gameBoard){
         idWeaponPosition.clear();
         boardTileImgVHashMap.clear();
@@ -3337,13 +3580,17 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method updates the playerboards of all the players
+     * @param players represents the list of all players
+     * @param frenzy is true if the game is in frenzy mode
+     */
     private static void updatePlayerBoards(List<SimplePlayer> players, boolean frenzy){
 
         if(frenzy) switchBoards(players);
         for(int i=0; i<players.size(); i++){
             if(i!=myTurn-1) {
 
-                //cambiare l'intero i passato alle funzioni, forse serve costruire nicknameNumbEnemyHashMap
                 if(players.get(i).getPosition()!=null) setPosition(players.get(i).getPosition(), nicknameTurnHashMap.get(players.get(i).getNickname()));
                 updateMarks(players.get(i).getMarks(), players.get(i).getNickname() );
                 updateDamages(players.get(i).getDamages(), i+1);
@@ -3388,7 +3635,6 @@ public class MainWindow extends Application {
                 int[] pos=new int[]{x, y};
                 mess.setText("Hai selezionato\n il quadrato\n in cui spostarti");
                 connection.runAction(pos);
-                //spostare effettivamente il giocatore
             }
         });
     }
@@ -3401,7 +3647,6 @@ public class MainWindow extends Application {
                 int[] pos=new int[]{x, y};
                 mess.setText("Hai selezionato il\n quadrato in cui spostare\n il giocatore");
                 connection.movePlayer(target, pos);
-                //spostare effettivamente il giocatore
             }
         });
     }
@@ -3568,6 +3813,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method initializes the board weapon buttons hashmap (Integer-Button)
+     */
     private static void initBoardWeaponsButton(){
         boardWeaponsButton.put(1, a1);
         boardWeaponsButton.put(2, a2);
@@ -3582,6 +3830,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method initializes the weapon buttons hashmap (Integer-Button)
+     */
     private static void initMyWeaponsButton(){
         myWeaponsButton.put(1, myw1);
         myWeaponsButton.put(2, myw2);
@@ -3589,6 +3840,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method initializes the powerup buttons hashmap (Integer-Button)
+     */
     private static void initMyPowerupsButton(){
         myPowerupsButton.put(1, myp1);
         myPowerupsButton.put(2, myp2);
@@ -3597,6 +3851,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method initializes the info windows hashmap (String-AnchorPane)
+     */
     private static void initInfoWindowPlayerHashMap(){
         infoWindowPlayer.put(numbEnemyNickname.get(1), infostage1);
         infoWindowPlayer.put(numbEnemyNickname.get(2), infostage2);
@@ -3604,6 +3861,9 @@ public class MainWindow extends Application {
         infoWindowPlayer.put(numbEnemyNickname.get(4), infostage4);
     }
 
+    /**
+     * This method initializes the weapons hashmap (String-Image)
+     */
     private static void initWeaponsHashMap(){
         weaponsHashMap.put("15", im1);
         weaponsHashMap.put("16", im2);
@@ -3630,6 +3890,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method initializes the powerup hashmap (String-Image)
+     */
     private static void initPowerupsHashMap(){
         powerupsHashMap.put("022", impow1);
         powerupsHashMap.put("023", impow2);
@@ -3648,6 +3911,11 @@ public class MainWindow extends Application {
 
 
 
+    /**
+     * This method sets the function of the button 1
+     * @param selectablePl represents the list of lists of selected players
+     * @param target repreents the target of the effect
+     */
     private static void set1Function(List<List<String>> selectablePl, SimpleTarget target){
         eff1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -3669,6 +3937,11 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method sets the function of the button 2
+     * @param selectablePl represents the list of lists of selected players
+     * @param target repreents the target of the effect
+     */
     private static void set2Function(List<List<String>> selectablePl, SimpleTarget target){
         eff2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -3690,6 +3963,11 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method sets the function of the button 3
+     * @param selectablePl represents the list of lists of selected players
+     * @param target repreents the target of the effect
+     */
     private static void set3Function(List<List<String>> selectablePl, SimpleTarget target){
         eff3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -3711,6 +3989,11 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method sets the function of the button 4
+     * @param selectablePl represents the list of lists of selected players
+     * @param target repreents the target of the effect
+     */
     private static void set4Function(List<List<String>> selectablePl, SimpleTarget target){
         eff4.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -3732,6 +4015,10 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method sets the function of the button okay (ok)
+     * @param target represents the target of the effect
+     */
     private static void setOkayFunction(SimpleTarget target){
         //mess.setText("Seleziona i giocatori che vuoi colpire");
         okay.setOnAction(new EventHandler<ActionEvent>() {
@@ -3802,6 +4089,12 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method sets the function of the users' buttons
+     * @param usButton represents the user button
+     * @param nick represents the nickname
+     * @param target represents the target
+     */
     private static void setUsFunction(Button usButton, String nick, SimpleTarget target){
         usButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -3878,11 +4171,13 @@ public class MainWindow extends Application {
                     }
                 }
 
-                //scrivere cosa fa con dovuti controlli con minPlayerIn e maxPlayerIn
             }
         });
     }
 
+    /**
+     * This method sets the function of the button ok (Invia)
+     */
     private static void setOkFunction(){
         ok.setDisable(false);
         ok.setOnAction(new EventHandler<ActionEvent>() {
@@ -3958,6 +4253,10 @@ public class MainWindow extends Application {
 
     /*-------- ADRENALINE UI HANDLER METHODS --------*/
 
+    /**
+     * This method is called when a player joins the waiting room of the player
+     * @param nickname represents the nickname of the player who joined the room
+     */
     public static void onJoinRoomAdvise(String nickname) {
         playerInRoom.add(nickname);
         if(WaitingRoomWindow.getArea()!=null){
@@ -3970,6 +4269,11 @@ public class MainWindow extends Application {
 
     }
 
+
+    /**
+     * This method is called when a player exits from the waiting room of the player
+     * @param nickname represents the nickname of the player who exited from the waiting room
+     */
     public static void onExitRoomAdvise(String nickname) {
         playerInRoom.remove(nickname);
         if(WaitingRoomWindow.getArea()!=null){
@@ -3982,6 +4286,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when the player is the first in his waiting room
+     */
     public static void onFirstInRoomAdvise() {
         /*
         LoginWindow.plOnline.setText("You are the first player.");
@@ -3991,6 +4298,12 @@ public class MainWindow extends Application {
         }
     }
 
+
+    /**
+     * This method is called at the creation of the match or when the player returns in game
+     * @param players represents the players in the match
+     * @param playerTurnNumber represents the turn of the player
+     */
     public static void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
 
         numPlayers=players.size();
@@ -4121,7 +4434,6 @@ public class MainWindow extends Application {
         initPowerupsHashMap();
 
 
-        //mettere a posto con degli if
 
         //String myPlayB=plBhashmap.get(playerTurnNumber-1);
         //playerBoard= new Image(myPlayB);
@@ -4278,6 +4590,10 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * This method is called when the server receives an invalid message
+     * @param msg represents the invalid message
+     */
     public static void onInvalidMessageReceived(String msg) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4287,6 +4603,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called to update the game board
+     * @param gameBoard represents the game board
+     */
     public static void onBoardUpdate(SimpleBoard gameBoard) {
         if(!init){
             Platform.setImplicitExit(false);
@@ -4305,6 +4625,12 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called at the end of a turn to update the players and the board
+     * @param players represents the players in the game
+     * @param gameBoard represents the game board
+     * @param frenzy is true if the game is in frenzy mode
+     */
     public static void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4316,6 +4642,10 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called when a player has to respawn in his first turn after the login
+     * @param powerups represents the discardable powerups to respawn
+     */
     public static void onRespwanRequest(List<Card> powerups) {
         Platform.setImplicitExit(false);
         Platform.runLater(()->{
@@ -4331,6 +4661,11 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when a player respawned
+     * @param player represents the player who respawned
+     * @param discardedPowerup represents the discarded powerup to respawn
+     */
     public static void onRespwanCompleted(SimplePlayer player, Card discardedPowerup) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4352,6 +4687,11 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when a player grabs an ammo tile
+     * @param player represents the player who grabbed the tile
+     * @param grabbedTile represents the tile grabbed
+     */
     public static void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4369,6 +4709,11 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called when a player grabbeda powerup
+     * @param player represents the player who grabbed the powerup
+     * @param powerup represents the powerup grabbed
+     */
     public static void onGrabbedPowerup(SimplePlayer player, Card powerup) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4382,6 +4727,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when the player chooses to grab a weapon
+     * @param weapons represents the weapons that can be grabbed
+     */
     public static void onGrabbableWeapons(List<Card> weapons) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4395,6 +4744,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when the player has to discard a weapon to grab another one
+     * @param weapons represents the weapons of the player
+     */
     public static void onDiscardWeapon(List<Card> weapons) {
         //forse è solo messaggio che uno ha scartato delle armi?
         Platform.setImplicitExit(false);
@@ -4408,6 +4761,11 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when a weapon is grabbed
+     * @param player represents the player who grabbed the weapon
+     * @param weapon represents the grabbed weapon
+     */
     public static void onGrabbedWeapon(SimplePlayer player, Card weapon) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4424,6 +4782,13 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called when a player reload a weapon
+     * @param player represents the player who reloaded a weapon
+     * @param weapon represents the weapon reloaded
+     * @param discardedPowerups represents the discarded powerup if exists
+     * @param totalCost represents the ammos used to reload the weapon
+     */
     public static void onReloadedWeapon(SimplePlayer player, Card weapon, List<Card> discardedPowerups, List<Color> totalCost) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4440,6 +4805,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This methos is called when the player chooses to reload a weapon and sends to the server the chosen weapon
+     * @param weapons represents the reloadable weapons
+     */
     public static void onReloadableWeapons(List<Card> weapons) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4452,6 +4821,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called to sets the possible actions that the player can do
+     * @param actions represents the possible actions
+     */
     public static void onTurnActions(List<String> actions) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4481,6 +4854,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called at the end of a turn
+     */
     public static void onTurnEnd() {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4491,6 +4867,10 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when a player moved
+     * @param player represents the player who moved
+     */
     public static void onMoveAction(SimplePlayer player) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4506,6 +4886,11 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player has to move another player
+     * @param matrix represents where the player can be moved
+     * @param targetPlayer represents the player that has to be moved
+     */
     public static void onMoveRequest(MatrixHelper matrix, String targetPlayer) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4527,6 +4912,12 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when a player has been marked
+     * @param player represents the player who marked
+     * @param selected represents the player who has been marked
+     * @param value represents the number of marks
+     */
     public static void onMarkAction(String player, SimplePlayer selected, int value) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4547,6 +4938,13 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when a player receives some damages
+     * @param player represents the player who damaged
+     * @param selected represents the player who has been damaged
+     * @param damageValue represents the number of damages
+     * @param convertedMarks represents how many damages derive from marks
+     */
     public static void onDamageAction(String player, SimplePlayer selected, int damageValue, int convertedMarks) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4567,6 +4965,11 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when a player discards a powerup
+     * @param player represents the player who discarded the powerup
+     * @param powerup represents the powerup discarded
+     */
     public static void onDiscardedPowerup(SimplePlayer player, Card powerup) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4582,6 +4985,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when a new turn starts
+     * @param currentPlayer represents the player of the turn just started
+     */
     public static void onTurnCreation(String currentPlayer) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4595,6 +5002,11 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player have to choose the players to hit and sends to the server the selected players
+     * @param selectable represents the selectable players grouped by specific target
+     * @param target represents the target(player, room, square, direction) of the weapon effect
+     */
     public static void onSelectablePlayers(List<List<String>> selectable, SimpleTarget target) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4669,6 +5081,9 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player can choose to use a powerup during his shoot routine
+     */
     public static void onCanUsePowerup() {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4700,6 +5115,9 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player can choose to stop the shoot routine
+     */
     public static void onCanStopRoutine() {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4731,6 +5149,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player have to choose which weapon to shoot with and sends to the server the selected weapon
+     * @param usableWeapons represents the usable weapons
+     */
     public static void onUsableWeapons(List<Card> usableWeapons) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4745,6 +5167,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player have to choose which effect to use and sends to the server the selected effect
+     * @param effects represents the usable effects
+     */
     public static void onAvailableEffects(List<String> effects) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4867,11 +5293,16 @@ public class MainWindow extends Application {
                 });
 
 
-        //stampa i nomi degli effetti e fanne selezionare uno. Quello selezionato chiama ServerConnection.seletEffect(nome effetto)
 
     }
 
 
+    /**
+     * This method is called when a player pays an effect
+     * @param player represents the player who paid the effect
+     * @param discardedPowerups represents the powerup discarded if there is one
+     * @param usedAmmo represents the ammo used if there are
+     */
     public static void onPayEffect(SimplePlayer player, List<Card> discardedPowerups, List<Color> usedAmmo) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4887,6 +5318,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when a card is used
+     * @param card represents the card used
+     */
     public static void onUsedCard(Card card) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4897,6 +5332,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player chooses to use a powerup and sends to the server the powerup chosen
+     * @param powerups represents the usable powerups
+     */
     public static void onAvailablePowerups(List<Card> powerups) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4906,23 +5345,18 @@ public class MainWindow extends Application {
                 String usPowerup = powerups.get(i).getId();
                 setUsablePowerup(usPowerup);
                 setMyPowerupsAction(usPowerup, powerups);
-            /*Button tempButt=myPowerupsButton.get(myPowerupsPosition.get(usPowerup));
-            tempButt.setDisable(false);
-            tempButt.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    tempButt.setDisable(true);
 
-                }
-            });
-
-            //chiama ServerConnection.selectPowerup(card powerup selezionato) */
             }
         });
 
     }
 
 
+    /**
+     * This method is called when a player finishes the run routine
+     * @param player represents the player who finished the run routine
+     * @param newPosition represents the new position of the player that finished the run routine
+     */
     public static void onRunCompleted(SimplePlayer player, int[] newPosition) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4938,6 +5372,10 @@ public class MainWindow extends Application {
     }
 
 
+    /**
+     * This method is called when the player chooses to run
+     * @param matrix represents where the player can move
+     */
     public static void onRunRoutine(MatrixHelper matrix) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4962,6 +5400,12 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when a player relogs in the game
+     * @param players represents the list of players in the game
+     * @param gameBoard represents the game board
+     * @param frenzy is true if the game is in frenzy mode
+     */
     public static void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -4977,7 +5421,6 @@ public class MainWindow extends Application {
                         initGameWindow(gameBoard.getSourceReference(), gameBoard.getSkullNumber());
                     });
             init=true;
-            //controllo se arriva prima questo o quello dopo
             updateBoard(gameBoard);
             updatePlayerBoards(players, frenzy);
             mess.setText("Sei di nuovo\n in partita");
@@ -4992,6 +5435,10 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called when a player returns in the game
+     * @param nickname represents the nickname of the player again in the game
+     */
     public static void onRecoverPlayerAdvise(String nickname){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5003,9 +5450,11 @@ public class MainWindow extends Application {
                         mess.setText(nickname + "\n è tornato in partita");
                     }
                 });
-        //aggiornare qualcosa(info?)
     }
 
+    /**
+     * This method is called when the player has already 3 powerups
+     */
     public static void onFullOfPowerup(){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5015,6 +5464,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when the player can counterattack
+     */
     public static void onCanCounterAttack(){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5046,6 +5498,12 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called when a player counterattacked
+     * @param currentPlayer represents the player that attacked
+     * @param player represents the player that counterattacked
+     * @param powerup represents the powerup used to counterattack
+     */
     public static void onCounterAttack(SimplePlayer currentPlayer, SimplePlayer player, Card powerup) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5067,6 +5525,9 @@ public class MainWindow extends Application {
 
     }
 
+    /**
+     * This method is called when a player don't answer in time to a canCounterAttack message
+     */
     public static void onCounterAttackTimeOut(){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5077,6 +5538,11 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called where there is an error
+     * @param cause represents the cause of the error
+     * @param message represents the message sent for the error
+     */
     public static void handleFatalError(String cause, String message){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5086,6 +5552,9 @@ public class MainWindow extends Application {
         //messagebox consiglia fil
     }
 
+    /**
+     * This method is called when a player disconnects
+     */
     public static void onDisconnectionAdvise(){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5096,6 +5565,10 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method is called when an end game message is received and sends to the server a confirm message of end
+     * @param players represents the list of the players in the game
+     */
     public static void onGameEnd(List<SimplePlayer> players){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5108,6 +5581,11 @@ public class MainWindow extends Application {
         });
     }
 
+    /**
+     * This method shows the ranking of the players at the end of the game
+     * @param nicknames represents the nicknames of the players from the winner to the loser
+     * @param points represents the points of the players
+     */
     public static void onLeaderboardReceived(List<String> nicknames, List<Integer> points){
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
@@ -5178,7 +5656,6 @@ public class MainWindow extends Application {
                 });
 
 
-        //mess.setText(nicknames.get(0) + " = " +points.get(0) + "\n" +nicknames.get(1) + " = " +points.get(1) + "\n" + nicknames.get(2) + " = " +points.get(2) + "\n");
     }
 }
 

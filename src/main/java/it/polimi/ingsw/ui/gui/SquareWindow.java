@@ -91,7 +91,7 @@ public class SquareWindow {
 
     /**
      * This method says if the square has an ammo tile
-     * @return
+     * @return true if it has an ammo tile
      */
     public boolean hasAmmoPoint(){return hasAmmo;}
 
@@ -301,6 +301,11 @@ public class SquareWindow {
         }
     }
 
+    /**
+     * This method configs a square of the first map
+     * @param i is the x coordinate of the square
+     * @param j is the y coordinate of the square
+     */
     private void configMap1(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 80, 83,111, 105);
@@ -471,6 +476,11 @@ public class SquareWindow {
 
     }
 
+    /**
+     * This method configs a square of the third map
+     * @param i is the x coordinate of the square
+     * @param j is the y coordinate of the square
+     */
     private void configMap3(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 71, 94, 110, 105);
@@ -673,6 +683,11 @@ public class SquareWindow {
 
     }
 
+    /**
+     * This method configs a square of the fourth map
+     * @param i is the x coordinate of the square
+     * @param j is the y coordinate of the square
+     */
     private void configMap4(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 71, 94, 110, 105);

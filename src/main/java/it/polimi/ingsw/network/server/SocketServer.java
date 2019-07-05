@@ -8,16 +8,34 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class represents the socket server for the game
+ */
 public class SocketServer {
 
+    /**
+     * This attribute represents the server
+     */
     private Server server;
 
+    /**
+     * This attribute represents the server socket
+     */
     private ServerSocket serverSocket;
 
+    /**
+     * This constructor initializes the server socket
+     * @param server represents the server
+     */
     public SocketServer(Server server){
         this.server=server;
     }
 
+    /**
+     * This method starts the socket server
+     * @param port represents the socket port
+     * @throws ServerException
+     */
     public void startServer(int port) throws ServerException {
         try {
             serverSocket = new ServerSocket(port);
@@ -28,6 +46,9 @@ public class SocketServer {
         }
     }
 
+    /**
+     * This class extends Thread and overrides the run method
+     */
     private class SocketManager extends Thread{
         private ExecutorService executor = Executors.newFixedThreadPool(128);
         private Server server;
