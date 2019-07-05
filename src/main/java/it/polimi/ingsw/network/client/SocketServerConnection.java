@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.controller.messages.matchmessages.routinemessages.*;
 import it.polimi.ingsw.network.controller.messages.room.*;
 import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.ui.gui.Client;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 
@@ -45,7 +46,7 @@ public class SocketServerConnection extends ServerConnection {
     }
 
     public SocketServerConnection(String hostname, AdrenalineUI ui) throws IOException {
-        this(hostname,Constants.SOCKET_PORT,ui);
+        this(hostname, Client.getSocketPort(),ui);
     }
 
     private void start(){

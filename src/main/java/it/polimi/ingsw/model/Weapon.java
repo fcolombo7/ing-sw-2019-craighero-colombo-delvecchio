@@ -1,13 +1,11 @@
 package it.polimi.ingsw.model;
 
-import com.sun.source.tree.Tree;
 import it.polimi.ingsw.model.enums.TargetType;
 import it.polimi.ingsw.model.exceptions.CardNotInitializedException;
 import it.polimi.ingsw.model.exceptions.WeaponEffectException;
 import it.polimi.ingsw.model.exceptions.WeaponLoadException;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.utils.Logger;
-import it.polimi.ingsw.utils.MatrixHelper;
 import it.polimi.ingsw.utils.TreeNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,7 +16,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +89,6 @@ public class Weapon extends Card{
     }
 
     /**
-     * TODO: insert the validation with DTD
      * This method initialized a weapon
      */
     public void init(){
@@ -100,37 +96,10 @@ public class Weapon extends Card{
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            /*
-        factory.setValidating(true);
-
-        builder.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void warning(SAXParseException e) throws SAXException {
-                Logger.logAndPrint("WARNING : " + e.getMessage()); // do nothing
-                throw e;
-            }
-
-            @Override
-            public void error(SAXParseException e) throws SAXException {
-                Logger.logAndPrint("ERROR : " + e.getMessage());
-                throw e;
-            }
-
-            @Override
-            public void fatalError(SAXParseException e) throws SAXException {
-                Logger.logAndPrint("FATAL : " + e.getMessage());
-                throw e;
-            }
-        });
-        */
             Document document = builder.parse(this.getClass().getResourceAsStream(getInitXML()));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
-            /*TODO: Controllo per la verifica che id e name siano giusti?
-             * String id=root.getAttribute("id");
-             * if(!id.equals(getId())) throw new InvalidInitializationException;
-             * */
             setAmmo(root.getElementsByTagName("ammo"));
             NodeList effectsList = root.getElementsByTagName("effects").item(0).getChildNodes();
             int count = 0;
@@ -375,9 +344,9 @@ public class Weapon extends Card{
         throw new IllegalArgumentException("The effect "+effect.getName()+" cannot be selected.");
     }
 
-    /**TODO: NEED TO BE TESTED
+    /**
      * This method is used to get all the effect the player could perform using this weapon in the current turn
-     * @param checkLoaded
+     * @param checkLoaded a boolean representing the possibility of doing or not the check on the load/unload weapon
      * @return List<Effect> representing all the effect the player could perform using this weapon in the current turn
      */
     public List<Effect> getUsableEffects(boolean checkLoaded, Turn turn){
@@ -410,7 +379,7 @@ public class Weapon extends Card{
         return iterateEffects(nodes,startingAmmo,turn);
     }
 
-    /**TODO: NEED TO BE TESTED
+    /**
      * This method get all the effect the player could perform which are in the nodes list,
      * @param nodes representing the set of effect that will be analyzed
      * @param ammo representing the ammo of the current player
@@ -475,7 +444,7 @@ public class Weapon extends Card{
         return ret;
     }
 
-    /**TODO: NEED TO BE TESTED
+    /**
      * This method check if the first list of color contains all the colors which are in the second one
      * @param ammo representing the list 'container'
      * @param cost representing the list that 'is contained'
@@ -488,7 +457,7 @@ public class Weapon extends Card{
         return true;
     }
 
-    /**TODO: NEED TO BE TESTED
+    /**
      * This method return the occurrences number if the color in the ammo list
      * @param ammo representing a list of color
      * @param color representing the color which you want to get the occurrences number
@@ -503,7 +472,7 @@ public class Weapon extends Card{
         return count;
     }
 
-    /**TODO: NEED TO BE TESTED
+    /**
      * This method remove form the ammo list all the color which are in the cost list
      * @param ammo representing the ammo list
      * @param cost representing the cost list

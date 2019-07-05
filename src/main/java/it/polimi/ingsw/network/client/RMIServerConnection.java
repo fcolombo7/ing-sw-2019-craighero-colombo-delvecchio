@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.controller.messages.SimpleBoard;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.SimpleTarget;
 import it.polimi.ingsw.ui.AdrenalineUI;
+import it.polimi.ingsw.ui.gui.Client;
 import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
@@ -65,7 +66,7 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
     }
 
     public RMIServerConnection(String hostname, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
-        this(hostname,Constants.RMI_PORT, ui);
+        this(hostname,Client.getRmiPort(), ui);
     }
 
     /*------ SERVER CONNECTION METHODS ------*/

@@ -57,7 +57,7 @@ public abstract class ServerConnection {
     }
 
     /**
-     *
+     *  This method returns the nickname
      * @return the nickname of the player
      */
     public String getNickname() {
@@ -65,18 +65,18 @@ public abstract class ServerConnection {
     }
 
     /**
-     *
+     *  This method returns the server IP
      * @return the hostname
      */
-    public String getHostname() {
+    String getHostname() {
         return hostname;
     }
 
     /**
-     *
+     * This method return the TCP port used during the connection
      * @return the tcp port
      */
-    public int getPort() {
+    int getPort() {
         return port;
     }
 
@@ -136,14 +136,58 @@ public abstract class ServerConnection {
      * @param effectName representing the name of the effect selected
      */
     public abstract void selectEffect(String effectName);
-    
+
+    /**
+     * This method is used to send to the server the weapon to load
+     * @param weapon the weapon to load
+     */
     public abstract void loadableWeapon(Card weapon);
+
+    /**
+     * This method is used to send to the server the new position due to the execution of a run routine
+     * @param newPosition representing the new poition of the player
+     */
     public abstract void runAction(int[] newPosition);
+
+    /**
+     * This method is used to send the players selected representing who will be the target of the effect selected
+     * @param selected players selected, target of the effect
+     */
     public abstract void selectPlayers(List<List<String>> selected);
+
+    /**
+     * This method is used to send to the server the selected powerup
+     * @param powerup the powerup selected, which will be used on the server
+     */
     public abstract void selectPowerup(Card powerup);
+
+    /**
+     * this method is used to send to the server the answer of the user to continue or not during the shooting routine
+     * @param stop a boolean representing the answer sended to the server
+     */
     public abstract void stopRoutine(boolean stop);
+
+    /**
+     * This method send to the server the answer of the user to use or not a powerup during the shooting routine
+     * @param use a boolean representing the answer sended to the server
+     */
     public abstract void usePowerup(boolean use);
+
+    /**
+     * This method is used to send to the server the weapon the user want to use
+     * @param weapon the weapon the user want to use
+     */
     public abstract void selectWeapon(Card weapon);
+
+    /**
+     * This method is used to send to the server if you want counter attack or not
+     * @param counterAttack the answer sended to the server
+     */
     public abstract void counterAttackAnswer(boolean counterAttack);
+
+    /**
+     * This method is sent to the server as answer to the game end.
+     * If sended the server will send to the user the leaderboard.
+     */
     public abstract void confirmEndGame();
 }

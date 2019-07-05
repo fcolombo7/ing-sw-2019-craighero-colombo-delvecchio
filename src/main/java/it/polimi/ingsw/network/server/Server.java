@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.ui.gui.Client;
 import it.polimi.ingsw.network.controller.JoinRoomException;
 import it.polimi.ingsw.network.controller.Room;
 import it.polimi.ingsw.utils.Constants;

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.network.RMIClientHandler;
 import it.polimi.ingsw.network.RMIServerHandler;
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.ui.gui.Client;
 import it.polimi.ingsw.utils.Logger;
 
 import java.io.File;
