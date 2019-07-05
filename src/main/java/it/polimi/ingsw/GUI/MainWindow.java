@@ -829,7 +829,7 @@ public class MainWindow extends Application {
         mess = new Label();
         mess.setStyle("-fx-font-size: 15");
         //mess.getStyleClass().add("mess");
-        setPosLabel(mess, 1030, 50);
+        setPosLabel(mess, 1020, 50);
         mess.setPrefWidth(180 * widthScaleFactor);
         mess.setPrefWidth(200 * heightScaleFactor);
         mess.setTextAlignment(TextAlignment.CENTER);
@@ -4252,6 +4252,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {
             mess.setText(msg);
+            connection.selectAction("END");
         });
 
     }
