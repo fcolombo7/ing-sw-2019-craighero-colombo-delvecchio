@@ -1,0 +1,57 @@
+<weapon id="20">
+	<name>ZX-2</name>
+	<ammo>YR</ammo>
+	<effects>
+		<effect ref_id="1" name="base">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+				<action type="MARK">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="scanner">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>3</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="MARK">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

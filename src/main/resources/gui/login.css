@@ -1,0 +1,34 @@
+.root{
+    -fx-background-image: url("blocks.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.label{
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: bolder;
+}
+
+.radio-button{
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: bolder;
+}
+
+.button{
+    -fx-background-color: #191056;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+}
+
+.title{
+    -fx-background-image: url("adr.png");
+
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+

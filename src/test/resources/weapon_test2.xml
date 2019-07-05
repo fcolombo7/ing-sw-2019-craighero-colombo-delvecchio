@@ -1,0 +1,74 @@
+<weapon id="weapon1">
+    <name>MY_WEAPON</name>
+    <ammo>BB</ammo>
+    <effects>
+        <effect ref_id="1" name="base">
+            <cost/>
+            <target>
+                <type>PLAYER</type>
+                <minNumber>1</minNumber>
+                <maxNumber>1</maxNumber>
+                <prevConstraints/>
+            </target>
+            <requirements>
+                <requirement name="VISIBLE">TRUE</requirement>
+            </requirements>
+            <actions>
+                <action type="DAMAGE">
+                    <value>2</value>
+                    <extras/>
+                </action>
+                <action type="MARK">
+                    <value>1</value>
+                </action>
+            </actions>
+            <extras/>
+        </effect>
+        <effect ref_id="2" name="opzionale">
+            <cost>R</cost>
+            <target>
+                <type>PLAYER</type>
+                <minNumber>1</minNumber>
+                <maxNumber>1</maxNumber>
+                <prevConstraints/>
+            </target>
+            <requirements>
+                <requirement name="VISIBLE">TRUE</requirement>
+            </requirements>
+            <actions>
+                <action type="MARK">
+                    <value>1</value>
+                </action>
+            </actions>
+            <extras/>
+        </effect>
+        <effect ref_id="3" name="opzionale2">
+            <cost>R</cost>
+            <target>
+                <type>PLAYER</type>
+                <minNumber>1</minNumber>
+                <maxNumber>1</maxNumber>
+                <prevConstraints/>
+            </target>
+            <requirements>
+                <requirement name="MAX_DISTANCE">1</requirement>
+            </requirements>
+            <actions>
+                <action type="MARK">
+                    <value>1</value>
+                </action>
+            </actions>
+            <extras/>
+        </effect>
+    </effects>
+    <order>
+        <sequence>
+            <node>1</node>
+        </sequence>
+        <sequence>
+            <node>1</node>
+            <node>2</node>
+            <node>3</node>
+        </sequence>
+    </order>
+</weapon>

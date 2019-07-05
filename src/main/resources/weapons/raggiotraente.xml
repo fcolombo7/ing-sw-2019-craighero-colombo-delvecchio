@@ -1,0 +1,60 @@
+<weapon id="30">
+	<name>RAGGIO TRAENTE</name>
+	<ammo>B</ammo>
+	<effects>
+		<effect ref_id="1" name="BASE">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+				<requirement name="SHIFTABLE">2</requirement>
+			</requirements>
+			<actions>
+				<action type="MOVE">
+					<value>2</value> 
+				</action>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="PUNITORE">
+			<cost>RY</cost>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="MAX_DISTANCE">2</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>3</value>
+				</action>
+			</actions>
+			<extras>
+				<extra name="SHIFT_IN_SQUARE"/>
+			</extras>	
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

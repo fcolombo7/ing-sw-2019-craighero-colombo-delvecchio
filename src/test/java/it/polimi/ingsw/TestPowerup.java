@@ -22,7 +22,7 @@ public class TestPowerup {
 
     @Test
     public void TestParsingPowerups(){
-        String folderName="src/main/Resources/powerups";
+        String folderName="src/main/resources/powerups";
         String path="";
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();

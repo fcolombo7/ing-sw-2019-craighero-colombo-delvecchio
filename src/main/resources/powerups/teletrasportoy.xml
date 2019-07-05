@@ -1,0 +1,23 @@
+<powerup id="0213"> 
+	<name>TELETRASPORTO</name>
+	<color>Y</color>
+	<timing>WAITING_PLAYER</timing>
+	<effect ref_id="1" name="TELETRASPORTO">
+		<cost/>
+		<target>
+			<type>ME</type>
+			<minNumber>1</minNumber>
+			<maxNumber>1</maxNumber>
+			<minPlayerIn>1</minPlayerIn>
+			<maxPlayerIn>1</maxPlayerIn>
+			<prevConstraints/>
+		</target>
+		<requirements/>
+		<actions>
+			<action type="MOVE">
+				<value>-1</value>
+			</action>
+		</actions>
+		<extras/>
+	</effect>
+</powerup>

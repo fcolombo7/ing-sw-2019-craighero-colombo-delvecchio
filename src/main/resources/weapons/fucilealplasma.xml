@@ -1,0 +1,94 @@
+<weapon id="32">
+	<name>FUCILE AL PLASMA</name>
+	<ammo>BY</ammo>
+	<effects>
+		<effect ref_id="1" name="effetto base">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="colpo sovraccarico">
+			<cost>B</cost>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints>
+					<constraint>SAME</constraint>
+				</prevConstraints>
+			</target>
+			<requirements/> 
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="3" name="slittamento di fase">
+			<cost/>
+			<target>
+				<type>ME</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="SHIFTABLE">2</requirement>
+				<requirement name="IF_FIRST_CHECK_VISIBILITY_AFTER_SHIFT">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="MOVE">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>3</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>3</node>
+			<node>2</node>
+		</sequence>
+		<sequence>
+			<node>3</node>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>3</node>
+			<node>1</node>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

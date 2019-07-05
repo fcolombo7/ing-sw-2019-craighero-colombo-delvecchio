@@ -1,0 +1,25 @@
+<powerup id="029"> 
+	<name>RAGGIO CINETICO</name>
+	<color>R</color>
+	<timing>WAITING_PLAYER</timing>
+	<effect ref_id="1" name="RAGGIO CINETICO">
+		<cost/>
+		<target>
+			<type>PLAYER</type>
+			<minNumber>1</minNumber>
+			<maxNumber>1</maxNumber>
+			<minPlayerIn>1</minPlayerIn>
+			<maxPlayerIn>1</maxPlayerIn>
+			<prevConstraints/>
+		</target>
+		<requirements/>
+		<actions>
+			<action type="MOVE">
+				<value>1</value>
+			</action>
+		</actions>
+		<extras>
+			<extra name="AGAIN_DIRECTION"/>
+		</extras>
+	</effect>
+</powerup>

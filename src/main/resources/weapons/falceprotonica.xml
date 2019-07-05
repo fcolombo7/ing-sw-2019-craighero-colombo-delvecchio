@@ -1,0 +1,55 @@
+<weapon id="35">
+	<name>FALCE PROTONICA</name>
+	<ammo>B</ammo>
+	<effects>
+		<effect ref_id="1" name="modalità base">
+			<cost/>
+			<target>
+				<type>SQUARE</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="MAX_DISTANCE">0</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="modalità mietitore">
+			<cost>BR</cost>
+			<target>
+				<type>SQUARE</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="MAX_DISTANCE">0</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>2</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>1</node>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

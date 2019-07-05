@@ -1,0 +1,59 @@
+<weapon id="27">
+	<name>VULCANIZZATORE</name>
+	<ammo>RB</ammo>
+	<effects>
+		<effect ref_id="1" name="BASE">
+			<cost/>
+			<target>
+				<type>ROOM</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">TRUE</requirement>
+				<requirement name="NOT_IN_ROOM">TRUE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+		<effect ref_id="2" name="FUOCO CONFORTEVOLE">
+			<cost/>
+			<target>
+				<type>SQUARE</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>-1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="MIN_DISTANCE">1</requirement>
+				<requirement name="MAX_DISTANCE">1</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>1</value>
+				</action>
+				<action type="MARK">
+					<value>1</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+		<sequence>
+			<node>2</node>
+		</sequence>
+	</order>
+</weapon>

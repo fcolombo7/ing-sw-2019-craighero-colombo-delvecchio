@@ -1,0 +1,26 @@
+<effect ref_id="1" name="nome">
+    <cost>RBY</cost>
+    <target>
+        <type>ROOM</type>
+        <minNumber>1</minNumber>
+        <maxNumber>1</maxNumber>
+        <minPlayerIn>1</minPlayerIn>
+        <maxPlayerIn>-1</maxPlayerIn>
+        <prevConstraints>
+            <contraint>DIFFERENT</contraint>
+        </prevConstraints>
+    </target>
+    <requirements>
+        <requirement name="NOT_IN_ROOM">true</requirement>
+        <requirement name="VISIBLE">true</requirement>
+    </requirements>
+    <actions>
+        <action type="DAMAGE">
+            <value>2</value>
+        </action>
+        <action type="MARK">
+            <value>1</value>
+        </action>
+    </actions>
+    <extras/>
+</effect>

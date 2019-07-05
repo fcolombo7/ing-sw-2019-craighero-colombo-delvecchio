@@ -1,0 +1,31 @@
+<weapon id="23">
+	<name>RAZZO TERMICO</name>
+	<ammo>RRY</ammo>
+	<effects>
+		<effect ref_id="1" name="EFFETTO">
+			<cost/>
+			<target>
+				<type>PLAYER</type>
+				<minNumber>1</minNumber>
+				<maxNumber>1</maxNumber>
+				<minPlayerIn>1</minPlayerIn>
+				<maxPlayerIn>1</maxPlayerIn>
+				<prevConstraints/>
+			</target>
+			<requirements>
+				<requirement name="VISIBLE">FALSE</requirement>
+			</requirements>
+			<actions>
+				<action type="DAMAGE">
+					<value>3</value>
+				</action>
+			</actions>
+			<extras/>
+		</effect>
+	</effects>
+	<order>
+		<sequence>
+			<node>1</node>
+		</sequence>
+	</order>
+</weapon>

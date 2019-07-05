@@ -1,0 +1,17 @@
+<!ELEMENT config (weapons, powerups, ammos, skull)>
+<!ELEMENT weapons (weapon+)>
+<!ELEMENT weapon (id,name,path)>
+<!ELEMENT powerups (powerup+)>
+<!ELEMENT powerup (id,name,path)>
+<!ELEMENT ammos (ammo+)>
+<!ELEMENT ammo (id,pow,colors)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT pow (#PCDATA)>
+<!ELEMENT colors (#PCDATA)>
+<!ELEMENT skull (#PCDATA)>
+<!ATTLIST powerups
+        quantity CDATA #REQUIRED>
+<!ATTLIST weapons
+        quantity CDATA #REQUIRED>

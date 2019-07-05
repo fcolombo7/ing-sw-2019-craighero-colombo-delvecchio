@@ -49,7 +49,7 @@ public class TestEffect {
         try{
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("src/test/Resources/effect_test1.xml"));
+            Document document = builder.parse(new File("src/test/resources/effect_test1.xml"));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
@@ -252,7 +252,7 @@ public class TestEffect {
             GameBoard board=game.getGameBoard();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("src/test/Resources/effect_test2.xml"));
+            Document document = builder.parse(new File("src/test/resources/effect_test2.xml"));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
@@ -287,7 +287,7 @@ public class TestEffect {
         try{
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("src/test/Resources/effect_test3.xml"));
+            Document document = builder.parse(new File("src/test/resources/effect_test3.xml"));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
@@ -336,7 +336,7 @@ public class TestEffect {
         try{
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("src/test/Resources/effect_test4.xml"));
+            Document document = builder.parse(new File("src/test/resources/effect_test4.xml"));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
@@ -387,7 +387,7 @@ public class TestEffect {
         try{
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("src/test/Resources/effect_test5.xml"));
+            Document document = builder.parse(new File("src/test/resources/effect_test5.xml"));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
@@ -496,7 +496,7 @@ public class TestEffect {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("src/test/Resources/effect_test6.xml"));
+            Document document = builder.parse(new File("src/test/resources/effect_test6.xml"));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();

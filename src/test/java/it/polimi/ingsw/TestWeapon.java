@@ -155,7 +155,7 @@ public class TestWeapon {
 
     @Test
     public void TestParsingWeapons(){
-        String folderName="src/main/Resources/weapons";
+        String folderName="src/main/resources/weapons";
         String path="";
         File folder = new File(folderName);
         File[] listOfFiles = folder.listFiles();

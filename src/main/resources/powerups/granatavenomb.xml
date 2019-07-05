@@ -1,0 +1,25 @@
+<powerup id="022"> 
+	<name>GRANATA VENOM</name>
+	<color>B</color>
+	<timing>COUNTER_ATTACK</timing>
+	<effect ref_id="1" name="GRANATA VENOM">
+		<cost/>
+		<target>
+			<type>PLAYER</type>
+			<minNumber>1</minNumber>
+			<maxNumber>1</maxNumber>
+			<minPlayerIn>1</minPlayerIn>
+			<maxPlayerIn>1</maxPlayerIn>
+			<prevConstraints/>
+		</target>
+		<requirements>
+			<requirement name="VISIBLE">TRUE</requirement>
+		</requirements>
+		<actions>
+			<action type="MARK">
+				<value>1</value>
+			</action>
+		</actions>
+		<extras/>
+	</effect>
+</powerup>
