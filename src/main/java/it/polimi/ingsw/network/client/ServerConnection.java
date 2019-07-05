@@ -106,11 +106,37 @@ public abstract class ServerConnection {
      * @param powerup the discarded card used to respawn the player
      */
     public abstract void respawnPlayer(Card powerup);
+
+    /**
+     * This method send the close turn request to the server
+     */
     public abstract void closeTurn();
+
+    /**
+     * This method is used to send the selected action you want to perform in the turn
+     * @param action the selected action you want to perform in the turn
+     */
     public abstract void selectAction(String action);
+
+    /**
+     * This method is used to send a move response
+     * @param target the target to move
+     * @param newPosition the target position
+     */
     public abstract void movePlayer(String target, int[] newPosition);
+
+    /**
+     * This method is used to send a discard weapon message
+     * @param weapon the weapon discarded
+     */
     public abstract void discardWeapon(Card weapon);
+
+    /**
+     * This method is used to send the selected effect
+     * @param effectName representing the name of the effect selected
+     */
     public abstract void selectEffect(String effectName);
+    
     public abstract void loadableWeapon(Card weapon);
     public abstract void runAction(int[] newPosition);
     public abstract void selectPlayers(List<List<String>> selected);

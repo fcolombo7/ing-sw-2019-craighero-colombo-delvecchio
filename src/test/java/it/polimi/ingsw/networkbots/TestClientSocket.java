@@ -1,4 +1,4 @@
-package it.polimi.ingsw.tests;
+package it.polimi.ingsw.networkbots;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -22,7 +22,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TestRMIClient {
+public class TestClientSocket {
     private static class DebugUI implements AdrenalineUI{
         private static int count=0;
         private ServerConnection connection;
@@ -64,9 +64,9 @@ public class TestRMIClient {
 
         @Override
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
-            System.out.println(count+" RMI: MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
+            System.out.println(count+" SOCKET: MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
             count++;
-            connection.boardPreference(1);
+            connection.boardPreference(2);
         }
 
         @Override
@@ -76,20 +76,20 @@ public class TestRMIClient {
 
         @Override
         public void onBoardUpdate(SimpleBoard gameBoard) {
-            System.out.println(count+" RMI: BOARD UPDATE");
+            System.out.println(count+" SOCKET: BOARD UPDATE("+gameBoard.getSourceReference()+")");
             count++;
         }
 
         @Override
         public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-            System.out.println(count+" RMI: MATCH UPDATE");
+            System.out.println(count+" SOCKET: MATCH UPDATE("+gameBoard.getSourceReference()+")");
             count++;
         }
 
         @Override
         public void onRespwanRequest(List<Card> powerups,List<Color> colors) {
             ex.submit(()->{
-                System.out.println(count+" RMI: RESPAWN REQUEST");
+                System.out.println(count+" SOCKET: RESPAWN REQUEST");
                 count++;
                 consoleInput.cancel();
                 int val=Integer.parseInt(consoleInput.readLine());
@@ -99,27 +99,27 @@ public class TestRMIClient {
 
         @Override
         public void onRespwanCompleted(SimplePlayer player, Card discardedPowerup,Color color) {
-            System.out.println(count+" RMI: RESPAWN COMPLETED");
+            System.out.println(count+" SOCKET: RESPAWN COMPLETED");
             count++;
         }
 
         @Override
         public void onGrabbedTile(SimplePlayer player, AmmoTile grabbedTile) {
-            System.out.println(count+" RMI: GRABBED TILE\n"+grabbedTile.toString());
+            System.out.println(count+" SOCKET: GRABBED TILE\n"+grabbedTile.toString());
             count++;
 
         }
 
         @Override
         public void onGrabbedPowerup(SimplePlayer player, Card powerup,Color color) {
-            System.out.println(count+" RMI: GRABBED POWERUP\n"+ powerup.toString());
+            System.out.println(count+" SOCKET: GRABBED POWERUP\n"+ powerup.toString());
             count++;
 
         }
 
         @Override
         public void onGrabbableWeapons(List<Card> weapons) {
-            System.out.println(count+" RMI: GRABBABLE WEAPONS");
+            System.out.println(count+" SOCKET: GRABBABLE WEAPONS");
             count++;
             connection.selectWeapon(weapons.get(0));
         }
@@ -131,7 +131,7 @@ public class TestRMIClient {
 
         @Override
         public void onGrabbedWeapon(SimplePlayer player, Card weapon) {
-            System.out.println(count+" RMI: GRABBED WEAPON\n"+weapon.toString());
+            System.out.println(count+" SOCKET: GRABBED WEAPON\n"+weapon.toString());
             count++;
 
         }
@@ -146,8 +146,8 @@ public class TestRMIClient {
 
         @Override
         public void onTurnActions(List<String> actions) {
-            System.out.println(count+" RMI: TURN ACTIONS");
-            count++;
+            System.out.println(count+" SOCKET: TURN ACTIONS");
+            count++;/*
             boolean found=false;
             for (String action : actions) {
                 if (action.equals("GRAB")) {
@@ -158,12 +158,13 @@ public class TestRMIClient {
             if(found) {
                 connection.selectAction("GRAB");
             }else
-                connection.selectAction("END");
+            */
+            connection.selectAction("END");
         }
 
         @Override
         public void onTurnEnd() {
-            System.out.println(count+" RMI: TURN END");
+            System.out.println(count+" SOCKET: TURN END");
             count++;
             connection.closeTurn();
         }
@@ -195,7 +196,7 @@ public class TestRMIClient {
 
         @Override
         public void onTurnCreation(String currentPlayer) {
-            System.out.println(count+" RMI: TURN CREATION");
+            System.out.println(count+" SOCKET: TURN CREATION");
             count++;
         }
 
@@ -246,11 +247,9 @@ public class TestRMIClient {
 
         @Override
         public void onRunRoutine(MatrixHelper matrix) {
-            System.out.println(count+" RMI: RUN ROUTINE");
-            System.out.println("Matrix is: \n"+matrix.toString());
+            System.out.println(count+" SOCKET: RUN ROUTINE");
             count++;
-            return;
-            /*
+            System.out.println("Matrix is: \n"+matrix.toString());
             for(int i=0;i<matrix.getRowLength();i++){
                 for(int j=0;j<matrix.getColLength();j++) {
                     if (matrix.toBooleanMatrix()[i][j]) {
@@ -260,13 +259,13 @@ public class TestRMIClient {
                     }
                 }
             }
-             */
 
         }
 
         @Override
         public void onPlayerWakeUp(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-
+            System.out.println(count+" SOCKET: WAKE UP!");
+            count++;
         }
 
         @Override
@@ -281,7 +280,9 @@ public class TestRMIClient {
 
         @Override
         public void onCanCounterAttack() {
-
+            System.out.println(count+" SOCKET: CAN COUNTER ATTACK");
+            count++;
+            connection.counterAttackAnswer(false);
         }
 
         @Override
@@ -301,29 +302,34 @@ public class TestRMIClient {
 
         @Override
         public void onDisconnectionAdvise() {
-
+            System.out.println(count+" SOCKET: DISCONNECTION ADVISE");
+            count++;
         }
 
         @Override
         public void onGameEnd(List<SimplePlayer> players) {
-
+            System.out.println(count+" SOCKET: GAME END");
+            count++;
+            connection.confirmEndGame();
         }
 
         @Override
         public void onLeaderboardReceived(List<String> nicknames, List<Integer> points) {
-
+            System.out.println(count+" SOCKET: LEADERBOARD RECEIVED");
+            count++;
+            System.out.println(nicknames.toString());
         }
     }
 
     public static void main(String[] args){
         String nick;
-        Scanner stdin=new Scanner(System.in);
+        Scanner stdin = new Scanner(System.in);
         System.out.print("nick: ");
         nick=stdin.nextLine();
         try {
-            DebugUI ui1=new DebugUI(true);
-            ui1.setUpConnection();
-            ui1.connection.login(nick,"MOTTO");
+            DebugUI ui2=new DebugUI(false);
+            ui2.setUpConnection();
+            ui2.connection.login(nick,"MOTTO");
         } catch (IOException | NotBoundException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
