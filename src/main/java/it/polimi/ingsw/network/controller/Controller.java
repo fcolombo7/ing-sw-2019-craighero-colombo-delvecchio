@@ -73,8 +73,11 @@ public class Controller{
     }
 
     public synchronized void respawnPlayer(String sender, Card powerup,boolean notAlive){
+        Logger.logAndPrint("RP -TRY NEW RESPAWN HANDLE "+ sender);
         if(game.getStatus()!=GameStatus.END) {
+            Logger.logAndPrint("RP - GAME NOT END "+ sender);
             if (!isDisconnected(sender)&&!notAlive) {
+                Logger.logAndPrint("RP - NOT DISCONNECTED"+ sender);
                 Timer t = timerMap.get(sender);
                 t.cancel();
                 t.purge();
@@ -84,8 +87,9 @@ public class Controller{
             for (Player p : game.getPlayers()) {
                 if (p.getNickname().equals(sender)) {
                     game.respawnPlayer(p, powerup);
-                    if (p.getStatus() == PlayerStatus.PLAYING) {
+                    if (p.getNickname().equals(game.getCurrentPlayer().getNickname())) {
                         if (!isDisconnected(sender)&&!notAlive) {
+                            Logger.logAndPrint("RP - NOT DISCONNECTED"+ sender);
                             Timer t = new Timer();
                             timerMap.put(p.getNickname(), t);
                             executionMap.put(t,"TURN");
@@ -109,10 +113,11 @@ public class Controller{
                             game.createTurn();
                         } else
                             handleNewTurn();
-                        return;
-                    }
-                    if (timerMap.isEmpty()) //IF IS EMPTY THEN ALL THE DEAD PLAYER HAS BEEN RESPAWNED
+                        //return;
+                    }else{
+                        nextPlayer();
                         handleNewTurn();
+                    }
                     return;
                 }
             }
@@ -203,37 +208,43 @@ public class Controller{
     }
 
     private void handleNewTurn() {
+        Logger.logAndPrint("ht -TRY NEW turn HANDLE ");
         if(game.getStatus()!=GameStatus.END) {
-            nextPlayer();
-            if (game.getCurrentPlayer().getStatus() == PlayerStatus.FIRST_SPAWN) {
-                Timer t = new Timer();
-                timerMap.put(game.getCurrentPlayer().getNickname(), t);
-                executionMap.put(t,"RESPAWN");
-                t.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Logger.logErr("RESPAWN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
-                        executionMap.remove(t);
-                        timerMap.remove(game.getCurrentPlayer().getNickname());
-                        room.forceDisconnection(game.getCurrentPlayer().getNickname());
-                        respawnPlayer(game.getCurrentPlayer().getNickname(), game.getCurrentPlayer().getPowerups().get(0),false);
-                    }
-                }, Server.getQuickMoveTimer() * 1000);
-                game.respawnPlayerRequest(game.getCurrentPlayer(), true);
-            } else {
-                Timer t = new Timer();
-                timerMap.put(game.getCurrentPlayer().getNickname(), t);
-                executionMap.put(t,"TURN");
-                t.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Logger.logErr("TURN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
-                        executionMap.remove(t);
-                        timerMap.remove(game.getCurrentPlayer().getNickname());
-                        room.forceDisconnection(game.getCurrentPlayer().getNickname());
-                    }
-                }, Server.getTurnTimer() * 1000);
-                game.createTurn();
+            Logger.logAndPrint("ht -NOT GAME END ");
+            try {
+                nextPlayer();
+                if (game.getCurrentPlayer().getStatus() == PlayerStatus.FIRST_SPAWN) {
+                    Timer t = new Timer();
+                    timerMap.put(game.getCurrentPlayer().getNickname(), t);
+                    executionMap.put(t, "RESPAWN");
+                    t.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Logger.logErr("RESPAWN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
+                            executionMap.remove(t);
+                            timerMap.remove(game.getCurrentPlayer().getNickname());
+                            room.forceDisconnection(game.getCurrentPlayer().getNickname());
+                            respawnPlayer(game.getCurrentPlayer().getNickname(), game.getCurrentPlayer().getPowerups().get(0), false);
+                        }
+                    }, Server.getQuickMoveTimer() * 1000);
+                    game.respawnPlayerRequest(game.getCurrentPlayer(), true);
+                } else {
+                    Timer t = new Timer();
+                    timerMap.put(game.getCurrentPlayer().getNickname(), t);
+                    executionMap.put(t, "TURN");
+                    t.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Logger.logErr("TURN TIMEOUT (" + game.getCurrentPlayer().getNickname() + ")");
+                            executionMap.remove(t);
+                            timerMap.remove(game.getCurrentPlayer().getNickname());
+                            room.forceDisconnection(game.getCurrentPlayer().getNickname());
+                        }
+                    }, Server.getTurnTimer() * 1000);
+                    game.createTurn();
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -300,54 +311,56 @@ public class Controller{
 
     public void addDisconnected(String nickname){
         for(Player p:game.getPlayers()){
-            if(p.getNickname().equals(nickname)){
-                disconnected.add(p);
-                debug();
-                if(game.getPlayers().size()-disconnected.size()<Server.getMinPlayerNumber()){
-                    for (Timer t:timerMap.values()){
-                        t.cancel();
-                        t.purge();
-                        executionMap.remove(t);
-                    }
-                    timerMap.clear();
-                    if(game.getStatus()==GameStatus.PLAYING_TURN) {
-                        try{
-                            ((ShootingRoutine)game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
+            if(p.getNickname().equals(nickname)) {
+                if (!disconnected.contains(p)) {
+                    disconnected.add(p);
+                    debug();
+                    if (game.getPlayers().size() - disconnected.size() < Server.getMinPlayerNumber()) {
+                        for (Timer t : timerMap.values()) {
+                            t.cancel();
+                            t.purge();
+                            executionMap.remove(t);
+                        }
+                        timerMap.clear();
+                        if (game.getStatus() == GameStatus.PLAYING_TURN) {
+                            try {
+                                ((ShootingRoutine) game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
+                                Logger.logAndPrint("Counter attack canceled in the shooting routine .");
+                            } catch (Exception e) {
+                                Logger.logAndPrint("No shooting routine in execution.");
+                            }
+                            game.getCurrentTurn().forceClosing();
+                            closeTurn(game.getCurrentPlayer().getNickname());
+                        }
+                        game.forceEndGame();
+                        if (lastTimer == null) {
+                            lastTimer = new Timer();
+                            lastTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    room.close();
+                                }
+                            }, Server.getQuickMoveTimer() * 1000);
+                        }
+                    } else if (game.getStatus() == GameStatus.PLAYING_TURN && game.getCurrentPlayer().getNickname().equals(nickname)) {
+                        Timer t = timerMap.get(game.getCurrentPlayer().getNickname());
+                        if (t != null) {
+                            t.cancel();
+                            t.purge();
+                            executionMap.remove(t);
+                            timerMap.remove(game.getCurrentPlayer().getNickname());
+                        }
+                        try {
+                            ((ShootingRoutine) game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
                             Logger.logAndPrint("Counter attack canceled in the shooting routine .");
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             Logger.logAndPrint("No shooting routine in execution.");
                         }
                         game.getCurrentTurn().forceClosing();
                         closeTurn(game.getCurrentPlayer().getNickname());
                     }
-                    game.forceEndGame();
-                    if(lastTimer==null){
-                        lastTimer=new Timer();
-                        lastTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                room.close();
-                            }
-                        },Server.getQuickMoveTimer()*1000);
-                    }
-                }else if(game.getStatus()==GameStatus.PLAYING_TURN&&game.getCurrentPlayer().getNickname().equals(nickname)){
-                    Timer t=timerMap.get(game.getCurrentPlayer().getNickname());
-                    if(t!=null) {
-                        t.cancel();
-                        t.purge();
-                        executionMap.remove(t);
-                        timerMap.remove(game.getCurrentPlayer().getNickname());
-                    }
-                    try{
-                        ((ShootingRoutine)game.getCurrentTurn().getInExecutionRoutine()).cancelCounterAttackTimers();
-                        Logger.logAndPrint("Counter attack canceled in the shooting routine .");
-                    }catch(Exception e){
-                        Logger.logAndPrint("No shooting routine in execution.");
-                    }
-                    game.getCurrentTurn().forceClosing();
-                    closeTurn(game.getCurrentPlayer().getNickname());
+                    return;
                 }
-                return;
             }
         }
     }

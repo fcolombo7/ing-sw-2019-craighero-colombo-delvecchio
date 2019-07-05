@@ -159,7 +159,7 @@ public class TestClientSocket {
                 connection.selectAction("GRAB");
             }else
             */
-                connection.selectAction("END");
+            connection.selectAction("END");
         }
 
         @Override

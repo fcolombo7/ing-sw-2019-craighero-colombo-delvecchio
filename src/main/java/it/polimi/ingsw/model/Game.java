@@ -581,8 +581,10 @@ public class Game extends Observable<MatchMessage> {
             throw new IllegalStateException("Cannot create turn without having instantiated the Gameboard.");
         if (currentPlayer.getStatus() == PlayerStatus.FIRST_SPAWN)
             throw new IllegalStateException("Current player need to be Spawned.");
-        if (currentPlayer.getStatus() != PlayerStatus.PLAYING)
-            throw new IllegalStateException("Cannot create turn.[Illegal player status: " + currentPlayer.getStatus().name() + "]");
+        if (currentPlayer.getStatus() != PlayerStatus.PLAYING) {
+            if(currentPlayer.getStatus()!=PlayerStatus.WAITING)
+                throw new IllegalStateException("Cannot create turn.[Illegal player status: " + currentPlayer.getStatus().name() + "]");
+        }
         if (currentTurn!=null&&currentTurn.getStatus()!= TurnStatus.END)
             throw new IllegalStateException("Cannot create turn. [Another one is still being played]");
         status=GameStatus.PLAYING_TURN;
@@ -621,6 +623,7 @@ public class Game extends Observable<MatchMessage> {
         if(!frenzyInTurn&&lastPlayerBeforeFrenzy==currentPlayer){
             gameEnded=true;
             status=GameStatus.END;
+            endGame();
         }else
             notify(new MatchUpdateMessage(players,gameBoard,frenzyMode));
     }
@@ -739,7 +742,7 @@ public class Game extends Observable<MatchMessage> {
                     if(powerup.getColor().name().equalsIgnoreCase(square.getRoomColor().name()))
                         player.setPosition(square);
                 }
-                player.setStatus(PlayerStatus.PLAYING);
+                player.setStatus(player.getStatus()==PlayerStatus.FIRST_SPAWN?PlayerStatus.PLAYING:PlayerStatus.WAITING);
                 MatchMessage message=new RespawnMessage(new SimplePlayer(player),powerup,powerup.getColor());
                 notify(message);
                 return;
