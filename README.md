@@ -39,3 +39,6 @@ The Client jar works with arguments. So if you want to run it, you must write in
 <br><br>CLI example:
 <br>`java -jar AM53-UI.jar CLI 192.168.1.133 12346 12345`
 <br><br>The examples refer to the configuration of the current `config.xml`
+
+###### Note
+Both the `.jar` files when started create a log file in the same directory of where the `.jar` is located.

@@ -28,13 +28,44 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class is used to represent the connection from client to server using the RMI technology
+ */
 public class RMIServerConnection extends ServerConnection implements RMIClientHandler {
+    /**
+     * This attribute is an unique string sending from the server used to identify the client
+     */
     private String session;
+
+    /**
+     * This attribute contains the server stub
+     */
     private RMIServerHandler stub;
+
+    /**
+     * This attributes contains a pool of thread using to send all the answer to the server
+     */
     private ExecutorService sendingPool;
+
+    /**
+     * This attribute contains a pool of thread using to receive and handle all the server request
+     */
     private ExecutorService receivingPool;
+
+    /**
+     * This attributes is used to save the connection status
+     */
     private boolean disconnected=false;
 
+    /**
+     * This constructor set up a RMI connection between server and client
+     * @param hostname representing the hostname of the server
+     * @param port representing the port used to perform the connection
+     * @param ui representing the associated UI
+     * @throws IOException due to IO and Net issues
+     * @throws NotBoundException due to IO and Net issues
+     * @throws URISyntaxException due to malformed URI
+     */
     public RMIServerConnection(String hostname, int port, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
         super(hostname, port, ui);
         String codebase= new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
@@ -65,6 +96,14 @@ public class RMIServerConnection extends ServerConnection implements RMIClientHa
 
     }
 
+    /**
+     * This constructor set up a a RMI connection between server and client
+     * @param hostname representing the hostname of the server
+     * @param ui representing the associated UI
+     * @throws IOException due to IO and Net issues
+     * @throws NotBoundException due to IO and Net issues
+     * @throws URISyntaxException due to malformed URI
+     */
     public RMIServerConnection(String hostname, AdrenalineUI ui) throws IOException, NotBoundException, URISyntaxException {
         this(hostname,Client.getRmiPort(), ui);
     }

@@ -10,11 +10,26 @@ import it.polimi.ingsw.utils.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class is used to represent the remote view on the server due to the network layer introduced in the MVC
+ */
 public class RemoteView extends View{
 
+    /**
+     * This attribute represents the client connection used to send and receive message
+     */
     private ClientConnection clientConnection;
+
+    /**
+     * This attribute represent the hashmap used to handle the message sending
+     */
     private Map<String, MessageSender> senderMap;
 
+    /**
+     * This constructor instantiates a Remote View
+     * @param player representing the associated player
+     * @param client representing the connection
+     */
     public RemoteView(Player player, ClientConnection client) {
         super(player);
         this.clientConnection = client;

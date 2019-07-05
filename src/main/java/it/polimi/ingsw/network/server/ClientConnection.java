@@ -43,7 +43,7 @@ public abstract class ClientConnection{
         online=false;
     }
 
-    String getNickname() {
+    public String getNickname() {
         return nickname;
     }
 

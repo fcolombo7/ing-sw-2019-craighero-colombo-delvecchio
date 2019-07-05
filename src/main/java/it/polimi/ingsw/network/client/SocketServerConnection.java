@@ -20,13 +20,43 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class is used to represent the connection from client to server using the Socket technology
+ */
 public class SocketServerConnection extends ServerConnection {
+    /**
+     * This attribute contains a useful string used whit LOGGER
+     */
     private static final String LOG_JSON ="[JSON ANSWER] ";
+
+    /**
+     * This attributes contains the socket used to communicate with the server
+     */
     private Socket socket;
+
+    /**
+     * This attributes is used to get te socket input stream
+     */
     private Scanner socketIn;
+
+    /**
+     * This attributes is used to get te socket output stream
+     */
     private PrintWriter socketOut;
+
+    /**
+     * This attributes is used to perform the request received from the server
+     */
     private Map<String,MessageReceiver> receiverMap;
+
+    /**
+     * This attribute contains an executor used to perform operation in thread
+     */
     private ExecutorService executor;
+
+    /**
+     * This attributes contains a pool of thread used to handle the server request and answer
+     */
     private ExecutorService pool;
 
     @FunctionalInterface
@@ -34,6 +64,13 @@ public class SocketServerConnection extends ServerConnection {
         void handle(String content);
     }
 
+    /**
+     * This constructor set up a socket connection
+     * @param hostname representing the hostname of the server
+     * @param port representing the port used to perform the connection
+     * @param ui representing the associated UI
+     * @throws IOException due to IO and network error
+     */
     public SocketServerConnection(String hostname, int port, AdrenalineUI ui) throws IOException {
         super(hostname, port, ui);
         socket = new Socket(hostname, port);
@@ -45,10 +82,19 @@ public class SocketServerConnection extends ServerConnection {
         Logger.log("SOCKET SET UP");
     }
 
+    /**
+     * This constructor set up a socket connection
+     * @param hostname representing the hostname of the server
+     * @param ui representing the associated UI
+     * @throws IOException due to IO and network error
+     */
     public SocketServerConnection(String hostname, AdrenalineUI ui) throws IOException {
         this(hostname, Client.getSocketPort(),ui);
     }
 
+    /**
+     * This method is used keep the client listening to the server request
+     */
     private void start(){
         Runnable receiver= () -> {
             try {
@@ -79,6 +125,9 @@ public class SocketServerConnection extends ServerConnection {
         executor.submit(receiver);
     }
 
+    /**
+     * This method is used to set up the receiver map used to manage the server request
+     */
     private void initReceiverMap() {
         receiverMap=new HashMap<>();
         receiverMap.put(Constants.PLAYER_JOIN,this::joinPlayer);
@@ -283,6 +332,10 @@ public class SocketServerConnection extends ServerConnection {
 
     /*------ MATCH RECEIVED MESSAGES ------*/
 
+    /**
+     * This method handle the wakeUp request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void wakeUpPlayer(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -298,6 +351,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the run routine request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void runRoutine(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -313,6 +370,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the run completed request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void runCompleted(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -328,6 +389,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the available powerups requestt
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void availablePowerups(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -343,6 +408,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the used card request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void usedCard(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -358,6 +427,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the pay effect request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void payEffect(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -373,6 +446,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the available effect request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void availableEffects(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -388,6 +465,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the usable effects request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void usableWeapons(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -403,6 +484,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the can stop routine request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void canStopRoutine(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -419,6 +504,10 @@ public class SocketServerConnection extends ServerConnection {
 
     }
 
+    /**
+     * This method handle the can use powerup request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void canUsePowerup(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -434,6 +523,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the selectable player request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void selectablePlayers(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -449,6 +542,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the discarded powerup request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void discardedPowerup(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -464,6 +561,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the damage action request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void damageAction(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -479,6 +580,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the mark action request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void markAction(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -494,6 +599,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the move request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void moveRequest(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -509,6 +618,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the move action request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void moveAction(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -524,6 +637,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the turn end request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void turnEnd(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -539,6 +656,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the turn actions request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void turnActions(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -554,6 +675,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the turn creation request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void turnCreation(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -569,6 +694,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the reloadable weapons request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void reloadableWeapons(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -584,6 +713,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the reloaded weapon message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void reloadedWeapon(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -599,6 +732,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the grabbed weapon message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void grabbedWeapon(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -614,6 +751,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the discarded weapon message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void discardWeapon(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -629,6 +770,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the "grabbable" weapon message (all the weapon you can grab)
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void grabbableWeapons(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -645,6 +790,10 @@ public class SocketServerConnection extends ServerConnection {
 
     }
 
+    /**
+     * This method handle the grabbed powerup message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void grabbedPowerup(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -660,6 +809,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the grabbed tile message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void grabbedTile(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -675,6 +828,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the respawn completed message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void respwanCompleted(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -691,6 +848,10 @@ public class SocketServerConnection extends ServerConnection {
 
     }
 
+    /**
+     * This method handle the respawn request
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void respwanRequest(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -706,6 +867,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the match update message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void matchUpdate(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -721,6 +886,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the board update message
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void boardUpdate(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -736,6 +905,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the invalid message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void invalidMessageReceived(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -751,6 +924,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the match creation from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void matchCreation(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -766,6 +943,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the leaderboard message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void leaderboard(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -781,6 +962,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the game end message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void gameEnd(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -796,6 +981,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the counterattack timeout message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void counterAttackTimeout(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -811,6 +1000,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the counterattack message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void counterAttack(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -826,6 +1019,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the can counterattack message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void canCounterAttack(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -841,6 +1038,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the full of powerup message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void fullOfPowerup(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -858,6 +1059,10 @@ public class SocketServerConnection extends ServerConnection {
 
     /*------ ROOM RECEIVED MESSAGES ------*/
 
+    /**
+     * This method handle the exit player from the room message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void exitPlayer(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -874,6 +1079,10 @@ public class SocketServerConnection extends ServerConnection {
 
     }
 
+    /**
+     * This method handle the first player in the room message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void firstPlayer(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -891,6 +1100,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the player join in room message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void joinPlayer(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -908,7 +1121,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
-    //TODO: ELIMINARE
+    /**
+     * This method handle the recover Player received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void recoverPlayer(String content) {
         pool.submit(()->{
             Gson gson=new Gson();
@@ -922,12 +1138,15 @@ public class SocketServerConnection extends ServerConnection {
             }catch (Exception e){
                 Logger.log(e.getMessage());
                 //HANDLE ERRORS HERE
-                e.printStackTrace();
                 handleInvalidReceived("RECOVER PLAYER",e.getMessage(),content);
             }
         });
     }
 
+    /**
+     * This method handle the disonnection message received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void notifyDisconnection(String content) {
         Gson gson = new Gson();
         Logger.log(LOG_JSON + content);
@@ -946,6 +1165,10 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method is used to handle the ping request received from the server
+     * @param content representing the JSON string which contains all the data sent by the server
+     */
     private void ping(String content) {
         Gson gson = new Gson();
         Logger.log("[KEEPING ALIVE (SOCKET)]");
@@ -963,6 +1186,9 @@ public class SocketServerConnection extends ServerConnection {
         }
     }
 
+    /**
+     * This method handle the invalid message received from the server
+     */
     private void handleInvalidReceived(String cause, String message, String lastLine) {
         String builder=("An error occurred while trying to execute '")+(cause)+("':\n")+(message);
         Logger.logErr(builder);
