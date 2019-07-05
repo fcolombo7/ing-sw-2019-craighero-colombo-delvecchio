@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GameStatus;
 import it.polimi.ingsw.model.enums.PlayerStatus;
 import it.polimi.ingsw.model.enums.TurnStatus;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.controller.messages.SimplePlayer;
 import it.polimi.ingsw.network.controller.messages.matchmessages.*;
 import it.polimi.ingsw.network.server.Server;
@@ -22,7 +23,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -120,7 +123,7 @@ public class Game extends Observable<MatchMessage> {
         ammoTileDeck = new ArrayList<>();
         players = new ArrayList<>();
 
-        Node root = parsingXMLFile(Constants.GAME_CONFIG_FILEPATH);
+        Node root = parsingXMLFile("/config.xml");
         NodeList nodeList = root.getChildNodes();
         for(int i=0; i<nodeList.getLength();i++) {
             Node cardNode = nodeList.item(i);
@@ -265,7 +268,7 @@ public class Game extends Observable<MatchMessage> {
     private Node parsingXMLFile(String path){
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(true);
+            //factory.setValidating(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(new ErrorHandler() {
                 @Override
@@ -286,13 +289,19 @@ public class Game extends Observable<MatchMessage> {
                     throw e;
                 }
             });
-            Document document = builder.parse(new File(path));
+            String path2;
+            //
+            path2=this.getClass().getResourceAsStream(path).toString();
+            Logger.logAndPrint(path2);
+
+            Document document = builder.parse(this.getClass().getResourceAsStream(path));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
             root.normalize();
             return root;
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.logErr(e.getMessage());
+            e.printStackTrace();
             throw new NullPointerException("Parsing failed");
         }
     }
@@ -537,16 +546,16 @@ public class Game extends Observable<MatchMessage> {
     public void setGameBoard(int mapNumber) {
         switch(mapNumber){
             case 1:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD1_FILEPATH), skullsNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("/boards/board1.xml"), skullsNumber,mapNumber);
                 break;
             case 2:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD2_FILEPATH), skullsNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("/boards/board2.xml"), skullsNumber,mapNumber);
                 break;
             case 3:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD3_FILEPATH), skullsNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("/boards/board3.xml"), skullsNumber,mapNumber);
                 break;
             case 4:
-                this.gameBoard = new GameBoard(parsingXMLFile(Constants.BOARD4_FILEPATH), skullsNumber,mapNumber);
+                this.gameBoard = new GameBoard(parsingXMLFile("/boards/board4.xml"), skullsNumber,mapNumber);
                 break;
             default: throw new IllegalArgumentException("An invalid map number has been chosen: game board not initialized");
         }

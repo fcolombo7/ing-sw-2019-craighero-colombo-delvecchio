@@ -54,12 +54,13 @@ public class Controller{
     public void roomPreferenceManager(String sender, int boardNumber) {
         if(game.getStatus()!=GameStatus.END) {
             if (boardPreference.containsKey(sender)) return;
-            String folderName = Constants.BOARD_FOLDER;
-            File folder = new File(folderName);
-            File[] listOfFiles = folder.listFiles();
-            if (listOfFiles == null) throw new MatchConfigurationException("No boards in " + folderName);
-            for (File file : listOfFiles) {
-                if (file.getName().equalsIgnoreCase("board" + boardNumber + ".xml")) {
+            ArrayList<Integer> values=new ArrayList<>();
+            values.add(1);
+            values.add(2);
+            values.add(3);
+            values.add(4);
+            for (Integer value : values) {
+                if (value.equals(boardNumber)) {
                     boardPreference.put(sender, boardNumber);
                     break;
                 }
@@ -114,8 +115,8 @@ public class Controller{
                         } else
                             handleNewTurn();
                         //return;
-                    }else{
-                        nextPlayer();
+                    }else {
+                        //nextPlayer();
                         handleNewTurn();
                     }
                     return;

@@ -1,10 +1,12 @@
-package it.polimi.ingsw.GUI;
+package it.polimi.ingsw.ui.gui;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 
 
-//square
+/**
+ * This class represents a square of the map
+ */
 public class SquareWindow {
     private Button squareButton;
     private double[] us1;
@@ -26,6 +28,14 @@ public class SquareWindow {
     private double widthScaleFactor;
     private double heightScaleFactor;
 
+    /**
+     * This constructor instantiates a square
+     * @param i is the x coordinate of the square
+     * @param j is the y coordinate of the square
+     * @param nummap is the number of the map
+     * @param widthFactor is the scale factor for the width
+     * @param heightFactor is the scale factor for the height
+     */
     public SquareWindow(int i, int j, int nummap, double widthFactor, double heightFactor){
         squareButton=new Button();
         weapon1=new Button();
@@ -73,8 +83,16 @@ public class SquareWindow {
 
     public int[] getPos(){return pos;}
 
+    /**
+     * This method says if the square is a respawn point
+     * @return true if it is a respawn point
+     */
     public boolean hasRespawn(){return hasRespawnPoint;}
 
+    /**
+     * This method says if the square has an ammo tile
+     * @return
+     */
     public boolean hasAmmoPoint(){return hasAmmo;}
 
     public ImageView getAmmo() {
@@ -93,6 +111,11 @@ public class SquareWindow {
         return weapon3;
     }
 
+    /**
+     * This method configs a square of the second map
+     * @param i is the x coordinate of the square
+     * @param j is the y coordinate of the square
+     */
     private void configMap2(int i, int j){
         if(i==0&&j==0){
             configSquareButton(squareButton, 80, 83,111, 105);

@@ -48,7 +48,7 @@ public class PowerupRoutineTest {
         p3.setStatus(PlayerStatus.WAITING);
         assertThat(collector.pop().getRequest(), is(Constants.BOARD_UPDATE_MESSAGE));
 
-        Powerup powerup= new Powerup(new Card("id","nome","src/main/Resources/powerups/teletrasportor.xml"));
+        Powerup powerup= new Powerup(new Card("id","nome","/powerups/teletrasportor.xml"));
         p1.addPowerup(powerup);
 
         Logger.log("DROWN POWERUP");

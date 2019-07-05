@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GUI;
+package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
@@ -809,30 +809,30 @@ public class MainWindow extends Application {
 
 
         myWeap1Label = new Label();
-        myPowerup1Label = new Label();
+        //myPowerup1Label = new Label();
         setPosLabel(myWeap1Label, 640, 520);
-        setPosLabel(myPowerup1Label, 640, 380);
+        //setPosLabel(myPowerup1Label, 640, 380);
         myWeap2Label = new Label();
         setPosLabel(myWeap2Label, 730, 520);
         myWeap3Label = new Label();
         setPosLabel(myWeap3Label, 820, 520);
-        myPowerup2Label = new Label();
+        /*myPowerup2Label = new Label();
         setPosLabel(myPowerup2Label, 730, 380);
         myPowerup3Label = new Label();
         setPosLabel(myPowerup3Label, 820, 380);
         myPowerup4Label = new Label();
-        setPosLabel(myPowerup4Label, 910, 380);
+        setPosLabel(myPowerup4Label, 910, 380);*/
 
         initMyWeaponsLabel();
 
 
-        mess = new Label();
+        /* mess = new Label();
         mess.setStyle("-fx-font-size: 15");
         //mess.getStyleClass().add("mess");
         setPosLabel(mess, 1020, 50);
         mess.setPrefWidth(180 * widthScaleFactor);
         mess.setPrefWidth(200 * heightScaleFactor);
-        mess.setTextAlignment(TextAlignment.CENTER);
+        mess.setTextAlignment(TextAlignment.CENTER);*/
 
         eff1 = new Button("1");
         eff2 = new Button("2");
@@ -1309,7 +1309,7 @@ public class MainWindow extends Application {
      * @param player represents infos of that player
      */
 
-    public static void config(int numEnem, SimplePlayer player){
+    private static void config(int numEnem, SimplePlayer player){
         if(numEnem==1) {
             infostage1.getChildren().clear();
         }
@@ -1413,7 +1413,7 @@ public class MainWindow extends Application {
      * @param numberEnemy represents which enemy is the player for me
      */
 
-    public static void setStageAp(int numberEnemy){
+    private static void setStageAp(int numberEnemy){
 
         if(numberEnemy==1){
             infoStage.setScene(infoscene1);
@@ -3738,12 +3738,22 @@ public class MainWindow extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 if(target.getMaxPlayerIn()==-1){
+                    ok.setDisable(true);
                     user1.setDisable(true);
+                    user1.setOnAction(null);
                     user2.setDisable(true);
+                    user2.setOnAction(null);
                     user3.setDisable(true);
+                    user3.setOnAction(null);
                     user4.setDisable(true);
+                    user4.setOnAction(null);
                     user5.setDisable(true);
+                    user5.setOnAction(null);
                     okay.setDisable(true);
+                    minNumberList1=false;
+                    minNumberList2=false;
+                    minNumberList3=false;
+                    minNumberList4=false;
                     plSelected=tempPlSelected;
                     connection.selectPlayers(plSelected);
                     countTarget=0;
@@ -3878,6 +3888,7 @@ public class MainWindow extends Application {
         ok.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                plSelected.clear();
                 ok.setDisable(true);
                 user1.setDisable(true);
                 user1.setOnAction(null);
@@ -4009,6 +4020,25 @@ public class MainWindow extends Application {
         configWeapBoardImg();
         configWeapBoardButtons();
         configUserButtons();
+
+        mess = new Label();
+        mess.setStyle("-fx-font-size: 15");
+        //mess.getStyleClass().add("mess");
+        setPosLabel(mess, 1020, 50);
+        mess.setPrefWidth(180 * widthScaleFactor);
+        mess.setPrefWidth(200 * heightScaleFactor);
+        mess.setTextAlignment(TextAlignment.CENTER);
+
+        myPowerup1Label = new Label();
+        setPosLabel(myPowerup1Label, 640, 380);
+
+        myPowerup2Label = new Label();
+        setPosLabel(myPowerup2Label, 730, 380);
+        myPowerup3Label = new Label();
+        setPosLabel(myPowerup3Label, 820, 380);
+        myPowerup4Label = new Label();
+        setPosLabel(myPowerup4Label, 910, 380);
+
 
 
 
@@ -4290,7 +4320,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()->{
             setMyPowerups(powerups);
-            mess.setText("Scarta un potenziamento per rigenerarti");
+            mess.setText("Scarta un potenziamento\n per rigenerarti");
             for(int i=0; i<powerups.size(); i++) {
                 String usPowerup=powerups.get(i).getId();
                 setMyPowerupsActionForRespawn(usPowerup, powerups);

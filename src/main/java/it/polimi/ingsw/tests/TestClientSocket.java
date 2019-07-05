@@ -66,7 +66,7 @@ public class TestClientSocket {
         public void onMatchCreation(List<SimplePlayer> players, int playerTurnNumber) {
             System.out.println(count+" SOCKET: MATCH CREATED ("+players.size()+","+playerTurnNumber+")");
             count++;
-            connection.boardPreference(1);
+            connection.boardPreference(2);
         }
 
         @Override
@@ -76,13 +76,13 @@ public class TestClientSocket {
 
         @Override
         public void onBoardUpdate(SimpleBoard gameBoard) {
-            System.out.println(count+" SOCKET: BOARD UPDATE");
+            System.out.println(count+" SOCKET: BOARD UPDATE("+gameBoard.getSourceReference()+")");
             count++;
         }
 
         @Override
         public void onMatchUpdate(List<SimplePlayer> players, SimpleBoard gameBoard, boolean frenzy) {
-            System.out.println(count+" SOCKET: MATCH UPDATE");
+            System.out.println(count+" SOCKET: MATCH UPDATE("+gameBoard.getSourceReference()+")");
             count++;
         }
 

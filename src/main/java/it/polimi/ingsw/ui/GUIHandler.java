@@ -1,6 +1,6 @@
 package it.polimi.ingsw.ui;
 
-import it.polimi.ingsw.GUI.MainWindow;
+import it.polimi.ingsw.ui.gui.MainWindow;
 import it.polimi.ingsw.model.AmmoTile;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.enums.Color;

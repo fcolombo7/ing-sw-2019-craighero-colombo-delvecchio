@@ -22,10 +22,10 @@ public class TestWeapon {
 
    @Test
     public void CorrectInitialization(){
-        Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+        Weapon weapon=new Weapon("weapon1","distruttore","/weapon_test1.xml");
         weapon.init();
         String expected="Weapon {\n" +
-                "Card {id: weapon1, name: distruttore, xmlFile: src/test/Resources/weapon_test1.xml}\n" +
+                "Card {id: weapon1, name: distruttore, xmlFile: /weapon_test1.xml}\n" +
                 "initialized: true\n" +
                 "ammo: BLUE, BLUE\n" +
                 "loaded: true\n" +
@@ -44,7 +44,7 @@ public class TestWeapon {
     public void GetEffectNotPresent() {
         String eName = "effetto1";
         try {
-            Weapon w = new Weapon("weapon1", "distruttore", "src/test/Resources/weapon_test1.xml");
+            Weapon w = new Weapon("weapon1", "distruttore", "/weapon_test1.xml");
             w.init();
             w.getEffect(eName);
             fail("Expected a WeaponEffectException to be thrown.");
@@ -62,7 +62,7 @@ public class TestWeapon {
     @Test
     public void GetEffectPresent(){
         try {
-            Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon w= new Weapon("weapon1","distruttore","/weapon_test1.xml");
             w.init();
             assertThat(w.getEffect("base").getName(), is("base"));
         } catch(WeaponEffectException aWeaponEffectException){
@@ -79,7 +79,7 @@ public class TestWeapon {
     @Test
     public void LoadWeaponAlreadyLoaded(){
         try{
-            Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon w= new Weapon("weapon1","distruttore","/weapon_test1.xml");
             w.init();
             w.load();
             fail("Expected a WeaponLoadException to be thrown.");
@@ -97,7 +97,7 @@ public class TestWeapon {
     @Test
     public void UnloadWeaponAlreadyUnloaded(){
         try{
-            Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon w= new Weapon("weapon1","distruttore","/weapon_test1.xml");
             w.init();
             w.unload();
             w.unload();
@@ -116,7 +116,7 @@ public class TestWeapon {
     @Test
     public void LoadWeaponUnloaded(){
         try{
-            Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon w= new Weapon("weapon1","distruttore","/weapon_test1.xml");
             w.init();
             w.unload();
             w.load();
@@ -135,7 +135,7 @@ public class TestWeapon {
     @Test
     public void UnloadWeaponLoaded(){
         try{
-            Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon w= new Weapon("weapon1","distruttore","/weapon_test1.xml");
             w.init();
             w.unload();
             assertFalse(w.isLoaded());
@@ -149,7 +149,7 @@ public class TestWeapon {
 
     @Test
     public void GetNameTest(){
-        Weapon w= new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+        Weapon w= new Weapon("weapon1","distruttore","/weapon_test1.xml");
         assertEquals("distruttore",w.getName());
     }
 
@@ -163,7 +163,7 @@ public class TestWeapon {
             for (File file:listOfFiles) {
                 if (file.isFile()) {
                     System.out.println("Weapon: " + file.getName());
-                    path=folderName.concat("/").concat(file.getName());
+                    path=("/weapons/").concat(file.getName());
                     Weapon w= new Weapon("weapon_id","name",path);
                     w.init();
                     System.out.println("INITIALIZATION OF " + w.getName());
@@ -179,7 +179,7 @@ public class TestWeapon {
     public void TestEffectOrder1(){
         try
         {
-            Weapon weapon=new Weapon("weapon1","vulcanizzatore","src/main/Resources/weapons/vulcanizzatore.xml");
+            Weapon weapon=new Weapon("weapon1","vulcanizzatore","/weapons/vulcanizzatore.xml");
             weapon.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);
@@ -226,7 +226,7 @@ public class TestWeapon {
     public void TestEffectOrder2(){
         try
         {
-            Weapon weapon=new Weapon("weapon1","myWeapon","src/test/Resources/weapon_test2.xml");
+            Weapon weapon=new Weapon("weapon1","myWeapon","/weapons/distruttore.xml");
             weapon.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);
@@ -267,7 +267,7 @@ public class TestWeapon {
             effects.clear();
             third.setPosition(board.getSquare(2,2));
             effects=weapon.getUsableEffects(true,new Turn(game));
-            assertTrue(effects.isEmpty());
+            assertFalse(effects.isEmpty());
 
         } catch (Exception e) {
             fail("Unhandled exception has been thrown.");
@@ -278,7 +278,7 @@ public class TestWeapon {
     public void WeaponEffectTest(){
         try
         {
-            Weapon weapon=new Weapon("weapon1","myWeapon","src/main/Resources/weapons/fucilealplasma.xml");
+            Weapon weapon=new Weapon("weapon1","myWeapon","/weapons/fucilealplasma.xml");
             weapon.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);

@@ -1,8 +1,8 @@
-package it.polimi.ingsw.GUI;
+package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.utils.Constants;
 
-//launcher
+
 public class  Launcher {
     public static void main(String[] args) {
         MainWindow.setHostname(Constants.RMI_HOSTNAME);

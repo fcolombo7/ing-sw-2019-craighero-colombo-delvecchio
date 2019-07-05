@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GUI;
+package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.network.client.RMIServerConnection;
 import it.polimi.ingsw.network.client.ServerConnection;
@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.rmi.NotBoundException;
 
+/**
+ * This class represents the login window
+ */
 public class LoginWindow {
 
     /* TO DELETE
@@ -35,16 +38,47 @@ public class LoginWindow {
 
      */
 
+    /**
+     * This attribute represents the group of radio buttons
+     */
     private static ToggleGroup connectionGroup;
+    /**
+     * This attribute represents the button rmi
+     */
     private static RadioButton rmi;
+    /**
+     * This attribute represents the button socket
+     */
     private static RadioButton socket;
+    /**
+     * This attribute represents the button login
+     */
     private static Button loginButton;
+    /**
+     * This attribute represents the field for the nickname
+     */
     private static TextField nicknameField;
+    /**
+     * This attribute represents the field for the motto
+     */
     private static TextField mottoField;
+    /**
+     * This attribute represents the label for connection message
+     */
     private static Label connLabel;
+    /**
+     * This attribute represents the label for login message
+     */
     private static Label logLabel;
+    /**
+     * This attribute represents the pane
+     */
     private static AnchorPane grid;
 
+    /**
+     * This method open the login window
+     * @param stage represents the stage for the window
+     */
     public static void log(Stage stage){
         stage.setTitle("Login");
         stage.setMinHeight(500);
@@ -66,101 +100,7 @@ public class LoginWindow {
             else{
                 login();
 
-                /*
-                if(!pl.contains(playerNameField.getText())){
-                    String namePl=playerNameField.getText();
-                    pl.add(namePl);
-                    players=players+1;
-                    String msg="";
-                    lb1.setText(msg);
-                    AnchorPane waitingRoom = new AnchorPane();
-                    Label text = new Label("Waiting for other players...");
-                    Button disconnect= new Button("Disconnect");
-                    Button rules=new Button("Show rules");
-                    Label welcome = new Label();
-                    welcome.setText("WELCOME TO ADRENALINE");
-                    Label tit= new Label("Logged Players:");
-                    plOnline= new Label(pl.toString());
-                    tit.setPrefWidth(150);
-                    tit.setPrefHeight(20);
-                    plOnline.setPrefHeight(50);
-                    plOnline.setPrefWidth(400);
-                    Button refresh=new Button("Refresh");
-                    refresh.setPrefWidth(80);
-                    refresh.setPrefHeight(25);
-                    welcome.getStyleClass().add("welcome");
-                    Image hourglass= new Image("/gui/hourglass.jpg");
-                    ImageView hg= new ImageView(hourglass);
 
-                    plOnline.getStyleClass().add("ply");
-                    refresh.getStyleClass().add("refr");
-
-
-                    welcome.setLayoutX(115);
-                    welcome.setLayoutY(10);
-                    text.setLayoutX(175);
-                    text.setLayoutY(280);
-                    disconnect.setLayoutX(40);
-                    disconnect.setLayoutY(120);
-                    rules.setLayoutX(430);
-                    rules.setLayoutY(120);
-                    tit.setLayoutX(20);
-                    tit.setLayoutY(360);
-                    plOnline.setLayoutX(20);
-                    plOnline.setLayoutY(390);
-                    refresh.setLayoutX(20);
-                    refresh.setLayoutY(450);
-                    hg.setLayoutX(242);
-                    hg.setLayoutY(60);
-
-
-
-                    waitingRoom.getChildren().addAll(welcome, text, disconnect, rules, plOnline, refresh, tit, hg);
-                    Scene secondScene = new Scene(waitingRoom, 600, 500);
-
-                    Stage newWindow = new Stage();
-                    newWindow.setTitle("Waiting room");
-                    newWindow.setScene(secondScene);
-
-                    rules.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            Rules.showRules();
-                        }
-                    });
-
-                    disconnect.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            pl.remove(namePl);
-                            newWindow.close();
-                            primaryStage.show();
-                            players=players-1;
-                        }
-                    });
-
-                    refresh.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            plOnline.setText(pl.toString());
-                        }
-                    });
-
-
-
-                    newWindow.initStyle(StageStyle.UNDECORATED);
-                    //newWindow.initModality((Modality.WINDOW_MODAL));
-                    //newWindow.initOwner(primaryStage);
-                    //primaryStage.hide();
-                    newWindow.setX(primaryStage.getX());
-                    newWindow.setY(primaryStage.getY());
-                    newWindow.setResizable(false);
-                    waitingRoom.getStylesheets().addAll(this.getClass().getResource("/gui/waitingroom.css").toExternalForm());
-                    newWindow.show();
-                } else {
-                    String msg="Name already used";
-                    lb1.setText(msg);
-                }*/
             }
         });
 
@@ -188,6 +128,9 @@ public class LoginWindow {
         stage.show();
     }
 
+    /**
+     * This method handles the login of a player
+     */
     private static void login() {
         rmi.setDisable(true);
         socket.setDisable(true);
@@ -224,6 +167,9 @@ public class LoginWindow {
         }
     }
 
+    /**
+     * This method sets up the login window
+     */
     private static void setUp() {
         connectionGroup= new ToggleGroup();
         rmi= new RadioButton("RMI");

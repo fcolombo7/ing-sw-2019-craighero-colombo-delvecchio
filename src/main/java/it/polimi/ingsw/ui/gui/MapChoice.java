@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GUI;
+package it.polimi.ingsw.ui.gui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,12 +14,18 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-//updMapChoice
+/**
+ * This class is for the choice of the map
+ */
 public class MapChoice {
 
     //public static Stage stage;
     //private static ServerConnection connection;
 
+    /**
+     * This method opens the window for the choice of the map
+     * @param stage represents the stage for the window
+     */
     public static void display(Stage stage) {
         Platform.setImplicitExit(false);
         Platform.runLater(()-> {

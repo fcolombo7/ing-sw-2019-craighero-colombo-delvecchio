@@ -77,37 +77,9 @@ public class Powerup extends Card {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            /*
-        factory.setValidating(true);
-
-        builder.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void warning(SAXParseException e) throws SAXException {
-                System.out.println("WARNING : " + e.getMessage()); // do nothing
-                throw e;
-            }
-
-            @Override
-            public void error(SAXParseException e) throws SAXException {
-                System.out.println("ERROR : " + e.getMessage());
-                throw e;
-            }
-
-            @Override
-            public void fatalError(SAXParseException e) throws SAXException {
-                System.out.println("FATAL : " + e.getMessage());
-                throw e;
-            }
-        });
-        */
-            Document document = builder.parse(new File(getInitXML()));
+            Document document = builder.parse(this.getClass().getResourceAsStream(getInitXML()));
             document.normalizeDocument();
             Element root = document.getDocumentElement();
-            root.normalize();
-            /*TODO: Controllo per la verifica che id e name siano giusti?
-             * String id=root.getAttribute("id");
-             * if(!id.equals(getId())) throw new InvalidInitializationException;
-             */
             setColor(root.getElementsByTagName("color").item(0));
             setTiming(root.getElementsByTagName("timing").item(0));
             effect = new Effect(root.getElementsByTagName("effect").item(0));

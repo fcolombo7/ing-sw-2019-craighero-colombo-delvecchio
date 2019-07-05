@@ -16,16 +16,51 @@ import it.polimi.ingsw.utils.MatrixHelper;
 
 import java.util.*;
 
+/**
+ * This class represents the shootinf routine
+ */
 public class ShootingRoutine implements TurnRoutine {
-
+    /**
+     * this attribute contains the information used to check or not if the weapon is loaded or not
+     */
     private boolean checkLoaded;
+
+    /**
+     * This attribute represents the current turn of the match
+     */
     private Turn turn;
+
+    /**
+     * This attribute contains the position the player can reach before the shooting rountine
+     */
     private MatrixHelper moveBeforeShot;
+
+    /**
+     * This atrtibute is used to save the available effects of the player
+     */
     private List<Effect> curAvailableEffects;
+
+    /**
+     * This attribute is used to save the selected effect chosen by the current player during this routine
+     */
     private Effect selEffect;
+
+    /**
+     * This attribute is used to save the selected weapon
+     */
     private Weapon selWeapon;
+
+    /**
+     * This map is used to check the relation between the players who can counter attack the current player and their timer to send the answer
+     */
     private Map<String, Timer> counterAttackMap;
 
+    /**
+     * This Constructor instantiates a ShootingRoutine
+     * @param checkLoaded boolean representing the possibility of check or not if the weapon is loaded or not
+     * @param moveBeforeShot a matrix representing where the player can run before shooting
+     * @param turn representing the current turn
+     */
     ShootingRoutine(boolean checkLoaded, MatrixHelper moveBeforeShot, Turn turn) {
         this.checkLoaded = checkLoaded;
         this.turn = turn;
@@ -71,6 +106,10 @@ public class ShootingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to handle the powerup answer during the shooting routine.
+     * @param answer representing the answer given to the routine
+     */
     private void onUsePowerupAnswer(UsePowerupAnswer answer) {
         if(answer.wishUseIt()) {
             TurnRoutineFactory factory= new TurnRoutineFactory(turn);
@@ -81,6 +120,10 @@ public class ShootingRoutine implements TurnRoutine {
             handleCounterAttack();
     }
 
+    /**
+     * This method is used to handle the answer to the possibility of perform another effect of the current weapon in this turn
+     * @param answer answer representing the answer given to the routine
+     */
     private void onStopAnswer(StopRoutineAnswer answer) {
         if(!answer.wishStop()){
             sendAvailableEffects();
@@ -90,6 +133,10 @@ public class ShootingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to handle the answer which contains the selected players, target of the chosen effect
+     * @param answer representing the answer given to the routine
+     */
     private void onSelectedPlayersReceived(SelectedPlayersAnswer answer) {
         if(!turn.getCurEffect().checkSelected(answer.getSelected(),turn)){
             Logger.logAndPrint("[SHOOT ROUTINE]Invalid nicknames received");
@@ -100,6 +147,10 @@ public class ShootingRoutine implements TurnRoutine {
         selEffect.perform(answer.getSelected(),turn);
     }
 
+    /**
+     * This method is used to handle the answer which contains the chosen effect
+     * @param answer representing the answer given to the routine
+     */
     private void onEffectReceived(EffectAnswer answer) {
         for(Effect effect:curAvailableEffects){
             if(effect.getName().equalsIgnoreCase(answer.getEffectName())){
@@ -126,6 +177,9 @@ public class ShootingRoutine implements TurnRoutine {
 
     }
 
+    /**
+     * This method is used to pay the effect cost of the selected weapon
+     */
     private void payEffectCost() {
         if(!selEffect.getCost().isEmpty()){
             List<Card> discardedPowerups=new ArrayList<>();
@@ -150,6 +204,11 @@ public class ShootingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to handle the answer which contains the weapon the user want to use in this routine:
+     * if the player really can choose this weapon, then the this method notify the usable effects
+     * @param answer representing the answer given to the routine
+     */
     private void onWeaponReceived(WeaponAnswer answer) {
         for(Weapon weapon:turn.getGame().getCurrentPlayer().getWeapons()){
             if(weapon.getId().equals(answer.getWeapon().getId())){
@@ -179,11 +238,17 @@ public class ShootingRoutine implements TurnRoutine {
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Not existing weapon received")));
     }
 
+    /**
+     * This method is used to send the available effects of the chosen weapon to the current player
+     */
     private void sendAvailableEffects() {
         TurnRoutineMessage message=new AvailableEffectsMessage(turn.getGame().getCurrentPlayer().getNickname(), curAvailableEffects);
         turn.getGame().notify(message);
     }
 
+    /**
+     * This method is used to send the available weapons tho the player
+     */
     private void sendAvailableWeapons() {
         curAvailableEffects=null;
         List<Card> availableWeapons=new ArrayList<>();
@@ -196,11 +261,17 @@ public class ShootingRoutine implements TurnRoutine {
         turn.getGame().notify(message);
     }
 
+    /**
+     * This method is used to start the run routine if the player can move before starting the shooting routine.
+     */
     private void startRunRoutine() {
         TurnRoutine routine=new RunningRoutine(turn, moveBeforeShot,true);
         routine.start();
     }
 
+    /**
+     * This method is used to start the reload routine if the player can reload before starting the shooting routine
+     */
     private void startReloadRoutine(){
         TurnRoutine routine=new ReloadingRoutine(turn, selWeapon);
         routine.start();
@@ -242,11 +313,17 @@ public class ShootingRoutine implements TurnRoutine {
 
     }
 
+    /**
+     * This method is used to send to the player the advise that he can stop his shooting routine, or perform another available effect
+     */
     private void sendStopAdvise() {
         TurnRoutineMessage message=new CanStopMessage(turn.getGame().getCurrentPlayer().getNickname());
         turn.getGame().notify(message);
     }
 
+    /**
+     * This method is called when the routine is completed and the turn need to be updated
+     */
     private void closeShotRoutine() {
         selWeapon.unload();
         turn.clearSelectedPlayers();
@@ -254,11 +331,19 @@ public class ShootingRoutine implements TurnRoutine {
         turn.endRoutine();
     }
 
+    /**
+     * This method is used to send an error advise to the player if he send incorrect answers
+     * @param routineType representing the routine in which there were error
+     */
     private void logError(TurnRoutineType routineType) {
         Logger.logAndPrint(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]")));
     }
 
+    /**
+     * This method is used to handle the possible counter attack received from an enemy.
+     * If the enemy does not answer in a setted time, the answer will set no as default.
+     */
     private void handleCounterAttack() {
         counterAttackMap=new HashMap<>();
         List<Player> canCounterAttackPlayers=getCounterAttackPlayers();
@@ -279,6 +364,10 @@ public class ShootingRoutine implements TurnRoutine {
             checkNewEffects();
     }
 
+    /**
+     * This method is used to handle the answer of a counter attack
+     * @param answer representing the answer given to the routine
+     */
     private synchronized void onCounterAttackAnswer(CounterAttackAnswer answer) {
         String nickname=answer.getSender();
         Timer t= counterAttackMap.get(nickname);
@@ -307,6 +396,10 @@ public class ShootingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to get the players which can counterattack
+     * @return the players which can counterattack
+     */
     private List<Player> getCounterAttackPlayers() {
         List<Player> list=new ArrayList<>();
         for(Player player:turn.getLastDamagedPlayers()){
@@ -316,6 +409,9 @@ public class ShootingRoutine implements TurnRoutine {
         return list;
     }
 
+    /**
+     * This method is used to check if can be performed new effects of the selected weapon
+     */
     private void checkNewEffects() {
         curAvailableEffects=selWeapon.getUsableEffects(true,turn);
         if(!curAvailableEffects.isEmpty()) {
@@ -346,6 +442,9 @@ public class ShootingRoutine implements TurnRoutine {
         handleCounterAttack();
     }
 
+    /**
+     * This method is used to cancel the timer instantiates to handle the counter attack
+     */
     public void cancelCounterAttackTimers(){
         for(String key:counterAttackMap.keySet()){
             Timer t=counterAttackMap.get(key);

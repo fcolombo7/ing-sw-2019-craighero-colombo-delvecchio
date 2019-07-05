@@ -30,7 +30,7 @@ public class TestPowerup {
             for (File file:listOfFiles) {
                 if (file.isFile()) {
                     System.out.println("Powerup: " + file.getName());
-                    path=folderName.concat("/").concat(file.getName());
+                    path=("/powerups/").concat(file.getName());
                     Powerup p= new Powerup("powe_id","name",path);
                     p.init();
                 }
@@ -44,7 +44,7 @@ public class TestPowerup {
     @Test
     public void TestPowerupWithDeadPlayer(){
         try {
-            Powerup powerup= new Powerup("id","nome","src/main/Resources/powerups/raggiocineticor.xml");
+            Powerup powerup= new Powerup("id","nome","/powerups/raggiocineticor.xml");
             powerup.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);

@@ -80,7 +80,7 @@ public class TestEffect {
     @Test
     public void CorrectCostEffect(){
         try{
-            Weapon weapon= new Weapon("id","distruttore", "src/main/Resources/weapons/distruttore.xml");
+            Weapon weapon= new Weapon("id","distruttore", "/weapons/distruttore.xml");
             weapon.init();
             Effect effect=weapon.getEffect(2);
             String msg="Effect {\n" +
@@ -102,7 +102,7 @@ public class TestEffect {
     @Test
     public void CorrectEmptyCostEffect(){
         try{
-            Weapon weapon= new Weapon("id","distruttore", "src/main/Resources/weapons/distruttore.xml");
+            Weapon weapon= new Weapon("id","distruttore", "/weapons/distruttore.xml");
             weapon.init();
             Effect effect=weapon.getEffect(1);
             String msg="Effect {\n" +
@@ -125,7 +125,7 @@ public class TestEffect {
     public void testVisible(){
         //base effect DISTRUTTORE
         try {
-            Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon weapon=new Weapon("weapon1","distruttore","/weapons/distruttore.xml");
             weapon.init();
 
             Game game=new Game();
@@ -147,7 +147,7 @@ public class TestEffect {
             third.setPosition(board.getSquare(2,3));
             fourth.setPosition(board.getSquare(0,0));
 
-            Effect base= weapon.getEffect("base");
+            Effect base= weapon.getEffect("SECONDO AGGANCIO");
 
             ArrayList<Boolean> values= new ArrayList<>();
 
@@ -173,7 +173,7 @@ public class TestEffect {
     public void testDifferentConstraint(){
         //base effect DISTRUTTORE
         try {
-            Weapon weapon=new Weapon("weapon1","distruttore","src/test/Resources/weapon_test1.xml");
+            Weapon weapon=new Weapon("weapon1","distruttore","/weapons/distruttore.xml");
             weapon.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);
@@ -199,7 +199,7 @@ public class TestEffect {
             third.setPosition(board.getSquare(2,3));
             fourth.setPosition(board.getSquare(0,0));
 
-            Effect base= weapon.getEffect("opzionale");
+            Effect base= weapon.getEffect("SECONDO AGGANCIO");
 
             ArrayList<Boolean> values= new ArrayList<>();
 
@@ -443,50 +443,9 @@ public class TestEffect {
     }
 
     @Test
-    public void TestEffectSyntaxWeapons(){
-        String folderName="src/main/Resources/weapons";
-        String path="";
-        File folder = new File(folderName);
-        File[] listOfFiles = folder.listFiles();
-        try{
-            Game game=new Game();
-            Player first=new Player("first","first_motto",true);
-            Player second=new Player("second","second_motto",false);
-            Player third=new Player("third","third_motto",false);
-            Player fourth=new Player("fourth","fourth_motto",false);
-
-            game.addPlayer(first);
-            game.addPlayer(second);
-            game.addPlayer(third);
-            game.addPlayer(fourth);
-
-            game.setGameBoard(1);
-            GameBoard board=game.getGameBoard();
-
-            first.setPosition(board.getSquare(1,0));
-            second.setPosition(board.getSquare(1,2));
-            third.setPosition(board.getSquare(2,3));
-            fourth.setPosition(board.getSquare(0,0));
-
-            for (File file:listOfFiles) {
-                if (file.isFile()) {
-                    System.out.println("Weapon: " + file.getName());
-                    path=folderName.concat("/").concat(file.getName());
-                    Weapon w= new Weapon("weapon_id","name",path);
-                    w.init();
-                    w.getEffect(1).canUse(new Turn(game));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("An unexpected exception has been thrown.("+path+")");
-        }
-    }
-
-    @Test
     public void TestShiftable(){
         try {
-            Weapon weapon=new Weapon("weapon1","cannonevortex","src/main/Resources/weapons/cannonevortex.xml");
+            Weapon weapon=new Weapon("weapon1","cannonevortex","/weapons/cannonevortex.xml");
             weapon.init();
             Game game=new Game();
             Player first=new Player("first","first_motto",true);
@@ -618,7 +577,7 @@ public class TestEffect {
         p4.setPosition(game.getGameBoard().getSquare(1,1));
         p4.setPosition(game.getGameBoard().getSquare(0,1));
 
-        Weapon weapon=new Weapon(new Card("id","VULCANIZZATORE","src/main/Resources/weapons/vulcanizzatore.xml"));
+        Weapon weapon=new Weapon(new Card("id","VULCANIZZATORE","/weapons/vulcanizzatore.xml"));
         p1.addWeapon(weapon);
 
         Turn turn=new Turn(game);
