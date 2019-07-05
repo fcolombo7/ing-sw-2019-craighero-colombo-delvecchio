@@ -809,30 +809,30 @@ public class MainWindow extends Application {
 
 
         myWeap1Label = new Label();
-        myPowerup1Label = new Label();
+        //myPowerup1Label = new Label();
         setPosLabel(myWeap1Label, 640, 520);
-        setPosLabel(myPowerup1Label, 640, 380);
+        //setPosLabel(myPowerup1Label, 640, 380);
         myWeap2Label = new Label();
         setPosLabel(myWeap2Label, 730, 520);
         myWeap3Label = new Label();
         setPosLabel(myWeap3Label, 820, 520);
-        myPowerup2Label = new Label();
+        /*myPowerup2Label = new Label();
         setPosLabel(myPowerup2Label, 730, 380);
         myPowerup3Label = new Label();
         setPosLabel(myPowerup3Label, 820, 380);
         myPowerup4Label = new Label();
-        setPosLabel(myPowerup4Label, 910, 380);
+        setPosLabel(myPowerup4Label, 910, 380);*/
 
         initMyWeaponsLabel();
 
 
-        mess = new Label();
+        /* mess = new Label();
         mess.setStyle("-fx-font-size: 15");
         //mess.getStyleClass().add("mess");
         setPosLabel(mess, 1020, 50);
         mess.setPrefWidth(180 * widthScaleFactor);
         mess.setPrefWidth(200 * heightScaleFactor);
-        mess.setTextAlignment(TextAlignment.CENTER);
+        mess.setTextAlignment(TextAlignment.CENTER);*/
 
         eff1 = new Button("1");
         eff2 = new Button("2");
@@ -4010,6 +4010,25 @@ public class MainWindow extends Application {
         configWeapBoardButtons();
         configUserButtons();
 
+        mess = new Label();
+        mess.setStyle("-fx-font-size: 15");
+        //mess.getStyleClass().add("mess");
+        setPosLabel(mess, 1020, 50);
+        mess.setPrefWidth(180 * widthScaleFactor);
+        mess.setPrefWidth(200 * heightScaleFactor);
+        mess.setTextAlignment(TextAlignment.CENTER);
+
+        myPowerup1Label = new Label();
+        setPosLabel(myPowerup1Label, 640, 380);
+
+        myPowerup2Label = new Label();
+        setPosLabel(myPowerup2Label, 730, 380);
+        myPowerup3Label = new Label();
+        setPosLabel(myPowerup3Label, 820, 380);
+        myPowerup4Label = new Label();
+        setPosLabel(myPowerup4Label, 910, 380);
+
+
 
 
 
@@ -4290,7 +4309,7 @@ public class MainWindow extends Application {
         Platform.setImplicitExit(false);
         Platform.runLater(()->{
             setMyPowerups(powerups);
-            mess.setText("Scarta un potenziamento per rigenerarti");
+            mess.setText("Scarta un potenziamento\n per rigenerarti");
             for(int i=0; i<powerups.size(); i++) {
                 String usPowerup=powerups.get(i).getId();
                 setMyPowerupsActionForRespawn(usPowerup, powerups);
