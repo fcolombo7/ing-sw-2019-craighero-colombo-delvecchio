@@ -13,7 +13,7 @@ public class Constants {
 
     /* NETWORKING PARAMETERS */
     //TODO:DEVONO ESSERE RIMOSSI!!!
-    public static final String RMI_HOSTNAME = "localhost";
+    public static final String RMI_HOSTNAME = "192.168.1.133";
     public static final int SOCKET_PORT=12345;
     public static final int RMI_PORT=12346;
     public static final String RMI_SERVER_NAME="ADRENALINE_SERVER";

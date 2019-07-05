@@ -10,15 +10,39 @@ import java.util.List;
 
 import static it.polimi.ingsw.model.enums.Color.ANY;
 
+/**
+ * This class represents the turn routine factory
+ */
 public class TurnRoutineFactory {
+    /**
+     * This attributes represents the current turn
+     */
     private Turn turn;
+
+    /**
+     * This attributes represents the matrix used when player needs to move before shooting
+     */
     private MatrixHelper moveBeforeShoot;
+
+    /**
+     * This attributes represents the matrix used when player needs to move before grabbing
+     */
     private MatrixHelper whereToGrab;
+
+    /**
+     * This constructor instantiates a TurnRoutineFactory object
+     * @param turn representing the current turn
+     */
     public TurnRoutineFactory(Turn turn){
         this.turn=turn;
         moveBeforeShoot=null;
     }
 
+    /**
+     * This method is used to get a TurnRoutine
+     * @param type represents the TurnRoutine Type you want to get
+     * @return a TurnRoutine obj
+     */
     public TurnRoutine getTurnRoutine(TurnRoutineType type){
         TurnRoutine routine=null;
         switch (type){
@@ -42,6 +66,10 @@ public class TurnRoutineFactory {
         return routine;
     }
 
+    /**
+     * This method is used to check if can start a PowerupRoutine
+     * @return true if can start a PowerupRoutine
+     */
     private boolean canPowerup(){
         if(!turn.getGame().getCurrentPlayer().hasTimingPowerup(turn.getStatus())) return false;
         for(Powerup p:turn.getGame().getCurrentPlayer().getPowerups()){
@@ -50,6 +78,10 @@ public class TurnRoutineFactory {
         return false;
     }
 
+    /**
+     * This method is used to check if there are player spawned in the game in the right moment
+     * @return true if there are player spawned in the game in the right moment
+     */
     private boolean thereArePlayersSpawned() {
         for(Player p:turn.getGame().getPlayers()){
             if(!p.getNickname().equals(turn.getGame().getCurrentPlayer().getNickname())&&p.getPosition()!=null)
@@ -58,6 +90,11 @@ public class TurnRoutineFactory {
         return false;
     }
 
+    /**
+     * This method is used to check if the player has all the necessary ammo to execute the effect
+     * @param effect represents the effect you want to execute
+     * @return true if the player has all the necessary ammo to execute the effect
+     */
     private boolean haveAmmo(Effect effect) {
         List<Color> ammo= new ArrayList<>(turn.getGame().getCurrentPlayer().getBoard().getAmmo());
         int count=0;
@@ -72,6 +109,10 @@ public class TurnRoutineFactory {
         return (count<=ammo.size());
     }
 
+    /**
+     * This method checks if the player can reload
+     * @return true if the player can reload
+     */
     private boolean canReload() {
         for(Weapon w:turn.getGame().getCurrentPlayer().getWeapons()){
             if(turn.getGame().getCurrentPlayer().canReloadedWeapon(w))
@@ -80,6 +121,10 @@ public class TurnRoutineFactory {
         return false;
     }
 
+    /**
+     * This method is used to check if the player can run
+     * @return true if the player can run
+     */
     private boolean canRun(){
         if(turn.getRoutineNumber()>0){
             if(turn.getGame().isFrenzy()){
@@ -89,6 +134,10 @@ public class TurnRoutineFactory {
         return false;
     }
 
+    /**
+     * This method is used to check if the player can grab
+     * @return true if the player can grab
+     */
     private boolean canGrab(){
         if(turn.getRoutineNumber()>0){
             int maxDistance=maxGrabDistance();
@@ -110,6 +159,12 @@ public class TurnRoutineFactory {
         return false;
     }
 
+    /**
+     * This method is used to check if the index passed represent a spawn ponit
+     * @param i representing the row index
+     * @param j representing the col index
+     * @return true if is a spawn point
+     */
     private boolean checkSpawnPoint(int i, int j) {
         if(!turn.getGame().getGameBoard().isSpawnPoint(i,j))return true;
         else{
@@ -134,6 +189,10 @@ public class TurnRoutineFactory {
         }
     }
 
+    /**
+     * This method is used to check if the player can shoot
+     * @return true if the player can shoot
+     */
     private boolean canShoot(){
         if(turn.getRoutineNumber()>0){
             int row=turn.getGame().getGameBoard().getGameboardMatrix().getRowLength();
@@ -165,6 +224,10 @@ public class TurnRoutineFactory {
         return false;
     }
 
+    /**
+     * This method return the max grab distance for the player
+     * @return max grab distance for the player
+     */
     private int maxGrabDistance() {
         if(turn.getGame().isFrenzy()){
             if(turn.getGame().getCurrentPlayer().isFirst()||turn.getGame().getPlayers().indexOf(turn.getGame().getLastPlayerBeforeFrenzy())>turn.getGame().getPlayers().indexOf(turn.getGame().getCurrentPlayer()))
@@ -180,6 +243,10 @@ public class TurnRoutineFactory {
         }
     }
 
+    /**
+     * This method return the max run distance for the player
+     * @return max run distance for the player
+     */
     private int maxRunDistance(){
         if(turn.getGame().isFrenzy()){
             if(turn.getGame().getCurrentPlayer().isFirst()||turn.getGame().getPlayers().indexOf(turn.getGame().getLastPlayerBeforeFrenzy())>turn.getGame().getPlayers().indexOf(turn.getGame().getCurrentPlayer()))
@@ -189,6 +256,10 @@ public class TurnRoutineFactory {
         }else return 3;
     }
 
+    /**
+     * This method return the max run distance before shoot for the player
+     * @return max run distance before shoot distance for the player
+     */
     private int maxMoveDistanceBeforeShot() {
         if(turn.getGame().isFrenzy()){
             if(turn.getGame().getCurrentPlayer().isFirst()||turn.getGame().getPlayers().indexOf(turn.getGame().getLastPlayerBeforeFrenzy())>turn.getGame().getPlayers().indexOf(turn.getGame().getCurrentPlayer()))
@@ -207,6 +278,11 @@ public class TurnRoutineFactory {
         }
     }
 
+    /**
+     * This method is used to check if the player has available weapons
+     * @param checkLoaded representing if the server need to check or not if a weapon is
+     * @return true if the player has available weapons
+     */
     private boolean hasAvailableWeapon(boolean checkLoaded) {
         for (Weapon w: turn.getGame().getCurrentPlayer().getWeapons()) {
             w.initNavigation();

@@ -115,8 +115,8 @@ public class Controller{
                         } else
                             handleNewTurn();
                         //return;
-                    }else{
-                        nextPlayer();
+                    }else {
+                        //nextPlayer();
                         handleNewTurn();
                     }
                     return;

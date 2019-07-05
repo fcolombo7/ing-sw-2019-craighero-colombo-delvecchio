@@ -19,19 +19,50 @@ import java.util.List;
 
 import static it.polimi.ingsw.model.enums.Color.ANY;
 
+/**
+ * This class represents the PowerupRoutine
+ */
 public class PowerupRoutine implements TurnRoutine {
+    /**
+     * This attribute represents the current turn
+     */
     private Turn turn;
+
+    /**
+     * This attribute represent the timing value in the turn
+     */
     private TurnStatus timing;
+
+    /**
+     * This attribute is used to check if is an inner routine
+     */
     private boolean inner;
+
+    /**
+     * This attributes is used to save the selected powerup
+     */
     private Powerup selPowerup;
+
+    /**
+     * This attribute is used to save the selected effect
+     */
     private Effect effect;
 
+    /**
+     * This Constructor instantiates a PowerupRoutine
+     * @param turn representing the current turn
+     * @param timing representing the status of the turn
+     * @param inner a boolean which is true if this routine is an inner routine
+     */
     PowerupRoutine(Turn turn, TurnStatus timing, boolean inner){
         this.turn=turn;
         this.timing=timing;
         this.inner=inner;
     }
 
+    /**
+     * This method is used to send the powerups to the player
+     */
     private void sendPowerups(){
         List<Card> usablePowerups=new ArrayList<>();
         ArrayList<Color> colors=new ArrayList<>();
@@ -46,6 +77,11 @@ public class PowerupRoutine implements TurnRoutine {
         turn.getGame().notify(new AvailablePowerupsMessage(turn.getGame().getCurrentPlayer().getNickname(),usablePowerups,colors));
     }
 
+    /**
+     * This method is used to check if the player can pay all the necessary ammo in order to esecute the powerup effect
+     * @param p representing the powerup card
+     * @return true if can pay and so execute the effect
+     */
     private boolean canPay(Powerup p) {
         List<Color> ammo= new ArrayList<>(turn.getGame().getCurrentPlayer().getBoard().getAmmo());
         int count=0;
@@ -59,6 +95,7 @@ public class PowerupRoutine implements TurnRoutine {
         }
         return (count<=ammo.size());
     }
+
 
     @Override
     public void start() {
@@ -80,6 +117,10 @@ public class PowerupRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method handle the answer of the client which contains the selected players on who perform the effect
+     * @param answer representing the answer given to the PowerupRoutine
+     */
     private void onSelectedPlayersReceived(SelectedPlayersAnswer answer) {
         if(!turn.getCurEffect().checkSelected(answer.getSelected(),turn)){
             Logger.logAndPrint("[POWERUP ROUTINE]Invalid nicknames received");
@@ -91,6 +132,10 @@ public class PowerupRoutine implements TurnRoutine {
         effect.perform(answer.getSelected(),turn);
     }
 
+    /**
+     * This method is used to handle the answer of the client which contains the selected players on who perform the effect
+     * @param answer representing the answer given to the PowerupRoutine
+     */
     private void onPowerupReceived(SelectedPowerupAnswer answer){
         Card cardPowerup=answer.getPowerup();
         List<Player> other=turn.getGame().getPlayers();
@@ -126,6 +171,9 @@ public class PowerupRoutine implements TurnRoutine {
 
     }
 
+    /**
+     * This method is used to pay the effect cost using the ammo and the powerups of the current player
+     */
     private void payEffectCost() {
         if(!effect.getCost().isEmpty()){
             List<Card> discardedPowerups=new ArrayList<>();

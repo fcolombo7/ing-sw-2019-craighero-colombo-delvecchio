@@ -12,12 +12,31 @@ import it.polimi.ingsw.utils.Constants;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.MatrixHelper;
 
+/**
+ * This class represents the RunningRoutine
+ */
 public class RunningRoutine implements TurnRoutine {
 
+    /**
+     * This attribute contains the current turn
+     */
     private Turn turn;
+
+    /**
+     * This attribute contains the position the player can reach during the run rountine
+     */
     private MatrixHelper runMatrix;
+
+    /**
+     * This attribute indicates if the routine is a son routine
+     */
     private boolean inner;
 
+    /**
+     * This constructor instantiates a RunningRoutine
+     * @param turn the current turn
+     * @param distance the max distance
+     */
     RunningRoutine(Turn turn, int distance){
         this.turn=turn;
         inner=false;
@@ -25,12 +44,21 @@ public class RunningRoutine implements TurnRoutine {
         runMatrix = turn.getGame().getGameBoard().getDistanceMatrix(playerPos[0],playerPos[1],distance);
     }
 
+    /**
+     * This constructor instantiates a RunningRoutine
+     * @param turn represents the current turn
+     * @param runMatrix represents the where to run matrix
+     * @param isInner a boolean which is true if is an inner routine
+     */
     RunningRoutine(Turn turn, MatrixHelper runMatrix, boolean isInner){
         this.turn=turn;
         inner=isInner;
         this.runMatrix=new MatrixHelper(runMatrix.toBooleanMatrix());
     }
 
+    /**
+     * This method is used to send where the cur player can run to
+     */
     private void sendWhereToMove() {
         TurnRoutineMessage message=new RunMessage(turn.getGame().getCurrentPlayer().getNickname(), runMatrix);
         turn.getGame().notify(message);

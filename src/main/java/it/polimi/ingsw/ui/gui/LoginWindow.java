@@ -1,4 +1,4 @@
-package it.polimi.ingsw.ui.GUI;
+package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.network.client.RMIServerConnection;
 import it.polimi.ingsw.network.client.ServerConnection;

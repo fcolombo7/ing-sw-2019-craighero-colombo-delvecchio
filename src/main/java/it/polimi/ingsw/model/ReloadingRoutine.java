@@ -14,17 +14,38 @@ import it.polimi.ingsw.utils.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the ReloadingRoutine
+ */
 public class ReloadingRoutine implements TurnRoutine {
+    /**
+     * This attribute contains the current turn
+     */
     private Turn turn;
+    /**
+     * This attribute is used to check if is a son routine
+     */
     private boolean inner;
+    /**
+     * This attributes contains the selected weapon
+     */
     private Weapon weapon;
 
+    /**
+     * This construtor instantiates a ReloadingRoutine
+     * @param turn representing the current turn
+     */
     ReloadingRoutine(Turn turn){
         this.turn=turn;
         inner=false;
         weapon=null;
     }
 
+    /**
+     * This constructor instantiates a reloading routine
+     * @param turn representing the current turn
+     * @param weapon representing the Weapon to reload
+     */
     ReloadingRoutine(Turn turn, Weapon weapon){
         this.turn=turn;
         inner=true;
@@ -51,6 +72,9 @@ public class ReloadingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to send the reloadable weapons to the user
+     */
     private void sendWeapons(){
         List<Card> loadableWeapons=new ArrayList<>();
         for (Weapon w:turn.getGame().getCurrentPlayer().getWeapons()){
@@ -60,6 +84,10 @@ public class ReloadingRoutine implements TurnRoutine {
         turn.getGame().notify(new ReloadableWeaponsMessage(turn.getGame().getCurrentPlayer().getNickname(),loadableWeapons));
     }
 
+    /**
+     * This method is used to handle the answer which contains the weapon to realod
+     * @param answer representing the answer given to the routine
+     */
     private void onLoadableWeaponReceived(LoadableWeaponSelectedAnswer answer){
         Card weapon=answer.getWeapon();
         for(Weapon w:turn.getGame().getCurrentPlayer().getWeapons()){
@@ -72,6 +100,10 @@ public class ReloadingRoutine implements TurnRoutine {
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Current player doesn't have the selected weapon")));
     }
 
+    /**
+     * This method reloads the selected weapon
+     * @param weapon the weapon to reaload
+     */
     private void reloadWeapon(Weapon weapon){
         if(turn.getGame().getCurrentPlayer().canReloadedWeapon(weapon)){
             List<Card> discardedPowerups= turn.getGame().getCurrentPlayer().reloadWeapon(weapon);

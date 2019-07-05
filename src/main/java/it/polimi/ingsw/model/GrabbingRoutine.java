@@ -19,12 +19,35 @@ import it.polimi.ingsw.utils.MatrixHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the grabbing routine
+ */
 public class GrabbingRoutine implements TurnRoutine {
+    /**
+     * This attribute represents the current turn
+     */
     private Turn turn;
+
+    /**
+     * This attribute contains all the sqaure the player can reach and grab in
+     */
     private MatrixHelper grabMatrix;
+
+    /**
+     * This atrtibutes contains the grabbed weapon
+     */
     private Weapon grabbedWeapon;
+
+    /**
+     * This attributes contains all the weapons of the square
+     */
     private List<Weapon> inSquareWeapons;
 
+    /**
+     * This constructor instantiates a GrabbingRoutine
+     * @param turn represents the current turn
+     * @param grabMatrix represent the where to grab matrix
+     */
     GrabbingRoutine(Turn turn, MatrixHelper grabMatrix){
         this.turn=turn;
         this.grabMatrix=new MatrixHelper(grabMatrix.toBooleanMatrix());
@@ -50,9 +73,12 @@ public class GrabbingRoutine implements TurnRoutine {
             Logger.logAndPrint("Invalid TurnRoutineMessage received");
             turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Received a "+answer.getRoutineAnswer()+" message.")));
         }
-
     }
 
+    /**
+     * This method is used to handle the answer which contains the discarded weapon
+     * @param answer representing the answer given to the routine
+     */
     private void onDiscardedWeaponReceived(DiscardedWeaponAnswer answer) {
         for(Weapon w:turn.getGame().getCurrentPlayer().getWeapons()){
             if(w.getId().equals(answer.getWeapon().getId())){
@@ -72,6 +98,10 @@ public class GrabbingRoutine implements TurnRoutine {
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Not existing weapon received")));
     }
 
+    /**
+     * This method is used to handle the answer which contains the selected weapon
+     * @param answer representing the answer given to the routine
+     */
     private void onWeaponReceived(WeaponAnswer answer) {
         for(Weapon weapon:inSquareWeapons){
             if(answer.getWeapon().getId().equals(weapon.getId())){
@@ -98,6 +128,9 @@ public class GrabbingRoutine implements TurnRoutine {
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),"Not existing weapon received")));
     }
 
+    /**
+     * This method is used to pay the weapon cost
+     */
     private void payWeaponCost() {
         List<Color> cost=new ArrayList<>(grabbedWeapon.getAmmo());
         cost.remove(0);
@@ -116,6 +149,9 @@ public class GrabbingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to start the grabbing routine
+     */
     private void grab() {
         Square position= turn.getGame().getCurrentPlayer().getPosition();
         if(turn.getGame().getGameBoard().isSpawnPoint(position.getBoardIndexes()[0],position.getBoardIndexes()[1])){
@@ -153,6 +189,11 @@ public class GrabbingRoutine implements TurnRoutine {
         }
     }
 
+    /**
+     * This method is used to check if the weapon can be grabbed
+     * @param w representing the weapon to grab
+     * @return true if the weapon can be grabbed
+     */
     private boolean canBeGrab(Weapon w) {
         List<Color> cost=new ArrayList<>(w.getAmmo());
         cost.remove(0);
@@ -194,11 +235,18 @@ public class GrabbingRoutine implements TurnRoutine {
             logError(routineType);
     }
 
+    /**
+     * This method is used to log error to the user
+     * @param routineType representing the cur routine type
+     */
     private void logError(TurnRoutineType routineType) {
         Logger.logAndPrint(this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]");
         turn.getGame().notify((new InvalidAnswerMessage(turn.getGame().getCurrentPlayer().getNickname(),this.getClass().getSimpleName()+" can not handle this inner routine ["+routineType.name()+"]")));
     }
 
+    /**
+     * This method is used to start the routine
+     */
     private void startRunRoutine() {
         TurnRoutine routine=new RunningRoutine(turn, grabMatrix,true);
         routine.start();
